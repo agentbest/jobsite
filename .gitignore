@@ -1,0 +1,15 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# エディタ
+.vscode/
+.idea/
+
+# 一時ファイル
+*.tmp
+*.log

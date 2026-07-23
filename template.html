@@ -1,0 +1,731 @@
+<title>求人検索 — キャリアの選択肢</title>
+<style>
+  :root{
+    --paper:#F7F6F2; --surface:#FFFFFF; --surface-2:#F1F0EA;
+    --ink:#1B1E2B; --ink-2:#4A4E60; --ink-3:#787C8C;
+    --line:#E4E2D9; --line-2:#EDECE5;
+    --accent:#33409A; --accent-strong:#3D4CC0; --accent-soft:#ECEEF9; --accent-ink:#2A3585;
+    --gold:#9C6F1E; --gold-soft:#F6EEDD;
+    --good:#2C8A66; --good-soft:#E3F1EA;
+    --focus:#4E61D6;
+    --shadow-sm:0 1px 2px rgba(27,30,43,.05), 0 1px 3px rgba(27,30,43,.06);
+    --shadow-md:0 4px 12px rgba(27,30,43,.08), 0 2px 4px rgba(27,30,43,.05);
+    --shadow-lg:0 24px 60px rgba(20,22,35,.22);
+    --r-card:14px; --r-input:10px; --r-pill:999px;
+    --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic","Noto Sans JP",Meiryo,system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,monospace;
+    --maxw:1300px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#12131B; --surface:#1A1C27; --surface-2:#232633;
+      --ink:#EDEEF4; --ink-2:#B9BCCB; --ink-3:#868AA0;
+      --line:#2C2F3D; --line-2:#242735;
+      --accent:#93A2F2; --accent-strong:#AEB9F7; --accent-soft:#20243A; --accent-ink:#C3CCFA;
+      --gold:#DDB463; --gold-soft:#2A2416;
+      --good:#5FBE93; --good-soft:#16281F;
+      --focus:#93A2F2;
+      --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 6px 18px rgba(0,0,0,.4);
+      --shadow-lg:0 30px 70px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F7F6F2; --surface:#FFFFFF; --surface-2:#F1F0EA;
+    --ink:#1B1E2B; --ink-2:#4A4E60; --ink-3:#787C8C;
+    --line:#E4E2D9; --line-2:#EDECE5;
+    --accent:#33409A; --accent-strong:#3D4CC0; --accent-soft:#ECEEF9; --accent-ink:#2A3585;
+    --gold:#9C6F1E; --gold-soft:#F6EEDD; --good:#2C8A66; --good-soft:#E3F1EA; --focus:#4E61D6;
+    --shadow-sm:0 1px 2px rgba(27,30,43,.05),0 1px 3px rgba(27,30,43,.06);
+    --shadow-md:0 4px 12px rgba(27,30,43,.08),0 2px 4px rgba(27,30,43,.05);
+    --shadow-lg:0 24px 60px rgba(20,22,35,.22);
+  }
+  :root[data-theme="dark"]{
+    --paper:#12131B; --surface:#1A1C27; --surface-2:#232633;
+    --ink:#EDEEF4; --ink-2:#B9BCCB; --ink-3:#868AA0;
+    --line:#2C2F3D; --line-2:#242735;
+    --accent:#93A2F2; --accent-strong:#AEB9F7; --accent-soft:#20243A; --accent-ink:#C3CCFA;
+    --gold:#DDB463; --gold-soft:#2A2416; --good:#5FBE93; --good-soft:#16281F; --focus:#93A2F2;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 6px 18px rgba(0,0,0,.4);
+    --shadow-lg:0 30px 70px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.7;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    font-feature-settings:"palt" 1;
+  }
+  a{color:inherit}
+  button{font-family:inherit; cursor:pointer}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:4px}
+  ::selection{background:var(--accent-soft); color:var(--accent-ink)}
+  .mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar__inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; gap:20px;
+  }
+  .brand{display:flex; align-items:center; gap:11px; text-decoration:none; flex-shrink:0}
+  .brand__mark{width:30px; height:30px; flex-shrink:0}
+  .brand__name{font-weight:800; letter-spacing:.02em; font-size:16px; line-height:1.1}
+  .brand__sub{font-size:10.5px; letter-spacing:.22em; color:var(--ink-3); text-transform:uppercase; font-weight:600}
+  .brand__txt{display:flex; flex-direction:column; gap:2px}
+
+  .search{position:relative; flex:1; max-width:520px}
+  .search svg{position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--ink-3); pointer-events:none}
+  .search input{
+    width:100%; padding:11px 14px 11px 42px; font-size:14.5px;
+    border:1px solid var(--line); border-radius:var(--r-pill);
+    background:var(--surface); color:var(--ink); transition:border-color .15s, box-shadow .15s;
+  }
+  .search input::placeholder{color:var(--ink-3)}
+  .search input:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft)}
+
+  .topbar__actions{display:flex; align-items:center; gap:8px; margin-left:auto}
+  .iconbtn{
+    display:inline-grid; place-items:center; width:40px; height:40px;
+    border:1px solid var(--line); border-radius:10px; background:var(--surface); color:var(--ink-2);
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .iconbtn:hover{background:var(--surface-2); color:var(--ink)}
+  .filter-toggle{display:none; align-items:center; gap:7px; padding:0 14px; width:auto; font-weight:700; font-size:13.5px}
+  .filter-toggle .badge{background:var(--accent); color:#fff; border-radius:999px; font-size:11px; padding:1px 7px; font-family:var(--mono)}
+
+  /* ---------- Layout ---------- */
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+  .intro{padding:30px 0 22px}
+  .intro h1{
+    margin:0 0 8px; font-size:clamp(1.5rem,3.2vw,2.15rem); line-height:1.25;
+    letter-spacing:.01em; font-weight:800; text-wrap:balance;
+  }
+  .intro h1 em{font-style:normal; color:var(--accent)}
+  .intro p{margin:0; color:var(--ink-2); font-size:15px; max-width:60ch}
+  .intro .stat{color:var(--ink-2)}
+  .intro .stat b{font-family:var(--mono); color:var(--ink); font-weight:700}
+
+  .layout{display:grid; grid-template-columns:288px 1fr; gap:34px; padding-bottom:80px; align-items:start}
+
+  /* ---------- Filters ---------- */
+  .filters{position:sticky; top:84px; max-height:calc(100vh - 104px); overflow-y:auto; padding-right:4px}
+  .filters::-webkit-scrollbar{width:8px}
+  .filters::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px}
+  .fgroup{border-bottom:1px solid var(--line-2); padding:16px 2px}
+  .fgroup:first-child{padding-top:2px}
+  .fgroup__head{display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:11px}
+  .fgroup__title{font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+  .fgroup__clear{font-size:11.5px; color:var(--accent); background:none; border:none; padding:0; opacity:0; pointer-events:none; transition:opacity .15s}
+  .fgroup.has-sel .fgroup__clear{opacity:1; pointer-events:auto}
+
+  .facet-search{width:100%; padding:7px 11px; font-size:13px; border:1px solid var(--line); border-radius:8px; background:var(--surface); color:var(--ink); margin-bottom:9px}
+  .facet-search:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .facet-list{display:flex; flex-direction:column; gap:1px; max-height:236px; overflow-y:auto; margin:0 -4px; padding:0 4px}
+  .facet-list.scroll::-webkit-scrollbar{width:7px}
+  .facet-list.scroll::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px}
+  .opt{display:flex; align-items:center; gap:9px; padding:6px 7px; border-radius:8px; cursor:pointer; transition:background .12s}
+  .opt:hover{background:var(--surface-2)}
+  .opt input{position:absolute; opacity:0; width:0; height:0}
+  .opt .box{
+    width:17px; height:17px; border:1.5px solid var(--line); border-radius:5px; flex-shrink:0;
+    display:grid; place-items:center; background:var(--surface); transition:all .12s; color:#fff;
+  }
+  .opt .box svg{width:11px; height:11px; opacity:0; transform:scale(.6); transition:.12s}
+  .opt input:checked + .box{background:var(--accent); border-color:var(--accent)}
+  .opt input:checked + .box svg{opacity:1; transform:scale(1)}
+  .opt input:focus-visible + .box{box-shadow:0 0 0 3px var(--accent-soft)}
+  .opt .lbl{flex:1; font-size:13.5px; color:var(--ink); line-height:1.35; min-width:0}
+  .opt .cnt{font-family:var(--mono); font-size:11.5px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+  .opt.hidden{display:none}
+
+  .chip-row{display:flex; flex-wrap:wrap; gap:7px}
+  .fchip{
+    padding:6px 13px; border:1px solid var(--line); border-radius:var(--r-pill); background:var(--surface);
+    font-size:13px; color:var(--ink-2); transition:all .12s; user-select:none;
+  }
+  .fchip:hover{border-color:var(--ink-3)}
+  .fchip[aria-pressed="true"]{background:var(--accent-soft); border-color:var(--accent); color:var(--accent-ink); font-weight:700}
+
+  .salary-val{font-family:var(--mono); font-weight:700; color:var(--ink); font-size:14px}
+  input[type="range"]{-webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:4px; background:var(--line); margin:14px 0 4px}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:var(--accent); border:3px solid var(--surface); box-shadow:var(--shadow-sm); cursor:pointer}
+  input[type="range"]::-moz-range-thumb{width:20px; height:20px; border:3px solid var(--surface); border-radius:50%; background:var(--accent); cursor:pointer}
+  .range-scale{display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+
+  /* ---------- Results ---------- */
+  .resbar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:16px}
+  .rescount{font-size:14px; color:var(--ink-2)}
+  .rescount b{font-family:var(--mono); font-size:19px; color:var(--ink); font-weight:800; margin-right:1px}
+  .sortsel{margin-left:auto; display:flex; align-items:center; gap:8px}
+  .sortsel label{font-size:12px; color:var(--ink-3); font-weight:600}
+  .sortsel select{
+    padding:8px 30px 8px 12px; font-size:13.5px; border:1px solid var(--line); border-radius:9px;
+    background:var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23787C8C' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 10px center;
+    color:var(--ink); appearance:none; cursor:pointer; font-family:inherit;
+  }
+  .sortsel select:focus{outline:none; border-color:var(--accent)}
+
+  .active-chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px}
+  .active-chips:empty{display:none}
+  .achip{display:inline-flex; align-items:center; gap:6px; padding:5px 8px 5px 12px; background:var(--accent-soft); color:var(--accent-ink); border-radius:var(--r-pill); font-size:12.5px; font-weight:600}
+  .achip button{background:none; border:none; color:var(--accent-ink); display:grid; place-items:center; padding:2px; border-radius:50%; opacity:.7}
+  .achip button:hover{opacity:1; background:color-mix(in srgb,var(--accent) 18%, transparent)}
+  .clear-all{font-size:12.5px; color:var(--ink-3); background:none; border:none; text-decoration:underline; text-underline-offset:2px}
+  .clear-all:hover{color:var(--ink)}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(316px,1fr)); gap:18px}
+  .card{
+    position:relative; display:flex; flex-direction:column; gap:12px;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--r-card);
+    padding:20px 20px 18px; text-align:left; width:100%; color:inherit;
+    transition:transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s, border-color .16s;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:color-mix(in srgb,var(--accent) 35%, var(--line))}
+  .card:focus-visible{outline:2px solid var(--focus); outline-offset:3px}
+  .card__eyebrow{display:flex; align-items:center; gap:8px; min-width:0}
+  .card__co{font-size:12.5px; font-weight:700; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .card__ind{font-size:11.5px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-shrink:1}
+  .card__ind::before{content:"·"; margin-right:8px; color:var(--line)}
+  .card__title{
+    font-size:15.5px; font-weight:700; line-height:1.5; color:var(--ink); margin:0;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.9em;
+  }
+  .card__tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:-2px}
+  .tag{font-size:11.5px; padding:3px 9px; border-radius:6px; background:var(--surface-2); color:var(--ink-2); font-weight:600; white-space:nowrap}
+  .tag--cat{background:var(--accent-soft); color:var(--accent-ink)}
+  .tag--remote{background:var(--good-soft); color:var(--good)}
+  .card__foot{margin-top:auto; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding-top:12px; border-top:1px solid var(--line-2)}
+  .card__salary{display:flex; flex-direction:column; gap:1px; min-width:0}
+  .card__salary .k{font-size:10px; letter-spacing:.1em; color:var(--ink-3); font-weight:700; text-transform:uppercase}
+  .card__salary .v{font-family:var(--mono); font-weight:800; font-size:16px; color:var(--gold); font-variant-numeric:tabular-nums; white-space:nowrap}
+  .card__loc{display:flex; align-items:center; gap:4px; font-size:12px; color:var(--ink-3); max-width:48%; overflow:hidden}
+  .card__loc span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .card__loc svg{flex-shrink:0}
+
+  .loadmore{display:flex; justify-content:center; margin:36px 0 0}
+  .loadmore button{
+    padding:12px 30px; border:1px solid var(--line); border-radius:var(--r-pill);
+    background:var(--surface); color:var(--ink); font-weight:700; font-size:14px; box-shadow:var(--shadow-sm);
+    transition:background .15s, border-color .15s;
+  }
+  .loadmore button:hover{background:var(--surface-2); border-color:var(--ink-3)}
+
+  .empty{text-align:center; padding:80px 20px; color:var(--ink-3)}
+  .empty svg{color:var(--line); margin-bottom:14px}
+  .empty h3{margin:0 0 6px; color:var(--ink-2); font-size:17px}
+  .empty button{margin-top:16px; padding:10px 22px; border:none; border-radius:var(--r-pill); background:var(--accent); color:#fff; font-weight:700}
+
+  /* ---------- Detail panel ---------- */
+  .backdrop{position:fixed; inset:0; z-index:60; background:rgba(15,17,26,.5); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .25s}
+  .backdrop.open{opacity:1; pointer-events:auto}
+  .panel{
+    position:fixed; top:0; right:0; bottom:0; z-index:70; width:min(680px,100%);
+    background:var(--surface); box-shadow:var(--shadow-lg); transform:translateX(102%);
+    transition:transform .32s cubic-bezier(.22,.68,.24,1); display:flex; flex-direction:column;
+  }
+  .panel.open{transform:translateX(0)}
+  .panel__bar{position:sticky; top:0; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-bottom:1px solid var(--line); background:var(--surface); z-index:2}
+  .panel__bar .lbl{font-size:12px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3); font-weight:700}
+  .panel__body{overflow-y:auto; padding:26px 30px 60px}
+  .pd-co{font-size:14px; font-weight:700; color:var(--accent); margin:0 0 5px}
+  .pd-title{font-size:22px; line-height:1.4; font-weight:800; margin:0 0 16px; text-wrap:balance}
+  .pd-tags{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px}
+  .pd-salary{display:flex; flex-wrap:wrap; gap:22px; padding:16px 18px; background:var(--surface-2); border-radius:12px; margin-bottom:8px}
+  .pd-salary .item{display:flex; flex-direction:column; gap:3px}
+  .pd-salary .k{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:700}
+  .pd-salary .v{font-family:var(--mono); font-weight:800; font-size:17px; color:var(--ink); font-variant-numeric:tabular-nums}
+  .pd-salary .v.gold{color:var(--gold)}
+  .pd-cta{display:flex; gap:10px; margin:18px 0 6px; flex-wrap:wrap}
+  .btn-primary{display:inline-flex; align-items:center; gap:8px; padding:12px 22px; background:var(--accent); color:#fff; border:none; border-radius:var(--r-pill); font-weight:700; font-size:14px; text-decoration:none; transition:background .15s}
+  .btn-primary:hover{background:var(--accent-strong)}
+  .btn-ghost{display:inline-flex; align-items:center; gap:8px; padding:12px 20px; background:var(--surface); color:var(--ink); border:1px solid var(--line); border-radius:var(--r-pill); font-weight:700; font-size:14px; text-decoration:none}
+  .btn-ghost:hover{background:var(--surface-2)}
+  .pd-sec{margin-top:30px}
+  .pd-sec > h3{font-size:15px; font-weight:800; margin:0 0 12px; padding-bottom:9px; border-bottom:2px solid var(--accent-soft); display:flex; align-items:center; gap:9px}
+  .pd-sec > h3::before{content:""; width:4px; height:15px; background:var(--accent); border-radius:2px}
+  .pd-meta{display:grid; grid-template-columns:auto 1fr; gap:10px 18px; font-size:13.5px}
+  .pd-meta dt{color:var(--ink-3); font-weight:700; white-space:nowrap}
+  .pd-meta dd{margin:0; color:var(--ink); white-space:pre-wrap}
+
+  /* rich text (markdown) */
+  .rich{font-size:14px; line-height:1.85; color:var(--ink-2); word-break:break-word}
+  .rich h4{font-size:15px; color:var(--ink); font-weight:800; margin:22px 0 8px}
+  .rich h5{font-size:13.5px; color:var(--ink); font-weight:700; margin:16px 0 6px}
+  .rich p{margin:0 0 12px}
+  .rich strong{color:var(--ink); font-weight:700}
+  .rich ul{margin:0 0 12px; padding-left:20px}
+  .rich li{margin:4px 0}
+  .rich a{color:var(--accent); text-decoration:underline; text-underline-offset:2px; word-break:break-all}
+  .rich a:hover{color:var(--accent-strong)}
+
+  .site-foot{border-top:1px solid var(--line); padding:26px 0 60px; color:var(--ink-3); font-size:12.5px; text-align:center}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:1080px){ .layout{grid-template-columns:262px 1fr; gap:26px} }
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr}
+    .filter-toggle{display:inline-flex}
+    .search{max-width:none}
+    .filters{
+      position:fixed; top:0; left:0; bottom:0; z-index:65; width:min(340px,86%); max-height:none;
+      background:var(--surface); border-right:1px solid var(--line); padding:18px 18px 40px; overflow-y:auto;
+      transform:translateX(-102%); transition:transform .3s cubic-bezier(.22,.68,.24,1); box-shadow:var(--shadow-lg);
+    }
+    .filters.open{transform:translateX(0)}
+    .filters__head{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px}
+    .filters__head h2{font-size:16px; margin:0}
+  }
+  @media (min-width:901px){ .filters__head{display:none} }
+  @media (max-width:560px){
+    .wrap,.topbar__inner{padding-left:16px; padding-right:16px}
+    .brand__sub{display:none}
+    .grid{grid-template-columns:1fr; gap:14px}
+    .panel__body{padding:22px 20px 50px}
+    .search input{padding-left:40px}
+    .intro{padding:22px 0 16px}
+  }
+  @media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important} }
+</style>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="#" aria-label="求人検索トップ" onclick="return false">
+      <svg class="brand__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="8" fill="var(--accent)"/>
+        <path d="M16 7l7 4.5v9L16 25l-7-4.5v-9L16 7z" stroke="var(--gold)" stroke-width="1.6" fill="none"/>
+        <circle cx="16" cy="16" r="3.1" fill="var(--gold)"/>
+      </svg>
+      <span class="brand__txt">
+        <span class="brand__name">求人検索</span>
+        <span class="brand__sub">Career Opportunities</span>
+      </span>
+    </a>
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="職種・企業名・キーワードで検索" autocomplete="off" aria-label="キーワード検索">
+    </div>
+    <div class="topbar__actions">
+      <button class="iconbtn filter-toggle" id="filterToggle" aria-label="絞り込みを開く">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+        絞り込み<span class="badge" id="filterBadge" hidden>0</span>
+      </button>
+      <button class="iconbtn" id="themeBtn" aria-label="テーマ切り替え">
+        <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="intro">
+    <h1>あなたの次のキャリアを、<em>まっすぐ</em>見つける。</h1>
+    <p class="stat">全 <b id="totalCount">0</b> 件の求人を、職種・業界・年収・エリアから絞り込めます。</p>
+  </section>
+
+  <div class="layout">
+    <aside class="filters" id="filters" aria-label="絞り込み条件">
+      <div class="filters__head">
+        <h2>絞り込み</h2>
+        <button class="iconbtn" id="filterClose" aria-label="閉じる">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="filterGroups"></div>
+    </aside>
+
+    <section class="results" aria-label="検索結果">
+      <div class="resbar">
+        <div class="rescount"><b id="resCount">0</b> 件の求人</div>
+        <div class="sortsel">
+          <label for="sort">並び替え</label>
+          <select id="sort">
+            <option value="reco">おすすめ順</option>
+            <option value="salaryHigh">年収が高い順</option>
+            <option value="salaryLow">年収が低い順</option>
+            <option value="company">企業名順</option>
+          </select>
+        </div>
+      </div>
+      <div class="active-chips" id="activeChips"></div>
+      <div class="grid" id="grid"></div>
+      <div class="loadmore" id="loadMore" hidden><button>さらに表示する</button></div>
+      <div class="empty" id="empty" hidden>
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <h3>該当する求人が見つかりませんでした</h3>
+        <p>条件を変えるか、絞り込みをリセットしてください。</p>
+        <button id="emptyReset">絞り込みをリセット</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<footer class="site-foot">
+  求人検索 — キャリアの選択肢 ｜ データは Airtable より取得したスナップショットです
+</footer>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="pdTitle" tabindex="-1">
+  <div class="panel__bar">
+    <span class="lbl">求人詳細</span>
+    <button class="iconbtn" id="panelClose" aria-label="閉じる">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="panel__body" id="panelBody"></div>
+</aside>
+
+<script>
+const JOBS = __JOBS_DATA__;
+
+/* ---------- utils ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const PREFS=["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
+
+/* enrich each job: prefectures + remote flag + salary sort key */
+JOBS.forEach(j=>{
+  const loc=(j.location||"");
+  j.areas=PREFS.filter(p=>loc.includes(p));
+  const rtxt=loc+" "+(j.jobContent||"")+" "+(j.benefits||"");
+  j.remote=/在宅|リモート|テレワーク|フルリモート/.test(rtxt);
+  j._skey = (j.salaryMax!=null?j.salaryMax:(j.salaryMin!=null?j.salaryMin:-1));
+  j._hay = [j.company,j.position,j.title,j.jobCategory,(j.industry||[]).join(" "),j.location,j.jobContent,j.must,j.welcome,j.idealPerson].filter(Boolean).join(" ").toLowerCase();
+});
+
+function fmtSalary(j){
+  const mn=j.salaryMin, mx=j.salaryMax;
+  if(mn!=null&&mx!=null) return mn===mx?`${mn}万円`:`${mn}〜${mx}万円`;
+  if(mx!=null) return `〜${mx}万円`;
+  if(mn!=null) return `${mn}万円〜`;
+  return "応相談";
+}
+
+/* ---------- markdown-ish renderer ---------- */
+function rich(src){
+  if(!src) return "";
+  let t=String(src).replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  const lines=t.split("\n");
+  let html="", listBuf=[], para=[];
+  const inline=s=>{
+    s=esc(s);
+    s=s.replace(/&lt;(https?:\/\/[^\s&>]+)&gt;/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+    s=s.replace(/(^|[^"=\/])(https?:\/\/[^\s<)）"]+)/g,(m,p,u)=>p+'<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>');
+    s=s.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
+    s=s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g,'$1<strong>$2</strong>');
+    return s;
+  };
+  const flushList=()=>{ if(listBuf.length){ html+="<ul>"+listBuf.map(x=>"<li>"+inline(x)+"</li>").join("")+"</ul>"; listBuf=[]; } };
+  const flushPara=()=>{ if(para.length){ html+="<p>"+para.map(inline).join("<br>")+"</p>"; para=[]; } };
+  for(let raw of lines){
+    let line=raw.replace(/\s+$/,"").replace(/\\+$/,"").trim();
+    if(!line){ flushList(); flushPara(); continue; }
+    let hm=line.match(/^(#{2,4})\s+(.*)$/);
+    if(hm){ flushList(); flushPara(); const tag=hm[1].length>=4?"h5":"h4"; html+="<"+tag+">"+inline(hm[2])+"</"+tag+">"; continue; }
+    let bm=line.match(/^(?:[-*＊]|・|●|◦|‣)\s*(.*)$/);
+    if(bm){ flushPara(); listBuf.push(bm[1]); continue; }
+    flushList(); para.push(line);
+  }
+  flushList(); flushPara();
+  return html;
+}
+
+/* ---------- facets config ---------- */
+const facetDefs=[
+  {key:"areas", title:"勤務地エリア", type:"check", multi:true, searchable:true, get:j=>j.areas},
+  {key:"jobCategory", title:"職種カテゴリ", type:"check", multi:true, searchable:true, get:j=>j.jobCategory?[j.jobCategory]:[]},
+  {key:"industry", title:"業界", type:"check", multi:true, searchable:true, get:j=>j.industry||[]},
+  {key:"employment", title:"雇用形態", type:"chip", multi:true, get:j=>j.employment?[j.employment]:[]},
+  {key:"kubun", title:"区分", type:"chip", multi:true, get:j=>j.kubun?[j.kubun]:[]},
+];
+
+const state={ q:"", sort:"reco", salaryMin:0, remote:false, sel:{} };
+facetDefs.forEach(f=>state.sel[f.key]=new Set());
+
+/* option counts (global, computed once) */
+const facetOptions={};
+facetDefs.forEach(f=>{
+  const m=new Map();
+  JOBS.forEach(j=>f.get(j).forEach(v=>{ if(v!=null&&v!=="") m.set(v,(m.get(v)||0)+1); }));
+  facetOptions[f.key]=[...m.entries()].sort((a,b)=>b[1]-a[1]);
+});
+const remoteCount=JOBS.filter(j=>j.remote).length;
+const MAXSAL=Math.min(3000,Math.ceil(Math.max(0,...JOBS.map(j=>j._skey))/100)*100);
+
+/* ---------- filtering ---------- */
+function jobMatches(j){
+  if(state.q){ const toks=state.q.toLowerCase().split(/\s+/).filter(Boolean); if(!toks.every(t=>j._hay.includes(t))) return false; }
+  if(state.remote && !j.remote) return false;
+  if(state.salaryMin>0){ const s=(j.salaryMax!=null?j.salaryMax:j.salaryMin); if(s==null||s<state.salaryMin) return false; }
+  for(const f of facetDefs){
+    const sel=state.sel[f.key]; if(!sel.size) continue;
+    const vals=f.get(j); if(!vals.some(v=>sel.has(v))) return false;
+  }
+  return true;
+}
+function sortJobs(arr){
+  const a=arr.slice();
+  if(state.sort==="salaryHigh") a.sort((x,y)=>y._skey-x._skey);
+  else if(state.sort==="salaryLow") a.sort((x,y)=>(x._skey<0?1e9:x._skey)-(y._skey<0?1e9:y._skey));
+  else if(state.sort==="company") a.sort((x,y)=>String(x.company||"").localeCompare(String(y.company||""),"ja"));
+  else a.sort((x,y)=>y._skey-x._skey);
+  return a;
+}
+
+/* ---------- render facets (once) ---------- */
+function buildFilters(){
+  const wrap=$("#filterGroups");
+  let h="";
+  /* keyword hint + remote + salary as first group */
+  h+=`<div class="fgroup" data-static="work">
+      <div class="fgroup__head"><span class="fgroup__title">働き方・年収</span></div>
+      <div class="chip-row" style="margin-bottom:14px">
+        <button class="fchip" role="button" aria-pressed="false" data-remote>リモート可 <span class="mono" style="color:var(--ink-3);font-size:11px">${remoteCount}</span></button>
+      </div>
+      <div class="fgroup__head" style="margin-bottom:2px"><span class="fgroup__title" style="letter-spacing:.06em;text-transform:none;font-size:12.5px;color:var(--ink-2)">年収下限</span><span class="salary-val" id="salLbl">指定なし</span></div>
+      <input type="range" id="salRange" min="0" max="${MAXSAL}" step="50" value="0" aria-label="年収下限">
+      <div class="range-scale"><span>0</span><span>${MAXSAL}万円</span></div>
+    </div>`;
+  facetDefs.forEach(f=>{
+    const opts=facetOptions[f.key]; if(!opts.length) return;
+    h+=`<div class="fgroup" data-key="${f.key}">
+        <div class="fgroup__head">
+          <span class="fgroup__title">${esc(f.title)}</span>
+          <button class="fgroup__clear" data-clear="${f.key}">クリア</button>
+        </div>`;
+    if(f.searchable && opts.length>7) h+=`<input class="facet-search" data-fsearch="${f.key}" placeholder="${esc(f.title)}を検索" aria-label="${esc(f.title)}を絞り込み">`;
+    if(f.type==="chip"){
+      h+=`<div class="chip-row">`+opts.map(([v,c])=>`<button class="fchip" role="button" aria-pressed="false" data-facet="${f.key}" data-val="${esc(v)}">${esc(v)} <span class="mono" style="color:var(--ink-3);font-size:11px">${c}</span></button>`).join("")+`</div>`;
+    }else{
+      const scroll=opts.length>8?"scroll":"";
+      h+=`<div class="facet-list ${scroll}">`+opts.map(([v,c])=>`
+        <label class="opt" data-opt="${esc(v)}">
+          <input type="checkbox" data-facet="${f.key}" data-val="${esc(v)}">
+          <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12l5 5L20 6"/></svg></span>
+          <span class="lbl">${esc(v)}</span><span class="cnt">${c}</span>
+        </label>`).join("")+`</div>`;
+    }
+    h+=`</div>`;
+  });
+  wrap.innerHTML=h;
+
+  wrap.addEventListener("change",e=>{
+    const el=e.target.closest("input[data-facet]"); if(!el) return;
+    const k=el.dataset.facet, v=el.dataset.val;
+    if(el.checked) state.sel[k].add(v); else state.sel[k].delete(v);
+    syncGroupState(k); apply();
+  });
+  wrap.addEventListener("click",e=>{
+    const chip=e.target.closest(".fchip[data-facet]");
+    if(chip){ const k=chip.dataset.facet,v=chip.dataset.val,on=chip.getAttribute("aria-pressed")==="true";
+      if(on){state.sel[k].delete(v);chip.setAttribute("aria-pressed","false");} else {state.sel[k].add(v);chip.setAttribute("aria-pressed","true");}
+      syncGroupState(k); apply(); return; }
+    const rc=e.target.closest("[data-remote]");
+    if(rc){ state.remote=!state.remote; rc.setAttribute("aria-pressed",state.remote); apply(); return; }
+    const cl=e.target.closest("[data-clear]");
+    if(cl){ clearFacet(cl.dataset.clear); return; }
+  });
+  wrap.addEventListener("input",e=>{
+    const s=e.target.closest("[data-fsearch]"); if(!s) return;
+    const grp=s.closest(".fgroup"); const term=s.value.trim().toLowerCase();
+    grp.querySelectorAll(".opt").forEach(o=>{ o.classList.toggle("hidden", term && !o.dataset.opt.toLowerCase().includes(term)); });
+  });
+  $("#salRange").addEventListener("input",e=>{
+    state.salaryMin=+e.target.value;
+    $("#salLbl").textContent = state.salaryMin>0?state.salaryMin+"万円以上":"指定なし";
+    apply();
+  });
+}
+function syncGroupState(k){
+  const grp=$(`.fgroup[data-key="${k}"]`); if(!grp) return;
+  grp.classList.toggle("has-sel", state.sel[k].size>0);
+}
+function clearFacet(k){
+  state.sel[k].clear();
+  document.querySelectorAll(`[data-facet="${k}"]`).forEach(el=>{
+    if(el.type==="checkbox") el.checked=false; else el.setAttribute("aria-pressed","false");
+  });
+  syncGroupState(k); apply();
+}
+
+/* ---------- active chips ---------- */
+const facetTitle=Object.fromEntries(facetDefs.map(f=>[f.key,f.title]));
+function renderActiveChips(){
+  const box=$("#activeChips"); let h="";
+  if(state.remote) h+=chipHtml("remote","",'リモート可');
+  if(state.salaryMin>0) h+=chipHtml("salary","",state.salaryMin+"万円以上");
+  facetDefs.forEach(f=>state.sel[f.key].forEach(v=>{ h+=chipHtml(f.key,v,v); }));
+  const any=h.length>0;
+  if(any) h+=`<button class="clear-all" id="clearAll">すべてクリア</button>`;
+  box.innerHTML=h;
+}
+function chipHtml(k,v,label){
+  return `<span class="achip">${esc(label)}<button data-rm-k="${esc(k)}" data-rm-v="${esc(v)}" aria-label="${esc(label)}を外す"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></span>`;
+}
+$("#activeChips").addEventListener("click",e=>{
+  const b=e.target.closest("[data-rm-k]");
+  if(b){ const k=b.dataset.rmK,v=b.dataset.rmV;
+    if(k==="remote"){ state.remote=false; document.querySelector("[data-remote]")?.setAttribute("aria-pressed","false"); }
+    else if(k==="salary"){ state.salaryMin=0; $("#salRange").value=0; $("#salLbl").textContent="指定なし"; }
+    else { state.sel[k].delete(v);
+      const el=document.querySelector(`[data-facet="${k}"][data-val="${CSS.escape(v)}"]`);
+      if(el){ if(el.type==="checkbox") el.checked=false; else el.setAttribute("aria-pressed","false"); }
+      syncGroupState(k);
+    }
+    apply(); return;
+  }
+  if(e.target.closest("#clearAll")) resetAll();
+});
+function resetAll(){
+  state.q=""; $("#q").value=""; state.remote=false; state.salaryMin=0;
+  $("#salRange").value=0; $("#salLbl").textContent="指定なし";
+  document.querySelector("[data-remote]")?.setAttribute("aria-pressed","false");
+  facetDefs.forEach(f=>clearFacetSilent(f.key));
+  apply();
+}
+function clearFacetSilent(k){
+  state.sel[k].clear();
+  document.querySelectorAll(`[data-facet="${k}"]`).forEach(el=>{ if(el.type==="checkbox") el.checked=false; else el.setAttribute("aria-pressed","false"); });
+  syncGroupState(k);
+}
+
+/* ---------- results ---------- */
+let filtered=[], shown=0; const PAGE=24;
+function apply(){
+  filtered=sortJobs(JOBS.filter(jobMatches));
+  shown=0;
+  $("#resCount").textContent=filtered.length;
+  renderActiveChips();
+  updateBadge();
+  const grid=$("#grid"); grid.innerHTML="";
+  $("#empty").hidden=filtered.length>0;
+  renderMore();
+}
+function updateBadge(){
+  let n=(state.remote?1:0)+(state.salaryMin>0?1:0)+facetDefs.reduce((s,f)=>s+state.sel[f.key].size,0);
+  const b=$("#filterBadge"); b.hidden=n===0; b.textContent=n;
+}
+function cardHtml(j){
+  const tags=[];
+  if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
+  if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
+  if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
+  const ind=(j.industry&&j.industry[0])?`<span class="card__ind">${esc(j.industry[0])}</span>`:"";
+  const loc=j.location?`<span class="card__loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${esc((j.location||"").split(/\n/)[0])}</span></span>`:"";
+  return `<button class="card" data-id="${esc(j.id)}">
+    <div class="card__eyebrow"><span class="card__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
+    <h3 class="card__title">${esc(j.position||j.jobCategory||j.title||"求人")}</h3>
+    <div class="card__tags">${tags.join("")}</div>
+    <div class="card__foot">
+      <div class="card__salary"><span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}</span></div>
+      ${loc}
+    </div>
+  </button>`;
+}
+function renderMore(){
+  const next=filtered.slice(shown,shown+PAGE);
+  const grid=$("#grid");
+  grid.insertAdjacentHTML("beforeend", next.map(cardHtml).join(""));
+  shown+=next.length;
+  $("#loadMore").hidden = shown>=filtered.length;
+}
+$("#loadMore").addEventListener("click",renderMore);
+$("#grid").addEventListener("click",e=>{ const c=e.target.closest(".card"); if(c) openDetail(c.dataset.id); });
+$("#emptyReset").addEventListener("click",resetAll);
+
+/* ---------- detail panel ---------- */
+let lastFocus=null;
+function metaRow(k,v){ return v?`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`:""; }
+function openDetail(id){
+  const j=JOBS.find(x=>x.id===id); if(!j) return;
+  lastFocus=document.activeElement;
+  const tags=[];
+  if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
+  if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
+  if(j.kubun) tags.push(`<span class="tag">${esc(j.kubun)}</span>`);
+  (j.industry||[]).forEach(i=>tags.push(`<span class="tag">${esc(i)}</span>`));
+  if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
+
+  const url=(typeof j.url==="string"&&/^https?:\/\//.test(j.url))?j.url:null;
+  const cta = url?`<a class="btn-primary" href="${esc(url)}" target="_blank" rel="noopener">企業サイトを見る
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>`:"";
+
+  const sec=(title,body,isRich)=> body?`<div class="pd-sec"><h3>${esc(title)}</h3>${isRich?`<div class="rich">${rich(body)}</div>`:body}</div>`:"";
+
+  const reqMeta = [
+    metaRow("給与（原文）", j.salaryRaw),
+    metaRow("勤務地", j.location),
+    metaRow("勤務時間", j.workHours),
+    metaRow("休日・休暇", j.holidays),
+    metaRow("福利厚生", j.benefits),
+  ].join("");
+  const coMeta = [
+    metaRow("会社概要", j.companyInfo),
+    metaRow("所在地", j.companyAddress),
+    metaRow("上場区分", j.listedStatus),
+  ].join("");
+
+  $("#panelBody").innerHTML=`
+    <p class="pd-co">${esc(j.company||"企業非公開")}</p>
+    <h2 class="pd-title" id="pdTitle">${esc(j.position||j.jobCategory||j.title||"求人")}</h2>
+    <div class="pd-tags">${tags.join("")}</div>
+    <div class="pd-salary">
+      <div class="item"><span class="k">想定年収</span><span class="v gold">${esc(fmtSalary(j))}</span></div>
+      ${j.employment?`<div class="item"><span class="k">雇用形態</span><span class="v">${esc(j.employment)}</span></div>`:""}
+      ${(j.areas&&j.areas.length)?`<div class="item"><span class="k">エリア</span><span class="v" style="font-size:14px">${esc(j.areas.join("・"))}</span></div>`:""}
+    </div>
+    ${cta?`<div class="pd-cta">${cta}</div>`:""}
+    ${sec("仕事内容", j.jobContent, true)}
+    ${sec("必須条件", j.must, true)}
+    ${sec("歓迎条件", j.welcome, true)}
+    ${sec("求める人物像", j.idealPerson, true)}
+    ${reqMeta?`<div class="pd-sec"><h3>募集要項</h3><dl class="pd-meta">${reqMeta}</dl></div>`:""}
+    ${sec("選考プロセス", j.selectionProcess, true)}
+    ${coMeta?`<div class="pd-sec"><h3>企業情報</h3><dl class="pd-meta">${coMeta}</dl></div>`:""}
+  `;
+  $("#panelBody").scrollTop=0;
+  $("#backdrop").classList.add("open");
+  $("#panel").classList.add("open");
+  document.body.style.overflow="hidden";
+  $("#panelClose").focus();
+}
+function closeDetail(){
+  $("#backdrop").classList.remove("open");
+  $("#panel").classList.remove("open");
+  document.body.style.overflow="";
+  if(lastFocus&&lastFocus.focus) lastFocus.focus();
+}
+$("#panelClose").addEventListener("click",closeDetail);
+$("#backdrop").addEventListener("click",closeDetail);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if($("#panel").classList.contains("open")) closeDetail(); else closeDrawer(); } });
+
+/* ---------- keyword search ---------- */
+let qt;
+$("#q").addEventListener("input",e=>{ clearTimeout(qt); qt=setTimeout(()=>{ state.q=e.target.value.trim(); apply(); },160); });
+$("#sort").addEventListener("change",e=>{ state.sort=e.target.value; apply(); });
+
+/* ---------- mobile drawer ---------- */
+function openDrawer(){ $("#filters").classList.add("open"); $("#backdrop").classList.add("open"); }
+function closeDrawer(){ $("#filters").classList.remove("open"); if(!$("#panel").classList.contains("open")) $("#backdrop").classList.remove("open"); }
+$("#filterToggle").addEventListener("click",openDrawer);
+$("#filterClose").addEventListener("click",closeDrawer);
+
+/* ---------- theme ---------- */
+const SUN='<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5.6 5.6L4.2 4.2M19.8 19.8l-1.4-1.4M18.4 5.6l1.4-1.4M4.2 19.8l1.4-1.4"/>';
+const MOON='<path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/>';
+function currentTheme(){ return document.documentElement.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"); }
+function setTheme(t){ document.documentElement.setAttribute("data-theme",t); $("#themeIcon").innerHTML=t==="dark"?SUN:MOON; try{localStorage.setItem("jobsite-theme",t);}catch(e){} }
+$("#themeBtn").addEventListener("click",()=>setTheme(currentTheme()==="dark"?"light":"dark"));
+(function initTheme(){ let t; try{t=localStorage.getItem("jobsite-theme");}catch(e){} setTheme(t|| (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")); })();
+
+/* ---------- init ---------- */
+$("#totalCount").textContent=JOBS.length;
+buildFilters();
+apply();
+</script>
