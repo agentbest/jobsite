@@ -1,4 +1,4 @@
-<title>求人検索 — キャリアの選択肢</title>
+<title>ミドル・ハイクラス求人検索 — キャリアの選択肢</title>
 <style>
   :root{
     --paper:#F7F6F2; --surface:#FFFFFF; --surface-2:#F1F0EA;
@@ -108,6 +108,10 @@
     letter-spacing:.01em; font-weight:800; text-wrap:balance;
   }
   .intro h1 em{font-style:normal; color:var(--accent)}
+  .intro .eyebrow{
+    margin:0 0 8px; font-size:11.5px; font-weight:800; color:var(--accent);
+    letter-spacing:.12em;
+  }
   .intro p{margin:0; color:var(--ink-2); font-size:15px; max-width:60ch}
   .intro .stat{color:var(--ink-2)}
   .intro .stat b{font-family:var(--mono); color:var(--ink); font-weight:700}
@@ -209,6 +213,7 @@
   .tag{font-size:11.5px; padding:3px 9px; border-radius:6px; background:var(--surface-2); color:var(--ink-2); font-weight:600; white-space:nowrap}
   .tag--cat{background:var(--accent-soft); color:var(--accent-ink)}
   .tag--remote{background:var(--good-soft); color:var(--good)}
+  .tag--kubun{background:var(--gold-soft); color:var(--gold); font-weight:800}
   .card__foot{margin-top:auto; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding-top:12px; border-top:1px solid var(--line-2)}
   .card__salary{display:flex; flex-direction:column; gap:1px; min-width:0}
   .card__salary .k{font-size:10px; letter-spacing:.1em; color:var(--ink-3); font-weight:700; text-transform:uppercase}
@@ -316,7 +321,7 @@
       </svg>
       <span class="brand__txt">
         <span class="brand__name">求人検索</span>
-        <span class="brand__sub">Career Opportunities</span>
+        <span class="brand__sub">MIDDLE &amp; HIGH CLASS</span>
       </span>
     </a>
     <div class="search">
@@ -337,11 +342,13 @@
 
 <div class="wrap">
   <section class="intro">
-    <h1>あなたの次のキャリアを、<em>まっすぐ</em>見つける。</h1>
-    <p class="stat">全 <b id="totalCount">0</b> 件の求人を、職種・業界・年収・エリアから絞り込めます。</p>
+    <p class="eyebrow">ミドルクラス・ハイクラス向け求人サイト</p>
+    <h1>その経験に、<em>見合う</em>ポジションを。</h1>
+    <p class="stat">全 <b id="totalCount">0</b> 件 ／ 年収800万円以上 <b id="count800">0</b> 件 ／ 1,000万円以上 <b id="count1000">0</b> 件。職種・業界・年収・エリアから絞り込めます。</p>
+    <p class="stat">中途採用が中心ですが、新卒・インターンの求人も掲載しています。</p>
     <p class="note">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-      <span>掲載しているのは求人の一部です。ここに出していない<b>非公開求人も多数</b>あります。</span>
+      <span>掲載しているのは求人の一部です。経営幹部・部長クラスを含む<b>非公開求人も多数</b>あります。</span>
     </p>
   </section>
 
@@ -383,7 +390,7 @@
 </div>
 
 <footer class="site-foot">
-  求人検索 — キャリアの選択肢 ｜ データは Airtable より取得したスナップショットです
+  ミドル・ハイクラス求人検索 — キャリアの選択肢 ｜ データは Airtable より取得したスナップショットです
 </footer>
 
 <div class="backdrop" id="backdrop"></div>
@@ -477,11 +484,11 @@ function rich(src){
 
 /* ---------- facets config ---------- */
 const facetDefs=[
+  {key:"kubun", title:"区分", type:"chip", multi:true, get:j=>j.kubun?[j.kubun]:[]},
   {key:"areas", title:"勤務地エリア", type:"check", multi:true, searchable:true, get:j=>j.areas},
   {key:"jobCategory", title:"職種カテゴリ", type:"check", multi:true, searchable:true, get:j=>j.jobCategory?[j.jobCategory]:[]},
   {key:"industry", title:"業界", type:"check", multi:true, searchable:true, get:j=>j.industry||[]},
   {key:"employment", title:"雇用形態", type:"chip", multi:true, get:j=>j.employment?[j.employment]:[]},
-  {key:"kubun", title:"区分", type:"chip", multi:true, get:j=>j.kubun?[j.kubun]:[]},
 ];
 
 const state={ q:"", sort:"reco", salaryMin:0, remote:false, sel:{} };
@@ -652,6 +659,7 @@ function updateBadge(){
 }
 function cardHtml(j){
   const tags=[];
+  if(j.kubun && j.kubun!=="中途") tags.push(`<span class="tag tag--kubun">${esc(j.kubun)}</span>`);
   if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
   if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
   if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
@@ -775,6 +783,8 @@ $("#themeBtn").addEventListener("click",()=>setTheme(currentTheme()==="dark"?"li
 
 /* ---------- init ---------- */
 $("#totalCount").textContent=JOBS.length;
+$("#count800").textContent=JOBS.filter(j=>j.salaryMax>=800).length;
+$("#count1000").textContent=JOBS.filter(j=>j.salaryMax>=1000).length;
 buildFilters();
 apply();
 </script>
