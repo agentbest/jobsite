@@ -1,0 +1,696 @@
+<title>エージェントベスト｜PM特化 転職エージェント</title>
+<meta name="description" content="PjM・PdMに特化した転職エージェント。あなたのキャリアを、要件定義から内定後まで伴走します。">
+
+<style>
+  :root{
+    --paper:#F4F6FA;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F7;
+    --ink:#111B2E;
+    --ink-soft:#48566B;
+    --ink-faint:#7C889B;
+    --line:#E1E6EF;
+    --line-strong:#CBD3E0;
+    --accent:#D98518;
+    --accent-hover:#C2740F;
+    --accent-tint:#FBEFDC;
+    --accent-ink:#7C4D0F;
+    --teal:#137F79;
+    --teal-tint:#DBEEEC;
+    --navy:#0B1220;
+    --navy-2:#111B2E;
+    --on-navy:#EAEEF6;
+    --on-navy-soft:#9AA6BC;
+    --on-navy-line:#26324B;
+
+    --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",YuGothic,"Noto Sans JP","Segoe UI",sans-serif;
+    --mono:"SFMono-Regular","SF Mono","Cascadia Code",Consolas,"Roboto Mono","Courier New",monospace;
+
+    --maxw:1120px;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(17,27,46,.05),0 12px 32px -18px rgba(17,27,46,.28);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0A0F1A;
+      --surface:#111A2B;
+      --surface-2:#0E1626;
+      --ink:#EAEEF6;
+      --ink-soft:#A5B0C4;
+      --ink-faint:#74809A;
+      --line:#20304C;
+      --line-strong:#2C3D5C;
+      --accent:#EFA63C;
+      --accent-hover:#F5B85C;
+      --accent-tint:#241C10;
+      --accent-ink:#F0AE4E;
+      --teal:#3BB6AF;
+      --teal-tint:#10201F;
+      --navy:#070B14;
+      --navy-2:#0C1524;
+      --on-navy:#EAEEF6;
+      --on-navy-soft:#95A2B9;
+      --on-navy-line:#1D293F;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -20px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F4F6FA;--surface:#FFFFFF;--surface-2:#EEF1F7;--ink:#111B2E;--ink-soft:#48566B;
+    --ink-faint:#7C889B;--line:#E1E6EF;--line-strong:#CBD3E0;--accent:#D98518;--accent-hover:#C2740F;
+    --accent-tint:#FBEFDC;--accent-ink:#7C4D0F;--teal:#137F79;--teal-tint:#DBEEEC;--navy:#0B1220;
+    --navy-2:#111B2E;--on-navy:#EAEEF6;--on-navy-soft:#9AA6BC;--on-navy-line:#26324B;
+    --shadow:0 1px 2px rgba(17,27,46,.05),0 12px 32px -18px rgba(17,27,46,.28);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0A0F1A;--surface:#111A2B;--surface-2:#0E1626;--ink:#EAEEF6;--ink-soft:#A5B0C4;
+    --ink-faint:#74809A;--line:#20304C;--line-strong:#2C3D5C;--accent:#EFA63C;--accent-hover:#F5B85C;
+    --accent-tint:#241C10;--accent-ink:#F0AE4E;--teal:#3BB6AF;--teal-tint:#10201F;--navy:#070B14;
+    --navy-2:#0C1524;--on-navy:#EAEEF6;--on-navy-soft:#95A2B9;--on-navy-line:#1D293F;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -20px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);line-height:1.7;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,p{margin:0}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono)}
+  .eyebrow{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent-ink);font-weight:600;
+  }
+  .serif{font-family:var(--serif)}
+
+  /* ---------- top nav ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:color-mix(in srgb,var(--paper) 82%,transparent);
+    backdrop-filter:saturate(1.4) blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em}
+  .brand .glyph{
+    width:26px;height:26px;border-radius:7px;flex:none;
+    background:linear-gradient(150deg,var(--accent),var(--teal));
+    display:grid;place-items:center;color:#fff;font-family:var(--mono);font-size:.8rem;font-weight:700;
+  }
+  .brand small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;color:var(--ink-faint);font-weight:600}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{font-size:.86rem;color:var(--ink-soft);font-weight:600}
+  .nav-links a:hover{color:var(--ink)}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;
+    font-size:.9rem;padding:11px 20px;border-radius:999px;cursor:pointer;border:1px solid transparent;
+    transition:transform .15s ease,background .2s ease,box-shadow .2s ease;white-space:nowrap;
+  }
+  .btn-primary{background:var(--accent);color:#1c1204;box-shadow:0 8px 20px -8px var(--accent)}
+  .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px)}
+  .btn-ghost{border-color:var(--line-strong);color:var(--ink);background:transparent}
+  .btn-ghost:hover{border-color:var(--ink-soft)}
+  .btn-lg{padding:15px 30px;font-size:1rem}
+  @media (max-width:760px){.nav-links a:not(.btn){display:none}}
+
+  /* ---------- hero (always dark) ---------- */
+  .hero{position:relative;background:var(--navy);color:var(--on-navy);overflow:hidden;border-bottom:1px solid var(--on-navy-line)}
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(60% 55% at 82% 8%,rgba(239,166,60,.16),transparent 60%),
+      radial-gradient(50% 45% at 6% 92%,rgba(59,182,175,.14),transparent 62%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    position:absolute;inset:0;opacity:.5;pointer-events:none;
+    background-image:linear-gradient(var(--on-navy-line) 1px,transparent 1px);
+    background-size:100% 46px;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 18%,#000 72%,transparent);
+            mask-image:linear-gradient(180deg,transparent,#000 18%,#000 72%,transparent);
+  }
+  .hero-in{position:relative;padding:78px 0 0}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--accent);
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+  .hero-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(239,166,60,.2)}
+  h1.hero-title{
+    font-family:var(--serif);font-weight:700;letter-spacing:.01em;
+    font-size:clamp(2.3rem,6vw,4.1rem);line-height:1.18;margin:22px 0 0;text-wrap:balance;
+  }
+  h1.hero-title .hl{color:var(--accent);font-style:normal;position:relative;white-space:nowrap}
+  .hero-lead{margin:24px 0 0;max-width:38em;color:var(--on-navy-soft);font-size:1.06rem}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin:34px 0 0;align-items:center}
+  .hero-cta .note{font-family:var(--mono);font-size:.72rem;color:var(--on-navy-soft);letter-spacing:.04em}
+  .hero-trust{display:flex;flex-wrap:wrap;gap:26px;margin:44px 0 0;padding:22px 0 0;border-top:1px solid var(--on-navy-line)}
+  .hero-trust .item .n{font-family:var(--mono);font-size:1.5rem;font-weight:700;color:var(--on-navy);font-variant-numeric:tabular-nums}
+  .hero-trust .item .n em{font-style:normal;color:var(--accent);font-size:1rem;margin-left:2px}
+  .hero-trust .item .l{font-size:.76rem;color:var(--on-navy-soft);letter-spacing:.04em}
+
+  /* roadmap graphic */
+  .roadmap{position:relative;margin:56px 0 -1px;padding:0 0 46px}
+  .roadmap .track{position:relative;height:3px;background:var(--on-navy-line);border-radius:3px}
+  .roadmap .track .fill{position:absolute;left:0;top:0;bottom:0;width:62%;
+    background:linear-gradient(90deg,var(--teal),var(--accent));border-radius:3px}
+  .roadmap .nodes{display:grid;grid-template-columns:repeat(5,1fr);position:relative;margin-top:-9px}
+  .rm-node{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding-right:12px}
+  .rm-node .pin{width:15px;height:15px;border-radius:50%;background:var(--navy);border:3px solid var(--on-navy-line);flex:none}
+  .rm-node.done .pin{border-color:var(--teal);background:var(--teal)}
+  .rm-node.active .pin{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 6px rgba(239,166,60,.18);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 5px rgba(239,166,60,.16)}50%{box-shadow:0 0 0 11px rgba(239,166,60,0)}}
+  .rm-node .ph{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;color:var(--on-navy-soft)}
+  .rm-node .lb{font-size:.82rem;font-weight:700;color:var(--on-navy);line-height:1.35}
+  .rm-node.active .lb{color:var(--accent)}
+  @media (max-width:760px){
+    .roadmap .nodes{grid-template-columns:repeat(2,1fr);gap:20px}
+    .roadmap .track{display:none}
+    .rm-node .pin{display:none}
+    .hero-trust{gap:20px}
+  }
+
+  /* ---------- generic section ---------- */
+  section{padding:88px 0}
+  .sec-head{display:flex;flex-direction:column;gap:14px;margin-bottom:44px;max-width:46em}
+  .sec-head h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.7rem,3.6vw,2.5rem);line-height:1.3;text-wrap:balance}
+  .sec-head p{color:var(--ink-soft);font-size:1.02rem}
+  .sec-index{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase}
+
+  /* problem */
+  .band{background:var(--surface-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .prob-quote{font-family:var(--serif);font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.5;font-weight:700;text-wrap:balance;max-width:20em}
+  .prob-quote .u{background:linear-gradient(transparent 62%,var(--accent-tint) 62%);padding:0 .05em}
+  .prob-lead{margin-top:22px;max-width:40em;color:var(--ink-soft);font-size:1.02rem}
+  .prob-lead b{color:var(--ink);font-weight:700}
+  .prob-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px}
+  .prob-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px 22px 22px;display:flex;gap:14px;align-items:flex-start}
+  .prob-card .x{font-family:var(--mono);color:var(--accent);font-weight:700;flex:none;margin-top:2px}
+  .prob-card p{font-size:.95rem;color:var(--ink-soft)}
+  .prob-card p b{color:var(--ink);font-weight:700}
+  @media (max-width:680px){.prob-grid{grid-template-columns:1fr}}
+
+  /* value cards */
+  .val-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .val{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);
+    position:relative;transition:transform .2s ease,border-color .2s ease}
+  .val:hover{transform:translateY(-3px);border-color:var(--line-strong)}
+  .val .no{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;color:var(--accent-ink);font-weight:600}
+  .val h3{font-size:1.18rem;font-weight:800;margin:14px 0 10px;letter-spacing:.01em}
+  .val p{color:var(--ink-soft);font-size:.95rem}
+  .val .ic{width:40px;height:40px;border-radius:10px;background:var(--accent-tint);color:var(--accent-ink);
+    display:grid;place-items:center;font-family:var(--mono);font-weight:700;margin-bottom:2px}
+  @media (max-width:680px){.val-grid{grid-template-columns:1fr}}
+
+  /* scope PjM/PdM */
+  .scope{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .scope-col{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+  .scope-col header{padding:22px 26px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:12px}
+  .scope-col header .tag{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.1em;padding:4px 9px;border-radius:6px}
+  .scope-col.pjm header .tag{background:var(--accent-tint);color:var(--accent-ink)}
+  .scope-col.pdm header .tag{background:var(--teal-tint);color:var(--teal)}
+  .scope-col header h3{font-size:1.15rem;font-weight:800}
+  .scope-col header h3 span{display:block;font-size:.78rem;font-weight:600;color:var(--ink-faint);font-family:var(--mono);letter-spacing:.02em}
+  .scope-col ul{list-style:none;margin:0;padding:20px 26px 26px;display:flex;flex-direction:column;gap:12px}
+  .scope-col li{display:flex;gap:11px;font-size:.92rem;color:var(--ink-soft)}
+  .scope-col li::before{content:"›";color:var(--accent);font-weight:700;font-family:var(--mono)}
+  .scope-col.pdm li::before{color:var(--teal)}
+  @media (max-width:680px){.scope{grid-template-columns:1fr}}
+
+  /* process timeline */
+  .proc{position:relative;margin-top:8px}
+  .proc::before{content:"";position:absolute;left:19px;top:8px;bottom:8px;width:2px;background:var(--line-strong)}
+  .step{position:relative;padding:0 0 34px 62px}
+  .step:last-child{padding-bottom:0}
+  .step .marker{position:absolute;left:8px;top:2px;width:24px;height:24px;border-radius:50%;
+    background:var(--surface);border:2px solid var(--line-strong);display:grid;place-items:center;
+    font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--ink-soft);z-index:1}
+  .step:nth-child(-n+3) .marker{border-color:var(--teal);color:var(--teal)}
+  .step .ph{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;color:var(--ink-faint)}
+  .step h3{font-size:1.12rem;font-weight:800;margin:4px 0 6px}
+  .step p{color:var(--ink-soft);font-size:.94rem;max-width:40em}
+
+  /* stats */
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px 24px}
+  .stat .n{font-family:var(--mono);font-weight:700;font-size:2.5rem;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .stat .n em{font-style:normal;font-size:1.1rem;color:var(--accent);margin-left:3px}
+  .stat .l{margin-top:12px;font-size:.86rem;color:var(--ink-soft);font-weight:600}
+  .stat .s{font-size:.74rem;color:var(--ink-faint);margin-top:3px}
+  @media (max-width:820px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+
+  /* voice */
+  .voice{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:38px 40px;box-shadow:var(--shadow);position:relative}
+  .voice .mark{font-family:var(--serif);font-size:4rem;line-height:.6;color:var(--accent);opacity:.4}
+  .voice blockquote{margin:6px 0 0;font-family:var(--serif);font-size:1.35rem;line-height:1.65;font-weight:700;text-wrap:balance}
+  .voice .who{margin-top:22px;font-size:.86rem;color:var(--ink-soft);display:flex;align-items:center;gap:12px}
+  .voice .who .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(140deg,var(--accent),var(--teal));flex:none}
+  .voice .who b{color:var(--ink)}
+  .voice .who .mono{color:var(--ink-faint);font-size:.74rem}
+
+  /* faq */
+  .faq{display:flex;flex-direction:column;gap:12px;max-width:820px}
+  details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 22px;transition:border-color .2s}
+  details[open]{border-color:var(--line-strong)}
+  summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:700;font-size:1rem;display:flex;align-items:center;gap:14px}
+  summary::-webkit-details-marker{display:none}
+  summary .q{font-family:var(--mono);color:var(--accent);font-size:.82rem;flex:none}
+  summary .chev{margin-left:auto;transition:transform .2s;color:var(--ink-faint)}
+  details[open] summary .chev{transform:rotate(180deg)}
+  details p{padding:0 0 20px 34px;color:var(--ink-soft);font-size:.94rem}
+
+  /* final cta */
+  .final{background:var(--navy);color:var(--on-navy);border-radius:24px;padding:64px 48px;text-align:center;position:relative;overflow:hidden}
+  .final::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(50% 60% at 20% 0%,rgba(239,166,60,.18),transparent 60%),
+    radial-gradient(50% 60% at 85% 100%,rgba(59,182,175,.16),transparent 60%)}
+  .final>*{position:relative}
+  .final .eyebrow{color:var(--accent)}
+  .final h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.9rem,4.4vw,3rem);line-height:1.28;margin:16px 0 0;text-wrap:balance}
+  .final p{color:var(--on-navy-soft);margin:18px auto 0;max-width:34em}
+  .final .hero-cta{justify-content:center}
+  .final .btn-ghost{color:var(--on-navy);border-color:var(--on-navy-line)}
+  .final .btn-ghost:hover{border-color:var(--on-navy-soft)}
+
+  /* footer */
+  footer.ft{border-top:1px solid var(--line);padding:44px 0;color:var(--ink-faint);font-size:.82rem}
+  .ft-in{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}
+  .ft-in .disc{max-width:44em;line-height:1.6}
+
+  /* quadrant (hero graphic) */
+  .quad{margin:52px 0 0;max-width:600px}
+  .quad .cap{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;color:var(--on-navy-soft);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .quad .cap::before{content:"";width:14px;height:1px;background:var(--accent)}
+  .quad-frame{position:relative;padding:6px 6px 30px 30px}
+  .quad-ylabel{position:absolute;left:0;top:6px;bottom:36px;width:22px;writing-mode:vertical-rl;text-orientation:mixed;
+    display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--mono);font-size:.62rem;
+    letter-spacing:.12em;color:var(--on-navy-soft);transform:rotate(180deg)}
+  .quad-xlabel{position:absolute;left:30px;right:6px;bottom:6px;height:20px;display:flex;align-items:center;justify-content:center;gap:6px;
+    font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;color:var(--on-navy-soft)}
+  .quad-ylabel .ar,.quad-xlabel .ar{color:var(--accent)}
+  .quad-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;aspect-ratio:1/.66}
+  .qcell{border:1px solid var(--on-navy-line);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;
+    justify-content:space-between;gap:10px;background:rgba(255,255,255,.02);min-height:0}
+  .qcell .qt{font-size:.86rem;font-weight:800;color:var(--on-navy);line-height:1.3}
+  .qcell .qs{font-family:var(--mono);font-size:.6rem;letter-spacing:.05em;color:var(--on-navy-soft)}
+  .qcell.muted{opacity:.42}
+  .qcell.hit{border-color:var(--accent);background:linear-gradient(150deg,rgba(239,166,60,.16),rgba(239,166,60,.03));
+    box-shadow:0 0 0 1px var(--accent),0 16px 40px -18px rgba(239,166,60,.6)}
+  .qcell.hit .qt{color:var(--accent)}
+  .qcell.hit .badge{align-self:flex-start;font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;
+    color:#1c1204;background:var(--accent);padding:3px 8px;border-radius:5px}
+  .qcell .here{align-self:flex-start;font-family:var(--mono);font-size:.56rem;font-weight:700;letter-spacing:.1em;
+    color:var(--on-navy-soft);border:1px solid var(--on-navy-line);padding:2px 7px;border-radius:5px}
+  .qcell.now{border-color:var(--on-navy-soft)}
+  .qcell.now .qt{color:var(--on-navy)}
+  @media (max-width:760px){.quad-grid{aspect-ratio:1/.9}.qcell .qs{display:none}}
+
+  /* example company cards */
+  .co-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .co{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 30px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+  .co .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .co .ind{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;color:var(--ink-faint)}
+  .co .stage{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:5px;white-space:nowrap}
+  .co .stage.ipo{color:var(--teal);background:var(--teal-tint)}
+  .co .stage.su{color:var(--accent-ink);background:var(--accent-tint)}
+  .co h3{font-size:1.12rem;font-weight:800;line-height:1.4}
+  .co p{font-size:.92rem;color:var(--ink-soft)}
+  .co .role{margin-top:auto;padding-top:14px;border-top:1px dashed var(--line-strong);display:flex;gap:8px;flex-wrap:wrap}
+  .co .role span{font-family:var(--mono);font-size:.66rem;font-weight:700;padding:4px 9px;border-radius:6px;background:var(--accent-tint);color:var(--accent-ink)}
+  @media (max-width:680px){.co-grid{grid-template-columns:1fr}}
+  .co-note{margin-top:22px;font-size:.82rem;color:var(--ink-faint);font-family:var(--mono);letter-spacing:.02em}
+
+  /* salary data */
+  .data-lead{max-width:44em;color:var(--ink-soft);font-size:1.02rem;margin-bottom:36px}
+  .data-lead b{color:var(--ink);font-weight:700}
+  .bars{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 32px;margin-top:22px;box-shadow:var(--shadow)}
+  .bars .bt{font-size:.9rem;font-weight:800;margin-bottom:6px}
+  .bars .bsub{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:22px}
+  .bar-row{display:grid;grid-template-columns:172px 1fr auto;align-items:center;gap:14px;margin:14px 0}
+  .bar-row .lab{font-size:.8rem;font-weight:700;color:var(--ink-soft);line-height:1.3}
+  .bar-row .track{height:26px;background:var(--surface-2);border-radius:7px;overflow:hidden}
+  .bar-row .fill{height:100%;border-radius:7px;background:linear-gradient(90deg,var(--teal),var(--accent));width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+  .bar-row.ref .fill{background:var(--line-strong)}
+  .bar-row .val{font-family:var(--mono);font-weight:700;font-size:.94rem;font-variant-numeric:tabular-nums;min-width:74px;text-align:right}
+  .src{margin-top:20px;font-family:var(--mono);font-size:.72rem;color:var(--ink-faint);letter-spacing:.02em;line-height:1.6}
+  @media (max-width:560px){.bar-row{grid-template-columns:108px 1fr auto;gap:9px}.bar-row .lab{font-size:.68rem}}
+
+  /* hero highlight pill */
+  .hero-hl{display:inline-flex;align-items:center;gap:12px;margin:26px 0 0;padding:11px 18px;border-radius:999px;
+    background:linear-gradient(120deg,rgba(239,166,60,.16),rgba(239,166,60,.04));border:1px solid rgba(239,166,60,.42)}
+  .hero-hl .tag{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.12em;color:#1c1204;background:var(--accent);padding:3px 9px;border-radius:6px}
+  .hero-hl .t{font-size:.9rem;font-weight:700;color:var(--on-navy)}
+  .hero-hl .t b{color:var(--accent);font-weight:800}
+  @media (max-width:520px){.hero-hl{flex-direction:column;align-items:flex-start;gap:8px;border-radius:14px}}
+
+  /* 1000万 callout */
+  .highlight{margin-top:26px;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:30px;
+    background:linear-gradient(130deg,var(--accent-tint),transparent 70%);border:1px solid var(--accent);
+    border-radius:var(--radius);padding:32px 36px}
+  .highlight .hl-num{font-family:var(--mono);font-weight:700;font-size:clamp(2.4rem,6vw,3.6rem);line-height:.95;
+    color:var(--accent-ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em;white-space:nowrap}
+  .highlight .hl-num span{font-size:.4em;margin-left:2px}
+  .highlight .hl-txt{font-size:1rem;color:var(--ink-soft)}
+  .highlight .hl-txt b{display:block;font-size:1.22rem;color:var(--ink);font-weight:800;margin-bottom:6px}
+  @media (max-width:640px){.highlight{grid-template-columns:1fr;gap:14px;padding:26px 24px}}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .rv{opacity:1;transform:none;transition:none}
+    .rm-node.active .pin{animation:none}
+    html{scroll-behavior:auto}
+  }
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+</style>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="エージェントベスト">
+      <span class="glyph">AB</span>
+      <span>AGENTBEST<small>PM CAREER AGENT</small></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#why">得られる価値</a>
+      <a href="#data">年収データ</a>
+      <a href="#companies">紹介企業</a>
+      <a href="#process">支援の流れ</a>
+      <a href="#faq">よくある質問</a>
+      <a href="https://calendly.com/r_matsuoka" target="_blank" rel="noopener" class="btn btn-primary">無料で面談予約</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" style="padding:0">
+    <div class="hero-grid"></div>
+    <div class="wrap hero-in">
+      <span class="hero-eyebrow"><span class="dot"></span>大手SIer・コンサルのPMへ ／ PjM &amp; PdM 特化</span>
+      <h1 class="hero-title">年収は、下げない。<br><span class="hl">裁量は、上げる。</span><br>場所は、選ぶ。</h1>
+      <p class="hero-lead">
+        大手SIer・大手コンサルで培った推進力を、もっと事業の中心で。上場グロース企業から超成長スタートアップまで、
+        給与水準はすでに上場企業に並び、上回る例も。フルリモートで働けるポジションも少なくありません。
+        もはや「挑戦か、年収か」を選ぶ必要はありません。安定の先で物足りなさを感じるPjM／PdMに、次の一手をご紹介します。
+      </p>
+      <div class="hero-cta">
+        <a href="https://calendly.com/r_matsuoka" target="_blank" rel="noopener" class="btn btn-primary btn-lg">無料で面談を予約する →</a>
+        <a href="#companies" class="btn btn-ghost btn-lg" style="border-color:var(--on-navy-line);color:var(--on-navy)">どんな企業か見る</a>
+        <span class="note">登録1分／在職中の相談OK／完全無料</span>
+      </div>
+
+      <div class="hero-hl rv">
+        <span class="tag">高年収帯</span>
+        <span class="t"><b>年収1,000万円以上</b>のPMポジションを多数保有</span>
+      </div>
+
+      <div class="hero-trust">
+        <div class="item"><div class="n">777<em>万円</em></div><div class="l">有力スタートアップの平均年収<span style="opacity:.6">（2025年度）</span></div></div>
+        <div class="item"><div class="n">98<em>%</em></div><div class="l">非公開求人の割合</div></div>
+        <div class="item"><div class="n">2<em>軸</em></div><div class="l">PjM／PdM 両対応</div></div>
+        <div class="item"><div class="n">0<em>円</em></div><div class="l">相談〜入社まで費用</div></div>
+      </div>
+
+      <!-- positioning quadrant -->
+      <div class="quad rv">
+        <div class="cap">POSITIONING — あなたが働く環境の座標</div>
+        <div class="quad-frame">
+          <div class="quad-ylabel"><span class="ar">↑</span>安定・働きやすさ</div>
+          <div class="quad-xlabel">裁量・スピード<span class="ar">→</span></div>
+          <div class="quad-grid" aria-hidden="true">
+            <div class="qcell now"><span class="here">現在地</span><span class="qt">大手SIer・コンサル</span><span class="qs">安定 ○ ／ 裁量 △</span></div>
+            <div class="qcell hit"><span class="badge">ここをご紹介</span><span class="qt">グロース企業・超成長スタートアップ</span><span class="qs">安定 ○ ／ 裁量 ◎</span></div>
+            <div class="qcell muted"><span class="qt">停滞フェーズ</span><span class="qs">安定 △ ／ 裁量 △</span></div>
+            <div class="qcell"><span class="qt">アーリースタートアップ</span><span class="qs">安定 △ ／ 裁量 ○</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROBLEM ============ -->
+  <section class="band" id="problem">
+    <div class="wrap">
+      <p class="sec-index rv">01 — 裁量の、"種類"の話</p>
+      <p class="prob-quote rv" style="margin-top:16px">
+        裁量がない、わけじゃない。<br>ただ、<span class="u">事業を背負う裁量</span>では、ない。
+      </p>
+      <p class="prob-lead rv">
+        大手にも、裁量のある環境は増えました。それでも——受託やアドバイザリー、大規模組織の中では、
+        <b>意思決定の"一番おいしい部分"が、いつも自分の手の外にある。</b>提案はできる。でも、背負えない。
+      </p>
+      <div class="prob-grid">
+        <div class="prob-card rv"><span class="x">△</span><p><b>決められても、背負えない。</b>提案も推進もできる。けれどプロダクトのP&amp;Lやロードマップを、"自分ごと"として最後まで握る立場ではない。</p></div>
+        <div class="prob-card rv"><span class="x">△</span><p><b>その裁量は、誰かの要件の中。</b>受託・アドバイザリーでは、意思決定の主導権が常にクライアント側に残る。作って、伸ばして、結果を引き受ける当事者になりきれない。</p></div>
+        <div class="prob-card rv"><span class="x">△</span><p><b>それでも、年収は下げられない。</b>挑戦したい気持ちはある。けれど生活水準を落とす転職は選べない——そう思って踏みとどまってきた。</p></div>
+        <div class="prob-card rv"><span class="x">◎</span><p><b>前提は、二つとも変わる。</b>事業を背負える裁量と、それに見合う年収。上場・グロース企業なら、<b>その両方を同時に</b>手にできます。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY ============ -->
+  <section id="why">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="sec-index">02 — 転職先で、得られるもの</span>
+        <h2>裁量・安定・働きやすさ・成長。<br>四つを、あきらめない。</h2>
+        <p>急成長を経て上場した企業だからこそ両立する、PMにとっての「働く価値」を4つの軸で。</p>
+      </div>
+      <div class="val-grid">
+        <div class="val rv">
+          <div class="ic">◇</div>
+          <div class="no">VALUE 01 — 裁量</div>
+          <h3>プロダクトを、背負える</h3>
+          <p>事業の意思決定に近い距離で、ロードマップや優先順位を自分で握る。提案して終わりではなく、作って・伸ばして・結果まで引き受ける当事者になれます。</p>
+        </div>
+        <div class="val rv">
+          <div class="ic">◆</div>
+          <div class="no">VALUE 02 — 安定</div>
+          <h3>上場・大型調達に、支えられた基盤</h3>
+          <p>上場による収益基盤、あるいは大型調達による潤沢な資金。アーリー期のような資金繰りの不安なく、中長期のプロダクト投資に腰を据えて取り組めます。</p>
+        </div>
+        <div class="val rv">
+          <div class="ic">◈</div>
+          <div class="no">VALUE 03 — 働きやすさ</div>
+          <h3>フルリモートも。柔軟な働き方</h3>
+          <p>フルリモート・フレックスなど柔軟な制度と、エンジニア・プロダクトを尊重する文化。住む場所や生活に合わせて、無理な稼働に依存しない持続可能な働き方ができます。</p>
+        </div>
+        <div class="val rv">
+          <div class="ic">▲</div>
+          <div class="no">VALUE 04 — 成長</div>
+          <h3>次の拡大フェーズの、当事者に</h3>
+          <p>上場はゴールではなく通過点。新規事業・海外展開・M&amp;Aなど、さらなる成長フェーズの中核ポジションで、キャリアの伸びしろを得られます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCOPE ============ -->
+  <section class="band" id="scope">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="sec-index">03 — 対応領域</span>
+        <h2>PjM・PdM、どちらのキャリアにも。</h2>
+        <p>いまの役割にとらわれず、隣接するポジションまで含めてご提案します。</p>
+      </div>
+      <div class="scope">
+        <div class="scope-col pjm rv">
+          <header>
+            <span class="tag">PjM</span>
+            <h3>プロジェクトマネージャー<span>Project Manager</span></h3>
+          </header>
+          <ul>
+            <li>Web／業務システム・SIの開発PM</li>
+            <li>PMO・大規模プロジェクトの推進</li>
+            <li>QCD管理・ベンダーコントロール</li>
+            <li>受託開発からの事業会社への転向</li>
+            <li>ITコンサル・DX推進のプロジェクトリード</li>
+          </ul>
+        </div>
+        <div class="scope-col pdm rv">
+          <header>
+            <span class="tag">PdM</span>
+            <h3>プロダクトマネージャー<span>Product Manager</span></h3>
+          </header>
+          <ul>
+            <li>SaaS・自社プロダクトの企画／グロース</li>
+            <li>新規事業・0→1のプロダクト立ち上げ</li>
+            <li>ロードマップ策定・KPI設計</li>
+            <li>PjMからPdMへのキャリアチェンジ</li>
+            <li>スタートアップのプロダクト責任者候補</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPANIES ============ -->
+  <section id="companies">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="sec-index">04 — ご紹介する企業のイメージ</span>
+        <h2>上場グロース企業から、<br>超成長スタートアップまで。</h2>
+        <p>上場した企業に加え、大型調達を背景に急拡大する未上場スタートアップも。裁量と給与の両方が成立し、フルリモートで働ける企業も含めて厳選します。※ 具体的な社名は、面談時に個別にご案内します。</p>
+      </div>
+      <div class="co-grid">
+        <div class="co rv">
+          <div class="top"><span class="ind">ERP / 経営管理</span><span class="stage su">超成長スタートアップ</span></div>
+          <h3>経営データを束ねる<br>次世代ERP・経営管理SaaS</h3>
+          <p>企業の予実・経営管理をクラウドで刷新するプロダクト。大型調達を背景に急拡大し、開発はプロダクト主導。PdMが仕様と優先順位を握れる、当事者性の高いフェーズです。</p>
+          <div class="role"><span>PdM</span><span>経営管理</span><span>フルリモート可</span></div>
+        </div>
+        <div class="co rv">
+          <div class="top"><span class="ind">GOVTECH / 行政DX</span><span class="stage su">超成長スタートアップ</span></div>
+          <h3>行政の予算編成を変える<br>GovTechスタートアップ</h3>
+          <p>自治体・行政の予算編成や政策業務をデジタル化。社会的意義が大きく、規制産業ならではの難度と手触りがある領域。0→1に踏み込めるPjM／PdMを募集。</p>
+          <div class="role"><span>PjM</span><span>PdM</span><span>社会課題</span></div>
+        </div>
+        <div class="co rv">
+          <div class="top"><span class="ind">FINTECH</span><span class="stage ipo">上場企業</span></div>
+          <h3>金融 × テクノロジーの<br>プラットフォーム企業</h3>
+          <p>金融インフラを、自社プロダクトとして展開。エンジニア主導・データドリブンな開発文化で、PdMが仕様と優先順位を主導します。</p>
+          <div class="role"><span>PdM</span><span>プラットフォーム</span><span>リモート中心</span></div>
+        </div>
+        <div class="co rv">
+          <div class="top"><span class="ind">B2B SAAS</span><span class="stage ipo">上場企業</span></div>
+          <h3>事業拡大フェーズの<br>BtoB SaaS企業</h3>
+          <p>既存プロダクトのグロースに加え、新規プロダクト・新機能の立ち上げが続くフェーズ。0→1／1→10の両方に裁量を持って関われます。</p>
+          <div class="role"><span>PdM</span><span>PjM</span><span>新規事業</span><span>フルリモート可</span></div>
+        </div>
+      </div>
+      <p class="co-note rv">※ 上記は環境イメージです。実在の企業名・ロゴは含みません。ご経験に合わせて最適な求人をご提案します。</p>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="band" id="process">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="sec-index">05 — 支援の流れ</span>
+        <h2>転職を、一つのプロジェクトとして進める。</h2>
+        <p>要件定義から入社後の定着まで。各フェーズにマイルストーンを置き、迷わないように伴走します。</p>
+      </div>
+      <div class="proc">
+        <div class="step rv"><span class="marker">01</span><span class="ph">KICK-OFF</span><h3>キックオフ面談</h3><p>現状の課題・志向・譲れない条件をヒアリング。転職の「要件」を一緒に言語化します。（オンライン30〜60分）</p></div>
+        <div class="step rv"><span class="marker">02</span><span class="ph">PLANNING</span><h3>キャリア設計・市場価値の可視化</h3><p>これまでの実績を棚卸しし、市場での立ち位置と狙えるレンジを提示。方針をすり合わせます。</p></div>
+        <div class="step rv"><span class="marker">03</span><span class="ph">PROPOSAL</span><h3>求人提案・書類の要件定義</h3><p>非公開を含む厳選求人をご紹介。職務経歴書を採用側に伝わる形へ添削します。</p></div>
+        <div class="step rv"><span class="marker">04</span><span class="ph">EXECUTION</span><h3>選考・面接対策</h3><p>各社の評価軸・面接官の関心に合わせた対策。日程調整もすべて代行します。</p></div>
+        <div class="step rv"><span class="marker">05</span><span class="ph">CLOSING</span><h3>内定・条件交渉</h3><p>言い出しにくい年収・役割・入社時期の交渉を代行。納得できる着地を目指します。</p></div>
+        <div class="step rv"><span class="marker">06</span><span class="ph">POST-RELEASE</span><h3>入社後フォロー</h3><p>オンボーディングでつまずかないよう、入社後も定着まで継続してサポートします。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section id="data">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="sec-index">06 — データで見る</span>
+        <h2>「給与を下げてまで」の時代は、<br>終わりつつある。</h2>
+      </div>
+      <p class="data-lead rv">
+        有力スタートアップの平均年収は上昇を続け、<b>777万円（2025年度）</b>に。
+        すでに2021年度の時点で上場企業の平均を上回り、その差は広がっています。
+        採用競争が激しさを増すいま、<b>年収を維持したままの挑戦</b>は現実的な選択肢です。
+      </p>
+
+      <div class="stat-grid">
+        <div class="stat rv"><div class="n">777<em>万円</em></div><div class="l">有力スタートアップの平均年収</div><div class="s">2025年度・前年比 +2%</div></div>
+        <div class="stat rv"><div class="n">+127<em>万円</em></div><div class="l">この4年の上昇幅</div><div class="s">2021年度 650万円 → 2025年度</div></div>
+        <div class="stat rv"><div class="n">約8<em>割</em></div><div class="l">給与を引き上げた企業</div><div class="s">採用強化のため（2025年度）</div></div>
+        <div class="stat rv"><div class="n">上場<em>企業超</em></div><div class="l">平均年収は上場企業を上回る</div><div class="s">2021年度に逆転、以降も上昇</div></div>
+      </div>
+
+      <div class="bars rv">
+        <div class="bt">有力スタートアップの平均年収は、上場企業を上回りながら上昇</div>
+        <div class="bsub">日経 NEXTユニコーン調査 ／ 単位：万円</div>
+        <div class="bar-row"><span class="lab">スタートアップ 2025年度</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">777</span></div>
+        <div class="bar-row"><span class="lab">スタートアップ 2024年度</span><span class="track"><span class="fill" style="width:98%"></span></span><span class="val">762</span></div>
+        <div class="bar-row"><span class="lab">スタートアップ 2021年度</span><span class="track"><span class="fill" style="width:84%"></span></span><span class="val">650</span></div>
+        <div class="bar-row ref"><span class="lab">上場企業 2021年度</span><span class="track"><span class="fill" style="width:78%"></span></span><span class="val">605</span></div>
+        <p class="src">出典：日本経済新聞社「NEXTユニコーン調査」（有力スタートアップ対象）。スタートアップ平均年収は2021年度650万円→2025年度777万円。上場企業の平均は2021年度時点で約605万円（スタートアップが約7%上回る）。※有力・回答企業ベースの平均値であり、全スタートアップの水準を示すものではありません。</p>
+      </div>
+
+      <div class="highlight rv">
+        <div class="hl-num">1,000<span>万円〜</span></div>
+        <div class="hl-txt">
+          <b>以上のPMポジションを、多数保有。</b>
+          市場全体の水準が上がるなか、当社は上場グロース企業から超成長スタートアップまで、年収1,000万円以上のPjM／PdM求人を継続的に確保。大手で培った経験を、下げるどころか引き上げる形でご提案できます。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOICE ============ -->
+  <section class="band" id="voice">
+    <div class="wrap" style="max-width:900px">
+      <div class="sec-head rv" style="margin-bottom:28px">
+        <span class="sec-index">07 — 利用者の声</span>
+      </div>
+      <div class="voice rv">
+        <div class="mark" aria-hidden="true">“</div>
+        <blockquote>大手SIerで待遇に不満はなかった。でも、決めるのはいつも自分ではなかった。年収を落とす覚悟までしていたのに、いざ動くと提示は前職以上。裁量は、比べものにならないほど大きくなりました。</blockquote>
+        <div class="who">
+          <span class="av" aria-hidden="true"></span>
+          <div><b>30代・大手SIerのPjM → 上場SaaS企業のPdMへ</b><br><span class="mono">大手SIer → 上場グロース企業／年収を維持したまま裁量を拡大</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="sec-index">08 — よくある質問</span>
+        <h2>ご相談の前に。</h2>
+      </div>
+      <div class="faq">
+        <details class="rv"><summary><span class="q">Q1</span>在職中でも相談できますか？<span class="chev">▾</span></summary><p>はい。ご利用者の多くが在職中です。面談はオンラインで平日夜・休日も対応し、選考の日程調整はこちらで代行しますので、働きながら無理なく進められます。</p></details>
+        <details class="rv"><summary><span class="q">Q2</span>費用はかかりますか？<span class="chev">▾</span></summary><p>相談から入社後のフォローまで、求職者の方の費用は一切かかりません。無料でご利用いただけます。</p></details>
+        <details class="rv"><summary><span class="q">Q3</span>大手からスタートアップに移ると、年収は下がりませんか？<span class="chev">▾</span></summary><p>必ずしも下がりません。有力スタートアップの平均年収は上昇を続け、上場企業を上回る水準に達しています（日経NEXTユニコーン調査）。ご紹介にあたっては現年収の維持・向上を前提に条件交渉を行い、基本給に加えてストックオプション等も含めた実質的な待遇で比較・ご提案します。</p></details>
+        <details class="rv"><summary><span class="q">Q4</span>PjMからPdM（またはその逆）への転向は可能ですか？<span class="chev">▾</span></summary><p>可能です。両領域を扱っているため、これまでのご経験がどう活きるかを整理したうえで、現実的な選択肢をご提案します。まずはご相談ください。</p></details>
+        <details class="rv"><summary><span class="q">Q5</span>まだ転職を決めていなくても大丈夫ですか？<span class="chev">▾</span></summary><p>もちろんです。市場の動向や、いまの環境と上場グロース企業の違いを知るための壁打ちだけのご利用も歓迎しています。無理に転職をおすすめすることはありません。</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section id="entry">
+    <div class="wrap">
+      <div class="final rv">
+        <span class="eyebrow">GET STARTED — 登録1分・完全無料</span>
+        <h2>あなたのキャリアの、<br>キックオフ面談から始めましょう。</h2>
+        <p>いまの立ち位置を整理するだけでも、次の一手は見えてきます。まずは気軽にお話を聞かせてください。</p>
+        <div class="hero-cta">
+          <a href="https://calendly.com/r_matsuoka" target="_blank" rel="noopener" class="btn btn-primary btn-lg">無料で面談を予約する →</a>
+          <a href="https://calendly.com/r_matsuoka" target="_blank" rel="noopener" class="btn btn-ghost btn-lg">会員登録する（1分）</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="ft">
+  <div class="wrap ft-in">
+    <div class="brand"><span class="glyph">AB</span><span>AGENTBEST<small>PM CAREER AGENT</small></span></div>
+    <p class="disc">※ 年収データは日本経済新聞社「NEXTユニコーン調査」に基づく実データです。「非公開求人98%」「年収1,000万円以上のPM求人 多数保有」等のサービス指標と利用者の声は確認・差し替え用のサンプルのため、公開前に自社の実績値へ置き換えてご利用ください。<br>© AGENTBEST. プロジェクトマネージャー／プロダクトマネージャー特化の転職エージェント。</p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var els=document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(en){
+      en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e,i){e.style.transitionDelay=(Math.min(i%4,3)*60)+'ms';io.observe(e);});
+  })();
+</script>
