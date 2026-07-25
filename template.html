@@ -261,6 +261,10 @@
   .pd-meta{display:grid; grid-template-columns:auto 1fr; gap:10px 18px; font-size:13.5px}
   .pd-meta dt{color:var(--ink-3); font-weight:700; white-space:nowrap}
   .pd-meta dd{margin:0; color:var(--ink); white-space:pre-wrap}
+  .pd-meta dd a{color:var(--accent); text-decoration:underline; text-underline-offset:2px; word-break:break-all}
+  .pd-meta dd a:hover{color:var(--accent-strong)}
+  .pd-meta dd a svg{vertical-align:-2px; margin-left:3px}
+  .pd-ctanote{margin:10px 0 0; font-size:12.5px; color:var(--ink-3)}
 
   /* rich text (markdown) */
   .rich{font-size:14px; line-height:1.85; color:var(--ink-2); word-break:break-word}
@@ -395,6 +399,29 @@
 
 <script>
 const JOBS = __JOBS_DATA__;
+
+/* ---------- 応募・相談の導線設定 ----------
+   APPLY_FORM_URL … Airtable「求人応募（サイト）」フォームビューの共有URL
+                    （空のままだと応募ボタンはメール送信にフォールバック）
+   求人名・企業名・求人IDは prefill_ パラメータで自動入力されます。 */
+const APPLY_FORM_URL = "";
+const CONSULT_URL    = "https://calendly.com/r_matsuoka";
+const CONTACT_MAIL   = "r_matsuoka@agent-best.net";
+
+function applyUrl(j){
+  const pos = j.position||j.jobCategory||j.title||"";
+  const co  = j.company||"";
+  if(APPLY_FORM_URL){
+    const p = new URLSearchParams();
+    p.set("prefill_応募求人", pos);
+    p.set("prefill_企業名", co);
+    if(j.id){ p.set("prefill_求人レコードID", j.id); p.set("hide_求人レコードID", "true"); }
+    return APPLY_FORM_URL + (APPLY_FORM_URL.includes("?")?"&":"?") + p.toString();
+  }
+  const subject = `【応募】${co}${co&&pos?" / ":""}${pos}`;
+  const body = `下記の求人に応募します。\n\n■応募求人：${pos}\n■企業名：${co}\n\n──以下ご記入ください──\n氏名：\nフリガナ：\n電話番号：\n現在の所属：\nご希望・ご質問：\n`;
+  return `mailto:${CONTACT_MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 
 /* ---------- utils ---------- */
 const $=s=>document.querySelector(s);
@@ -665,8 +692,16 @@ function openDetail(id){
   if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
 
   const url=(typeof j.url==="string"&&/^https?:\/\//.test(j.url))?j.url:null;
-  const cta = url?`<a class="btn-primary" href="${esc(url)}" target="_blank" rel="noopener">企業サイトを見る
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>`:"";
+  const siteRow = url?`<dt>企業サイト</dt><dd><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url.replace(/^https?:\/\//,"").replace(/\/$/,""))}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a></dd>`:"";
+
+  const cta = `<div class="pd-cta">
+      <a class="btn-primary" href="${esc(applyUrl(j))}" target="_blank" rel="noopener">この求人に応募する
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn-ghost" href="${esc(CONSULT_URL)}" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg>
+        担当エージェントに詳しい話を聞きたい</a>
+    </div>
+    <p class="pd-ctanote">まずは話を聞くだけでもOKです。非公開求人のご紹介も可能です。</p>`;
 
   const sec=(title,body,isRich)=> body?`<div class="pd-sec"><h3>${esc(title)}</h3>${isRich?`<div class="rich">${rich(body)}</div>`:body}</div>`:"";
 
@@ -681,6 +716,7 @@ function openDetail(id){
     metaRow("会社概要", j.companyInfo),
     metaRow("所在地", j.companyAddress),
     metaRow("上場区分", j.listedStatus),
+    siteRow,
   ].join("");
 
   $("#panelBody").innerHTML=`
@@ -692,7 +728,7 @@ function openDetail(id){
       ${j.employment?`<div class="item"><span class="k">雇用形態</span><span class="v">${esc(j.employment)}</span></div>`:""}
       ${(j.areas&&j.areas.length)?`<div class="item"><span class="k">エリア</span><span class="v" style="font-size:14px">${esc(j.areas.join("・"))}</span></div>`:""}
     </div>
-    ${cta?`<div class="pd-cta">${cta}</div>`:""}
+    ${cta}
     ${sec("仕事内容", j.jobContent, true)}
     ${sec("必須条件", j.must, true)}
     ${sec("歓迎条件", j.welcome, true)}
@@ -700,6 +736,7 @@ function openDetail(id){
     ${reqMeta?`<div class="pd-sec"><h3>募集要項</h3><dl class="pd-meta">${reqMeta}</dl></div>`:""}
     ${sec("選考プロセス", j.selectionProcess, true)}
     ${coMeta?`<div class="pd-sec"><h3>企業情報</h3><dl class="pd-meta">${coMeta}</dl></div>`:""}
+    <div class="pd-sec"><h3>この求人が気になったら</h3>${cta}</div>
   `;
   $("#panelBody").scrollTop=0;
   $("#backdrop").classList.add("open");
