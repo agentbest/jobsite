@@ -1,4 +1,12 @@
 <title>ミドル・ハイクラス求人検索 — キャリアの選択肢</title>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1XXMP8Y1B4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1XXMP8Y1B4');
+</script>
 <style>
   :root{
     --paper:#F7F6F2; --surface:#FFFFFF; --surface-2:#F1F0EA;
@@ -484,6 +492,22 @@ function applyUrl(j){
   return `mailto:${CONTACT_MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
+/* ---------- 計測（GA4・タグ未読込でも落ちない） ---------- */
+function track(name, params){
+  try{ if(typeof gtag==="function") gtag("event", name, params||{}); }catch(e){}
+}
+/* 外部リンクのクリックを一括計測（応募＝Airtable / 相談＝Calendly / 専門LP） */
+document.addEventListener("click",e=>{
+  const a=e.target.closest("a[href^='http']"); if(!a) return;
+  let host=""; try{ host=new URL(a.href).hostname; }catch(err){ return; }
+  const label=(a.textContent||"").trim().slice(0,60);
+  if(host.endsWith("airtable.com")) track("apply_click", {job_name:currentJob.position, company:currentJob.company, job_id:currentJob.id});
+  else if(host.endsWith("calendly.com")) track("consult_click", {location:label});
+  else if(/^(pm|eng|student)\.agent-best\.net$/.test(host)) track("lp_click", {lp:host, link_text:label});
+  else if(host.endsWith("agent-best.net")) track("corporate_click", {link_text:label});
+},true);
+let currentJob={};
+
 /* ---------- utils ---------- */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -619,12 +643,13 @@ function buildFilters(){
     const el=e.target.closest("input[data-facet]"); if(!el) return;
     const k=el.dataset.facet, v=el.dataset.val;
     if(el.checked) state.sel[k].add(v); else state.sel[k].delete(v);
+    if(el.checked) track("filter_use", {filter:k, value:v});
     syncGroupState(k); apply();
   });
   wrap.addEventListener("click",e=>{
     const chip=e.target.closest(".fchip[data-facet]");
     if(chip){ const k=chip.dataset.facet,v=chip.dataset.val,on=chip.getAttribute("aria-pressed")==="true";
-      if(on){state.sel[k].delete(v);chip.setAttribute("aria-pressed","false");} else {state.sel[k].add(v);chip.setAttribute("aria-pressed","true");}
+      if(on){state.sel[k].delete(v);chip.setAttribute("aria-pressed","false");} else {state.sel[k].add(v);chip.setAttribute("aria-pressed","true"); track("filter_use", {filter:k, value:v});}
       syncGroupState(k); apply(); return; }
     const rc=e.target.closest("[data-remote]");
     if(rc){ state.remote=!state.remote; rc.setAttribute("aria-pressed",state.remote); apply(); return; }
@@ -745,6 +770,8 @@ let lastFocus=null;
 function metaRow(k,v){ return v?`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`:""; }
 function openDetail(id){
   const j=JOBS.find(x=>x.id===id); if(!j) return;
+  currentJob=j;
+  track("job_detail_open", {job_id:j.id, job_name:j.position||j.jobCategory||j.title||"", company:j.company||"", job_category:j.jobCategory||"", salary_max:j.salaryMax||0});
   lastFocus=document.activeElement;
   const tags=[];
   if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
@@ -818,7 +845,10 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if($("#panel").cl
 
 /* ---------- keyword search ---------- */
 let qt;
-$("#q").addEventListener("input",e=>{ clearTimeout(qt); qt=setTimeout(()=>{ state.q=e.target.value.trim(); apply(); },160); });
+let qTrackT;
+$("#q").addEventListener("input",e=>{ clearTimeout(qt); qt=setTimeout(()=>{ state.q=e.target.value.trim(); apply();
+  clearTimeout(qTrackT); qTrackT=setTimeout(()=>{ if(state.q) track("search", {search_term:state.q, results:filtered.length}); },1200);
+},160); });
 $("#sort").addEventListener("change",e=>{ state.sort=e.target.value; apply(); });
 
 /* ---------- mobile drawer ---------- */
