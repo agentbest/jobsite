@@ -269,7 +269,8 @@
   .pd-meta dd a{color:var(--accent); text-decoration:underline; text-underline-offset:2px; word-break:break-all}
   .pd-meta dd a:hover{color:var(--accent-strong)}
   .pd-meta dd a svg{vertical-align:-2px; margin-left:3px}
-  .pd-ctanote{margin:10px 0 0; font-size:12.5px; color:var(--ink-3)}
+  .pd-ctanote{margin:10px 0 0; font-size:12.5px; color:var(--ink-3); line-height:1.75}
+  .pd-ctanote b{color:var(--ink-2); font-weight:700}
 
   /* rich text (markdown) */
   .rich{font-size:14px; line-height:1.85; color:var(--ink-2); word-break:break-word}
@@ -282,7 +283,17 @@
   .rich a{color:var(--accent); text-decoration:underline; text-underline-offset:2px; word-break:break-all}
   .rich a:hover{color:var(--accent-strong)}
 
-  .site-foot{border-top:1px solid var(--line); padding:26px 0 60px; color:var(--ink-3); font-size:12.5px; text-align:center}
+  .site-foot{border-top:1px solid var(--line); padding:30px 0 60px; color:var(--ink-3); font-size:12.5px; background:var(--surface)}
+  .foot__inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:grid; gap:16px}
+  .foot__brand{display:flex; flex-direction:column; gap:4px}
+  .foot__brand strong{color:var(--ink); font-size:13.5px}
+  .foot__brand span{max-width:70ch; line-height:1.7}
+  .foot__meta{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0; max-width:70ch}
+  .foot__meta dt{font-weight:700}
+  .foot__meta dd{margin:0; color:var(--ink-2)}
+  .foot__links{display:flex; flex-wrap:wrap; gap:6px 18px}
+  .foot__links a{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+  .foot__copy{margin:0; padding-top:4px; border-top:1px solid var(--line-2)}
 
   /* ---------- Responsive ---------- */
   @media (max-width:1080px){ .layout{grid-template-columns:262px 1fr; gap:26px} }
@@ -390,7 +401,23 @@
 </div>
 
 <footer class="site-foot">
-  ミドル・ハイクラス求人検索 — キャリアの選択肢 ｜ データは Airtable より取得したスナップショットです
+  <div class="foot__inner">
+    <div class="foot__brand">
+      <strong>ミドル・ハイクラス求人検索</strong>
+      <span>人材紹介サービス「エージェントベスト」が運営しています。ご利用はすべて無料です（紹介手数料は採用企業からいただきます）。</span>
+    </div>
+    <dl class="foot__meta">
+      <dt>運営会社</dt><dd>株式会社エージェントベスト</dd>
+      <dt>所在地</dt><dd>東京都港区六本木4-8-7 嶋田ビル5階</dd>
+      <dt>許可番号</dt><dd>有料職業紹介事業 13-ユ-316964</dd>
+    </dl>
+    <nav class="foot__links">
+      <a href="https://www.agent-best.net/" target="_blank" rel="noopener">運営会社サイト</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="https://www.agent-best.net/contact" target="_blank" rel="noopener">お問い合わせ</a>
+    </nav>
+    <p class="foot__copy">&copy; 株式会社エージェントベスト</p>
+  </div>
 </footer>
 
 <div class="backdrop" id="backdrop"></div>
@@ -709,7 +736,7 @@ function openDetail(id){
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg>
         担当エージェントに詳しい話を聞きたい</a>
     </div>
-    <p class="pd-ctanote">まずは話を聞くだけでもOKです。非公開求人のご紹介も可能です。</p>`;
+    <p class="pd-ctanote">ご応募いただくと、担当エージェント（株式会社エージェントベスト）が内容を確認のうえ、<b>企業へ推薦</b>する形で選考が進みます。書類の書き方や面接対策もお任せください。<b>ご利用は無料</b>です（紹介手数料は採用企業負担）。まずは話を聞くだけでもかまいません。</p>`;
 
   const sec=(title,body,isRich)=> body?`<div class="pd-sec"><h3>${esc(title)}</h3>${isRich?`<div class="rich">${rich(body)}</div>`:body}</div>`:"";
 
