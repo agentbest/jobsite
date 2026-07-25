@@ -123,6 +123,16 @@
   }
   .intro .note b{color:var(--gold); font-weight:800}
   .intro .note svg{flex:none; color:var(--gold)}
+  .intro-lp{display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; margin-top:14px}
+  .intro-lp__lbl{font-size:11px; font-weight:800; letter-spacing:.1em; color:var(--ink-3)}
+  .intro-lp a{
+    display:inline-flex; align-items:center; gap:5px; padding:5px 13px;
+    border:1px solid var(--line); border-radius:var(--r-pill); background:var(--surface);
+    color:var(--ink-2); font-size:13px; font-weight:700; text-decoration:none;
+    transition:border-color .15s, color .15s, background .15s;
+  }
+  .intro-lp a:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft)}
+  .intro-lp a svg{flex:none; opacity:.75}
 
   .layout{display:grid; grid-template-columns:288px 1fr; gap:34px; padding-bottom:80px; align-items:start}
 
@@ -293,6 +303,8 @@
   .foot__meta dd{margin:0; color:var(--ink-2)}
   .foot__links{display:flex; flex-wrap:wrap; gap:6px 18px}
   .foot__links a{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+  .foot__links--sub{gap:6px 14px; font-size:12px}
+  .foot__links--sub span{font-weight:700; color:var(--ink-3)}
   .foot__copy{margin:0; padding-top:4px; border-top:1px solid var(--line-2)}
 
   /* ---------- Responsive ---------- */
@@ -361,6 +373,15 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <span>掲載しているのは求人の一部です。経営幹部・部長クラスを含む<b>非公開求人も多数</b>あります。</span>
     </p>
+    <div class="intro-lp">
+      <span class="intro-lp__lbl">専門ページ</span>
+      <a href="https://pm.agent-best.net/" target="_blank" rel="noopener">PM・PMOのキャリア支援
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      <a href="https://eng.agent-best.net/" target="_blank" rel="noopener">エンジニアからコンサルへ
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      <a href="https://student.agent-best.net/" target="_blank" rel="noopener">学生（新卒・インターン）向け
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+    </div>
   </section>
 
   <div class="layout">
@@ -415,6 +436,12 @@
       <a href="https://www.agent-best.net/" target="_blank" rel="noopener">運営会社サイト</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="https://www.agent-best.net/contact" target="_blank" rel="noopener">お問い合わせ</a>
+    </nav>
+    <nav class="foot__links foot__links--sub">
+      <span>専門ページ</span>
+      <a href="https://pm.agent-best.net/" target="_blank" rel="noopener">PM・PMOのキャリア支援</a>
+      <a href="https://eng.agent-best.net/" target="_blank" rel="noopener">エンジニアからコンサルへ</a>
+      <a href="https://student.agent-best.net/" target="_blank" rel="noopener">学生（新卒・インターン）向け</a>
     </nav>
     <p class="foot__copy">&copy; 株式会社エージェントベスト</p>
   </div>
