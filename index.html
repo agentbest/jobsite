@@ -111,6 +111,14 @@
   .intro p{margin:0; color:var(--ink-2); font-size:15px; max-width:60ch}
   .intro .stat{color:var(--ink-2)}
   .intro .stat b{font-family:var(--mono); color:var(--ink); font-weight:700}
+  .intro .note{
+    display:inline-flex; align-items:center; gap:8px; margin-top:12px;
+    padding:7px 14px; border-radius:var(--r-pill);
+    background:var(--gold-soft); border:1px solid color-mix(in srgb, var(--gold) 36%, transparent);
+    color:var(--ink); font-size:14px; line-height:1.5; max-width:100%;
+  }
+  .intro .note b{color:var(--gold); font-weight:800}
+  .intro .note svg{flex:none; color:var(--gold)}
 
   .layout{display:grid; grid-template-columns:288px 1fr; gap:34px; padding-bottom:80px; align-items:start}
 
@@ -327,6 +335,10 @@
   <section class="intro">
     <h1>あなたの次のキャリアを、<em>まっすぐ</em>見つける。</h1>
     <p class="stat">全 <b id="totalCount">0</b> 件の求人を、職種・業界・年収・エリアから絞り込めます。</p>
+    <p class="note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span>掲載しているのは求人の一部です。ここに出していない<b>非公開求人も多数</b>あります。</span>
+    </p>
   </section>
 
   <div class="layout">
