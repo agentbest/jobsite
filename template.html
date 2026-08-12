@@ -1,4 +1,11 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
 <title>ミドル・ハイクラス求人検索 — キャリアの選択肢</title>
+<meta name="description" content="ミドルクラス・ハイクラス向けの求人検索サイト。職種・業界・年収・勤務地エリアから絞り込めます。経営幹部・部長クラスを含む非公開求人も多数。株式会社エージェントベストが運営、ご利用は無料です。">
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1XXMP8Y1B4"></script>
 <script>
@@ -133,9 +140,12 @@
   .intro .note svg{flex:none; color:var(--gold)}
 
   .layout{display:grid; grid-template-columns:288px 1fr; gap:34px; padding-bottom:80px; align-items:start}
+  /* grid/flex の子は既定で min-width:auto のため、長い社名などで横スクロールが出る。明示的に潰す */
+  .layout > *{min-width:0}
 
   /* ---------- Filters ---------- */
   .filters{position:sticky; top:84px; max-height:calc(100vh - 104px); overflow-y:auto; padding-right:4px}
+  .filters__foot{display:none}
   .filters::-webkit-scrollbar{width:8px}
   .filters::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px}
   .fgroup{border-bottom:1px solid var(--line-2); padding:16px 2px}
@@ -204,21 +214,23 @@
   .card{
     position:relative; display:flex; flex-direction:column; gap:12px;
     background:var(--surface); border:1px solid var(--line); border-radius:var(--r-card);
-    padding:20px 20px 18px; text-align:left; width:100%; color:inherit;
+    padding:20px 20px 18px; text-align:left; width:100%; min-width:0; overflow:hidden; color:inherit;
     transition:transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s, border-color .16s;
   }
   .card:hover{transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:color-mix(in srgb,var(--accent) 35%, var(--line))}
   .card:focus-visible{outline:2px solid var(--focus); outline-offset:3px}
-  .card__eyebrow{display:flex; align-items:center; gap:8px; min-width:0}
-  .card__co{font-size:12.5px; font-weight:700; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .card__ind{font-size:11.5px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-shrink:1}
+  .card__eyebrow{display:flex; align-items:center; gap:8px; min-width:0; max-width:100%}
+  .card__co{font-size:12.5px; font-weight:700; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex-shrink:1}
+  .card__ind{font-size:11.5px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-shrink:1; min-width:0}
   .card__ind::before{content:"·"; margin-right:8px; color:var(--line)}
   .card__title{
     font-size:15.5px; font-weight:700; line-height:1.5; color:var(--ink); margin:0;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.9em;
+    overflow-wrap:anywhere;
   }
   .card__tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:-2px}
-  .tag{font-size:11.5px; padding:3px 9px; border-radius:6px; background:var(--surface-2); color:var(--ink-2); font-weight:600; white-space:nowrap}
+  /* 長い職種名でも切れないよう、はみ出す時だけ折り返す */
+  .tag{font-size:11.5px; padding:3px 9px; border-radius:6px; background:var(--surface-2); color:var(--ink-2); font-weight:600; max-width:100%; overflow-wrap:anywhere; line-height:1.5}
   .tag--cat{background:var(--accent-soft); color:var(--accent-ink)}
   .tag--remote{background:var(--good-soft); color:var(--good)}
   .tag--kubun{background:var(--gold-soft); color:var(--gold); font-weight:800}
@@ -329,18 +341,90 @@
     .filters.open{transform:translateX(0)}
     .filters__head{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px}
     .filters__head h2{font-size:16px; margin:0}
+    /* ドロワー内を「見出し／スクロール領域／固定ボタン」の3段にする */
+    .filters{display:flex; flex-direction:column; padding-bottom:16px; overflow:hidden}
+    .filters #filterGroups{flex:1; overflow-y:auto; min-height:0; margin-right:-4px; padding-right:4px}
+    .filters__foot{display:block; flex:none; padding-top:12px; border-top:1px solid var(--line)}
+    .filters__foot button{
+      width:100%; padding:14px; border:none; border-radius:var(--r-pill);
+      background:var(--accent); color:#fff; font-weight:800; font-size:15px; box-shadow:var(--shadow-sm);
+    }
+    .filters__foot button b{font-family:var(--mono); font-size:16px}
   }
   @media (min-width:901px){ .filters__head{display:none} }
-  @media (max-width:560px){
-    .wrap,.topbar__inner{padding-left:16px; padding-right:16px}
-    .brand__sub{display:none}
-    .grid{grid-template-columns:1fr; gap:14px}
-    .panel__body{padding:22px 20px 50px}
-    .search input{padding-left:40px}
+
+  /* スマホ：検索窓を2段目に折り返し、文字とタップ領域を大きくする */
+  @media (max-width:700px){
+    body{font-size:16px}
+    .topbar__inner{flex-wrap:wrap; gap:10px; padding:10px 16px}
+    .brand{order:1}
+    .topbar__actions{order:2; margin-left:auto}
+    .search{order:3; flex:1 0 100%; max-width:none}
+    /* iOSでフォーカス時に勝手にズームしないよう入力欄は16px以上にする */
+    .search input{font-size:16px; padding:11px 14px 11px 42px}
+    .facet-search{font-size:16px; padding:9px 12px}
+
+    .wrap{padding-left:16px; padding-right:16px}
     .intro{padding:22px 0 16px}
+    .intro p,.intro .stat{font-size:15.5px}
+    .intro .note{font-size:14.5px; align-items:flex-start}
+    .intro .note svg{margin-top:4px}
+
+    .grid{grid-template-columns:1fr; gap:14px}
+    .card{padding:18px 18px 16px}
+    .card__co{font-size:13.5px}
+    .card__ind{font-size:12px}
+    .card__title{font-size:17px; line-height:1.55}
+    .tag{font-size:12.5px; padding:4px 10px}
+    .card__salary .k{font-size:10.5px}
+    .card__salary .v{font-size:18px}
+    .card__loc{font-size:12.5px}
+
+    .rescount{font-size:15px}
+    .sortsel select{font-size:15px; padding:9px 30px 9px 12px}
+    .achip{font-size:13.5px}
+    .clear-all{font-size:13.5px}
+
+    /* 絞り込みドロワー：指で押しやすいサイズに */
+    .opt{padding:9px 8px}
+    .opt .lbl{font-size:15px}
+    .opt .cnt{font-size:12.5px}
+    .opt .box{width:19px; height:19px}
+    .fchip{font-size:14px; padding:8px 15px}
+    .facet-list{max-height:44vh}
+    .fgroup__title{font-size:12.5px}
+
+    /* 求人詳細 */
+    .panel__body{padding:22px 18px 60px}
+    .pd-title{font-size:20px}
+    .pd-salary{gap:14px 20px; padding:14px 16px}
+    .pd-cta{gap:10px}
+    .btn-primary,.btn-ghost{width:100%; justify-content:center; font-size:15px; padding:14px 18px}
+    .pd-ctanote{font-size:13.5px}
+    .rich{font-size:15.5px}
+    .rich h4{font-size:16px}
+    .rich h5{font-size:14.5px}
+    /* 項目名と内容を縦積みにして横潰れを防ぐ */
+    .pd-meta{grid-template-columns:1fr; gap:2px}
+    .pd-meta dt{font-size:12.5px; color:var(--ink-3); margin-top:10px}
+    .pd-meta dt:first-child{margin-top:0}
+    .pd-meta dd{font-size:14.5px}
+    .pd-author .bio{font-size:13.5px}
+
+    .site-foot{font-size:13.5px}
+    .foot__inner{padding-left:16px; padding-right:16px}
+    .foot__meta{grid-template-columns:1fr; gap:2px}
+    .foot__meta dt{margin-top:8px; color:var(--ink-3)}
+    .foot__meta dt:first-child{margin-top:0}
+  }
+  @media (max-width:560px){
+    .brand__sub{display:none}
+    .filter-toggle{padding:0 12px}
   }
   @media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important} }
 </style>
+</head>
+<body>
 
 <header class="topbar">
   <div class="topbar__inner">
@@ -392,6 +476,9 @@
         </button>
       </div>
       <div id="filterGroups"></div>
+      <div class="filters__foot">
+        <button id="filterApply"><b id="drawerCount">0</b> 件の求人を見る</button>
+      </div>
     </aside>
 
     <section class="results" aria-label="検索結果">
@@ -718,6 +805,7 @@ function apply(){
   filtered=sortJobs(JOBS.filter(jobMatches));
   shown=0;
   $("#resCount").textContent=filtered.length;
+  $("#drawerCount").textContent=filtered.length;
   renderActiveChips();
   updateBadge();
   const grid=$("#grid"); grid.innerHTML="";
@@ -856,10 +944,13 @@ $("#q").addEventListener("input",e=>{ clearTimeout(qt); qt=setTimeout(()=>{ stat
 $("#sort").addEventListener("change",e=>{ state.sort=e.target.value; apply(); });
 
 /* ---------- mobile drawer ---------- */
-function openDrawer(){ $("#filters").classList.add("open"); $("#backdrop").classList.add("open"); }
-function closeDrawer(){ $("#filters").classList.remove("open"); if(!$("#panel").classList.contains("open")) $("#backdrop").classList.remove("open"); }
+function openDrawer(){ $("#filters").classList.add("open"); $("#backdrop").classList.add("open"); document.body.style.overflow="hidden"; }
+function closeDrawer(){ $("#filters").classList.remove("open"); if(!$("#panel").classList.contains("open")){ $("#backdrop").classList.remove("open"); document.body.style.overflow=""; } }
 $("#filterToggle").addEventListener("click",openDrawer);
 $("#filterClose").addEventListener("click",closeDrawer);
+$("#filterApply").addEventListener("click",closeDrawer);
+/* 背景タップでドロワーも閉じる（求人詳細が開いていない時） */
+$("#backdrop").addEventListener("click",()=>{ if($("#filters").classList.contains("open")) closeDrawer(); });
 
 /* ---------- theme ---------- */
 const SUN='<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5.6 5.6L4.2 4.2M19.8 19.8l-1.4-1.4M18.4 5.6l1.4-1.4M4.2 19.8l1.4-1.4"/>';
@@ -876,3 +967,5 @@ $("#count1000").textContent=JOBS.filter(j=>j.salaryMax>=1000).length;
 buildFilters();
 apply();
 </script>
+</body>
+</html>
