@@ -13,3 +13,8 @@ Thumbs.db
 # 一時ファイル
 *.tmp
 *.log
+
+# Airtable のトークン（このリポジトリは Public なので絶対にコミットしない）
+airtable.local.json
+.env
+.env.*

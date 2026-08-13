@@ -139,6 +139,25 @@
   .intro .note b{color:var(--gold); font-weight:800}
   .intro .note svg{flex:none; color:var(--gold)}
 
+  /* 特集ページへの導線 */
+  .intro-feat{
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; margin-top:14px;
+    padding:11px 16px; border-radius:var(--r-card);
+    background:var(--accent-soft); border:1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+    font-size:14px; line-height:1.6;
+  }
+  .intro-feat__lbl{
+    font-size:11px; font-weight:800; letter-spacing:.1em; color:#fff; flex:none;
+    background:var(--accent); padding:3px 9px; border-radius:var(--r-pill);
+  }
+  .intro-feat span.txt{color:var(--ink-2); min-width:0}
+  .intro-feat a{
+    display:inline-flex; align-items:center; gap:5px; flex:none;
+    color:var(--accent-ink); font-weight:800; text-decoration:underline; text-underline-offset:3px;
+  }
+  .intro-feat a:hover{text-decoration-thickness:2px}
+  .intro-feat a svg{flex:none; opacity:.8}
+
   .layout{display:grid; grid-template-columns:288px 1fr; gap:34px; padding-bottom:80px; align-items:start}
   /* grid/flex の子は既定で min-width:auto のため、長い社名などで横スクロールが出る。明示的に潰す */
   .layout > *{min-width:0}
@@ -256,6 +275,66 @@
   .empty button{margin-top:16px; padding:10px 22px; border:none; border-radius:var(--r-pill); background:var(--accent); color:#fff; font-weight:700}
 
   /* ---------- Detail panel ---------- */
+  /* ---------- お気に入り／マイページ ---------- */
+  .fav{
+    position:absolute; top:11px; right:11px; z-index:2;
+    display:grid; place-items:center; width:32px; height:32px;
+    border-radius:9px; border:1px solid transparent; background:transparent;
+    color:var(--ink-3); cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s, transform .12s;
+  }
+  .fav:hover{background:var(--surface-2); color:var(--gold); border-color:var(--line)}
+  .fav:active{transform:scale(.88)}
+  .fav.on{color:var(--gold)}
+  .fav.on svg{fill:var(--gold)}
+  .fav--bar{position:static; width:40px; height:40px; border-color:var(--line); background:var(--surface)}
+  .card__eyebrow{padding-right:32px}
+
+  .mybtn{width:auto; padding:0 13px; gap:7px; display:inline-flex; align-items:center; font-weight:700; font-size:13.5px}
+  .mybtn .badge{background:var(--gold); color:#fff; border-radius:999px; font-size:11px; padding:1px 7px; font-family:var(--mono); font-weight:700}
+  :root[data-theme="dark"] .mybtn .badge{color:#241c08}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .mybtn .badge{color:#241c08} }
+
+  .auth{border:1px solid var(--line); border-radius:var(--r-card); background:var(--surface-2); padding:18px 18px 16px; margin-bottom:26px}
+  .auth h3{margin:0 0 6px; font-size:15px; letter-spacing:.01em}
+  .auth p{margin:0 0 12px; font-size:13px; color:var(--ink-2); line-height:1.75}
+  .auth__row{display:flex; gap:8px; flex-wrap:wrap}
+  .auth input[type=email], .auth input[type=text]{
+    flex:1 1 220px; min-width:0; padding:10px 12px; font-family:inherit; font-size:14px;
+    border:1px solid var(--line); border-radius:var(--r-input); background:var(--surface); color:var(--ink);
+  }
+  .auth input:focus-visible{outline:2px solid var(--focus); outline-offset:1px}
+  .auth__btn{
+    padding:10px 16px; border:0; border-radius:var(--r-input); background:var(--accent); color:#fff;
+    font-weight:700; font-size:13.5px; white-space:nowrap;
+  }
+  .auth__btn:hover{background:var(--accent-strong)}
+  .auth__btn[disabled]{opacity:.55; cursor:default}
+  .auth__btn--ghost{background:transparent; color:var(--ink-2); border:1px solid var(--line)}
+  .auth__btn--ghost:hover{background:var(--surface); color:var(--ink)}
+  .auth__msg{margin:10px 0 0; font-size:12.5px; line-height:1.7}
+  .auth__msg.ok{color:var(--good)}
+  .auth__msg.ng{color:#C0392B}
+  :root[data-theme="dark"] .auth__msg.ng{color:#F1948A}
+  .auth__who{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:13.5px; margin-bottom:12px}
+  .auth__who b{font-weight:700; word-break:break-all}
+  .auth__note{font-size:12px; color:var(--ink-3); margin-top:10px; line-height:1.7}
+
+  .myrow{
+    position:relative; display:block; width:100%; text-align:left; color:inherit;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--r-card);
+    padding:15px 46px 14px 16px; margin-bottom:10px;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .myrow:hover{border-color:color-mix(in srgb,var(--accent) 35%, var(--line)); box-shadow:var(--shadow-sm)}
+  .myrow__co{font-size:12px; font-weight:700; color:var(--accent)}
+  .myrow__title{margin:2px 0 6px; font-size:15px; font-weight:700; line-height:1.5}
+  .myrow__sal{font-family:var(--mono); font-weight:800; font-size:14px; color:var(--gold)}
+  .myrow .fav{top:12px; right:10px}
+  .myempty{text-align:center; padding:34px 10px; color:var(--ink-3); font-size:13.5px; line-height:1.9}
+  .myempty svg{color:var(--line); margin-bottom:6px}
+  .mysec{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:700; margin:0 0 12px}
+
   .backdrop{position:fixed; inset:0; z-index:60; background:rgba(15,17,26,.5); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .25s}
   .backdrop.open{opacity:1; pointer-events:auto}
   .panel{
@@ -369,6 +448,7 @@
     .intro p,.intro .stat{font-size:15.5px}
     .intro .note{font-size:14.5px; align-items:flex-start}
     .intro .note svg{margin-top:4px}
+    .intro-feat{font-size:14.5px}
 
     .grid{grid-template-columns:1fr; gap:14px}
     .card{padding:18px 18px 16px}
@@ -420,6 +500,13 @@
   @media (max-width:560px){
     .brand__sub{display:none}
     .filter-toggle{padding:0 12px}
+    .mybtn{padding:0 10px}
+    .mybtn__txt{display:none}
+  }
+  /* 指で押しやすいよう、スマホでは★のタップ範囲を広げる */
+  @media (max-width:700px){
+    .fav{width:42px; height:42px; top:6px; right:6px}
+    .card__eyebrow{padding-right:40px}
   }
   @media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important} }
 </style>
@@ -448,6 +535,10 @@
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
         絞り込み<span class="badge" id="filterBadge" hidden>0</span>
       </button>
+      <button class="iconbtn mybtn" id="myBtn" aria-label="マイページを開く">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9L12 3.6z"/></svg>
+        <span class="mybtn__txt">マイページ</span><span class="badge" id="myBadge" hidden>0</span>
+      </button>
       <button class="iconbtn" id="themeBtn" aria-label="テーマ切り替え">
         <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg>
       </button>
@@ -465,6 +556,13 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <span>掲載しているのは求人の一部です。経営幹部・部長クラスを含む<b>非公開求人も多数</b>あります。</span>
     </p>
+    <div class="intro-feat">
+      <span class="intro-feat__lbl">特集</span>
+      <span class="txt">1日で複数社の選考が進む「1day選考会」を開催しています。</span>
+      <a href="1day.html">1day選考会を見る
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
   </section>
 
   <div class="layout">
@@ -519,6 +617,7 @@
       <dt>許可番号</dt><dd>有料職業紹介事業 13-ユ-316964</dd>
     </dl>
     <nav class="foot__links">
+      <a href="1day.html">1day選考会</a>
       <a href="https://www.agent-best.net/" target="_blank" rel="noopener">運営会社サイト</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="https://www.agent-best.net/contact" target="_blank" rel="noopener">お問い合わせ</a>
@@ -537,11 +636,24 @@
 <aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="pdTitle" tabindex="-1">
   <div class="panel__bar">
     <span class="lbl">求人詳細</span>
-    <button class="iconbtn" id="panelClose" aria-label="閉じる">
+    <div style="display:flex; align-items:center; gap:8px">
+      <span class="fav fav--bar" id="panelFav" role="button" tabindex="0" data-fav=""></span>
+      <button class="iconbtn" id="panelClose" aria-label="閉じる">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="panel__body" id="panelBody"></div>
+</aside>
+
+<aside class="panel" id="mypanel" role="dialog" aria-modal="true" aria-labelledby="myTitle" tabindex="-1">
+  <div class="panel__bar">
+    <span class="lbl" id="myTitle">マイページ</span>
+    <button class="iconbtn" id="myClose" aria-label="閉じる">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
   </div>
-  <div class="panel__body" id="panelBody"></div>
+  <div class="panel__body" id="myBody"></div>
 </aside>
 
 <script>
@@ -584,6 +696,11 @@ document.addEventListener("click",e=>{
   else if(host.endsWith("calendly.com")) track("consult_click", {location:label});
   else if(/^(pm|eng|student)\.agent-best\.net$/.test(host)) track("lp_click", {lp:host, link_text:label});
   else if(host.endsWith("agent-best.net")) track("corporate_click", {link_text:label});
+},true);
+/* サイト内の特集ページ（1day選考会）への遷移を計測（相対リンクなので上の一括計測に乗らない） */
+document.addEventListener("click",e=>{
+  const a=e.target.closest("a[href='1day.html']"); if(!a) return;
+  track("feature_click", {feature:"1day", link_text:(a.textContent||"").trim().slice(0,60)});
 },true);
 let currentJob={};
 
@@ -825,6 +942,7 @@ function cardHtml(j){
   const ind=(j.industry&&j.industry[0])?`<span class="card__ind">${esc(j.industry[0])}</span>`:"";
   const loc=j.location?`<span class="card__loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${esc((j.location||"").split(/\n/)[0])}</span></span>`:"";
   return `<button class="card" data-id="${esc(j.id)}">
+    ${favBtn(j.id)}
     <div class="card__eyebrow"><span class="card__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
     <h3 class="card__title">${esc(j.position||j.jobCategory||j.title||"求人")}</h3>
     <div class="card__tags">${tags.join("")}</div>
@@ -840,9 +958,14 @@ function renderMore(){
   grid.insertAdjacentHTML("beforeend", next.map(cardHtml).join(""));
   shown+=next.length;
   $("#loadMore").hidden = shown>=filtered.length;
+  paintFavs();
 }
 $("#loadMore").addEventListener("click",renderMore);
-$("#grid").addEventListener("click",e=>{ const c=e.target.closest(".card"); if(c) openDetail(c.dataset.id); });
+$("#grid").addEventListener("click",e=>{
+  const f=e.target.closest(".fav");
+  if(f){ e.preventDefault(); e.stopPropagation(); toggleFav(f.dataset.fav); return; }
+  const c=e.target.closest(".card"); if(c) openDetail(c.dataset.id);
+});
 $("#emptyReset").addEventListener("click",resetAll);
 
 /* ---------- detail panel ---------- */
@@ -920,6 +1043,9 @@ function openDetail(id){
     ${author}
   `;
   $("#panelBody").scrollTop=0;
+  $("#panelFav").dataset.fav=j.id;
+  $("#panelFav").innerHTML=STAR;
+  paintFavs();
   $("#backdrop").classList.add("open");
   $("#panel").classList.add("open");
   document.body.style.overflow="hidden";
@@ -960,12 +1086,254 @@ function setTheme(t){ document.documentElement.setAttribute("data-theme",t); $("
 $("#themeBtn").addEventListener("click",()=>setTheme(currentTheme()==="dark"?"light":"dark"));
 (function initTheme(){ let t; try{t=localStorage.getItem("jobsite-theme");}catch(e){} setTheme(t|| (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")); })();
 
+/* =========================================================================
+   お気に入り／マイページ
+
+   ■ 設定していないとき（初期状態）
+     「この端末に保存」モードで動きます。★は押せて、同じブラウザで開けば残ります。
+     サーバーもデータベースも不要。費用ゼロ。
+
+   ■ 会員登録（メールでログイン）を有効にするとき
+     Supabase でプロジェクトを作り、下の2つを貼り付けるだけで切り替わります。
+     手順は同じフォルダの SUPABASE_SETUP.md を参照。
+   ========================================================================= */
+const SUPABASE_URL = "";
+const SUPABASE_ANON_KEY = "";
+
+const FAV_KEY="jobsite-favs";
+const STAR='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9L12 3.6z"/></svg>';
+
+let favs=new Set();
+let sb=null;        // Supabase クライアント（未設定なら null のまま）
+let me=null;        // ログイン中のユーザー
+let myProfile=null; // { full_name }
+
+function authEnabled(){ return !!(SUPABASE_URL && SUPABASE_ANON_KEY); }
+
+/* ---- 保存（この端末） ---- */
+function loadLocalFavs(){ try{ return new Set(JSON.parse(localStorage.getItem(FAV_KEY)||"[]")); }catch(e){ return new Set(); } }
+function saveLocalFavs(){ try{ localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); }catch(e){} }
+favs=loadLocalFavs();
+
+/* ---- ★ボタン ---- */
+function favBtn(id){ return `<span class="fav" role="button" tabindex="0" data-fav="${esc(id)}">${STAR}</span>`; }
+function paintFavs(){
+  document.querySelectorAll(".fav[data-fav]").forEach(b=>{
+    if(!b.dataset.fav) return;
+    const on=favs.has(b.dataset.fav);
+    b.classList.toggle("on",on);
+    b.setAttribute("aria-pressed", on?"true":"false");
+    b.setAttribute("aria-label", on?"お気に入りから外す":"お気に入りに追加");
+    b.title = on?"お気に入りから外す":"お気に入りに追加";
+  });
+}
+function updateMyBadge(){
+  const n=favs.size, el=$("#myBadge");
+  el.textContent=n; el.hidden = n===0;
+}
+async function toggleFav(id){
+  if(!id) return;
+  const on=!favs.has(id);
+  if(on) favs.add(id); else favs.delete(id);
+  saveLocalFavs(); paintFavs(); updateMyBadge();
+  if($("#mypanel").classList.contains("open")) renderMypage();
+  track(on?"fav_add":"fav_remove",{job_id:id});
+  if(sb&&me){
+    try{
+      if(on) await sb.from("favorites").upsert({user_id:me.id, job_id:id},{onConflict:"user_id,job_id"});
+      else   await sb.from("favorites").delete().eq("user_id",me.id).eq("job_id",id);
+    }catch(e){ console.warn("お気に入りの同期に失敗しました",e); }
+  }
+}
+/* 詳細パネルの★とマイページ内の★（#grid の外）をまとめて拾う */
+document.addEventListener("click",e=>{
+  const f=e.target.closest(".fav");
+  if(!f || f.closest("#grid")) return;   // #grid 内は専用ハンドラで処理済み
+  e.preventDefault(); e.stopPropagation();
+  toggleFav(f.dataset.fav);
+});
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Enter"&&e.key!==" ") return;
+  const f=e.target.closest&&e.target.closest(".fav");
+  if(!f) return;
+  e.preventDefault(); e.stopPropagation();
+  toggleFav(f.dataset.fav);
+});
+
+/* ---- マイページ本体 ---- */
+function authBoxHtml(){
+  if(!authEnabled()){
+    return `<div class="auth">
+      <h3>この端末に保存しています</h3>
+      <p>お気に入りは、いまお使いのブラウザに保存されています。<br>
+         別の端末やブラウザからは表示されません。</p>
+      <p class="auth__note">※ 会員登録（メールでログイン）を有効にすると、どの端末からでも同じお気に入りを見られるようになります。</p>
+    </div>`;
+  }
+  if(!me){
+    return `<div class="auth">
+      <h3>会員登録・ログイン</h3>
+      <p>メールアドレスを入れると、ログイン用のリンクが届きます。<br>
+         <b>パスワードは不要</b>です。届いたリンクを開くとログインが完了します。</p>
+      <div class="auth__row">
+        <input id="authEmail" type="email" placeholder="メールアドレス" autocomplete="email" inputmode="email" aria-label="メールアドレス">
+        <button class="auth__btn" id="authSend">ログインリンクを送る</button>
+      </div>
+      <p class="auth__msg" id="authMsg" hidden></p>
+      <p class="auth__note">いま★を付けている求人は、ログインすると自動的に引き継がれます。</p>
+    </div>`;
+  }
+  const nm=(myProfile&&myProfile.full_name)||"";
+  return `<div class="auth">
+    <div class="auth__who">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>ログイン中：<b>${esc(me.email||"")}</b></span>
+    </div>
+    <div class="auth__row">
+      <input id="profName" type="text" placeholder="お名前（任意）" autocomplete="name" value="${esc(nm)}" aria-label="お名前">
+      <button class="auth__btn" id="profSave">保存</button>
+      <button class="auth__btn auth__btn--ghost" id="authOut">ログアウト</button>
+    </div>
+    <p class="auth__msg" id="authMsg" hidden></p>
+  </div>`;
+}
+function myRowHtml(j){
+  return `<div class="myrow" data-open="${esc(j.id)}" role="button" tabindex="0">
+    ${favBtn(j.id)}
+    <div class="myrow__co">${esc(j.company||"企業非公開")}</div>
+    <div class="myrow__title">${esc(j.position||j.jobCategory||j.title||"求人")}</div>
+    <div class="myrow__sal">${esc(fmtSalary(j))}</div>
+  </div>`;
+}
+function renderMypage(){
+  const ids=[...favs];
+  const list=ids.map(id=>JOBS.find(j=>j.id===id)).filter(Boolean);
+  const gone=ids.length-list.length;
+  const body = list.length
+    ? `<p class="mysec">気になる求人 ${list.length}件</p>${list.map(myRowHtml).join("")}` +
+      (gone>0?`<p class="auth__note">※ ${gone}件は募集が終了したため表示できません。</p>`:"")
+    : `<div class="myempty">
+         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9L12 3.6z"/></svg>
+         <div>まだ気になる求人がありません。</div>
+         <div>求人カード右上の★を押すと、ここに保存されます。</div>
+       </div>`;
+  $("#myBody").innerHTML=authBoxHtml()+body;
+  paintFavs();
+  wireMypage();
+}
+function wireMypage(){
+  const send=$("#authSend"), out=$("#authOut"), save=$("#profSave");
+  if(send) send.addEventListener("click",sendMagicLink);
+  const em=$("#authEmail");
+  if(em) em.addEventListener("keydown",e=>{ if(e.key==="Enter") sendMagicLink(); });
+  if(out) out.addEventListener("click",signOut);
+  if(save) save.addEventListener("click",saveProfile);
+  $("#myBody").querySelectorAll("[data-open]").forEach(el=>{
+    el.addEventListener("click",e=>{ if(e.target.closest(".fav")) return; closeMypage(); openDetail(el.dataset.open); });
+    el.addEventListener("keydown",e=>{ if(e.key==="Enter"){ closeMypage(); openDetail(el.dataset.open); } });
+  });
+}
+function authMsg(text, ok){
+  const el=$("#authMsg"); if(!el) return;
+  el.textContent=text; el.hidden=false;
+  el.className="auth__msg "+(ok?"ok":"ng");
+}
+function openMypage(){
+  if($("#panel").classList.contains("open")) closeDetail();
+  renderMypage();
+  $("#backdrop").classList.add("open");
+  $("#mypanel").classList.add("open");
+  document.body.style.overflow="hidden";
+  $("#myClose").focus();
+  track("mypage_open",{favorites:favs.size, logged_in:!!me});
+}
+function closeMypage(){
+  $("#mypanel").classList.remove("open");
+  if(!$("#panel").classList.contains("open")){
+    $("#backdrop").classList.remove("open");
+    document.body.style.overflow="";
+  }
+}
+$("#myBtn").addEventListener("click",openMypage);
+$("#myClose").addEventListener("click",closeMypage);
+$("#backdrop").addEventListener("click",()=>{ if($("#mypanel").classList.contains("open")) closeMypage(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&$("#mypanel").classList.contains("open")) closeMypage(); });
+
+/* ---- ログイン（Supabase を設定したときだけ動く） ---- */
+function loadScript(src){
+  return new Promise((ok,ng)=>{ const s=document.createElement("script"); s.src=src; s.onload=ok; s.onerror=()=>ng(new Error(src)); document.head.appendChild(s); });
+}
+async function sendMagicLink(){
+  const el=$("#authEmail"); if(!el) return;
+  const email=el.value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ authMsg("メールアドレスの形式を確認してください。",false); return; }
+  const btn=$("#authSend"); btn.disabled=true; btn.textContent="送信中…";
+  try{
+    const {error}=await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin+location.pathname } });
+    if(error) throw error;
+    authMsg("ログイン用のリンクを送りました。メールをご確認ください。",true);
+    track("login_link_sent",{});
+  }catch(e){
+    authMsg("送信できませんでした。時間をおいて試すか、お問い合わせください。",false);
+    console.warn(e);
+  }finally{ btn.disabled=false; btn.textContent="ログインリンクを送る"; }
+}
+async function signOut(){
+  try{ await sb.auth.signOut(); }catch(e){ console.warn(e); }
+  me=null; myProfile=null; renderMypage();
+}
+async function saveProfile(){
+  const el=$("#profName"); if(!el||!me) return;
+  const name=el.value.trim();
+  const btn=$("#profSave"); btn.disabled=true;
+  try{
+    const {error}=await sb.from("profiles").upsert({id:me.id, full_name:name});
+    if(error) throw error;
+    myProfile={full_name:name};
+    authMsg("保存しました。",true);
+  }catch(e){ authMsg("保存できませんでした。",false); console.warn(e); }
+  finally{ btn.disabled=false; }
+}
+async function onSignedIn(user){
+  me=user;
+  try{
+    const local=[...favs];
+    if(local.length){
+      await sb.from("favorites").upsert(local.map(id=>({user_id:user.id, job_id:id})),{onConflict:"user_id,job_id"});
+    }
+    const {data,error}=await sb.from("favorites").select("job_id").eq("user_id",user.id);
+    if(!error&&data){ favs=new Set(data.map(r=>r.job_id)); saveLocalFavs(); }
+    const p=await sb.from("profiles").select("full_name").eq("id",user.id).maybeSingle();
+    myProfile=p.data||null;
+  }catch(e){ console.warn("ログイン後の同期に失敗しました",e); }
+  paintFavs(); updateMyBadge();
+  if($("#mypanel").classList.contains("open")) renderMypage();
+}
+async function initAuth(){
+  if(!authEnabled()) return;
+  try{
+    await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js");
+    sb=window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    sb.auth.onAuthStateChange((ev,session)=>{
+      if(session&&session.user){ onSignedIn(session.user); }
+      else if(ev==="SIGNED_OUT"){ me=null; myProfile=null; }
+    });
+    const {data}=await sb.auth.getSession();
+    if(data&&data.session) await onSignedIn(data.session.user);
+    /* メールのリンクから戻ってきたときにURLを綺麗にする */
+    if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname+location.search);
+  }catch(e){ console.warn("ログイン機能を初期化できませんでした",e); sb=null; }
+}
+
 /* ---------- init ---------- */
 $("#totalCount").textContent=JOBS.length;
 $("#count800").textContent=JOBS.filter(j=>j.salaryMax>=800).length;
 $("#count1000").textContent=JOBS.filter(j=>j.salaryMax>=1000).length;
 buildFilters();
 apply();
+updateMyBadge();
+paintFavs();
+initAuth();
 </script>
 </body>
 </html>

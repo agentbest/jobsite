@@ -13,6 +13,7 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
 - `index.html` … 完成した求人サイト（単一ファイル・オフラインでもブラウザで開けば動く／全456件を内蔵）
 - `template.html` … データ差し込み前のテンプレート（`__JOBS_DATA__` が差し込み位置）
 - `data/jobs.json` … Airtable から取得した求人データ 456 件（正規化済み・compact JSON）
+- `SUPABASE_SETUP.md` … マイページに「会員登録・ログイン」を足すときの手順書
 - `rebuild.js` … `data/jobs.json` を `template.html` に流し込んで `index.html` を再生成
   - 実行: このフォルダで `node rebuild.js`
   - デザインや機能を変えたいときは `template.html` を編集 → `node rebuild.js`
@@ -62,6 +63,11 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
 - 並び替え: おすすめ / 年収が高い・低い / 企業名
 - 求人カード → 右スライドの詳細パネル（仕事内容などを Markdown 整形表示・企業サイトへのリンク）
 - ライト/ダークテーマ、スマホ対応
+- **マイページ（お気に入り）** … 求人カード右上の★で保存 → ヘッダー「マイページ」から一覧
+  - 初期状態は **localStorage（その端末だけ）** に保存。サーバー不要・費用ゼロ
+  - `template.html` の `SUPABASE_URL` / `SUPABASE_ANON_KEY` を設定すると
+    **メールでログイン（パスワード不要）** に切り替わり、端末をまたいで同期される
+  - 手順は `SUPABASE_SETUP.md` を参照
 
 ## 既知の前提・検討中の項目（「考えたい」メモ）
 - 年収 min/max 未設定が 45 件（表示は「応相談」）。扱いを検討。
