@@ -1,5 +1,21 @@
 # マイページに「会員登録・ログイン」を追加する手順
 
+> ## ✅ 設定済みです（2026-08-15）
+>
+> | 項目 | 値 |
+> |---|---|
+> | プロジェクト | `jobsite-tokyo` |
+> | プロジェクトID | `jvdnabtpxcyfnogdulea` |
+> | リージョン | **Northeast Asia (Tokyo)** ap-northeast-1 |
+> | ダッシュボード | https://supabase.com/dashboard/project/jvdnabtpxcyfnogdulea |
+>
+> テーブル作成・RLS・ログインURL設定・鍵の反映はすべて完了しています。
+> **以下は、作り直すときのための記録です。**
+>
+> ⚠ 最初にSingaporeリージョンで作ってしまい、作り直しました。
+> **Regionの「Asia-Pacific」を選ぶとSingaporeになります。**
+> 「SPECIFIC REGIONS」から **Northeast Asia (Tokyo)** を選んでください。ここは後から変更できません。
+
 いまの状態でも**お気に入り（★）は動きます**。ただし保存先はそのブラウザの中だけで、
 別の端末からは見えません。
 
@@ -109,33 +125,37 @@ create policy "本人のプロフィールのみ" on public.profiles
 
 ## 手順5. 鍵を2つコピーして貼る
 
-左メニューの **Project Settings**（歯車）→ **API** を開きます。
+左メニューの **Project Settings**（歯車）→ **API Keys** を開きます。
 
-1. **Project URL**（`https://xxxxx.supabase.co` の形）
-2. **anon public** キー（`eyJ...` で始まる長い文字列）
+1. **Project URL** … `https://<プロジェクトID>.supabase.co` の形
+2. **Publishable key** … `sb_publishable_` で始まる文字列
+
+> Supabaseは鍵の仕組みを新しくしました。以前の **anon public** キー（`eyJ...`）は
+> 「Legacy anon, service_role API keys」タブに残っていますが、**新しく作るなら Publishable key** を使います。
+> supabase-js v2 はどちらでも動きます。変数名 `SUPABASE_ANON_KEY` は当時の名残です。
 
 この2つを、`template.html` の以下の場所に貼り付けます。
 
 ```javascript
 const SUPABASE_URL = "";        // ← ここに Project URL
-const SUPABASE_ANON_KEY = "";   // ← ここに anon public キー
+const SUPABASE_ANON_KEY = "";   // ← ここに Publishable key
 ```
 
-貼り付けるとこうなります。
+貼り付けるとこうなります（実際の値は設定済み）。
 
 ```javascript
-const SUPABASE_URL = "https://xxxxx.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+const SUPABASE_URL = "https://jvdnabtpxcyfnogdulea.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_...";
 ```
 
-### anon キーは公開して大丈夫？
+### この鍵は公開して大丈夫？
 
-**大丈夫です。** このキーは公開されることを前提に作られています。
+**大丈夫です。** Supabaseの画面にも「Publishable keys can be safely shared publicly」と書かれています。
 手順3で設定した「本人しか読み書きできない」ルールがデータベース側で守っているので、
-キーを知っていても他人のデータは取れません。
+鍵を知っていても他人のデータは取れません。
 
-**⚠ 絶対に貼ってはいけないキー**: 同じ画面にある **`service_role`** キーは
-すべての制限を無視できる管理者キーです。これはサイトに貼らないでください。
+**⚠ 絶対に貼ってはいけない鍵**: 同じ画面にある **Secret keys**（`sb_secret_...`）と
+**`service_role`** キーは、すべての制限を無視できる管理者鍵です。これはサイトに貼らないでください。
 
 ---
 
