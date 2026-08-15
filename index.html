@@ -469,7 +469,11 @@
   .jshare__btn--facebook:hover{background:#1877F2; border-color:#1877F2}
   .jshare__btn--linkedin:hover{background:#0A66C2; border-color:#0A66C2}
   .jshare__btn--hatena:hover{background:#00A4DE; border-color:#00A4DE}
-  .jshare__btn--copy:hover, .jshare__btn--native:hover{background:var(--accent); border-color:var(--accent)}
+  /* コピー・共有はブランド色を持たないので、地の色を薄く敷く。
+     ダークモードだと --accent が明るく、白アイコンが読めなくなるため */
+  .jshare__btn--copy:hover, .jshare__btn--native:hover{
+    background:color-mix(in srgb, currentColor 16%, transparent); border-color:currentColor; color:inherit;
+  }
   .jshare__btn:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
   .jshare__hb{font-weight:800; font-size:13px; line-height:1; letter-spacing:-.02em}
   .jshare__done{font-size:12px; font-weight:700; color:var(--good)}
