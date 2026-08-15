@@ -100,6 +100,52 @@ create policy "本人のプロフィールのみ" on public.profiles
   for all using (auth.uid() = id) with check (auth.uid() = id);
 ```
 
+### 追加：履歴書・職務経歴書の保管（2026-08-15）
+
+同じ SQL Editor で、下のSQLも実行します。
+
+```sql
+-- プロフィールに書類の情報を持たせる
+alter table public.profiles add column if not exists resume_path text;
+alter table public.profiles add column if not exists resume_name text;
+alter table public.profiles add column if not exists resume_at   timestamptz;
+alter table public.profiles add column if not exists cv_path     text;
+alter table public.profiles add column if not exists cv_name     text;
+alter table public.profiles add column if not exists cv_at       timestamptz;
+
+-- 書類の入れ物（非公開バケット・10MBまで・PDF/Word/Excelのみ）
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('documents','documents', false, 10485760, array[
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+])
+on conflict (id) do update set
+  public = false,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+-- 【重要】自分のフォルダ（= 自分のユーザーID）以外は読めない・書けない
+create policy "本人の書類のみ参照" on storage.objects for select
+  using (bucket_id = 'documents' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "本人の書類のみ登録" on storage.objects for insert
+  with check (bucket_id = 'documents' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "本人の書類のみ更新" on storage.objects for update
+  using (bucket_id = 'documents' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "本人の書類のみ削除" on storage.objects for delete
+  using (bucket_id = 'documents' and (storage.foldername(name))[1] = auth.uid()::text);
+```
+
+> バケットを **public にしない**ことと、この4つの policy が
+> 「他人の履歴書を見られない」を担保しています。**消さないでください。**
+
+**担当者が中身を見るには**、左メニューの **Storage** → `documents` を開きます。
+フォルダ名は会員のユーザーIDです。誰のものかは **Table Editor** の `profiles` と突き合わせて確認します。
+
+---
+
 > 最後の `enable row level security` と `policy` が**最も大事な部分**です。
 > これがあるおかげで、Aさんのお気に入りをBさんが見ることはできません。
 > 消したり書き換えたりしないでください。

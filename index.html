@@ -342,6 +342,21 @@
   .pf__chip input:checked+span .cnt{color:var(--accent)}
   .pf__chip input:focus-visible+span{outline:2px solid var(--focus); outline-offset:1px}
   .prof__act{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:2px}
+  .auth__btn--sm{padding:7px 12px; font-size:12.5px}
+
+  /* 履歴書・職務経歴書 */
+  .doc{display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:12px 0; border-top:1px dashed var(--line)}
+  .doc:first-of-type{border-top:0; padding-top:4px}
+  .doc__label{font-size:13px; font-weight:700; min-width:86px}
+  .doc__now{font-size:12px; color:var(--ink-3); flex:1 1 150px; min-width:0}
+  .doc__now b{color:var(--ink-2); font-weight:700; word-break:break-all}
+  .doc__input{position:absolute; opacity:0; width:0; height:0}
+  .doc__pick{cursor:pointer}
+  .doc__input:focus-visible+.doc__pick{outline:2px solid var(--focus); outline-offset:1px}
+  .doc__msg{flex:0 0 100%; margin:2px 0 0; font-size:12.5px; line-height:1.9; color:var(--ink-2)}
+  .doc__msg.ok{color:var(--good)}
+  .doc__msg.ng{color:#C0392B}
+  :root[data-theme="dark"] .doc__msg.ng{color:#F1948A}
 
   .myrow{
     position:relative; display:block; width:100%; text-align:left; color:inherit;
@@ -1233,6 +1248,107 @@ const JOB_GROUPS=(()=>{
   return [...m.entries()].sort((a,b)=>b[1]-a[1]);
 })();
 
+/* ---- 履歴書・職務経歴書（ログイン中のみ・任意） ----
+   Supabase Storage の非公開バケットに {ユーザーID}/resume.pdf の形で置く。
+   ストレージ側にもRLSがかかっていて、自分のフォルダ以外は読めない・書けない。
+   閲覧は60秒だけ有効な署名付きURL。 */
+const DOC_BUCKET="documents";
+const DOC_MAX_MB=10;
+const DOC_EXT=["pdf","doc","docx","xls","xlsx"];
+const DOC_ACCEPT=".pdf,.doc,.docx,.xls,.xlsx";
+const DOCS=[{key:"resume",label:"履歴書"},{key:"cv",label:"職務経歴書"}];
+
+function docState(key){
+  const p=myProfile||{};
+  return { path:p[key+"_path"]||"", name:p[key+"_name"]||"", at:p[key+"_at"]||"" };
+}
+function docMsg(key,text,ok){
+  const el=$("#docMsg_"+key); if(!el) return;
+  el.hidden=false; el.textContent=text;
+  el.className="doc__msg"+(ok===true?" ok":ok===false?" ng":"");
+}
+function docRowHtml(d){
+  const st=docState(d.key);
+  const day=st.at?String(st.at).slice(0,10).replace(/-/g,"/"):"";
+  const now=st.path
+    ? `<span class="doc__now">現在：<b>${esc(st.name||"アップロード済み")}</b>${day?`（${esc(day)}）`:""}</span>`
+    : `<span class="doc__now">まだアップロードされていません</span>`;
+  return `<div class="doc">
+    <span class="doc__label">${esc(d.label)}</span>
+    ${now}
+    <input type="file" id="docFile_${d.key}" class="doc__input" data-doc="${d.key}" accept="${DOC_ACCEPT}">
+    <label class="auth__btn auth__btn--ghost auth__btn--sm doc__pick" for="docFile_${d.key}">${st.path?"差し替える":"ファイルを選ぶ"}</label>
+    ${st.path?`<button class="auth__btn auth__btn--ghost auth__btn--sm" data-docview="${d.key}">開く</button>
+    <button class="auth__btn auth__btn--ghost auth__btn--sm" data-docdel="${d.key}">削除</button>`:""}
+    <p class="doc__msg" id="docMsg_${d.key}" hidden></p>
+  </div>`;
+}
+function docsHtml(){
+  return `<div class="pf">
+    <span class="pf__t">履歴書・職務経歴書（任意）</span>
+    ${DOCS.map(docRowHtml).join("")}
+    <p class="auth__note" style="margin-top:8px">${esc(DOC_EXT.join("・"))} の形式、1ファイル${DOC_MAX_MB}MBまで。<br>
+    アップロードされた書類は、ご本人と当社の担当者だけが見られます。いつでも削除できます。</p>
+  </div>`;
+}
+async function uploadDoc(key,file){
+  if(!sb||!me||!file) return;
+  const ext=(file.name.split(".").pop()||"").toLowerCase();
+  if(DOC_EXT.indexOf(ext)<0){ docMsg(key,`${DOC_EXT.join("・")} のファイルを選んでください。`,false); return; }
+  if(file.size>DOC_MAX_MB*1024*1024){ docMsg(key,`ファイルが大きすぎます（${DOC_MAX_MB}MBまで）。`,false); return; }
+  docMsg(key,"アップロード中…");
+  const path=me.id+"/"+key+"."+ext;
+  const old=docState(key).path;
+  try{
+    const up=await sb.storage.from(DOC_BUCKET).upload(path,file,{upsert:true, contentType:file.type||undefined});
+    if(up.error) throw up.error;
+    if(old&&old!==path){ try{ await sb.storage.from(DOC_BUCKET).remove([old]); }catch(e){} }
+    const now=new Date().toISOString();
+    const patch={id:me.id}; patch[key+"_path"]=path; patch[key+"_name"]=file.name; patch[key+"_at"]=now;
+    const {error}=await sb.from("profiles").upsert(patch);
+    if(error) throw error;
+    myProfile=Object.assign({},myProfile||{},patch); delete myProfile.id;
+    track("doc_upload",{doc:key});
+    renderMypage();
+    docMsg(key,"アップロードしました。",true);
+  }catch(e){
+    console.warn(e);
+    docMsg(key,"アップロードできませんでした。時間をおいて試すか、お問い合わせください。",false);
+  }
+}
+async function viewDoc(key){
+  const st=docState(key); if(!st.path||!sb) return;
+  const w=window.open("about:blank","_blank");   /* 先に窓を開く（ポップアップブロック回避） */
+  try{
+    const {data,error}=await sb.storage.from(DOC_BUCKET).createSignedUrl(st.path,60);
+    if(error) throw error;
+    if(w){ w.opener=null; w.location.href=data.signedUrl; }
+    else location.href=data.signedUrl;
+  }catch(e){ if(w) w.close(); console.warn(e); docMsg(key,"開けませんでした。",false); }
+}
+function askDeleteDoc(key){
+  const el=$("#docMsg_"+key); if(!el) return;
+  el.hidden=false; el.className="doc__msg";
+  el.innerHTML=`本当に削除しますか？ `+
+    `<button class="auth__btn auth__btn--ghost auth__btn--sm" data-docdelyes="${esc(key)}">削除する</button> `+
+    `<button class="auth__btn auth__btn--ghost auth__btn--sm" data-docdelno="${esc(key)}">やめる</button>`;
+}
+async function deleteDoc(key){
+  const st=docState(key); if(!st.path||!sb||!me) return;
+  docMsg(key,"削除中…");
+  try{
+    const rm=await sb.storage.from(DOC_BUCKET).remove([st.path]);
+    if(rm.error) throw rm.error;
+    const patch={id:me.id}; patch[key+"_path"]=null; patch[key+"_name"]=null; patch[key+"_at"]=null;
+    const {error}=await sb.from("profiles").upsert(patch);
+    if(error) throw error;
+    myProfile=Object.assign({},myProfile||{},patch); delete myProfile.id;
+    track("doc_delete",{doc:key});
+    renderMypage();
+    docMsg(key,"削除しました。",true);
+  }catch(e){ console.warn(e); docMsg(key,"削除できませんでした。",false); }
+}
+
 function pfSelect(id,label,opts,val,placeholder){
   const cur=String(val==null?"":val);
   return `<div class="pf"><label class="pf__t" for="${id}">${esc(label)}</label>
@@ -1258,6 +1374,7 @@ function profileHtml(){
         `<label class="pf__chip"><input type="checkbox" data-job="${esc(g)}"${want.has(g)?" checked":""}><span>${esc(g)}<span class="cnt">${c}</span></span></label>`
       ).join("")}</div></div>
     ${pfSelect("profIndustry","現在のお仕事の業種",INDUSTRY_OPTS,p.current_industry||"","未選択")}
+    ${docsHtml()}
     <div class="prof__act">
       <button class="auth__btn" id="profSave">プロフィールを保存</button>
       <button class="auth__btn auth__btn--ghost" id="profSearch">この希望条件で求人を探す</button>
@@ -1407,6 +1524,21 @@ function closeMypage(){
     document.body.style.overflow="";
   }
 }
+/* 書類の操作は #myBody への委譲で1回だけ登録する（renderMypage は innerHTML を差し替えるだけなので
+   ここで張ったリスナーは残る。wireMypage 側に置くと再描画のたびに二重登録される） */
+$("#myBody").addEventListener("change",e=>{
+  const inp=e.target.closest("input[data-doc]"); if(!inp) return;
+  const f=inp.files&&inp.files[0];
+  inp.value="";                       /* 同じファイルを選び直しても change が起きるように */
+  if(f) uploadDoc(inp.dataset.doc,f);
+});
+$("#myBody").addEventListener("click",e=>{
+  const v=e.target.closest("[data-docview]");   if(v){ viewDoc(v.dataset.docview); return; }
+  const d=e.target.closest("[data-docdel]");    if(d){ askDeleteDoc(d.dataset.docdel); return; }
+  const y=e.target.closest("[data-docdelyes]"); if(y){ deleteDoc(y.dataset.docdelyes); return; }
+  const n=e.target.closest("[data-docdelno]");  if(n){ const m=$("#docMsg_"+n.dataset.docdelno); if(m){ m.hidden=true; m.innerHTML=""; } return; }
+});
+
 $("#myBtn").addEventListener("click",openMypage);
 $("#myClose").addEventListener("click",closeMypage);
 $("#backdrop").addEventListener("click",()=>{ if($("#mypanel").classList.contains("open")) closeMypage(); });
@@ -1450,7 +1582,7 @@ async function saveProfile(){
       updated_at:       new Date().toISOString()
     });
     if(error) throw error;
-    myProfile=p;
+    myProfile=Object.assign({},myProfile||{},p);   /* 書類の情報を消さないようにマージする */
     authMsg("保存しました。",true);
     track("profile_save",{fields:Object.values(p).filter(v=>v&&(!Array.isArray(v)||v.length)).length});
   }catch(e){ authMsg("保存できませんでした。時間をおいて試してください。",false); console.warn(e); }
@@ -1465,7 +1597,7 @@ async function onSignedIn(user){
     }
     const {data,error}=await sb.from("favorites").select("job_id").eq("user_id",user.id);
     if(!error&&data){ favs=new Set(data.map(r=>r.job_id)); saveLocalFavs(); }
-    const p=await sb.from("profiles").select("full_name,desired_salary,desired_jobs,current_industry,timing").eq("id",user.id).maybeSingle();
+    const p=await sb.from("profiles").select("full_name,desired_salary,desired_jobs,current_industry,timing,resume_path,resume_name,resume_at,cv_path,cv_name,cv_at").eq("id",user.id).maybeSingle();
     myProfile=p.data||null;
   }catch(e){ console.warn("ログイン後の同期に失敗しました",e); }
   paintFavs(); updateMyBadge();
