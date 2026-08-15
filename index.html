@@ -6,6 +6,15 @@
 <meta name="robots" content="index,follow">
 <title>ミドル・ハイクラス求人検索 — キャリアの選択肢</title>
 <meta name="description" content="ミドルクラス・ハイクラス向けの求人検索サイト。職種・業界・年収・勤務地エリアから絞り込めます。経営幹部・部長クラスを含む非公開求人も多数。株式会社エージェントベストが運営、ご利用は無料です。">
+<!-- SNSでシェアされたときの表示。静的サイトなので求人ごとの出し分けはできず、
+     共有されるのはこのサイト共通のカードになる（求人名は投稿本文側に入れている） -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ミドル・ハイクラス求人検索">
+<meta property="og:title" content="ミドル・ハイクラス求人検索 — キャリアの選択肢">
+<meta property="og:description" content="ミドルクラス・ハイクラス向けの求人検索サイト。職種・業界・年収・勤務地エリアから絞り込めます。株式会社エージェントベストが運営、ご利用は無料です。">
+<meta property="og:url" content="https://jobs.agent-best.net/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1XXMP8Y1B4"></script>
 <script>
@@ -445,6 +454,26 @@
   .pd-author .sns{display:flex; gap:14px}
   .pd-author .sns a{color:var(--ink-3); transition:color .15s; display:inline-flex}
   .pd-author .sns a:hover{color:var(--accent)}
+
+  /* 求人のシェア。外部SDKは読み込まず、ただのリンクとして自前で持つ */
+  .jshare{display:flex; align-items:center; flex-wrap:wrap; gap:10px 12px; margin-top:26px; padding-top:16px; border-top:1px solid var(--line)}
+  .jshare__lbl{font-size:12px; font-weight:700; color:var(--ink-3); letter-spacing:.04em}
+  .jshare__list{display:flex; flex-wrap:wrap; gap:8px}
+  .jshare__btn{
+    display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; padding:0;
+    border:1px solid var(--line); border-radius:999px; background:var(--surface); color:var(--ink-2);
+    transition:background-color .15s, border-color .15s, color .15s;
+  }
+  .jshare__btn:hover{color:#fff}
+  .jshare__btn--x:hover{background:#000; border-color:#000}
+  .jshare__btn--facebook:hover{background:#1877F2; border-color:#1877F2}
+  .jshare__btn--linkedin:hover{background:#0A66C2; border-color:#0A66C2}
+  .jshare__btn--hatena:hover{background:#00A4DE; border-color:#00A4DE}
+  .jshare__btn--copy:hover, .jshare__btn--native:hover{background:var(--accent); border-color:var(--accent)}
+  .jshare__btn:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+  .jshare__hb{font-weight:800; font-size:13px; line-height:1; letter-spacing:-.02em}
+  .jshare__done{font-size:12px; font-weight:700; color:var(--good)}
+  @media (max-width:640px){ .jshare__btn{width:42px; height:42px} }
   .pd-ctanote b{color:var(--ink-2); font-weight:700}
 
   /* rich text (markdown) */
@@ -1040,6 +1069,70 @@ $("#grid").addEventListener("click",e=>{
 });
 $("#emptyReset").addEventListener("click",resetAll);
 
+/* ---------- 求人のシェア ----------
+   詳細パネルはURLが変わらない作りだったので、開いたときに ?job=<求人ID> を付けて
+   「その求人を開いた状態のURL」を作れるようにした（replaceState なので戻るボタンの
+   挙動は今までと変わらない）。共有されたリンクを開くとその求人が開く。
+   OGPは静的サイトなのでサイト共通のまま。求人名は投稿本文側に入れて補っている。 */
+const SHARE_ICONS={
+  x:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+  facebook:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047v-2.66c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.971H15.83c-1.491 0-1.956.93-1.956 1.886v2.264h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>',
+  linkedin:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>',
+  copy:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  native:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>'
+};
+function jobUrl(j){ return location.origin+location.pathname+"?job="+encodeURIComponent(j.id); }
+function jobShareText(j){
+  const pos=j.position||j.jobCategory||j.title||"求人";
+  const co=j.company?`｜${j.company}`:"";
+  return `${pos}${co}`;
+}
+function shareHtml(j){
+  const url=jobUrl(j), text=jobShareText(j);
+  const u=encodeURIComponent(url), t=encodeURIComponent(text);
+  const link=(key,label,href)=>`<a class="jshare__btn jshare__btn--${key}" href="${esc(href)}" target="_blank" rel="noopener noreferrer" data-share="${key}" aria-label="${esc(label)}" title="${esc(label)}">${SHARE_ICONS[key]||""}</a>`;
+  return `<div class="jshare">
+    <span class="jshare__lbl">この求人をシェア</span>
+    <div class="jshare__list">
+      ${link("x","Xでシェア",`https://x.com/intent/post?url=${u}&text=${t}`)}
+      ${link("facebook","Facebookでシェア",`https://www.facebook.com/sharer/sharer.php?u=${u}`)}
+      ${link("linkedin","LinkedInでシェア",`https://www.linkedin.com/sharing/share-offsite/?url=${u}`)}
+      <a class="jshare__btn jshare__btn--hatena" href="${esc(`https://b.hatena.ne.jp/entry/panel/?url=${u}&btitle=${t}`)}" target="_blank" rel="noopener noreferrer" data-share="hatena" aria-label="はてなブックマークに追加" title="はてなブックマークに追加"><span class="jshare__hb" aria-hidden="true">B!</span></a>
+      <button type="button" class="jshare__btn jshare__btn--copy" data-share="copy" aria-label="リンクをコピー" title="リンクをコピー">${SHARE_ICONS.copy}</button>
+      ${(typeof navigator!=="undefined"&&"share"in navigator)?`<button type="button" class="jshare__btn jshare__btn--native" data-share="native" aria-label="その他の方法でシェア" title="その他の方法でシェア">${SHARE_ICONS.native}</button>`:""}
+    </div>
+    <span class="jshare__done" role="status" aria-live="polite"></span>
+  </div>`;
+}
+/* パネル内は innerHTML で作り直されるので、委譲で1回だけ張る */
+document.addEventListener("click",async e=>{
+  const el=e.target.closest&&e.target.closest("[data-share]");
+  if(!el||!currentJob||!currentJob.id) return;
+  const kind=el.dataset.share;
+  const done=el.closest(".jshare")&&el.closest(".jshare").querySelector(".jshare__done");
+  const flash=t=>{ if(!done) return; done.textContent=t; setTimeout(()=>{ done.textContent=""; },2200); };
+  if(kind==="copy"){
+    e.preventDefault();
+    const url=jobUrl(currentJob);
+    let ok=false;
+    try{ await navigator.clipboard.writeText(url); ok=true; }
+    catch(err){
+      const ta=document.createElement("textarea");
+      ta.value=url; ta.setAttribute("readonly","");
+      ta.style.cssText="position:fixed;top:-1000px";
+      document.body.appendChild(ta); ta.select();
+      try{ ok=document.execCommand("copy"); }catch(e2){ ok=false; }
+      document.body.removeChild(ta);
+    }
+    flash(ok?"コピーしました":"コピーできませんでした");
+  }else if(kind==="native"){
+    e.preventDefault();
+    try{ await navigator.share({url:jobUrl(currentJob), title:jobShareText(currentJob)}); }
+    catch(err){ return; }   /* 共有シートを閉じただけ */
+  }
+  track("job_share",{method:kind, job_id:currentJob.id, company:currentJob.company||""});
+});
+
 /* ---------- detail panel ---------- */
 let lastFocus=null;
 function metaRow(k,v){ return v?`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`:""; }
@@ -1113,6 +1206,7 @@ function openDetail(id){
     ${sec("選考プロセス", j.selectionProcess, true)}
     ${coMeta?`<div class="pd-sec"><h3>企業情報</h3><dl class="pd-meta">${coMeta}</dl></div>`:""}
     <div class="pd-sec"><h3>この求人が気になったら</h3>${cta}</div>
+    ${shareHtml(j)}
     ${author}
   `;
   $("#panelBody").scrollTop=0;
@@ -1122,13 +1216,30 @@ function openDetail(id){
   $("#backdrop").classList.add("open");
   $("#panel").classList.add("open");
   document.body.style.overflow="hidden";
+  setJobParam(j.id);
   $("#panelClose").focus();
 }
 function closeDetail(){
   $("#backdrop").classList.remove("open");
   $("#panel").classList.remove("open");
   document.body.style.overflow="";
+  setJobParam(null);
   if(lastFocus&&lastFocus.focus) lastFocus.focus();
+}
+/* URLの ?job= を付け外しする。replaceState なので履歴は増えない＝戻るの挙動は今までどおり */
+function setJobParam(id){
+  if(!history.replaceState) return;
+  const p=new URLSearchParams(location.search);
+  if(id) p.set("job",id); else p.delete("job");
+  const q=p.toString();
+  history.replaceState(null,"",location.pathname+(q?"?"+q:"")+location.hash);
+}
+/* 共有されたリンク（?job=...）から来たときは、その求人を開いた状態にする */
+function openJobFromUrl(){
+  const id=new URLSearchParams(location.search).get("job");
+  if(!id) return;
+  if(JOBS.some(j=>j.id===id)) openDetail(id);
+  else setJobParam(null);   /* 掲載が終わっている求人。URLだけ消して一覧を見せる */
 }
 $("#panelClose").addEventListener("click",closeDetail);
 $("#backdrop").addEventListener("click",closeDetail);
@@ -1775,6 +1886,7 @@ apply();
 updateMyBadge();
 paintFavs();
 initAuth();
+openJobFromUrl();
 </script>
 </body>
 </html>
