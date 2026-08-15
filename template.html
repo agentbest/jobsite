@@ -358,6 +358,28 @@
   .doc__msg.ng{color:#C0392B}
   :root[data-theme="dark"] .doc__msg.ng{color:#F1948A}
 
+  /* 退会（アカウントの削除）。取り返しがつかないので、開く→確認する の2段階にしている */
+  .quit{margin-top:18px; padding-top:14px; border-top:1px dashed var(--line)}
+  .quit__open{
+    background:none; border:0; padding:0; color:var(--ink-3);
+    font-size:12px; text-decoration:underline; text-underline-offset:2px;
+  }
+  .quit__open:hover{color:var(--ink-2)}
+  .quit__box{
+    margin-top:12px; padding:14px 16px; border-radius:12px;
+    border:1px solid color-mix(in srgb, #C0392B 34%, var(--line)); background:color-mix(in srgb, #C0392B 5%, var(--surface));
+  }
+  .quit__box h4{margin:0 0 8px; font-size:13.5px; font-weight:800; color:var(--ink)}
+  .quit__box p{margin:0 0 8px; font-size:12.5px; color:var(--ink-2); line-height:1.8}
+  .quit__box ul{margin:0 0 10px; padding-left:1.2em; font-size:12.5px; color:var(--ink-2); line-height:1.8}
+  .quit__act{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .quit__btn{
+    padding:9px 15px; border:0; border-radius:var(--r-input); background:#C0392B; color:#fff;
+    font-weight:700; font-size:13px; white-space:nowrap;
+  }
+  .quit__btn:hover{background:#A93226}
+  .quit__btn[disabled]{opacity:.55; cursor:default}
+
   .myrow{
     position:relative; display:block; width:100%; text-align:left; color:inherit;
     background:var(--surface); border:1px solid var(--line); border-radius:var(--r-card);
@@ -663,6 +685,7 @@
     <nav class="foot__links">
       <a href="1day.html">1day選考会</a>
       <a href="https://www.agent-best.net/" target="_blank" rel="noopener">運営会社サイト</a>
+      <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー（人材紹介）</a>
       <a href="privacy-ad.html">プライバシーポリシー（求人広告）</a>
       <a href="https://www.agent-best.net/contact" target="_blank" rel="noopener">お問い合わせ</a>
@@ -712,6 +735,7 @@ const APPLY_FORM_URL = "https://airtable.com/appYkc36EvioYoL1A/shr0K5l9MSiNMgUe6
 const CONSULT_URL    = "https://calendly.com/r_matsuoka";
 const CONTACT_MAIL   = "r_matsuoka@agent-best.net";
 const PROFILE_URL    = "https://www.agent-best.net/profile";
+const CONTACT_URL    = "https://www.agent-best.net/contact";
 
 function applyUrl(j){
   const pos = j.position||j.jobCategory||j.title||"";
@@ -1417,6 +1441,31 @@ function profileHtml(){
       <button class="auth__btn auth__btn--ghost" id="authOut">ログアウト</button>
     </div>
     <p class="auth__msg" id="authMsg" hidden></p>
+    ${quitHtml()}
+  </div>`;
+}
+/* 退会（アカウントの削除）。confirm() は使わず、開いてから確認する2段階にする */
+function quitHtml(){
+  return `<div class="quit">
+    <button class="quit__open" id="quitOpen">退会（アカウントの削除）</button>
+    <div class="quit__box" id="quitBox" hidden>
+      <h4>本当に退会しますか？</h4>
+      <p>次の情報がすべて削除されます。<b>元に戻すことはできません。</b></p>
+      <ul>
+        <li>ご登録のメールアドレス（ログイン情報）</li>
+        <li>プロフィール（お名前・年齢・ご希望条件など）</li>
+        <li>アップロードされた履歴書・職務経歴書</li>
+        <li>「気になる求人」として保存された求人</li>
+      </ul>
+      <p>すでにご応募いただいた求人の記録は、企業へのご推薦の経緯として当社に残ります。
+         その削除をご希望の場合は<a href="${esc(CONTACT_URL)}" target="_blank" rel="noopener">お問い合わせ</a>ください。
+         くわしくは<a href="terms.html" target="_blank" rel="noopener">利用規約</a>をご覧ください。</p>
+      <div class="quit__act">
+        <button class="quit__btn" id="quitYes">すべて削除して退会する</button>
+        <button class="auth__btn auth__btn--ghost auth__btn--sm" id="quitNo">やめる</button>
+      </div>
+      <p class="auth__msg" id="quitMsg" hidden></p>
+    </div>
   </div>`;
 }
 function readProfileForm(){
@@ -1492,6 +1541,7 @@ function authBoxHtml(){
       </div>
       <p class="auth__msg" id="authMsg" hidden></p>
       <p class="auth__note">いま★を付けている求人は、ログインすると自動的に引き継がれます。</p>
+      <p class="auth__note">会員登録・ログインをもって、<a href="terms.html" target="_blank" rel="noopener">利用規約</a>と<a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に同意いただいたものとみなします。退会（登録情報の削除）はマイページからいつでもできます。</p>
     </div>`;
   }
   return `<div class="auth">
@@ -1552,6 +1602,14 @@ function wireMypage(){
   if(psearch) psearch.addEventListener("click",applyProfileSearch);
   const sclear=$("#seenClear");
   if(sclear) sclear.addEventListener("click",clearSeen);
+  const qOpen=$("#quitOpen"), qNo=$("#quitNo"), qYes=$("#quitYes");
+  if(qOpen) qOpen.addEventListener("click",()=>{
+    const box=$("#quitBox"); if(!box) return;
+    box.hidden=!box.hidden;
+    if(!box.hidden){ const m=$("#quitMsg"); if(m){ m.hidden=true; m.textContent=""; } $("#quitNo").focus(); }
+  });
+  if(qNo)  qNo.addEventListener("click",()=>{ const box=$("#quitBox"); if(box) box.hidden=true; });
+  if(qYes) qYes.addEventListener("click",deleteAccount);
   $("#myBody").querySelectorAll("[data-open]").forEach(el=>{
     el.addEventListener("click",e=>{ if(e.target.closest(".fav")) return; closeMypage(); openDetail(el.dataset.open); });
     el.addEventListener("keydown",e=>{ if(e.key==="Enter"){ closeMypage(); openDetail(el.dataset.open); } });
@@ -1620,6 +1678,37 @@ async function sendMagicLink(){
 async function signOut(){
   try{ await sb.auth.signOut(); }catch(e){ console.warn(e); }
   me=null; myProfile=null; renderMypage();
+}
+/* 退会。書類の実体はストレージAPIで先に消す（delete_own_account はDBの行しか消せない）。
+   auth.users の削除は本人でも直接はできないので、Supabase側の関数を呼ぶ。 */
+async function deleteAccount(){
+  if(!me||!sb) return;
+  const btn=$("#quitYes"), no=$("#quitNo"), msg=$("#quitMsg");
+  const say=(t,ok)=>{ if(!msg) return; msg.hidden=false; msg.textContent=t; msg.className="auth__msg "+(ok?"ok":"ng"); };
+  if(btn){ btn.disabled=true; btn.textContent="削除しています…"; }
+  if(no) no.disabled=true;
+  try{
+    const paths=DOCS.map(d=>docState(d.key).path).filter(Boolean);
+    if(paths.length){
+      const {error}=await sb.storage.from(DOC_BUCKET).remove(paths);
+      if(error) console.warn("書類の削除に失敗しました",error);
+    }
+    const {error}=await sb.rpc("delete_own_account");
+    if(error) throw error;
+    try{ await sb.auth.signOut(); }catch(e){ console.warn(e); }
+    me=null; myProfile=null;
+    favs=new Set(); saveLocalFavs();
+    seen=[]; saveSeen();
+    updateMyBadge(); paintFavs();
+    track("account_delete",{});
+    renderMypage();
+    authMsg("退会が完了しました。ご登録の情報はすべて削除されました。ご利用ありがとうございました。",true);
+  }catch(e){
+    console.warn(e);
+    say("削除できませんでした。時間をおいて試すか、お問い合わせください。",false);
+    if(btn){ btn.disabled=false; btn.textContent="すべて削除して退会する"; }
+    if(no) no.disabled=false;
+  }
 }
 async function saveProfile(){
   if(!me||!sb) return;

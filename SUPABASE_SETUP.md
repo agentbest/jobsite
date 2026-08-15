@@ -156,6 +156,51 @@ alter table public.profiles add column if not exists desired_salary_ideal int;  
 > `desired_areas` に入るのは都道府県ではなく **地域ブロック名**（関東／東海／関西 …）です。
 > ブロックの定義は `template.html` の `AREA_BLOCKS` にあります。
 
+### 追加：退会（アカウントの削除）（2026-08-15）
+
+会員がマイページから自分で退会できるようにするための関数です。同じ SQL Editor で実行します。
+
+```sql
+create or replace function public.delete_own_account()
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  uid uuid := auth.uid();
+begin
+  if uid is null then
+    raise exception 'not authenticated';
+  end if;
+  delete from storage.objects
+    where bucket_id = 'documents' and (storage.foldername(name))[1] = uid::text;
+  delete from public.favorites where user_id = uid;
+  delete from public.profiles  where id = uid;
+  delete from auth.users       where id = uid;
+end;
+$$;
+
+revoke all on function public.delete_own_account() from public;
+revoke all on function public.delete_own_account() from anon;
+grant execute on function public.delete_own_account() to authenticated;
+```
+
+> 実行時に「Potential issue detected（destructive operations）」の確認が出ますが、
+> **関数を作るだけ**でこの時点では何も消えません。「Run query」で進めて構いません。
+
+**なぜ関数が要るのか**：`auth.users` の削除だけは、サイトに貼っている公開鍵の権限（anon / authenticated）では
+できません。かといって管理者鍵（service_role）をサイトに貼るのは論外なので、
+「**自分自身のIDしか消せない**関数」をデータベース側に用意して、それだけを呼べるようにしています。
+
+- `security definer` ＝ 管理者権限で動く関数。だから `uid`（＝`auth.uid()`＝呼んだ本人）以外は
+  絶対に触らない作りになっている点が肝です。**where 句を緩めないでください。**
+- `anon`（未ログイン）からは実行できません。外側から確認済み＝`permission denied for function`。
+- **書類の実体（ストレージのファイル）は、関数を呼ぶ前にサイト側が Storage API で削除**します。
+  この関数が消せるのはDBの管理行だけなので、順番を入れ替えるとファイルが残ります。
+
+なお、**応募の記録（Airtable側）はここでは消えません**。利用規約 第5項にその旨を書いています。
+
 **担当者が中身を見るには**、左メニューの **Storage** → `documents` を開きます。
 フォルダ名は会員のユーザーIDです。誰のものかは **Table Editor** の `profiles` と突き合わせて確認します。
 
