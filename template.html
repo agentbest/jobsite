@@ -357,6 +357,12 @@
   .myempty{text-align:center; padding:34px 10px; color:var(--ink-3); font-size:13.5px; line-height:1.9}
   .myempty svg{color:var(--line); margin-bottom:6px}
   .mysec{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:700; margin:0 0 12px}
+  .mysec--row{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-top:30px}
+  .mysec__clear{
+    background:none; border:0; padding:0; color:var(--ink-3);
+    font-size:11.5px; font-weight:700; letter-spacing:normal; text-transform:none; text-decoration:underline; white-space:nowrap;
+  }
+  .mysec__clear:hover{color:var(--ink)}
 
   .backdrop{position:fixed; inset:0; z-index:60; background:rgba(15,17,26,.5); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .25s}
   .backdrop.open{opacity:1; pointer-events:auto}
@@ -1001,6 +1007,7 @@ function metaRow(k,v){ return v?`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`:""; }
 function openDetail(id){
   const j=JOBS.find(x=>x.id===id); if(!j) return;
   currentJob=j;
+  pushSeen(j.id);
   track("job_detail_open", {job_id:j.id, job_name:j.position||j.jobCategory||j.title||"", company:j.company||"", job_category:j.jobCategory||"", salary_max:j.salaryMax||0});
   lastFocus=document.activeElement;
   const tags=[];
@@ -1141,6 +1148,28 @@ function authEnabled(){ return !!(SUPABASE_URL && SUPABASE_ANON_KEY); }
 function loadLocalFavs(){ try{ return new Set(JSON.parse(localStorage.getItem(FAV_KEY)||"[]")); }catch(e){ return new Set(); } }
 function saveLocalFavs(){ try{ localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); }catch(e){} }
 favs=loadLocalFavs();
+
+/* ---- 最近見た求人（この端末のみ・サーバーへは送らない） ----
+   ログインしても同期しない。求人IDを新しい順に SEEN_MAX 件だけ持つ。 */
+const SEEN_KEY="jobsite-seen";
+const SEEN_MAX=15;
+let seen=(function(){
+  try{
+    const a=JSON.parse(localStorage.getItem(SEEN_KEY)||"[]");
+    return Array.isArray(a)?a.filter(x=>typeof x==="string").slice(0,SEEN_MAX):[];
+  }catch(e){ return []; }
+})();
+function saveSeen(){ try{ localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); }catch(e){} }
+function pushSeen(id){
+  if(!id) return;
+  seen=[id, ...seen.filter(x=>x!==id)].slice(0,SEEN_MAX);
+  saveSeen();
+}
+function clearSeen(){
+  seen=[]; saveSeen();
+  if($("#mypanel").classList.contains("open")) renderMypage();
+  track("seen_clear",{});
+}
 
 /* ---- ★ボタン ---- */
 function favBtn(id){ return `<span class="fav" role="button" tabindex="0" data-fav="${esc(id)}">${STAR}</span>`; }
@@ -1311,17 +1340,32 @@ function myRowHtml(j){
   </div>`;
 }
 function renderMypage(){
-  const ids=[...favs];
-  const list=ids.map(id=>JOBS.find(j=>j.id===id)).filter(Boolean);
-  const gone=ids.length-list.length;
-  const body = list.length
-    ? `<p class="mysec">気になる求人 ${list.length}件</p>${list.map(myRowHtml).join("")}` +
-      (gone>0?`<p class="auth__note">※ ${gone}件は募集が終了したため表示できません。</p>`:"")
-    : `<div class="myempty">
+  const favList=[...favs].map(id=>JOBS.find(j=>j.id===id)).filter(Boolean);
+  const gone=favs.size-favList.length;
+  /* ★済みは「気になる求人」に出ているので履歴からは省く（同じ求人を二度出さない） */
+  const seenList=seen.filter(id=>!favs.has(id)).map(id=>JOBS.find(j=>j.id===id)).filter(Boolean);
+
+  let body="";
+  if(favList.length){
+    body += `<p class="mysec">気になる求人 ${favList.length}件</p>` + favList.map(myRowHtml).join("");
+    if(gone>0) body += `<p class="auth__note">※ ${gone}件は募集が終了したため表示できません。</p>`;
+  }else if(seenList.length){
+    body += `<p class="mysec">気になる求人</p>
+      <p class="auth__note" style="margin-top:0">まだありません。求人カード右上の★を押すと、ここに保存されます。</p>`;
+  }else{
+    body += `<div class="myempty">
          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9L12 3.6z"/></svg>
          <div>まだ気になる求人がありません。</div>
          <div>求人カード右上の★を押すと、ここに保存されます。</div>
        </div>`;
+  }
+  if(seenList.length){
+    body += `<div class="mysec mysec--row">
+        <span>最近見た求人 ${seenList.length}件</span>
+        <button class="mysec__clear" id="seenClear">履歴を消す</button>
+      </div>` + seenList.map(myRowHtml).join("") +
+      `<p class="auth__note">最近見た求人は、ログインの有無にかかわらず、この端末の中だけに保存されます。</p>`;
+  }
   $("#myBody").innerHTML=authBoxHtml()+body;
   paintFavs();
   wireMypage();
@@ -1335,6 +1379,8 @@ function wireMypage(){
   if(save) save.addEventListener("click",saveProfile);
   const psearch=$("#profSearch");
   if(psearch) psearch.addEventListener("click",applyProfileSearch);
+  const sclear=$("#seenClear");
+  if(sclear) sclear.addEventListener("click",clearSeen);
   $("#myBody").querySelectorAll("[data-open]").forEach(el=>{
     el.addEventListener("click",e=>{ if(e.target.closest(".fav")) return; closeMypage(); openDetail(el.dataset.open); });
     el.addEventListener("keydown",e=>{ if(e.key==="Enter"){ closeMypage(); openDetail(el.dataset.open); } });
