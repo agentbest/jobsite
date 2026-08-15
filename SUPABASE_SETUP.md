@@ -54,12 +54,24 @@ create table if not exists public.favorites (
   primary key (user_id, job_id)
 );
 
--- 会員プロフィール（お名前など）
+-- 会員プロフィール（お名前・ご希望条件／すべて任意入力）
 create table if not exists public.profiles (
-  id         uuid        primary key references auth.users(id) on delete cascade,
-  full_name  text,
-  created_at timestamptz not null default now()
+  id               uuid        primary key references auth.users(id) on delete cascade,
+  full_name        text,        -- お名前
+  desired_salary   int,         -- 希望年収の下限（万円）
+  desired_jobs     text[],      -- 希望職種（営業／エンジニア など・複数）
+  current_industry text,        -- 現在のお仕事の業種
+  timing           text,        -- 転職を考えている時期
+  created_at       timestamptz  not null default now(),
+  updated_at       timestamptz  not null default now()
 );
+
+-- （すでに古い形で作ってしまった場合の追加。初めての方は何も起きません）
+alter table public.profiles add column if not exists desired_salary   int;
+alter table public.profiles add column if not exists desired_jobs     text[];
+alter table public.profiles add column if not exists current_industry text;
+alter table public.profiles add column if not exists timing           text;
+alter table public.profiles add column if not exists updated_at       timestamptz not null default now();
 
 -- 【重要】本人以外は読めない・書けないようにする設定
 alter table public.favorites enable row level security;
@@ -167,9 +179,17 @@ Supabaseの画面からボタン1つで切り替えられ、作り直しは不�
 
 このマイページで預かるのは以下だけです。
 
-- メールアドレス
-- お名前（任意入力）
+- メールアドレス（ログインに使うので必須）
+- お名前（任意）
+- 希望年収の下限（任意）
+- 希望職種（任意）
+- 現在のお仕事の業種（任意）
+- 転職を考えている時期（任意）
 - ★を付けた求人のID
 
-公開前に、プライバシーポリシー（`privacy.html`）へ
-「会員登録された方のメールアドレス・氏名・お気に入り求人を取得する」旨の追記が必要です。
+公開前に、プライバシーポリシー（`privacy.html`）へ上記を取得する旨の追記が必要です。
+
+### 登録された会員を見るには
+
+Supabaseの左メニュー **Table Editor** → `profiles` / `favorites` を開けば一覧できます。
+`favorites` の `job_id` は求人サイト側の求人IDです。

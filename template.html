@@ -320,6 +320,29 @@
   .auth__who b{font-weight:700; word-break:break-all}
   .auth__note{font-size:12px; color:var(--ink-3); margin-top:10px; line-height:1.7}
 
+  /* 会員プロフィール（ログインしているときだけ表示） */
+  .prof{margin-top:16px; padding-top:16px; border-top:1px solid var(--line)}
+  .prof__h{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:700; margin:0 0 4px}
+  .prof__lead{font-size:12.5px; color:var(--ink-3); line-height:1.7; margin:0 0 14px}
+  .pf{margin-bottom:14px}
+  .pf__t{display:block; font-size:12.5px; font-weight:700; color:var(--ink-2); margin-bottom:6px}
+  .pf select, .pf input[type=text]{
+    flex:none; width:100%; padding:10px 12px; font-family:inherit; font-size:14px;
+    border:1px solid var(--line); border-radius:var(--r-input); background:var(--surface); color:var(--ink);
+  }
+  .pf select:focus-visible, .pf input:focus-visible{outline:2px solid var(--focus); outline-offset:1px}
+  .pf__chips{display:flex; flex-wrap:wrap; gap:7px}
+  .pf__chip input{position:absolute; opacity:0; width:0; height:0}
+  .pf__chip>span{
+    display:inline-block; padding:7px 12px; border:1px solid var(--line); border-radius:999px;
+    background:var(--surface); font-size:12.5px; color:var(--ink-2); line-height:1.25; transition:border-color .15s, background .15s;
+  }
+  .pf__chip .cnt{font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-left:4px}
+  .pf__chip input:checked+span{border-color:var(--accent); background:color-mix(in srgb,var(--accent) 10%, var(--surface)); color:var(--accent); font-weight:700}
+  .pf__chip input:checked+span .cnt{color:var(--accent)}
+  .pf__chip input:focus-visible+span{outline:2px solid var(--focus); outline-offset:1px}
+  .prof__act{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:2px}
+
   .myrow{
     position:relative; display:block; width:100%; text-align:left; color:inherit;
     background:var(--surface); border:1px solid var(--line); border-radius:var(--r-card);
@@ -716,6 +739,9 @@ JOBS.forEach(j=>{
   const rtxt=loc+" "+(j.jobContent||"")+" "+(j.benefits||"");
   j.remote=/在宅|リモート|テレワーク|フルリモート/.test(rtxt);
   j._skey = (j.salaryMax!=null?j.salaryMax:(j.salaryMin!=null?j.salaryMin:-1));
+  /* 「法人営業（営業）」→「営業」。末尾の括弧が職種の大分類。プロフィールの希望職種に使う */
+  const gm=String(j.jobCategory||"").match(/（([^（）]+)）\s*$/);
+  j.jobGroup = gm?gm[1]:"";
   j._hay = [j.company,j.position,j.title,j.jobCategory,(j.industry||[]).join(" "),j.location,j.jobContent,j.must,j.welcome,j.idealPerson].filter(Boolean).join(" ").toLowerCase();
 });
 
@@ -1160,6 +1186,90 @@ document.addEventListener("keydown",e=>{
   toggleFav(f.dataset.fav);
 });
 
+/* ---- 会員プロフィール（ログイン中のみ表示・すべて任意入力） ----
+   希望職種は求人データから自動生成するので、jobs.json が増えても手直し不要。
+   現職の業種だけは求人の「業界」と目的が違う（求職者側の属性）ため固定リスト。 */
+const SAL_OPTS=[400,500,600,700,800,1000,1200];
+const TIMING_OPTS=["すぐにでも","3ヶ月以内","半年以内","1年以内","良い求人があれば"];
+const INDUSTRY_OPTS=[
+  "IT・インターネット","SIer・システム開発","コンサルティング","金融（銀行・証券・保険）",
+  "メーカー・製造","商社","建設・不動産","人材・教育","広告・マーケティング",
+  "医療・介護・福祉","小売・流通","運輸・物流","飲食・サービス","公務員・団体",
+  "士業・専門サービス","学生","その他"
+];
+const JOB_GROUPS=(()=>{
+  const m=new Map();
+  JOBS.forEach(j=>{ if(j.jobGroup) m.set(j.jobGroup,(m.get(j.jobGroup)||0)+1); });
+  return [...m.entries()].sort((a,b)=>b[1]-a[1]);
+})();
+
+function pfSelect(id,label,opts,val,placeholder){
+  const cur=String(val==null?"":val);
+  return `<div class="pf"><label class="pf__t" for="${id}">${esc(label)}</label>
+    <select id="${id}"><option value="">${esc(placeholder)}</option>${
+      opts.map(o=>{
+        const v=String(o&&o.v!=null?o.v:o), t=String(o&&o.t!=null?o.t:o);
+        return `<option value="${esc(v)}"${cur===v?" selected":""}>${esc(t)}</option>`;
+      }).join("")
+    }</select></div>`;
+}
+function profileHtml(){
+  const p=myProfile||{};
+  const want=new Set(p.desired_jobs||[]);
+  return `<div class="prof">
+    <p class="prof__h">プロフィール</p>
+    <p class="prof__lead">ご希望を登録しておくと、条件に合う求人をご案内できます。<b>すべて任意</b>です。</p>
+    <div class="pf"><label class="pf__t" for="profName">お名前</label>
+      <input id="profName" type="text" autocomplete="name" placeholder="例）山田 太郎" value="${esc(p.full_name||"")}"></div>
+    ${pfSelect("profSalary","希望年収（下限）",SAL_OPTS.map(v=>({v:v,t:v+"万円以上"})),p.desired_salary||"","指定なし")}
+    ${pfSelect("profTiming","転職を考えている時期",TIMING_OPTS,p.timing||"","未選択")}
+    <div class="pf"><span class="pf__t">希望職種（複数選べます）</span>
+      <div class="pf__chips">${JOB_GROUPS.map(([g,c])=>
+        `<label class="pf__chip"><input type="checkbox" data-job="${esc(g)}"${want.has(g)?" checked":""}><span>${esc(g)}<span class="cnt">${c}</span></span></label>`
+      ).join("")}</div></div>
+    ${pfSelect("profIndustry","現在のお仕事の業種",INDUSTRY_OPTS,p.current_industry||"","未選択")}
+    <div class="prof__act">
+      <button class="auth__btn" id="profSave">プロフィールを保存</button>
+      <button class="auth__btn auth__btn--ghost" id="profSearch">この希望条件で求人を探す</button>
+      <button class="auth__btn auth__btn--ghost" id="authOut">ログアウト</button>
+    </div>
+    <p class="auth__msg" id="authMsg" hidden></p>
+  </div>`;
+}
+function readProfileForm(){
+  const v=id=>{ const el=$(id); return el?el.value:""; };
+  const sal=parseInt(v("#profSalary"),10);
+  return {
+    full_name: v("#profName").trim(),
+    desired_salary: isNaN(sal)?null:sal,
+    desired_jobs: [...document.querySelectorAll("#myBody input[data-job]")].filter(c=>c.checked).map(c=>c.dataset.job),
+    timing: v("#profTiming"),
+    current_industry: v("#profIndustry")
+  };
+}
+/* 希望条件をそのまま検索条件に流し込む（大分類→該当する職種カテゴリを全部ON） */
+function applyProfileSearch(){
+  const p=readProfileForm();
+  clearFacet("jobCategory");
+  if(p.desired_jobs.length){
+    const vals=new Set();
+    JOBS.forEach(j=>{ if(j.jobGroup&&j.jobCategory&&p.desired_jobs.includes(j.jobGroup)) vals.add(j.jobCategory); });
+    vals.forEach(val=>{
+      state.sel.jobCategory.add(val);
+      const el=document.querySelector(`[data-facet="jobCategory"][data-val="${CSS.escape(val)}"]`);
+      if(el){ if(el.type==="checkbox") el.checked=true; else el.setAttribute("aria-pressed","true"); }
+    });
+    syncGroupState("jobCategory");
+  }
+  state.salaryMin=p.desired_salary||0;
+  const r=$("#salRange"); if(r) r.value=state.salaryMin;
+  const lbl=$("#salLbl"); if(lbl) lbl.textContent = state.salaryMin>0?state.salaryMin+"万円以上":"指定なし";
+  apply();
+  closeMypage();
+  window.scrollTo({top:0, behavior:"smooth"});
+  track("profile_search",{jobs:p.desired_jobs.length, salary:state.salaryMin});
+}
+
 /* ---- マイページ本体 ---- */
 function authBoxHtml(){
   if(!authEnabled()){
@@ -1183,18 +1293,12 @@ function authBoxHtml(){
       <p class="auth__note">いま★を付けている求人は、ログインすると自動的に引き継がれます。</p>
     </div>`;
   }
-  const nm=(myProfile&&myProfile.full_name)||"";
   return `<div class="auth">
     <div class="auth__who">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
       <span>ログイン中：<b>${esc(me.email||"")}</b></span>
     </div>
-    <div class="auth__row">
-      <input id="profName" type="text" placeholder="お名前（任意）" autocomplete="name" value="${esc(nm)}" aria-label="お名前">
-      <button class="auth__btn" id="profSave">保存</button>
-      <button class="auth__btn auth__btn--ghost" id="authOut">ログアウト</button>
-    </div>
-    <p class="auth__msg" id="authMsg" hidden></p>
+    ${profileHtml()}
   </div>`;
 }
 function myRowHtml(j){
@@ -1228,6 +1332,8 @@ function wireMypage(){
   if(em) em.addEventListener("keydown",e=>{ if(e.key==="Enter") sendMagicLink(); });
   if(out) out.addEventListener("click",signOut);
   if(save) save.addEventListener("click",saveProfile);
+  const psearch=$("#profSearch");
+  if(psearch) psearch.addEventListener("click",applyProfileSearch);
   $("#myBody").querySelectorAll("[data-open]").forEach(el=>{
     el.addEventListener("click",e=>{ if(e.target.closest(".fav")) return; closeMypage(); openDetail(el.dataset.open); });
     el.addEventListener("keydown",e=>{ if(e.key==="Enter"){ closeMypage(); openDetail(el.dataset.open); } });
@@ -1283,16 +1389,25 @@ async function signOut(){
   me=null; myProfile=null; renderMypage();
 }
 async function saveProfile(){
-  const el=$("#profName"); if(!el||!me) return;
-  const name=el.value.trim();
-  const btn=$("#profSave"); btn.disabled=true;
+  if(!me||!sb) return;
+  const p=readProfileForm();
+  const btn=$("#profSave"); btn.disabled=true; btn.textContent="保存中…";
   try{
-    const {error}=await sb.from("profiles").upsert({id:me.id, full_name:name});
+    const {error}=await sb.from("profiles").upsert({
+      id:me.id,
+      full_name:        p.full_name||null,
+      desired_salary:   p.desired_salary,
+      desired_jobs:     p.desired_jobs,
+      current_industry: p.current_industry||null,
+      timing:           p.timing||null,
+      updated_at:       new Date().toISOString()
+    });
     if(error) throw error;
-    myProfile={full_name:name};
+    myProfile=p;
     authMsg("保存しました。",true);
-  }catch(e){ authMsg("保存できませんでした。",false); console.warn(e); }
-  finally{ btn.disabled=false; }
+    track("profile_save",{fields:Object.values(p).filter(v=>v&&(!Array.isArray(v)||v.length)).length});
+  }catch(e){ authMsg("保存できませんでした。時間をおいて試してください。",false); console.warn(e); }
+  finally{ btn.disabled=false; btn.textContent="プロフィールを保存"; }
 }
 async function onSignedIn(user){
   me=user;
@@ -1303,7 +1418,7 @@ async function onSignedIn(user){
     }
     const {data,error}=await sb.from("favorites").select("job_id").eq("user_id",user.id);
     if(!error&&data){ favs=new Set(data.map(r=>r.job_id)); saveLocalFavs(); }
-    const p=await sb.from("profiles").select("full_name").eq("id",user.id).maybeSingle();
+    const p=await sb.from("profiles").select("full_name,desired_salary,desired_jobs,current_industry,timing").eq("id",user.id).maybeSingle();
     myProfile=p.data||null;
   }catch(e){ console.warn("ログイン後の同期に失敗しました",e); }
   paintFavs(); updateMyBadge();
