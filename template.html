@@ -1235,7 +1235,22 @@ document.addEventListener("keydown",e=>{
    希望職種は求人データから自動生成するので、jobs.json が増えても手直し不要。
    現職の業種だけは求人の「業界」と目的が違う（求職者側の属性）ため固定リスト。 */
 const SAL_OPTS=[400,500,600,700,800,1000,1200];
+const SAL_IDEAL_OPTS=[400,500,600,700,800,900,1000,1200,1500,2000];
+const AGE_OPTS=(()=>{ const a=[]; for(let n=18;n<=70;n++) a.push({v:n,t:n+"歳"}); a.push({v:71,t:"71歳以上"}); return a; })();
 const TIMING_OPTS=["すぐにでも","3ヶ月以内","半年以内","1年以内","良い求人があれば"];
+/* 希望勤務地は地域ブロックで聞く（都道府県だと選ぶのが大変で、求人も11都府県にしか無いため）。
+   「この希望条件で求人を探す」では、ブロック→実際に求人がある都道府県に展開して絞り込む。 */
+const AREA_BLOCKS=[
+  ["関東",       ["茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県"]],
+  ["東海",       ["岐阜県","静岡県","愛知県","三重県"]],
+  ["関西",       ["滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県"]],
+  ["北海道",     ["北海道"]],
+  ["東北",       ["青森県","岩手県","宮城県","秋田県","山形県","福島県"]],
+  ["北陸・甲信越",["新潟県","富山県","石川県","福井県","山梨県","長野県"]],
+  ["中国",       ["鳥取県","島根県","岡山県","広島県","山口県"]],
+  ["四国",       ["徳島県","香川県","愛媛県","高知県"]],
+  ["九州・沖縄", ["福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]]
+];
 const INDUSTRY_OPTS=[
   "IT・インターネット","SIer・システム開発","コンサルティング","金融（銀行・証券・保険）",
   "メーカー・製造","商社","建設・不動産","人材・教育","広告・マーケティング",
@@ -1246,6 +1261,14 @@ const JOB_GROUPS=(()=>{
   const m=new Map();
   JOBS.forEach(j=>{ if(j.jobGroup) m.set(j.jobGroup,(m.get(j.jobGroup)||0)+1); });
   return [...m.entries()].sort((a,b)=>b[1]-a[1]);
+})();
+/* ブロックごとの求人件数（0件のブロックも選べるようにしておく＝ご希望として受け取るため） */
+const AREA_COUNTS=(()=>{
+  const m=new Map();
+  AREA_BLOCKS.forEach(([name,prefs])=>{
+    m.set(name, JOBS.filter(j=>j.areas&&j.areas.some(a=>prefs.includes(a))).length);
+  });
+  return m;
 })();
 
 /* ---- 履歴書・職務経歴書（ログイン中のみ・任意） ----
@@ -1362,18 +1385,31 @@ function pfSelect(id,label,opts,val,placeholder){
 function profileHtml(){
   const p=myProfile||{};
   const want=new Set(p.desired_jobs||[]);
+  const exp=new Set(p.experience_jobs||[]);
+  const area=new Set(p.desired_areas||[]);
   return `<div class="prof">
     <p class="prof__h">プロフィール</p>
     <p class="prof__lead">ご希望を登録しておくと、条件に合う求人をご案内できます。<b>すべて任意</b>です。</p>
     <div class="pf"><label class="pf__t" for="profName">お名前</label>
       <input id="profName" type="text" autocomplete="name" placeholder="例）山田 太郎" value="${esc(p.full_name||"")}"></div>
-    ${pfSelect("profSalary","希望年収（下限）",SAL_OPTS.map(v=>({v:v,t:v+"万円以上"})),p.desired_salary||"","指定なし")}
-    ${pfSelect("profTiming","転職を考えている時期",TIMING_OPTS,p.timing||"","未選択")}
+    ${pfSelect("profAge","年齢",AGE_OPTS,p.age||"","未選択")}
+    ${pfSelect("profIndustry","現在のお仕事の業種",INDUSTRY_OPTS,p.current_industry||"","未選択")}
+    <div class="pf"><span class="pf__t">経験のある職種（複数選べます）</span>
+      <div class="pf__chips">${JOB_GROUPS.map(([g,c])=>
+        `<label class="pf__chip"><input type="checkbox" data-exp="${esc(g)}"${exp.has(g)?" checked":""}><span>${esc(g)}</span></label>`
+      ).join("")}</div></div>
     <div class="pf"><span class="pf__t">希望職種（複数選べます）</span>
       <div class="pf__chips">${JOB_GROUPS.map(([g,c])=>
         `<label class="pf__chip"><input type="checkbox" data-job="${esc(g)}"${want.has(g)?" checked":""}><span>${esc(g)}<span class="cnt">${c}</span></span></label>`
       ).join("")}</div></div>
-    ${pfSelect("profIndustry","現在のお仕事の業種",INDUSTRY_OPTS,p.current_industry||"","未選択")}
+    <div class="pf"><span class="pf__t">希望勤務地（複数選べます）</span>
+      <div class="pf__chips">${AREA_BLOCKS.map(([name])=>{
+        const c=AREA_COUNTS.get(name)||0;
+        return `<label class="pf__chip"><input type="checkbox" data-area="${esc(name)}"${area.has(name)?" checked":""}><span>${esc(name)}${c?`<span class="cnt">${c}</span>`:""}</span></label>`;
+      }).join("")}</div></div>
+    ${pfSelect("profSalary","希望年収（最低ライン）",SAL_OPTS.map(v=>({v:v,t:v+"万円以上"})),p.desired_salary||"","指定なし")}
+    ${pfSelect("profSalaryIdeal","希望年収（理想）",SAL_IDEAL_OPTS.map(v=>({v:v,t:v+"万円くらい"})),p.desired_salary_ideal||"","指定なし")}
+    ${pfSelect("profTiming","転職を考えている時期",TIMING_OPTS,p.timing||"","未選択")}
     ${docsHtml()}
     <div class="prof__act">
       <button class="auth__btn" id="profSave">プロフィールを保存</button>
@@ -1385,11 +1421,16 @@ function profileHtml(){
 }
 function readProfileForm(){
   const v=id=>{ const el=$(id); return el?el.value:""; };
-  const sal=parseInt(v("#profSalary"),10);
+  const num=id=>{ const n=parseInt(v(id),10); return isNaN(n)?null:n; };
+  const checked=attr=>[...document.querySelectorAll(`#myBody input[data-${attr}]`)].filter(c=>c.checked).map(c=>c.dataset[attr]);
   return {
     full_name: v("#profName").trim(),
-    desired_salary: isNaN(sal)?null:sal,
-    desired_jobs: [...document.querySelectorAll("#myBody input[data-job]")].filter(c=>c.checked).map(c=>c.dataset.job),
+    age: num("#profAge"),
+    desired_salary: num("#profSalary"),
+    desired_salary_ideal: num("#profSalaryIdeal"),
+    desired_jobs: checked("job"),
+    experience_jobs: checked("exp"),
+    desired_areas: checked("area"),
     timing: v("#profTiming"),
     current_industry: v("#profIndustry")
   };
@@ -1408,13 +1449,26 @@ function applyProfileSearch(){
     });
     syncGroupState("jobCategory");
   }
+  /* 希望勤務地：ブロック → 実際に求人がある都道府県に展開して絞り込む */
+  clearFacet("areas");
+  if(p.desired_areas.length){
+    const prefs=new Set();
+    AREA_BLOCKS.forEach(([name,list])=>{ if(p.desired_areas.includes(name)) list.forEach(x=>prefs.add(x)); });
+    prefs.forEach(val=>{
+      if(!JOBS.some(j=>j.areas&&j.areas.includes(val))) return;   /* 求人が無い県はチェック欄自体が無い */
+      state.sel.areas.add(val);
+      const el=document.querySelector(`[data-facet="areas"][data-val="${CSS.escape(val)}"]`);
+      if(el){ if(el.type==="checkbox") el.checked=true; else el.setAttribute("aria-pressed","true"); }
+    });
+    syncGroupState("areas");
+  }
   state.salaryMin=p.desired_salary||0;
   const r=$("#salRange"); if(r) r.value=state.salaryMin;
   const lbl=$("#salLbl"); if(lbl) lbl.textContent = state.salaryMin>0?state.salaryMin+"万円以上":"指定なし";
   apply();
   closeMypage();
   window.scrollTo({top:0, behavior:"smooth"});
-  track("profile_search",{jobs:p.desired_jobs.length, salary:state.salaryMin});
+  track("profile_search",{jobs:p.desired_jobs.length, areas:p.desired_areas.length, salary:state.salaryMin});
 }
 
 /* ---- マイページ本体 ---- */
@@ -1574,12 +1628,16 @@ async function saveProfile(){
   try{
     const {error}=await sb.from("profiles").upsert({
       id:me.id,
-      full_name:        p.full_name||null,
-      desired_salary:   p.desired_salary,
-      desired_jobs:     p.desired_jobs,
-      current_industry: p.current_industry||null,
-      timing:           p.timing||null,
-      updated_at:       new Date().toISOString()
+      full_name:            p.full_name||null,
+      age:                  p.age,
+      desired_salary:       p.desired_salary,
+      desired_salary_ideal: p.desired_salary_ideal,
+      desired_jobs:         p.desired_jobs,
+      experience_jobs:      p.experience_jobs,
+      desired_areas:        p.desired_areas,
+      current_industry:     p.current_industry||null,
+      timing:               p.timing||null,
+      updated_at:           new Date().toISOString()
     });
     if(error) throw error;
     myProfile=Object.assign({},myProfile||{},p);   /* 書類の情報を消さないようにマージする */
@@ -1597,7 +1655,7 @@ async function onSignedIn(user){
     }
     const {data,error}=await sb.from("favorites").select("job_id").eq("user_id",user.id);
     if(!error&&data){ favs=new Set(data.map(r=>r.job_id)); saveLocalFavs(); }
-    const p=await sb.from("profiles").select("full_name,desired_salary,desired_jobs,current_industry,timing,resume_path,resume_name,resume_at,cv_path,cv_name,cv_at").eq("id",user.id).maybeSingle();
+    const p=await sb.from("profiles").select("full_name,age,desired_salary,desired_salary_ideal,desired_jobs,experience_jobs,desired_areas,current_industry,timing,resume_path,resume_name,resume_at,cv_path,cv_name,cv_at").eq("id",user.id).maybeSingle();
     myProfile=p.data||null;
   }catch(e){ console.warn("ログイン後の同期に失敗しました",e); }
   paintFavs(); updateMyBadge();

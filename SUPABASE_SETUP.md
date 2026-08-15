@@ -141,6 +141,21 @@ create policy "本人の書類のみ削除" on storage.objects for delete
 > バケットを **public にしない**ことと、この4つの policy が
 > 「他人の履歴書を見られない」を担保しています。**消さないでください。**
 
+### 追加：プロフィール項目の拡張（2026-08-15）
+
+年齢・経験職種・希望勤務地・希望年収（理想）を追加しました。同じ SQL Editor で実行します。
+
+```sql
+alter table public.profiles add column if not exists age                  int;    -- 年齢
+alter table public.profiles add column if not exists experience_jobs      text[]; -- 経験のある職種（複数）
+alter table public.profiles add column if not exists desired_areas        text[]; -- 希望勤務地（地域ブロック・複数）
+alter table public.profiles add column if not exists desired_salary_ideal int;    -- 希望年収の理想（万円）
+```
+
+> `desired_salary` は「最低ライン」、`desired_salary_ideal` は「理想」です。画面上もそう表示しています。
+> `desired_areas` に入るのは都道府県ではなく **地域ブロック名**（関東／東海／関西 …）です。
+> ブロックの定義は `template.html` の `AREA_BLOCKS` にあります。
+
 **担当者が中身を見るには**、左メニューの **Storage** → `documents` を開きます。
 フォルダ名は会員のユーザーIDです。誰のものかは **Table Editor** の `profiles` と突き合わせて確認します。
 
@@ -247,10 +262,14 @@ Supabaseの画面からボタン1つで切り替えられ、作り直しは不�
 
 - メールアドレス（ログインに使うので必須）
 - お名前（任意）
-- 希望年収の下限（任意）
-- 希望職種（任意）
+- 年齢（任意）
 - 現在のお仕事の業種（任意）
+- 経験のある職種（任意）
+- 希望職種（任意）
+- 希望勤務地（任意）
+- 希望年収の最低ライン・理想（任意）
 - 転職を考えている時期（任意）
+- 履歴書・職務経歴書（任意・アップロードした場合のみ）
 - ★を付けた求人のID
 
 公開前に、プライバシーポリシー（`privacy.html`）へ上記を取得する旨の追記が必要です。
