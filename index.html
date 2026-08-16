@@ -284,7 +284,7 @@
   .empty button{margin-top:16px; padding:10px 22px; border:none; border-radius:var(--r-pill); background:var(--accent); color:#fff; font-weight:700}
 
   /* ---------- Detail panel ---------- */
-  /* ---------- お気に入り／マイページ ---------- */
+  /* ---------- 気になる求人／マイページ ---------- */
   .fav{
     position:absolute; top:11px; right:11px; z-index:2;
     display:grid; place-items:center; width:32px; height:32px;
@@ -1275,7 +1275,7 @@ $("#themeBtn").addEventListener("click",()=>setTheme(currentTheme()==="dark"?"li
 (function initTheme(){ let t; try{t=localStorage.getItem("jobsite-theme");}catch(e){} setTheme(t|| (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")); })();
 
 /* =========================================================================
-   お気に入り／マイページ
+   気になる求人／マイページ
 
    ■ 設定していないとき（初期状態）
      「この端末に保存」モードで動きます。★は押せて、同じブラウザで開けば残ります。
@@ -1333,8 +1333,8 @@ function paintFavs(){
     const on=favs.has(b.dataset.fav);
     b.classList.toggle("on",on);
     b.setAttribute("aria-pressed", on?"true":"false");
-    b.setAttribute("aria-label", on?"お気に入りから外す":"お気に入りに追加");
-    b.title = on?"お気に入りから外す":"お気に入りに追加";
+    b.setAttribute("aria-label", on?"気になる求人から外す":"気になる求人に追加");
+    b.title = on?"気になる求人から外す":"気になる求人に追加";
   });
 }
 function updateMyBadge(){
@@ -1352,7 +1352,7 @@ async function toggleFav(id){
     try{
       if(on) await sb.from("favorites").upsert({user_id:me.id, job_id:id},{onConflict:"user_id,job_id"});
       else   await sb.from("favorites").delete().eq("user_id",me.id).eq("job_id",id);
-    }catch(e){ console.warn("お気に入りの同期に失敗しました",e); }
+    }catch(e){ console.warn("気になる求人の同期に失敗しました",e); }
   }
 }
 /* 詳細パネルの★とマイページ内の★（#grid の外）をまとめて拾う */
@@ -1640,9 +1640,9 @@ function authBoxHtml(){
   if(!authEnabled()){
     return `<div class="auth">
       <h3>この端末に保存しています</h3>
-      <p>お気に入りは、いまお使いのブラウザに保存されています。<br>
+      <p>気になる求人は、いまお使いのブラウザに保存されています。<br>
          別の端末やブラウザからは表示されません。</p>
-      <p class="auth__note">※ 会員登録（メールでログイン）を有効にすると、どの端末からでも同じお気に入りを見られるようになります。</p>
+      <p class="auth__note">※ 会員登録（メールでログイン）を有効にすると、どの端末からでも同じ気になる求人を見られるようになります。</p>
     </div>`;
   }
   if(!me){
