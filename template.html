@@ -944,10 +944,37 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const PREFS=["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
 
+/* 勤務地の生データ（「【アクセス】」「〒150-6015」「東京都港区南青山1-12-3 ○○ビル5F」など）を
+   カード用に「都道府県＋市区町村」へ整える。詳細パネルには生データをそのまま出す（情報を落とさない）。
+   ⚠ 市区町村の切り出しは遅延マッチ＋[市町村]?。greedyにすると「中央区日本橋富沢町」を拾って壊れる。 */
+const BARE_CITY={"東京":"東京都","大阪":"大阪府","京都":"京都府","名古屋":"愛知県名古屋市","福岡":"福岡県福岡市","札幌":"北海道札幌市","横浜":"神奈川県横浜市","神戸":"兵庫県神戸市","仙台":"宮城県仙台市","広島":"広島県広島市"};
+function locLabel(loc){
+  loc=String(loc||"");
+  const areas=PREFS.filter(p=>loc.includes(p));
+  const lines=loc.split(/\n/).map(s=>s.trim()).filter(Boolean)
+    .map(s=>s.replace(/^[【\[][^】\]]*[】\]]\s*/,"").replace(/^[■◆●○・*\-]+\s*/,"").trim())
+    .filter(s=>s && !/^[〒\d\-−ー\s]+$/.test(s));   /* 郵便番号だけの行は捨てる */
+  let base="";
+  for(const s of lines){
+    const p=PREFS.find(x=>s.includes(x)); if(!p) continue;
+    const rest=s.slice(s.indexOf(p)+p.length);
+    const m=rest.match(/^\s*([^\s0-9０-９]{1,8}?[市区町村郡][市町村]?)/);   /* 四日市市・町田市を落とさない */
+    base=m?p+m[1]:p; break;
+  }
+  if(!base && areas.length) base=areas[0];
+  if(!base){
+    const f=(lines[0]||"").replace(/(オフィス|勤務地|勤務|本社|支社|エリア|市内|都内|府内|県内)$/,"").trim();
+    base=BARE_CITY[f] || (f && f.length<=8 ? (lines[0]||"").trim() : "");
+  }
+  if(base && areas.length>1) base+=" 他"+(areas.length-1);
+  return base;
+}
+
 /* enrich each job: prefectures + remote flag + salary sort key */
 JOBS.forEach(j=>{
   const loc=(j.location||"");
   j.areas=PREFS.filter(p=>loc.includes(p));
+  j.locShort=locLabel(loc);
   const rtxt=loc+" "+(j.jobContent||"")+" "+(j.benefits||"");
   j.remote=/在宅|リモート|テレワーク|フルリモート/.test(rtxt);
   j._skey = (j.salaryMax!=null?j.salaryMax:(j.salaryMin!=null?j.salaryMin:-1));
@@ -1178,7 +1205,7 @@ function cardHtml(j){
   if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
   if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
   const ind=(j.industry&&j.industry[0])?`<span class="card__ind">${esc(j.industry[0])}</span>`:"";
-  const loc=j.location?`<span class="card__loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${esc((j.location||"").split(/\n/)[0])}</span></span>`:"";
+  const loc=j.locShort?`<span class="card__loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${esc(j.locShort)}</span></span>`:"";
   return `<button class="card" data-id="${esc(j.id)}">
     ${favBtn(j.id)}
     <div class="card__eyebrow"><span class="card__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
