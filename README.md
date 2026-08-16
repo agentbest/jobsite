@@ -104,6 +104,24 @@ Airtable テーブル: **求人の問い合わせ（サイト）** `tbltITsj4OmX
 4. 右上 **Share form** → 共有リンクをコピー
 5. `template.html` の `INQUIRY_FORM_URL` に貼る → `node rebuild.js` → commit & push
 
+### Slack 通知
+
+問い合わせが入ると Slack の **#notification_siteoubo**（`C0BKL6YEDPV`）へ投稿します。
+Airtable のオートメーション **「求人サイトの問い合わせを Slack へ通知」** `wflaOu5LOuWTDwia1`
+（https://airtable.com/appYkc36EvioYoL1A/wflaOu5LOuWTDwia1 ）が担当します。
+
+`#notification_siteoubo` は元々「求人応募（サイト）」の通知先でしたが、
+**応募導線を削除したためこのチャンネルは無音になります。**
+求人サイト由来の反応をここに集約する形にしました。
+
+通知は「ご希望の連絡方法」を先頭に出しています。**電話の折り返し希望は早く気づく必要がある**ためです。
+
+> ⚠ **オートメーションは作成しただけでは動きません。** Airtable の画面で内容を確認して
+> **オンにする**必要があります（API から作成したものは必ず下書き状態になります）。
+>
+> ⚠ 選択肢フィールド（ご希望の連絡方法・電話のご希望時間帯）は `…["fldXXX","name"]` のように
+> **`name` まで指定しないと保存できません**。オブジェクトが返るためです。
+
 ### ⚠ プリフィルはフィールド名と一致していないと効かない
 
 `template.html` の `inquiryUrl()` が `prefill_ご希望の連絡方法` / `prefill_対象求人` /
