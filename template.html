@@ -329,6 +329,40 @@
   .auth__who b{font-weight:700; word-break:break-all}
   .auth__note{font-size:12px; color:var(--ink-3); margin-top:10px; line-height:1.7}
 
+  /* 求人案内の受信同意。利用規約への包括同意とは別に、個別に取る（特定電子メール法）。
+     既定はオフ。チェックしなくても会員登録そのものは進められる。 */
+  .consent{
+    display:flex; gap:9px; align-items:flex-start; margin:12px 0 0;
+    font-size:12.5px; color:var(--ink-2); line-height:1.7; cursor:pointer;
+  }
+  .consent input[type=checkbox]{
+    flex:0 0 auto; width:17px; height:17px; margin:2px 0 0; accent-color:var(--accent); cursor:pointer;
+  }
+  .consent input:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+
+  /* ★を押した人に出す、その場の登録案内。モーダルにはしない（操作を止めない）。 */
+  .signal{
+    position:fixed; left:50%; transform:translateX(-50%) translateY(140%);
+    bottom:16px; z-index:60; width:min(440px, calc(100vw - 24px));
+    border:1px solid var(--line); border-radius:var(--r-card); background:var(--surface);
+    box-shadow:0 12px 36px rgba(0,0,0,.18); padding:16px 16px 14px;
+    transition:transform .28s cubic-bezier(.22,.9,.3,1); visibility:hidden;
+  }
+  .signal.open{transform:translateX(-50%) translateY(0); visibility:visible}
+  .signal h3{margin:0 0 6px; font-size:14.5px; padding-right:26px}
+  .signal p{margin:0 0 12px; font-size:12.5px; color:var(--ink-2); line-height:1.75}
+  .signal__x{
+    position:absolute; top:10px; right:10px; width:28px; height:28px; display:grid; place-items:center;
+    border:0; background:transparent; color:var(--ink-3); border-radius:8px;
+  }
+  .signal__x:hover{background:var(--surface-2); color:var(--ink)}
+  .signal__later{
+    display:inline-block; margin-top:10px; padding:0; border:0; background:transparent;
+    color:var(--ink-3); font-size:12px; text-decoration:underline; text-underline-offset:3px;
+  }
+  .signal__later:hover{color:var(--ink-2)}
+  @media (prefers-reduced-motion:reduce){ .signal{transition:none} }
+
   /* 会員プロフィール（ログインしているときだけ表示） */
   .prof{margin-top:16px; padding-top:16px; border-top:1px solid var(--line)}
   .prof__h{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:700; margin:0 0 4px}
@@ -757,6 +791,27 @@
   <div class="panel__body" id="myBody"></div>
 </aside>
 
+<!-- 「気になる」が一定数たまった人にだけ出す登録案内。ログイン済み・辞退済みには出ない。 -->
+<aside class="signal" id="signal" role="region" aria-labelledby="signalTitle" hidden>
+  <button class="signal__x" id="signalX" aria-label="閉じる">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <h3 id="signalTitle">気になる求人が<span id="signalCount">2</span>件になりました</h3>
+  <p>保存した求人に動きがあったときや、条件の近い求人が出たときに、担当エージェントからお知らせします。<br>
+     メールアドレスを入れると確認用のリンクが届きます。<b>パスワードは不要</b>です。</p>
+  <div class="auth__row">
+    <input id="signalEmail" type="email" placeholder="メールアドレス" autocomplete="email" inputmode="email" aria-label="メールアドレス">
+    <button class="auth__btn" id="signalSend">リンクを送る</button>
+  </div>
+  <label class="consent">
+    <input type="checkbox" id="signalConsent">
+    <span>保存した求人に関するご連絡や、条件の近い求人のご案内をメールで受け取ります（任意・いつでも停止できます）</span>
+  </label>
+  <p class="auth__msg" id="signalMsg" hidden></p>
+  <p class="auth__note">登録をもって<a href="terms.html" target="_blank" rel="noopener">利用規約</a>と<a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に同意いただいたものとみなします。求人のご案内は上のチェックを入れた場合にのみお送りします。</p>
+  <button class="signal__later" id="signalLater">今はしない</button>
+</aside>
+
 <script>
 const JOBS = __JOBS_DATA__;
 
@@ -783,6 +838,20 @@ function applyUrl(j){
   const subject = `【応募】${co}${co&&pos?" / ":""}${pos}`;
   const body = `下記の求人に応募します。\n\n■応募求人：${pos}\n■企業名：${co}\n\n──以下ご記入ください──\n氏名：\nフリガナ：\n電話番号：\n現在の所属：\nご希望・ご質問：\n`;
   return `mailto:${CONTACT_MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+/* 求人詳細から「相談する」を押したとき、どの求人の話かを Calendly に持っていく。
+   Calendly の事前質問は先頭から a1, a2… で埋められる。松岡アカウントの2つの
+   面談メニュー（WEB面談・電話面談）はどちらも1問目が「事前にお伝えしたいこと」
+   なので a1 に入れる。該当する質問がない場合は無視されるだけで害はない。 */
+function consultUrl(j){
+  if(!j) return CONSULT_URL;
+  const pos = j.position||j.jobCategory||j.title||"";
+  const co  = j.company||"";
+  if(!pos && !co) return CONSULT_URL;
+  const p = new URLSearchParams();
+  p.set("a1", `求人サイトを見て相談したいこと：${co}${co&&pos?" / ":""}${pos}`);
+  return CONSULT_URL + (CONSULT_URL.includes("?")?"&":"?") + p.toString();
 }
 
 /* ---------- 計測（GA4・タグ未読込でも落ちない） ---------- */
@@ -1156,14 +1225,17 @@ function openDetail(id){
   const url=(typeof j.url==="string"&&/^https?:\/\//.test(j.url))?j.url:null;
   const siteRow = url?`<dt>企業サイト</dt><dd><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url.replace(/^https?:\/\//,"").replace(/\/$/,""))}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a></dd>`:"";
 
+  /* 当社は人材紹介（推薦）であって求人広告ではないので、主導線は「相談」。
+     書類を出す導線は残すが、実態どおり「推薦を依頼する」と書く。 */
   const cta = `<div class="pd-cta">
-      <a class="btn-primary" href="${esc(applyUrl(j))}" target="_blank" rel="noopener">この求人に応募する
+      <a class="btn-primary" href="${esc(consultUrl(j))}" target="_blank" rel="noopener">この求人について相談する
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      <a class="btn-ghost" href="${esc(CONSULT_URL)}" target="_blank" rel="noopener">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg>
-        担当エージェントに詳しい話を聞きたい</a>
+      <a class="btn-ghost" href="${esc(applyUrl(j))}" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6"/></svg>
+        経歴書を送って推薦を依頼する</a>
     </div>
-    <p class="pd-ctanote">ご応募いただくと、担当エージェント（株式会社エージェントベスト）が内容を確認のうえ、<b>企業へ推薦</b>する形で選考が進みます。書類の書き方や面接対策もお任せください。<b>ご利用は無料</b>です（紹介手数料は採用企業負担）。まずは話を聞くだけでもかまいません。</p>`;
+    <p class="pd-ctanote">当社は人材紹介会社です。この求人へは、担当エージェント（株式会社エージェントベスト）が<b>企業へ推薦</b>する形で選考が進みます。<b>ご利用は無料</b>です（紹介手数料は採用企業負担）。<br>
+      まだ転職を決めていない段階でもかまいません。<b>相談だけでも、経歴書のご用意も不要</b>です。この求人の背景や求められている経験など、公開情報にないところからお話しします。</p>`;
 
   const sec=(title,body,isRich)=> body?`<div class="pd-sec"><h3>${esc(title)}</h3>${isRich?`<div class="rich">${rich(body)}</div>`:body}</div>`:"";
 
@@ -1291,10 +1363,21 @@ const SUPABASE_ANON_KEY = "sb_publishable_kVUJIz-lImX0AD5eALVVaA_YiDqi7GQ";
 const FAV_KEY="jobsite-favs";
 const STAR='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9L12 3.6z"/></svg>';
 
+/* ---- 「気になる」が SIGNAL_AT 件たまったら、その場で登録を案内する ----
+   1件目では出さない（押した手応えだけ返す）。断られたら二度と出さない。
+   ログイン済み・Supabase未設定のときも出さない。 */
+const SIGNAL_AT=2;
+const SIGNAL_KEY="jobsite-signal-off";
+function signalOff(){ try{ return localStorage.getItem(SIGNAL_KEY)==="1"; }catch(e){ return false; } }
+function setSignalOff(){ try{ localStorage.setItem(SIGNAL_KEY,"1"); }catch(e){} }
+
 let favs=new Set();
 let sb=null;        // Supabase クライアント（未設定なら null のまま）
 let me=null;        // ログイン中のユーザー
 let myProfile=null; // { full_name }
+/* profiles に contact_consent 列があるか。SUPABASE_SETUP.md の受信同意SQLが
+   未実行の環境でも、プロフィール本体は壊さずに動かすための退避フラグ。 */
+let hasConsentCols=true;
 
 function authEnabled(){ return !!(SUPABASE_URL && SUPABASE_ANON_KEY); }
 
@@ -1354,6 +1437,52 @@ async function toggleFav(id){
       else   await sb.from("favorites").delete().eq("user_id",me.id).eq("job_id",id);
     }catch(e){ console.warn("気になる求人の同期に失敗しました",e); }
   }
+  if(on) maybeShowSignal();
+}
+
+/* ---- 登録案内パネル ---- */
+function maybeShowSignal(){
+  if(!authEnabled() || me || signalOff()) return;
+  if(favs.size < SIGNAL_AT) return;
+  const el=$("#signal"); if(!el || el.classList.contains("open")) return;
+  const n=$("#signalCount"); if(n) n.textContent=favs.size;
+  el.hidden=false;
+  requestAnimationFrame(()=>el.classList.add("open"));
+  track("signal_shown",{favorites:favs.size});
+}
+function hideSignal(permanent){
+  const el=$("#signal"); if(!el) return;
+  el.classList.remove("open");
+  setTimeout(()=>{ el.hidden=true; }, 300);
+  if(permanent) setSignalOff();
+}
+function signalMsg(text, ok){
+  const el=$("#signalMsg"); if(!el) return;
+  el.hidden=false; el.textContent=text; el.className="auth__msg "+(ok?"ok":"ng");
+}
+/* 求人案内の受信同意は、確認リンクを送る時点では auth のユーザーメタに預けておき、
+   本人がリンクを開いてログインが成立した時点で profiles に書き移す（onSignedIn）。
+   リンクを開かなかった人の同意は、どこにも残らない。 */
+async function sendSignalLink(){
+  if(!sb) return;
+  const el=$("#signalEmail"); if(!el) return;
+  const email=el.value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ signalMsg("メールアドレスの形式を確認してください。",false); return; }
+  const consent=!!($("#signalConsent")||{}).checked;
+  const btn=$("#signalSend"); btn.disabled=true; btn.textContent="送信中…";
+  try{
+    const {error}=await sb.auth.signInWithOtp({
+      email,
+      options:{ emailRedirectTo: location.origin+location.pathname, data:{ contact_consent:consent } }
+    });
+    if(error) throw error;
+    signalMsg("確認用のリンクを送りました。メールをご確認ください。",true);
+    track("signal_submit",{favorites:favs.size, consent:consent});
+    setSignalOff();   /* 送信できたら再表示しない */
+  }catch(e){
+    signalMsg("送信できませんでした。時間をおいて試すか、お問い合わせください。",false);
+    console.warn(e);
+  }finally{ btn.disabled=false; btn.textContent="リンクを送る"; }
 }
 /* 詳細パネルの★とマイページ内の★（#grid の外）をまとめて拾う */
 document.addEventListener("click",e=>{
@@ -1550,6 +1679,13 @@ function profileHtml(){
     ${pfSelect("profSalaryIdeal","希望年収（理想）",SAL_IDEAL_OPTS.map(v=>({v:v,t:v+"万円くらい"})),p.desired_salary_ideal||"","指定なし")}
     ${pfSelect("profTiming","転職を考えている時期",TIMING_OPTS,p.timing||"","未選択")}
     ${docsHtml()}
+    ${hasConsentCols?`<div class="pf"><span class="pf__t">求人のご案内</span>
+      <label class="consent">
+        <input type="checkbox" id="profConsent"${p.contact_consent?" checked":""}>
+        <span>保存した求人に関するご連絡や、条件の近い求人のご案内をメールで受け取る<br>
+          <span style="color:var(--ink-3)">チェックを外して保存すると、以後お送りしません。選考中のご連絡など、ご相談いただいた件についての事務連絡は引き続きお送りします。</span></span>
+      </label>
+    </div>`:""}
     <div class="prof__act">
       <button class="auth__btn" id="profSave">プロフィールを保存</button>
       <button class="auth__btn auth__btn--ghost" id="profSearch">この希望条件で求人を探す</button>
@@ -1596,7 +1732,8 @@ function readProfileForm(){
     experience_jobs: checked("exp"),
     desired_areas: checked("area"),
     timing: v("#profTiming"),
-    current_industry: v("#profIndustry")
+    current_industry: v("#profIndustry"),
+    contact_consent: !!($("#profConsent")||{}).checked
   };
 }
 /* 希望条件をそのまま検索条件に流し込む（大分類→該当する職種カテゴリを全部ON） */
@@ -1654,9 +1791,13 @@ function authBoxHtml(){
         <input id="authEmail" type="email" placeholder="メールアドレス" autocomplete="email" inputmode="email" aria-label="メールアドレス">
         <button class="auth__btn" id="authSend">ログインリンクを送る</button>
       </div>
+      <label class="consent">
+        <input type="checkbox" id="authConsent">
+        <span>保存した求人に関するご連絡や、条件の近い求人のご案内をメールで受け取ります（任意・いつでも停止できます）</span>
+      </label>
       <p class="auth__msg" id="authMsg" hidden></p>
       <p class="auth__note">いま★を付けている求人は、ログインすると自動的に引き継がれます。</p>
-      <p class="auth__note">会員登録・ログインをもって、<a href="terms.html" target="_blank" rel="noopener">利用規約</a>と<a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に同意いただいたものとみなします。退会（登録情報の削除）はマイページからいつでもできます。</p>
+      <p class="auth__note">会員登録・ログインをもって、<a href="terms.html" target="_blank" rel="noopener">利用規約</a>と<a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に同意いただいたものとみなします。<b>求人のご案内は上のチェックを入れた場合にのみお送りします。</b>退会（登録情報の削除）はマイページからいつでもできます。</p>
     </div>`;
   }
   return `<div class="auth">
@@ -1771,6 +1912,12 @@ $("#myClose").addEventListener("click",closeMypage);
 $("#backdrop").addEventListener("click",()=>{ if($("#mypanel").classList.contains("open")) closeMypage(); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&$("#mypanel").classList.contains("open")) closeMypage(); });
 
+/* 登録案内パネル。×と「今はしない」はどちらも辞退＝以後出さない。 */
+$("#signalSend").addEventListener("click",sendSignalLink);
+$("#signalEmail").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); sendSignalLink(); } });
+$("#signalX").addEventListener("click",()=>{ hideSignal(true); track("signal_dismiss",{how:"close"}); });
+$("#signalLater").addEventListener("click",()=>{ hideSignal(true); track("signal_dismiss",{how:"later"}); });
+
 /* ---- ログイン（Supabase を設定したときだけ動く） ---- */
 function loadScript(src){
   return new Promise((ok,ng)=>{ const s=document.createElement("script"); s.src=src; s.onload=ok; s.onerror=()=>ng(new Error(src)); document.head.appendChild(s); });
@@ -1779,12 +1926,16 @@ async function sendMagicLink(){
   const el=$("#authEmail"); if(!el) return;
   const email=el.value.trim();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ authMsg("メールアドレスの形式を確認してください。",false); return; }
+  const consent=!!($("#authConsent")||{}).checked;
   const btn=$("#authSend"); btn.disabled=true; btn.textContent="送信中…";
   try{
-    const {error}=await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin+location.pathname } });
+    const {error}=await sb.auth.signInWithOtp({
+      email,
+      options:{ emailRedirectTo: location.origin+location.pathname, data:{ contact_consent:consent } }
+    });
     if(error) throw error;
     authMsg("ログイン用のリンクを送りました。メールをご確認ください。",true);
-    track("login_link_sent",{});
+    track("login_link_sent",{consent:consent});
   }catch(e){
     authMsg("送信できませんでした。時間をおいて試すか、お問い合わせください。",false);
     console.warn(e);
@@ -1829,20 +1980,33 @@ async function saveProfile(){
   if(!me||!sb) return;
   const p=readProfileForm();
   const btn=$("#profSave"); btn.disabled=true; btn.textContent="保存中…";
+  const now=new Date().toISOString();
+  /* 同意した日時は、オフ→オンに変わったときだけ打ち直す（いつ同意を得たかの記録） */
+  const was=!!(myProfile&&myProfile.contact_consent);
+  p.contact_consent_at = p.contact_consent ? (was ? (myProfile.contact_consent_at||now) : now) : null;
+  const row={
+    id:me.id,
+    full_name:            p.full_name||null,
+    age:                  p.age,
+    desired_salary:       p.desired_salary,
+    desired_salary_ideal: p.desired_salary_ideal,
+    desired_jobs:         p.desired_jobs,
+    experience_jobs:      p.experience_jobs,
+    desired_areas:        p.desired_areas,
+    current_industry:     p.current_industry||null,
+    timing:               p.timing||null,
+    updated_at:           now
+  };
+  /* 列がまだ無いときに同意を混ぜると、プロフィール保存ごと失敗する。
+     同意だけ落として、他の項目は保存できるようにする。 */
+  if(hasConsentCols){
+    row.contact_consent    = p.contact_consent;
+    row.contact_consent_at = p.contact_consent_at;
+  }else{
+    delete p.contact_consent; delete p.contact_consent_at;
+  }
   try{
-    const {error}=await sb.from("profiles").upsert({
-      id:me.id,
-      full_name:            p.full_name||null,
-      age:                  p.age,
-      desired_salary:       p.desired_salary,
-      desired_salary_ideal: p.desired_salary_ideal,
-      desired_jobs:         p.desired_jobs,
-      experience_jobs:      p.experience_jobs,
-      desired_areas:        p.desired_areas,
-      current_industry:     p.current_industry||null,
-      timing:               p.timing||null,
-      updated_at:           new Date().toISOString()
-    });
+    const {error}=await sb.from("profiles").upsert(row);
     if(error) throw error;
     myProfile=Object.assign({},myProfile||{},p);   /* 書類の情報を消さないようにマージする */
     authMsg("保存しました。",true);
@@ -1859,9 +2023,28 @@ async function onSignedIn(user){
     }
     const {data,error}=await sb.from("favorites").select("job_id").eq("user_id",user.id);
     if(!error&&data){ favs=new Set(data.map(r=>r.job_id)); saveLocalFavs(); }
-    const p=await sb.from("profiles").select("full_name,age,desired_salary,desired_salary_ideal,desired_jobs,experience_jobs,desired_areas,current_industry,timing,resume_path,resume_name,resume_at,cv_path,cv_name,cv_at").eq("id",user.id).maybeSingle();
+    /* SUPABASE_SETUP.md の受信同意SQLがまだ実行されていないと contact_consent 列が無い。
+       その場合は列なしで読み直す。ここで諦めると myProfile が null になり、
+       名前も書類も画面から消えたように見えたうえ、保存で空に上書きされてしまう。 */
+    const BASE_COLS="full_name,age,desired_salary,desired_salary_ideal,desired_jobs,experience_jobs,desired_areas,current_industry,timing,resume_path,resume_name,resume_at,cv_path,cv_name,cv_at";
+    let p=await sb.from("profiles").select(BASE_COLS+",contact_consent,contact_consent_at").eq("id",user.id).maybeSingle();
+    if(p.error){
+      hasConsentCols=false;
+      console.warn("受信同意の列が見つかりません。SUPABASE_SETUP.md の SQL を実行してください。",p.error);
+      p=await sb.from("profiles").select(BASE_COLS).eq("id",user.id).maybeSingle();
+    }
     myProfile=p.data||null;
+    /* 登録案内パネルで同意にチェックした人は、その意思が auth のメタに入っている。
+       ログインが成立した最初の1回だけ profiles に書き移す（既存の同意は上書きしない）。 */
+    const wants=!!((user.user_metadata||{}).contact_consent);
+    if(hasConsentCols && wants && !(myProfile&&myProfile.contact_consent)){
+      const at=new Date().toISOString();
+      const {error}=await sb.from("profiles").upsert({id:user.id, contact_consent:true, contact_consent_at:at, updated_at:at});
+      if(error) console.warn("受信同意の保存に失敗しました",error);
+      else myProfile=Object.assign({},myProfile||{},{contact_consent:true, contact_consent_at:at});
+    }
   }catch(e){ console.warn("ログイン後の同期に失敗しました",e); }
+  hideSignal(false);
   paintFavs(); updateMyBadge();
   if($("#mypanel").classList.contains("open")) renderMypage();
 }

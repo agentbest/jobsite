@@ -156,6 +156,28 @@ alter table public.profiles add column if not exists desired_salary_ideal int;  
 > `desired_areas` に入るのは都道府県ではなく **地域ブロック名**（関東／東海／関西 …）です。
 > ブロックの定義は `template.html` の `AREA_BLOCKS` にあります。
 
+### 追加：求人案内の受信同意（2026-08-16）
+
+「気になる求人」を起点に当社からご案内を送るための、**受信同意の記録**です。同じ SQL Editor で実行します。
+
+```sql
+alter table public.profiles add column if not exists contact_consent    boolean not null default false; -- 求人案内を受け取る／受け取らない
+alter table public.profiles add column if not exists contact_consent_at timestamptz;                    -- 同意をいただいた日時
+```
+
+> ⚠ **この SQL を実行するまで、同意まわりは動きません。**
+> 未実行のまま会員登録されると `contact_consent` 列が無いため保存に失敗し、
+> ブラウザのコンソールに「受信同意の保存に失敗しました」が出ます（ログイン自体は成立します）。
+>
+> **なぜ規約への同意と分けているか**：利用規約・プライバシーポリシーへの同意は会員登録に伴う包括的なものですが、
+> 求人のご案内＝広告・宣伝メールの送信は、**受け取る意思を個別に確認したうえで**送る必要があります（特定電子メール法のオプトイン）。
+> そのためチェックボックスは**既定でオフ**にしてあり、チェックしなくても会員登録は完了します。
+> `contact_consent_at` は「いつ同意を得たか」の記録で、オフ→オンに変わったときだけ打ち直します。
+>
+> **配信を止めるとき**：会員はマイページの「求人のご案内」のチェックを外して保存すれば止まります。
+> 運用側で止める場合は該当行の `contact_consent` を `false` にしてください。
+> **`contact_consent` が `true` の人にだけ送る**、を必ず守ってください。
+
 ### 追加：退会（アカウントの削除）（2026-08-15）
 
 会員がマイページから自分で退会できるようにするための関数です。同じ SQL Editor で実行します。
