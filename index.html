@@ -824,6 +824,10 @@ const JOBS = [{"id":"rec0CQuw3gyDmqgnA","title":"アーキテックス株式会�
    APPLY_FORM_URL … Airtable「求人応募（サイト）」フォームビューの共有URL
                     （空のままだと応募ボタンはメール送信にフォールバック）
    求人名・企業名・求人IDは prefill_ パラメータで自動入力されます。 */
+/* ⚠ 応募フォームは、いまサイトのどこからもリンクしていない（2026-08-16に導線を削除）。
+   人材紹介の入口は「相談」であって「応募」ではない、という方針のため。
+   定数と applyUrl() は、戻したくなったときのために残してある。
+   リンクを復活させない限り GA4 の apply_click は発火しない。 */
 const APPLY_FORM_URL = "https://airtable.com/appYkc36EvioYoL1A/shr0K5l9MSiNMgUe6";
 /* 相談の入口。Airtable「求人の問い合わせ（サイト）」tbltITsj4OmX5B2PJ のフォームビュー共有URL。
    ⚠ 空のあいだは mailto へフォールバックする（フォーム未作成でもリンクが死なないように）。
@@ -1294,8 +1298,7 @@ function openDetail(id){
     </div>
     <p class="pd-ctanote">当社は人材紹介会社です。この求人へは、担当エージェント（株式会社エージェントベスト）が<b>企業へ推薦</b>する形で選考が進みます。<b>ご利用は無料</b>です（紹介手数料は採用企業負担）。<br>
       まだ転職を決めていない段階でもかまいません。<b>経歴書のご用意は不要</b>です。この求人の背景や求められている経験など、公開情報にないところからお話しします。</p>
-    <p class="pd-ctamail">「電話で軽く話を聞きたい」は<b>日程を決めずに、こちらから折り返す</b>形です。ご希望の時間帯だけ伺います。<br>
-      すぐに応募したい方は、<a href="${esc(applyUrl(j))}" target="_blank" rel="noopener">経歴書を送って推薦を依頼する</a>こともできます。${INQUIRY_FORM_URL?"":`<br>
+    <p class="pd-ctamail">「電話で軽く話を聞きたい」は<b>日程を決めずに、こちらから折り返す</b>形です。ご希望の時間帯だけ伺います。${INQUIRY_FORM_URL?"":`<br>
       メールソフトが開かないときは、<b class="pd-ctamail__addr">${esc(CONTACT_MAIL)}</b> あてに直接お送りください。`}</p>`;
 
   const sec=(title,body,isRich)=> body?`<div class="pd-sec"><h3>${esc(title)}</h3>${isRich?`<div class="rich">${rich(body)}</div>`:body}</div>`:"";
