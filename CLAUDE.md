@@ -96,6 +96,15 @@ const SUPABASE_ANON_KEY = "";   // 埋める = メールログインモード（
 - 配信停止はマイページの「求人のご案内」のチェックを外して保存。**停止の導線は必ず残す**
 - ⚠ `SUPABASE_SETUP.md` の受信同意SQLが未実行だと列が無い。その場合 `hasConsentCols` が `false` になり、同意欄を隠して**プロフィール本体だけは壊さず動く**ようにしてある。**この退避を外すと、SQL未実行の環境で会員のプロフィールが空に見え、保存で上書きされる。**
 
+### Slack通知（2026-08-16）
+
+会員が★を押すと Slack に通知が飛ぶ。`favorites` の INSERT → Database Webhook → Edge Function `supabase/functions/notify-slack/index.ts` → Slack Incoming Webhook。手順は `SUPABASE_SETUP.md`。
+
+- ⚠ **通知できるのはログイン済みの★だけ。** 未ログインの★は `localStorage` にしか無く、`privacy.html` 第2項・第11項で**「当社が取得することはありません」「当社のサーバーへは送信されません」**と明記している。**記載を変えない限り匿名の★は通知できない**（変えるなら、それは信頼設計の後退だと理解したうえで判断する）
+- ⚠ **Slack の Webhook URL は Edge Function の Secret に置く。サイトには絶対に貼らない**（Publicリポジトリ）
+- ⚠ **`HOOK_SECRET` を省略しない。** 関数のURLは誰でも叩けるので、無いと偽の通知を流し込まれる
+- 通知には受信同意の有無が出る。**`🚫 受信同意なし` の人に求人案内を送らない**
+
 ### ⚠ セキュリティ上、絶対に緩めてはいけないもの
 
 - **Storage の RLS 4本**（select/insert/update/delete）。条件は

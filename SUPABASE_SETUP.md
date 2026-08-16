@@ -178,6 +178,62 @@ alter table public.profiles add column if not exists contact_consent_at timestam
 > 運用側で止める場合は該当行の `contact_consent` を `false` にしてください。
 > **`contact_consent` が `true` の人にだけ送る**、を必ず守ってください。
 
+### 追加：「気になる」の Slack 通知（2026-08-16）
+
+会員が★を押したときに Slack へ通知します。コードは `supabase/functions/notify-slack/index.ts`。
+
+⚠ **通知できるのはログイン済み会員の★だけです。** 未ログインの★は `localStorage` にしか無く、
+サーバーには届きません。プライバシーポリシー第2項・第11項で
+**「当社が取得することはありません」「当社のサーバーへは送信されません」**と明記しているため、
+意図的にそうしています。**記載を変えない限り、匿名の★は通知できません。**
+
+#### 1. Slack 側の準備
+
+1. 通知用のチャンネルを作る（例 `#jobsite-通知`）。既存の `#general` でも動きます
+2. Slack App を作り **Incoming Webhooks** を有効化 → そのチャンネル向けの Webhook URL を発行
+3. URL（`https://hooks.slack.com/services/...`）を控える。⚠ **これは秘密です。サイトには絶対に貼らないこと**
+
+#### 2. Edge Function を作る
+
+Supabase 管理画面 → **Edge Functions** → **Deploy a new function** → 名前を `notify-slack` にし、
+`supabase/functions/notify-slack/index.ts` の中身を貼り付けてデプロイします。
+
+#### 3. Secret を登録する
+
+**Edge Functions → Secrets** で2つ登録します。
+
+| 名前 | 値 |
+|---|---|
+| `SLACK_WEBHOOK_URL` | 手順1で控えた Slack の Webhook URL |
+| `HOOK_SECRET` | 自分で決めた長いランダム文字列（40文字程度） |
+
+`SUPABASE_URL` と `SUPABASE_SERVICE_ROLE_KEY` は Supabase が自動で入れるので登録不要です。
+
+> `HOOK_SECRET` は、この関数のURLを外部から叩かれて**偽の通知を流し込まれる**のを防ぐための合言葉です。
+> 一致しないリクエストは 403 で捨てます。省略すると誰でも通知を送れてしまいます。
+
+#### 4. Database Webhook をつなぐ
+
+**Database → Webhooks** → **Create a new hook**
+
+| 項目 | 値 |
+|---|---|
+| Name | `favorite-to-slack` |
+| Table | `favorites` |
+| Events | **Insert** のみ（Update / Delete はチェックしない） |
+| Type | HTTP Request |
+| Method | `POST` |
+| URL | `https://jvdnabtpxcyfnogdulea.supabase.co/functions/v1/notify-slack` |
+| HTTP Headers | `Content-Type: application/json` と `x-hook-secret: 手順3で決めた文字列` |
+
+#### 5. 動作確認
+
+サイトにログインして★を1つ押し、Slack に通知が届くか見ます。届かない場合は
+**Edge Functions → Logs** を確認してください。`SLACK_WEBHOOK_URL が未設定です` と出ていれば
+手順3の登録漏れ、403 が並んでいれば `x-hook-secret` の不一致です。
+
+通知には**受信同意の有無**が出ます。`🚫 受信同意なし` の人に求人案内を送ってはいけません。
+
 ### 追加：退会（アカウントの削除）（2026-08-15）
 
 会員がマイページから自分で退会できるようにするための関数です。同じ SQL Editor で実行します。
