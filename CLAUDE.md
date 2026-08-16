@@ -137,7 +137,9 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 
 ## GA4
 
-測定ID `G-1XXMP8Y1B4`。カスタムイベント: `job_detail_open` / `apply_click` / `consult_click` / `search` / `filter_use` / `lp_click` / `corporate_click` / `job_share`。
+測定ID `G-1XXMP8Y1B4`。カスタムイベント: `job_detail_open` / `inquiry_click` / `consult_click` / `apply_click` / `search` / `filter_use` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss`。
+
+⚠ **`inquiry_click` は `way` で電話（`tel`）とメール（`mail`）を分けている。** 「電話で軽く話を聞きたい人がどれだけいるか」を測るための軸なので、消さないこと。⚠ **問い合わせフォームも応募フォームも `airtable.com` なので、ホスト名では区別できない。** 相談導線は `data-cta` 属性で先に判定している。これを外すと `apply_click` に化けて、消したはずの応募が発生しているように見える。
 外部リンクのクリックは document の capture で一括計測しているので、ボタンを追加しても漏れない。`track()` は gtag 未読込でも落ちない。
 
 ## 相互リンク
