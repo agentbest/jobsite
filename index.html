@@ -1627,13 +1627,13 @@ function openDetail(id){
       <h1 class="dt-title" id="pdTitle">${esc(jobName(j))}</h1>
       <div class="pd-tags">${tags.join("")}</div>
     </div>
+    ${coMeta?`<div class="pd-sec"><h3>企業情報</h3><dl class="pd-meta">${coMeta}</dl></div>`:""}
     ${sec("仕事内容", j.jobContent, true)}
     ${sec("必須条件", j.must, true)}
     ${sec("歓迎条件", j.welcome, true)}
     ${sec("求める人物像", j.idealPerson, true)}
     ${reqMeta?`<div class="pd-sec"><h3>募集要項</h3><dl class="pd-meta">${reqMeta}</dl></div>`:""}
     ${sec("選考プロセス", j.selectionProcess, true)}
-    ${coMeta?`<div class="pd-sec"><h3>企業情報</h3><dl class="pd-meta">${coMeta}</dl></div>`:""}
     <div class="pd-sec"><h3>この求人に応募する</h3>${cta}</div>
     ${shareHtml(j)}
     ${author}
