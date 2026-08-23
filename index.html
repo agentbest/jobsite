@@ -507,6 +507,7 @@
   .pd-sec{margin-top:30px}
   .pd-sec > h3{font-size:15px; font-weight:800; margin:0 0 12px; padding-bottom:9px; border-bottom:2px solid var(--accent-soft); display:flex; align-items:center; gap:9px}
   .pd-sec > h3::before{content:""; width:4px; height:15px; background:var(--accent); border-radius:2px}
+  .pd-sec > .rich + .pd-meta{margin-top:18px; padding-top:16px; border-top:1px solid var(--line)}
   .pd-meta{display:grid; grid-template-columns:auto 1fr; gap:10px 18px; font-size:13.5px}
   .pd-meta dt{color:var(--ink-3); font-weight:700; white-space:nowrap}
   .pd-meta dd{margin:0; color:var(--ink); white-space:pre-wrap}
@@ -1614,12 +1615,16 @@ function openDetail(id){
     metaRow("休日・休暇", j.holidays),
     metaRow("福利厚生", j.benefits),
   ].join("");
+  /* 会社概要は長文なので本文組み、残りの1行項目だけを表に残す */
   const coMeta = [
-    metaRow("会社概要", j.companyInfo),
     metaRow("所在地", j.companyAddress),
     metaRow("上場区分", j.listedStatus),
     siteRow,
   ].join("");
+  const coBody = j.companyInfo?`<div class="rich">${rich(j.companyInfo)}</div>`:"";
+  const coSec = (coBody||coMeta)
+    ?`<div class="pd-sec"><h3>企業情報</h3>${coBody}${coMeta?`<dl class="pd-meta">${coMeta}</dl>`:""}</div>`
+    :"";
 
   $("#detailBody").innerHTML=`
     <div class="dt-head">
@@ -1627,7 +1632,7 @@ function openDetail(id){
       <h1 class="dt-title" id="pdTitle">${esc(jobName(j))}</h1>
       <div class="pd-tags">${tags.join("")}</div>
     </div>
-    ${coMeta?`<div class="pd-sec"><h3>企業情報</h3><dl class="pd-meta">${coMeta}</dl></div>`:""}
+    ${coSec}
     ${sec("仕事内容", j.jobContent, true)}
     ${sec("必須条件", j.must, true)}
     ${sec("歓迎条件", j.welcome, true)}
