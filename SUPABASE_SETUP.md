@@ -234,6 +234,48 @@ Supabase 管理画面 → **Edge Functions** → **Deploy a new function** → �
 
 通知には**受信同意の有無**が出ます。`🚫 受信同意なし` の人に求人案内を送ってはいけません。
 
+### 追加：応募の Slack 通知（2026-08-28）
+
+**「気になる」で使っている Slack Webhook をそのまま使い回します。**
+Slackアプリの作り直しも、新しい Secret も要りません（`SLACK_WEBHOOK_URL` は登録済み）。
+
+同じ `notify-slack` 関数が `applications` の INSERT も受け取り、応募をSlackへ投稿します。
+`applications` は**中途と新卒で共有**しているため、`record.source` を見て出し分けます。
+
+| | 中途（`source = jobsite`） | 新卒（`source = shinsotsu`） |
+|---|---|---|
+| 見出し | 応募がありました（中途サイト） | 応募がありました（新卒サイト） |
+| 求人リンク | `jobs.agent-best.net/?job=` | `shinsotsu.agent-best.net/?job=` |
+| 経験の欄 | 直近の経験職種 | **興味のある職種**（新卒フォームは同じ列に入れている） |
+| 卒業予定年 | 出さない | **出す（`grad_year`）** |
+
+#### 1. 関数を更新する
+
+**Edge Functions → `notify-slack`** を開き、`supabase/functions/notify-slack/index.ts` の
+中身を貼り直してデプロイします。Secret はそのままでよいです。
+
+#### 2. Database Webhook をもう1本足す
+
+**Database → Webhooks** → **Create a new hook**（`favorite-to-slack` とは別に作る）
+
+| 項目 | 値 |
+|---|---|
+| Name | `application-to-slack` |
+| Table | `applications` |
+| Events | **Insert** のみ |
+| Type | HTTP Request |
+| Method | `POST` |
+| URL | `https://jvdnabtpxcyfnogdulea.supabase.co/functions/v1/notify-slack` |
+| HTTP Headers | `Content-Type: application/json` と `x-hook-secret: HOOK_SECRET と同じ文字列` |
+
+⚠ **メール通知（Apps Script）のウェブフックは消さないこと。** メールとSlackは別の宛先で、
+`applications` の INSERT に対してウェブフックが2本ぶら下がる形になります。
+
+#### 3. 動作確認
+
+新卒サイトからテスト応募を1件送り、Slackに `応募がありました（新卒サイト）` が出るか見ます。
+出ない場合は **Edge Functions → Logs**（403 なら `x-hook-secret` の不一致）。
+
 ### 追加：退会（アカウントの削除）（2026-08-15）
 
 会員がマイページから自分で退会できるようにするための関数です。同じ SQL Editor で実行します。

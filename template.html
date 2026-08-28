@@ -4,17 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index,follow">
-<title>ミドル・ハイクラス求人検索 — キャリアの選択肢</title>
-<meta name="description" content="ミドルクラス・ハイクラス向けの求人検索サイト。職種・業界・年収・勤務地エリアから絞り込めます。経営幹部・部長クラスを含む非公開求人も多数。株式会社エージェントベストが運営、ご利用は無料です。">
+<title>ミドル・ハイクラス転職 求人検索 — キャリアの選択肢</title>
+<link rel="canonical" href="https://jobs.agent-best.net/">
+<meta name="description" content="20代・30代を中心としたハイクラス転職の求人検索サイト。IT・Web、コンサル、M&amp;Aなどの中途求人を職種・業界・年収・エリアから絞り込めます。非公開求人も多数。株式会社エージェントベストが運営、ご利用は無料です。">
 <!-- SNSでシェアされたときの表示。静的サイトなので求人ごとの出し分けはできず、
      共有されるのはこのサイト共通のカードになる（求人名は投稿本文側に入れている） -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="ミドル・ハイクラス求人検索">
-<meta property="og:title" content="ミドル・ハイクラス求人検索 — キャリアの選択肢">
-<meta property="og:description" content="ミドルクラス・ハイクラス向けの求人検索サイト。職種・業界・年収・勤務地エリアから絞り込めます。株式会社エージェントベストが運営、ご利用は無料です。">
+<meta property="og:site_name" content="ミドル・ハイクラス転職 求人検索">
+<meta property="og:title" content="ミドル・ハイクラス転職 求人検索 — キャリアの選択肢">
+<meta property="og:description" content="20代・30代を中心としたハイクラス転職の求人検索サイト。IT・Web、コンサル、M&amp;Aなどの中途求人を職種・業界・年収・エリアから絞り込めます。株式会社エージェントベストが運営、ご利用は無料です。">
 <meta property="og:url" content="https://jobs.agent-best.net/">
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://jobs.agent-best.net/assets/ogp.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jobs.agent-best.net/assets/ogp.jpg">
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1XXMP8Y1B4"></script>
 <script>
@@ -32,6 +37,7 @@
     --gold:#9C6F1E; --gold-soft:#F6EEDD;
     --good:#2C8A66; --good-soft:#E3F1EA;
     --focus:#4E61D6;
+    --cta:#B3701A; --cta-ink:#FFFFFF; --cta-hover:#8F5A13;
     --shadow-sm:0 1px 2px rgba(27,30,43,.05), 0 1px 3px rgba(27,30,43,.06);
     --shadow-md:0 4px 12px rgba(27,30,43,.08), 0 2px 4px rgba(27,30,43,.05);
     --shadow-lg:0 24px 60px rgba(20,22,35,.22);
@@ -49,6 +55,7 @@
       --gold:#DDB463; --gold-soft:#2A2416;
       --good:#5FBE93; --good-soft:#16281F;
       --focus:#93A2F2;
+      --cta:#DDB463; --cta-ink:#241C08; --cta-hover:#EBC57C;
       --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 6px 18px rgba(0,0,0,.4);
       --shadow-lg:0 30px 70px rgba(0,0,0,.6);
     }
@@ -59,6 +66,7 @@
     --line:#E4E2D9; --line-2:#EDECE5;
     --accent:#33409A; --accent-strong:#3D4CC0; --accent-soft:#ECEEF9; --accent-ink:#2A3585;
     --gold:#9C6F1E; --gold-soft:#F6EEDD; --good:#2C8A66; --good-soft:#E3F1EA; --focus:#4E61D6;
+    --cta:#B3701A; --cta-ink:#FFFFFF; --cta-hover:#8F5A13;
     --shadow-sm:0 1px 2px rgba(27,30,43,.05),0 1px 3px rgba(27,30,43,.06);
     --shadow-md:0 4px 12px rgba(27,30,43,.08),0 2px 4px rgba(27,30,43,.05);
     --shadow-lg:0 24px 60px rgba(20,22,35,.22);
@@ -69,6 +77,7 @@
     --line:#2C2F3D; --line-2:#242735;
     --accent:#93A2F2; --accent-strong:#AEB9F7; --accent-soft:#20243A; --accent-ink:#C3CCFA;
     --gold:#DDB463; --gold-soft:#2A2416; --good:#5FBE93; --good-soft:#16281F; --focus:#93A2F2;
+    --cta:#DDB463; --cta-ink:#241C08; --cta-hover:#EBC57C;
     --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 6px 18px rgba(0,0,0,.4);
     --shadow-lg:0 30px 70px rgba(0,0,0,.6);
   }
@@ -104,7 +113,7 @@
   .brand__sub{font-size:10.5px; letter-spacing:.22em; color:var(--ink-3); text-transform:uppercase; font-weight:600}
   .brand__txt{display:flex; flex-direction:column; gap:2px}
 
-  .search{position:relative; flex:1; max-width:520px}
+  .search{position:relative; flex:1; max-width:380px}
   .search svg{position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--ink-3); pointer-events:none}
   .search input{
     width:100%; padding:11px 14px 11px 42px; font-size:14.5px;
@@ -126,19 +135,81 @@
 
   /* ---------- Layout ---------- */
   .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
-  .intro{padding:30px 0 22px}
-  .intro h1{
-    margin:0 0 8px; font-size:clamp(1.5rem,3.2vw,2.15rem); line-height:1.25;
-    letter-spacing:.01em; font-weight:800; text-wrap:balance;
+
+  /* ---------- ヒーロー（アイキャッチ） ----------
+     写真の上に藍のスクリムを重ねる。人物は右、コピーと検索は左。
+     ライト・ダークどちらでも同じ見え方になるよう、中は常に白文字で組む。 */
+  .hero{
+    position:relative; margin:18px 0 0; border-radius:18px; overflow:hidden;
+    background:#131832; box-shadow:var(--shadow-md); isolation:isolate;
   }
-  .intro h1 em{font-style:normal; color:var(--accent)}
-  .intro .eyebrow{
-    margin:0 0 8px; font-size:11.5px; font-weight:800; color:var(--accent);
-    letter-spacing:.12em;
+  .hero__bg{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:50% 46%;
   }
+  .hero__scrim{
+    position:absolute; inset:0;
+    background:
+      linear-gradient(96deg, rgba(14,18,48,.95) 0%, rgba(14,18,48,.90) 32%, rgba(16,21,54,.62) 58%, rgba(20,26,62,.36) 100%),
+      linear-gradient(180deg, rgba(10,13,36,.34) 0%, rgba(10,13,36,0) 44%);
+  }
+  .hero__inner{position:relative; padding:44px 44px 38px; max-width:660px; color:#fff}
+  .hero__eyebrow{
+    display:inline-flex; align-items:center; gap:8px; margin:0 0 12px;
+    font-size:11.5px; font-weight:800; letter-spacing:.14em; color:#F0D9A6;
+  }
+  .hero__eyebrow::before{content:""; width:22px; height:2px; background:#DDB463; border-radius:2px}
+  .hero h1{
+    margin:0 0 12px; font-size:clamp(1.62rem,3.3vw,2.35rem); line-height:1.24;
+    letter-spacing:.01em; font-weight:800; text-wrap:balance; color:#fff;
+    text-shadow:0 2px 18px rgba(8,10,28,.45);
+  }
+  .hero h1 em{font-style:normal; color:#F2CE84}
+  .hero__sub{
+    margin:0 0 20px; font-size:15px; line-height:1.75; color:rgba(255,255,255,.90);
+    max-width:34em; text-shadow:0 1px 12px rgba(8,10,28,.4);
+  }
+  /* ヒーロー内の検索。押した内容はヘッダーの #q に流し込む */
+  .hero__search{display:flex; gap:8px; margin:0 0 14px}
+  .hero__search .field{position:relative; flex:1 1 auto; min-width:0}
+  .hero__search .field svg{
+    position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    color:var(--ink-3); pointer-events:none;
+  }
+  .hero__search input{
+    width:100%; padding:13px 14px 13px 42px; font:inherit; font-size:15px;
+    border-radius:var(--r-input); border:1px solid transparent;
+    background:#fff; color:#1B1E2B; box-shadow:0 6px 20px rgba(8,10,28,.22);
+  }
+  .hero__search input::placeholder{color:#8A8E9E}
+  .hero__search input:focus{outline:none; box-shadow:0 0 0 4px rgba(226,190,116,.5), 0 6px 20px rgba(8,10,28,.22)}
+  .hero__search button{
+    flex:none; padding:13px 22px; border:none; border-radius:var(--r-input);
+    background:var(--cta); color:var(--cta-ink); font-weight:800; font-size:15px;
+    box-shadow:0 6px 20px rgba(8,10,28,.22); transition:background .15s;
+  }
+  .hero__search button:hover{background:var(--cta-hover)}
+  .hero__quick{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0 0 20px}
+  .hero__quick-lbl{font-size:12px; font-weight:700; color:rgba(255,255,255,.72); letter-spacing:.06em}
+  .hero__quick button{
+    padding:6px 14px; border-radius:var(--r-pill); font-size:13.5px; font-weight:700;
+    color:#fff; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.34);
+    backdrop-filter:blur(4px); transition:background .15s, border-color .15s;
+  }
+  .hero__quick button:hover{background:rgba(255,255,255,.24); border-color:rgba(255,255,255,.6)}
+  .hero__stats{
+    display:flex; flex-wrap:wrap; gap:10px 30px; padding-top:18px;
+    border-top:1px solid rgba(255,255,255,.22);
+  }
+  .hero__stats div{display:flex; align-items:baseline; gap:7px}
+  .hero__stats b{
+    font-family:var(--mono); font-variant-numeric:tabular-nums;
+    font-size:21px; font-weight:700; color:#F2CE84; line-height:1.2;
+  }
+  .hero__stats span{font-size:12.5px; color:rgba(255,255,255,.82)}
+
+  .intro{padding:20px 0 22px}
   .intro p{margin:0; color:var(--ink-2); font-size:15px; max-width:60ch}
-  .intro .stat{color:var(--ink-2)}
-  .intro .stat b{font-family:var(--mono); color:var(--ink); font-weight:700}
   .intro .note{
     display:inline-flex; align-items:center; gap:8px; margin-top:12px;
     padding:7px 14px; border-radius:var(--r-pill);
@@ -238,54 +309,86 @@
   .clear-all{font-size:12.5px; color:var(--ink-3); background:none; border:none; text-decoration:underline; text-underline-offset:2px}
   .clear-all:hover{color:var(--ink)}
 
-  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(316px,1fr)); gap:18px}
-  .card{
-    position:relative; display:flex; flex-direction:column; gap:12px;
-    background:var(--surface); border:1px solid var(--line); border-radius:var(--r-card);
-    padding:20px 20px 18px; text-align:left; width:100%; min-width:0; overflow:hidden; color:inherit;
-    transition:transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s, border-color .16s;
+  /* ---------- 求人リスト（1件1行の横長カード） ---------- */
+  .joblist{display:flex; flex-direction:column; gap:14px}
+  .jrow{
+    position:relative; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--r-card); padding:20px 22px 18px; min-width:0;
+    transition:border-color .15s, box-shadow .15s;
   }
-  .card:hover{transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:color-mix(in srgb,var(--accent) 35%, var(--line))}
-  .card:focus-visible{outline:2px solid var(--focus); outline-offset:3px}
-  .card__eyebrow{display:flex; align-items:center; gap:8px; min-width:0; max-width:100%}
+  .jrow:hover{border-color:color-mix(in srgb,var(--accent) 32%, var(--line)); box-shadow:var(--shadow-sm)}
+  .jrow__top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:5px; padding-right:44px}
+  .jrow__new{
+    flex:none; font-size:10.5px; font-weight:800; letter-spacing:.08em; line-height:1;
+    padding:4px 7px; border-radius:5px; background:var(--cta); color:var(--cta-ink);
+  }
+  .jrow__co{font-size:13px; font-weight:700; color:var(--accent); min-width:0; overflow-wrap:anywhere}
   /* 企業ロゴ。画像が無い企業は社名の頭文字タイルにする。
      ⚠ 外部の favicon サービスは使わない（訪問者の閲覧履歴が第三者に渡るため）。 */
-  .card__logo{
+  .jrow__logo{
     flex:0 0 auto; width:28px; height:28px; border-radius:7px; overflow:hidden;
     display:grid; place-items:center; border:1px solid var(--line-2);
-    background:var(--accent-soft); color:var(--accent-ink);
+    background:var(--accent-soft); color:var(--accent);
     font-size:12px; font-weight:800; line-height:1; letter-spacing:.01em;
   }
-  .card__logo img{width:100%; height:100%; object-fit:contain; display:block; background:#fff}
-  .card__co{font-size:12.5px; font-weight:700; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex-shrink:1}
-  .card__ind{font-size:11.5px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-shrink:1; min-width:0}
-  .card__ind::before{content:"·"; margin-right:8px; color:var(--line)}
-  .card__title{
-    font-size:15.5px; font-weight:700; line-height:1.5; color:var(--ink); margin:0;
-    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.9em;
-    overflow-wrap:anywhere;
+  .jrow__logo img{width:100%; height:100%; object-fit:contain; display:block; background:#fff}
+  .jrow__ind{font-size:12px; color:var(--ink-3); min-width:0; overflow-wrap:anywhere}
+  .jrow__ind::before{content:"·"; margin-right:8px; color:var(--line)}
+  .jrow__title{margin:0 0 10px; padding-right:44px; font-size:18px; font-weight:800; line-height:1.5}
+  .jrow__title a{
+    color:var(--ink); text-decoration:none; overflow-wrap:anywhere;
+    background-image:linear-gradient(currentColor,currentColor); background-size:0 1.5px;
+    background-position:0 100%; background-repeat:no-repeat; transition:background-size .2s;
   }
-  .card__tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:-2px}
+  .jrow__title a:hover{color:var(--accent); background-size:100% 1.5px}
+  .jrow__desc{
+    margin:0 0 12px; font-size:13.5px; line-height:1.85; color:var(--ink-2);
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .jrow__meta{
+    display:grid; grid-template-columns:auto 1fr; gap:5px 16px; margin:0 0 14px;
+    padding-top:12px; border-top:1px solid var(--line-2); font-size:13.5px;
+  }
+  .jrow__meta dt{color:var(--ink-3); font-weight:700; white-space:nowrap}
+  .jrow__meta dd{margin:0; color:var(--ink); min-width:0; overflow-wrap:anywhere}
+  .jrow__sal{font-family:var(--mono); font-weight:800; font-size:15px; color:var(--gold); font-variant-numeric:tabular-nums}
+  .jrow__act{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center}
+  .card__tags{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px}
   /* 長い職種名でも切れないよう、はみ出す時だけ折り返す */
   .tag{font-size:11.5px; padding:3px 9px; border-radius:6px; background:var(--surface-2); color:var(--ink-2); font-weight:600; max-width:100%; overflow-wrap:anywhere; line-height:1.5}
   .tag--cat{background:var(--accent-soft); color:var(--accent-ink)}
   .tag--remote{background:var(--good-soft); color:var(--good)}
   .tag--kubun{background:var(--gold-soft); color:var(--gold); font-weight:800}
-  .card__foot{margin-top:auto; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding-top:12px; border-top:1px solid var(--line-2)}
-  .card__salary{display:flex; flex-direction:column; gap:1px; min-width:0}
-  .card__salary .k{font-size:10px; letter-spacing:.1em; color:var(--ink-3); font-weight:700; text-transform:uppercase}
-  .card__salary .v{font-family:var(--mono); font-weight:800; font-size:16px; color:var(--gold); font-variant-numeric:tabular-nums; white-space:nowrap}
-  .card__loc{display:flex; align-items:center; gap:4px; font-size:12px; color:var(--ink-3); max-width:48%; overflow:hidden}
-  .card__loc span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .card__loc svg{flex-shrink:0}
 
-  .loadmore{display:flex; justify-content:center; margin:36px 0 0}
-  .loadmore button{
-    padding:12px 30px; border:1px solid var(--line); border-radius:var(--r-pill);
-    background:var(--surface); color:var(--ink); font-weight:700; font-size:14px; box-shadow:var(--shadow-sm);
+  /* ---------- ボタン（応募・詳細） ---------- */
+  .btn-apply{
+    display:inline-flex; align-items:center; justify-content:center; gap:7px; white-space:nowrap;
+    padding:11px 24px; border:0; border-radius:var(--r-pill);
+    background:var(--cta); color:var(--cta-ink); font-weight:800; font-size:14px;
+    text-decoration:none; box-shadow:var(--shadow-sm); transition:background .15s;
+  }
+  .btn-apply:hover{background:var(--cta-hover)}
+  .btn-apply svg{flex:none}
+  .btn-detail{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap;
+    padding:11px 20px; border:1px solid var(--line); border-radius:var(--r-pill);
+    background:var(--surface); color:var(--accent-ink); font-weight:700; font-size:14px; text-decoration:none;
     transition:background .15s, border-color .15s;
   }
-  .loadmore button:hover{background:var(--surface-2); border-color:var(--ink-3)}
+  .btn-detail:hover{background:var(--surface-2); border-color:var(--accent)}
+
+  /* ---------- ページネーション ---------- */
+  .pager{display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; margin:34px 0 0}
+  .pager button{
+    min-width:40px; height:40px; padding:0 11px; border:1px solid var(--line); border-radius:9px;
+    background:var(--surface); color:var(--ink-2); font-weight:700; font-size:13.5px;
+    font-family:var(--mono); font-variant-numeric:tabular-nums; transition:background .15s, border-color .15s;
+  }
+  .pager button:hover:not([disabled]):not([aria-current]){background:var(--surface-2); border-color:var(--ink-3)}
+  .pager button[aria-current="page"]{background:var(--accent); border-color:var(--accent); color:#fff}
+  .pager button[disabled]{opacity:.35; cursor:default}
+  .pager .gap{color:var(--ink-3); padding:0 2px; font-family:var(--mono)}
+  .pager__nav{font-family:var(--sans)!important; font-weight:700}
 
   .empty{text-align:center; padding:80px 20px; color:var(--ink-3)}
   .empty svg{color:var(--line); margin-bottom:14px}
@@ -306,7 +409,6 @@
   .fav.on{color:var(--gold)}
   .fav.on svg{fill:var(--gold)}
   .fav--bar{position:static; width:40px; height:40px; border-color:var(--line); background:var(--surface)}
-  .card__eyebrow{padding-right:32px}
 
   .mybtn{width:auto; padding:0 13px; gap:7px; display:inline-flex; align-items:center; font-weight:700; font-size:13.5px}
   .mybtn .badge{background:var(--gold); color:#fff; border-radius:999px; font-size:11px; padding:1px 7px; font-family:var(--mono); font-weight:700}
@@ -480,6 +582,7 @@
   .pd-sec{margin-top:30px}
   .pd-sec > h3{font-size:15px; font-weight:800; margin:0 0 12px; padding-bottom:9px; border-bottom:2px solid var(--accent-soft); display:flex; align-items:center; gap:9px}
   .pd-sec > h3::before{content:""; width:4px; height:15px; background:var(--accent); border-radius:2px}
+  .pd-sec > .rich + .pd-meta{margin-top:18px; padding-top:16px; border-top:1px solid var(--line)}
   .pd-meta{display:grid; grid-template-columns:auto 1fr; gap:10px 18px; font-size:13.5px}
   .pd-meta dt{color:var(--ink-3); font-weight:700; white-space:nowrap}
   .pd-meta dd{margin:0; color:var(--ink); white-space:pre-wrap}
@@ -559,6 +662,12 @@
     .layout{grid-template-columns:1fr}
     .filter-toggle{display:inline-flex}
     .search{max-width:none}
+    /* 幅が狭くなるとコピーが写真の人物側まで伸びるので、スクリムを全面に切り替える */
+    .hero__scrim{
+      background:linear-gradient(180deg, rgba(12,16,42,.58) 0%, rgba(12,16,42,.86) 48%, rgba(12,16,42,.94) 100%);
+    }
+    .hero__inner{max-width:none; padding:34px 28px 30px}
+    .hero__bg{object-position:50% 44%}
     .filters{
       position:fixed; top:0; left:0; bottom:0; z-index:65; width:min(340px,86%); max-height:none;
       background:var(--surface); border-right:1px solid var(--line); padding:18px 18px 40px; overflow-y:auto;
@@ -591,21 +700,36 @@
     .facet-search{font-size:16px; padding:9px 12px}
 
     .wrap{padding-left:16px; padding-right:16px}
-    .intro{padding:22px 0 16px}
-    .intro p,.intro .stat{font-size:15.5px}
+
+    .hero{margin-top:12px; border-radius:14px}
+    .hero__inner{padding:26px 18px 24px}
+    .hero__sub{font-size:14.5px; margin-bottom:16px}
+    .hero__search{flex-wrap:wrap}
+    /* iOSでフォーカス時に勝手にズームしないよう16px以上 */
+    .hero__search input{font-size:16px}
+    .hero__search button{width:100%}
+    .hero__stats{gap:10px 22px; padding-top:14px}
+    .hero__stats b{font-size:19px}
+
+    .intro{padding:16px 0 16px}
+    .intro p{font-size:15.5px}
     .intro .note{font-size:14.5px; align-items:flex-start}
     .intro .note svg{margin-top:4px}
     .intro-feat{font-size:14.5px}
 
-    .grid{grid-template-columns:1fr; gap:14px}
-    .card{padding:18px 18px 16px}
-    .card__co{font-size:13.5px}
-    .card__ind{font-size:12px}
-    .card__title{font-size:17px; line-height:1.55}
+    .joblist{gap:12px}
+    .jrow{padding:18px 16px 16px}
+    .jrow__co{font-size:14px}
+    .jrow__ind{font-size:12.5px}
+    .jrow__title{font-size:17.5px; line-height:1.55}
     .tag{font-size:12.5px; padding:4px 10px}
-    .card__salary .k{font-size:10.5px}
-    .card__salary .v{font-size:18px}
-    .card__loc{font-size:12.5px}
+    .jrow__desc{font-size:14.5px}
+    .jrow__meta{grid-template-columns:1fr; gap:2px; font-size:14.5px}
+    .jrow__meta dt{font-size:12.5px; color:var(--ink-3); margin-top:8px}
+    .jrow__meta dt:first-child{margin-top:0}
+    .jrow__sal{font-size:17px}
+    .jrow__act{justify-content:stretch}
+    .jrow__act .btn-apply,.jrow__act .btn-detail{flex:1 1 45%; font-size:15px; padding:13px 14px}
 
     .rescount{font-size:15px}
     .sortsel select{font-size:15px; padding:9px 30px 9px 12px}
@@ -653,7 +777,108 @@
   /* 指で押しやすいよう、スマホでは★のタップ範囲を広げる */
   @media (max-width:700px){
     .fav{width:42px; height:42px; top:6px; right:6px}
-    .card__eyebrow{padding-right:40px}
+    .jrow__top,.jrow__title{padding-right:40px}
+  }
+
+  /* =======================================================================
+     ワークポート型レイアウト（グローバルナビ・パンくず・検索条件・求人詳細）
+     ======================================================================= */
+
+  /* ---------- グローバルナビ ---------- */
+  .gnav{display:flex; align-items:center; gap:20px; font-size:13.5px; font-weight:700; flex-shrink:0}
+  .gnav a{color:var(--ink-2); text-decoration:none; white-space:nowrap; transition:color .15s}
+  .gnav a:hover{color:var(--accent)}
+  .gnav a[aria-current="page"]{color:var(--accent)}
+  .btn-head{
+    display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+    padding:10px 18px; border:0; border-radius:var(--r-pill);
+    background:var(--cta); color:var(--cta-ink); font-weight:800; font-size:13.5px;
+    text-decoration:none; box-shadow:var(--shadow-sm); transition:background .15s;
+  }
+  .btn-head:hover{background:var(--cta-hover)}
+  .btn-head .free{
+    font-size:10px; letter-spacing:.06em; padding:2px 5px; border-radius:4px;
+    background:color-mix(in srgb, var(--cta-ink) 88%, transparent); color:var(--cta);
+  }
+  .btn-head__short{display:none}
+  @media (max-width:1080px){ .gnav{display:none} }
+  /* 狭い画面では、ヘッダーの掲載を横に詰めこまず、CTAを自分の行に落とす。
+     横に並べると 430px で横スクロールが出て、本文ごと右にずれる。 */
+  @media (max-width:760px){
+    .btn-head{order:4; flex:1 0 100%; justify-content:center; padding:12px 16px; font-size:14.5px}
+    .btn-head__long{display:none}
+    .btn-head__short{display:inline}
+  }
+
+  /* ---------- パンくず ---------- */
+  .crumb{display:flex; align-items:center; flex-wrap:wrap; gap:7px; padding:14px 0 0; font-size:12px; color:var(--ink-3)}
+  .crumb a{color:var(--ink-3); text-decoration:none}
+  .crumb a:hover{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+  .crumb .sep{opacity:.6}
+  .crumb .cur{color:var(--ink-2); font-weight:700; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:46ch}
+
+  /* ---------- 検索結果のヘッダ（現在の検索条件） ---------- */
+  .cond{
+    border:1px solid var(--line); border-radius:var(--r-card); background:var(--surface);
+    padding:14px 16px; margin-bottom:16px;
+  }
+  .cond__h{display:flex; align-items:baseline; gap:10px; margin-bottom:8px}
+  .cond__h span{font-size:11.5px; font-weight:800; letter-spacing:.1em; color:var(--ink-3)}
+  .cond__none{font-size:13px; color:var(--ink-3)}
+  .cond .active-chips{margin-bottom:0}
+
+  .resbar{padding-bottom:14px; border-bottom:1px solid var(--line); margin-bottom:18px}
+  .perpage{display:flex; align-items:center; gap:8px}
+  .perpage label{font-size:12px; color:var(--ink-3); font-weight:600}
+  .sortsel select,.perpage select{min-height:38px}
+
+  /* ---------- 求人詳細（別ページ相当） ---------- */
+  .detail{padding:6px 0 90px}
+  .dt-grid{display:grid; grid-template-columns:1fr 328px; gap:36px; align-items:start}
+  .dt-grid > *{min-width:0}
+  .dt-head{margin-bottom:22px}
+  .dt-co{font-size:14px; font-weight:700; color:var(--accent); margin:0 0 6px}
+  .dt-title{margin:0 0 14px; font-size:clamp(1.35rem,2.6vw,1.75rem); font-weight:800; line-height:1.4; text-wrap:balance}
+  .dt-back{
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:4px;
+    background:none; border:0; padding:0; color:var(--ink-3); font-size:13px; font-weight:700;
+  }
+  .dt-back:hover{color:var(--accent)}
+
+  /* 右レール（年収＋応募ボタン） */
+  .dt-side{position:sticky; top:96px; display:flex; flex-direction:column; gap:12px}
+  .dt-card{border:1px solid var(--line); border-radius:var(--r-card); background:var(--surface); padding:20px; box-shadow:var(--shadow-sm)}
+  .dt-card .k{display:block; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:700}
+  .dt-card .v{display:block; font-family:var(--mono); font-weight:800; font-size:19px; color:var(--gold); font-variant-numeric:tabular-nums; margin-bottom:14px}
+  .dt-card .btn-apply{width:100%; padding:14px; font-size:15px}
+  .dt-card .btn-detail{width:100%; margin-top:9px}
+  .dt-card__note{margin:12px 0 0; font-size:11.5px; line-height:1.75; color:var(--ink-3)}
+  .dt-card__note b{color:var(--ink-2)}
+  .dt-fav{display:flex; align-items:center; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line-2); font-size:12.5px; color:var(--ink-3)}
+
+  /* スマホ：下に张り付く応募バー */
+  .applybar{
+    position:fixed; left:0; right:0; bottom:0; z-index:50; display:none; gap:10px; align-items:center;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    background:color-mix(in srgb, var(--surface) 94%, transparent);
+    backdrop-filter:saturate(180%) blur(10px); border-top:1px solid var(--line);
+  }
+  .applybar .sal{flex:0 0 auto; font-family:var(--mono); font-weight:800; font-size:13.5px; color:var(--gold); line-height:1.3}
+  .applybar .sal small{display:block; font-family:var(--sans); font-size:10px; color:var(--ink-3); letter-spacing:.08em}
+  .applybar .btn-apply{flex:1; padding:14px}
+
+  @media (max-width:1080px){ .dt-grid{grid-template-columns:1fr 288px; gap:26px} }
+  @media (max-width:900px){
+    .dt-grid{grid-template-columns:1fr}
+    .dt-side{position:static}
+    body.detail-open .applybar{display:flex}
+    body.detail-open .detail{padding-bottom:96px}
+  }
+  @media (max-width:700px){
+    .crumb{font-size:12.5px}
+    .crumb .cur{max-width:24ch}
+    .cond{padding:12px 14px}
+    .dt-card{padding:16px}
   }
   @media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important} }
 </style>
@@ -673,6 +898,11 @@
         <span class="brand__sub">MIDDLE &amp; HIGH CLASS</span>
       </span>
     </a>
+    <nav class="gnav" aria-label="メインメニュー">
+      <a href="./" aria-current="page">求人を探す</a>
+      <a href="1day.html">1day選考会</a>
+      <a href="apply.html">転職支援サービス</a>
+    </nav>
     <div class="search">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <input id="q" type="search" placeholder="職種・企業名・キーワードで検索" autocomplete="off" aria-label="キーワード検索">
@@ -690,18 +920,55 @@
         <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg>
       </button>
     </div>
+    <a class="btn-head" href="apply.html">
+      <span class="btn-head__long">転職支援に申し込む</span>
+      <span class="btn-head__short">無料で申し込む</span>
+      <span class="free">無料</span>
+    </a>
   </div>
 </header>
 
 <div class="wrap">
+  <nav class="crumb" id="crumb" aria-label="パンくず"></nav>
+
+  <div id="listView">
+  <!-- ===== ヒーロー（アイキャッチ） ===== -->
+  <section class="hero">
+    <picture>
+      <source type="image/webp" srcset="assets/hero.webp">
+      <img class="hero__bg" src="assets/hero.jpg" alt="" width="1600" height="650" fetchpriority="high" decoding="async">
+    </picture>
+    <div class="hero__scrim"></div>
+    <div class="hero__inner">
+      <p class="hero__eyebrow">20代・30代のハイクラス転職</p>
+      <h1>その経験に、<em>見合う</em>ポジションを。</h1>
+      <p class="hero__sub">転職はゴールではなく、キャリアの通過点。5年後の選択肢が増える一社かどうかで選べるように、求人を揃えています。</p>
+      <form class="hero__search" id="heroSearch" role="search">
+        <span class="field">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="heroQ" type="search" placeholder="職種・企業名・キーワードで検索" autocomplete="off" aria-label="キーワードで求人を検索">
+        </span>
+        <button type="submit">求人を検索</button>
+      </form>
+      <div class="hero__quick" id="heroQuick">
+        <span class="hero__quick-lbl">人気の条件</span>
+        <button type="button" data-hq="sal800">年収800万円以上</button>
+        <button type="button" data-hq="sal1000">年収1,000万円以上</button>
+        <button type="button" data-hq="remote" id="hqRemote" hidden>リモート可</button>
+        <button type="button" data-hq="filter">職種・業界から探す</button>
+      </div>
+      <div class="hero__stats">
+        <div><b id="totalCount">0</b><span>掲載中の求人</span></div>
+        <div><b id="count800">0</b><span>年収800万円以上</span></div>
+        <div><b id="count1000">0</b><span>年収1,000万円以上</span></div>
+      </div>
+    </div>
+  </section>
+
   <section class="intro">
-    <p class="eyebrow">ミドルクラス・ハイクラス向け求人サイト</p>
-    <h1>その経験に、<em>見合う</em>ポジションを。</h1>
-    <p class="stat">全 <b id="totalCount">0</b> 件 ／ 年収800万円以上 <b id="count800">0</b> 件 ／ 1,000万円以上 <b id="count1000">0</b> 件。職種・業界・年収・エリアから絞り込めます。</p>
-    <p class="stat">中途採用が中心ですが、新卒・インターンの求人も掲載しています。</p>
     <p class="note">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-      <span>掲載しているのは求人の一部です。経営幹部・部長クラスを含む<b>非公開求人も多数</b>あります。</span>
+      <span>掲載しているのは求人の一部です。重要なポジションほど公開されず、<b>非公開で動いています</b>。</span>
     </p>
     <div class="intro-feat">
       <span class="intro-feat__lbl">特集</span>
@@ -727,6 +994,11 @@
     </aside>
 
     <section class="results" aria-label="検索結果">
+      <div class="cond">
+        <div class="cond__h"><span>現在の検索条件</span></div>
+        <p class="cond__none" id="condNone">指定なし（すべての求人）</p>
+        <div class="active-chips" id="activeChips"></div>
+      </div>
       <div class="resbar">
         <div class="rescount"><b id="resCount">0</b> 件の求人</div>
         <div class="sortsel">
@@ -738,10 +1010,17 @@
             <option value="company">企業名順</option>
           </select>
         </div>
+        <div class="perpage">
+          <label for="perPage">表示件数</label>
+          <select id="perPage">
+            <option value="30">30件</option>
+            <option value="50">50件</option>
+            <option value="100">100件</option>
+          </select>
+        </div>
       </div>
-      <div class="active-chips" id="activeChips"></div>
-      <div class="grid" id="grid"></div>
-      <div class="loadmore" id="loadMore" hidden><button>さらに表示する</button></div>
+      <div class="joblist" id="grid"></div>
+      <div class="pager" id="pager"></div>
       <div class="empty" id="empty" hidden>
         <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <h3>該当する求人が見つかりませんでした</h3>
@@ -750,6 +1029,18 @@
       </div>
     </section>
   </div>
+  </div><!-- /#listView -->
+
+  <section class="detail" id="detail" hidden aria-label="求人詳細">
+    <button class="dt-back" id="dtBack" type="button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      求人情報一覧に戻る
+    </button>
+    <div class="dt-grid">
+      <div class="dt-main" id="detailBody"></div>
+      <aside class="dt-side" id="detailSide"></aside>
+    </div>
+  </section>
 </div>
 
 <footer class="site-foot">
@@ -775,26 +1066,14 @@
       <span>専門ページ</span>
       <a href="https://pm.agent-best.net/" target="_blank" rel="noopener">PMのキャリア支援</a>
       <a href="https://eng.agent-best.net/" target="_blank" rel="noopener">エンジニアからコンサルへ</a>
-      <a href="https://student.agent-best.net/" target="_blank" rel="noopener">学生（新卒・インターン）向け</a>
+      <a href="https://shinsotsu.agent-best.net/" target="_blank" rel="noopener">新卒・インターンの求人を探す</a>
+      <a href="https://student.agent-best.net/" target="_blank" rel="noopener">学生向けキャリア支援</a>
     </nav>
     <p class="foot__copy">&copy; 株式会社エージェントベスト</p>
   </div>
 </footer>
 
 <div class="backdrop" id="backdrop"></div>
-<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="pdTitle" tabindex="-1">
-  <div class="panel__bar">
-    <span class="lbl">求人詳細</span>
-    <div style="display:flex; align-items:center; gap:8px">
-      <span class="fav fav--bar" id="panelFav" role="button" tabindex="0" data-fav=""></span>
-      <button class="iconbtn" id="panelClose" aria-label="閉じる">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="panel__body" id="panelBody"></div>
-</aside>
-
 <aside class="panel" id="mypanel" role="dialog" aria-modal="true" aria-labelledby="myTitle" tabindex="-1">
   <div class="panel__bar">
     <span class="lbl" id="myTitle">マイページ</span>
@@ -804,6 +1083,9 @@
   </div>
   <div class="panel__body" id="myBody"></div>
 </aside>
+
+<!-- スマホで求人詳細を見ている間だけ、画面下部に応募ボタンを固定する -->
+<div class="applybar" id="applybar" hidden></div>
 
 <!-- 「気になる」が一定数たまった人にだけ出す登録案内。ログイン済み・辞退済みには出ない。 -->
 <aside class="signal" id="signal" role="region" aria-labelledby="signalTitle" hidden>
@@ -830,14 +1112,11 @@
 const JOBS = __JOBS_DATA__;
 
 /* ---------- 応募・相談の導線設定 ----------
-   APPLY_FORM_URL … Airtable「求人応募（サイト）」フォームビューの共有URL
-                    （空のままだと応募ボタンはメール送信にフォールバック）
-   求人名・企業名・求人IDは prefill_ パラメータで自動入力されます。 */
-/* ⚠ 応募フォームは、いまサイトのどこからもリンクしていない（2026-08-16に導線を削除）。
-   人材紹介の入口は「相談」であって「応募」ではない、という方針のため。
-   定数と applyUrl() は、戻したくなったときのために残してある。
-   リンクを復活させない限り GA4 の apply_click は発火しない。 */
-const APPLY_FORM_URL = "https://airtable.com/appYkc36EvioYoL1A/shr0K5l9MSiNMgUe6";
+   APPLY_PAGE … 「応募する」の遷移先。ワークポート/JAC と同じ建て付けで、
+                押した先は「転職支援サービスの申し込みフォーム」（自社内の apply.html）。
+                企業へ直接応募するのではなく、当社から推薦する形で選考が進むことを
+                フォーム側で明示し、利用規約・プライバシーポリシーへの同意を個別に取る。 */
+const APPLY_PAGE = "apply.html";
 /* 相談の入口。Airtable「求人の問い合わせ（サイト）」tbltITsj4OmX5B2PJ のフォームビュー共有URL。
    ⚠ 空のあいだは mailto へフォールバックする（フォーム未作成でもリンクが死なないように）。
    作り方は README.md「問い合わせフォーム」を参照。 */
@@ -850,20 +1129,9 @@ const CONTACT_MAIL   = "r_matsuoka@agent-best.net";
 const PROFILE_URL    = "https://www.agent-best.net/profile";
 const CONTACT_URL    = "https://www.agent-best.net/contact";
 
-function applyUrl(j){
-  const pos = j.position||j.jobCategory||j.title||"";
-  const co  = j.company||"";
-  if(APPLY_FORM_URL){
-    const p = new URLSearchParams();
-    p.set("prefill_応募求人", pos);
-    p.set("prefill_企業名", co);
-    if(j.id){ p.set("prefill_求人レコードID", j.id); p.set("hide_求人レコードID", "true"); }
-    return APPLY_FORM_URL + (APPLY_FORM_URL.includes("?")?"&":"?") + p.toString();
-  }
-  const subject = `【応募】${co}${co&&pos?" / ":""}${pos}`;
-  const body = `下記の求人に応募します。\n\n■応募求人：${pos}\n■企業名：${co}\n\n──以下ご記入ください──\n氏名：\nフリガナ：\n電話番号：\n現在の所属：\nご希望・ご質問：\n`;
-  return `mailto:${CONTACT_MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
+/* 求人ごとの内部リンク（?job=求人ID）と、申し込みフォームへのリンク */
+function jobHref(j){ return "?job=" + encodeURIComponent(j&&j.id||""); }
+function applyHref(j){ return APPLY_PAGE + "?job=" + encodeURIComponent(j&&j.id||""); }
 
 /* 求人詳細から「相談する」を押したとき、どの求人の話かを Calendly に持っていく。
    Calendly の事前質問は先頭から a1, a2… で埋められる。松岡アカウントの2つの
@@ -933,10 +1201,10 @@ document.addEventListener("click",e=>{
   const a=e.target.closest("a[href^='http']"); if(!a) return;
   let host=""; try{ host=new URL(a.href).hostname; }catch(err){ return; }
   const label=(a.textContent||"").trim().slice(0,60);
-  /* ⚠ 問い合わせフォームも応募フォームも airtable.com なので、ホスト名だけでは
-     区別できない。相談導線は data-cta を先に見て、apply_click と混ざらないようにする。 */
+  /* 応募（apply.html）はサイト内なのでここには来ない。data-apply 側で記録している。
+     airtable.com へ出ていくのは問い合わせフォームだけ。 */
   if(a.dataset.cta) track("inquiry_click", {way:a.dataset.cta, job_name:currentJob.position, company:currentJob.company, job_id:currentJob.id});
-  else if(host.endsWith("airtable.com")) track("apply_click", {job_name:currentJob.position, company:currentJob.company, job_id:currentJob.id});
+  else if(host.endsWith("airtable.com")) track("inquiry_click", {way:"form", job_name:currentJob.position, company:currentJob.company, job_id:currentJob.id});
   else if(host.endsWith("calendly.com")) track("consult_click", {location:label});
   else if(/^(pm|eng|student)\.agent-best\.net$/.test(host)) track("lp_click", {lp:host, link_text:label});
   else if(host.endsWith("agent-best.net")) track("corporate_click", {link_text:label});
@@ -951,12 +1219,64 @@ let currentJob={};
 /* ---------- utils ---------- */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* Airtableのリッチテキストは Markdown で返ってくるので、& や + の前にバックスラッシュが付く（M\&A）。
+   表示のときに外す。 */
+const MD_ESC=/\\([!-\/:-@\[-\x60{-~])/g;
+const MD_ESC_HTML=/\\(&amp;|&quot;|&#39;|&lt;|&gt;|[!-\/:-@\[-\x60{-~])/g;
+/* 数字の直前のバックスラッシュは、原文が半角の「¥」（基本給\304,000 など）。円記号に戻す。 */
+const YEN=/\\(?=[0-9])/g;
+const mdUnesc=s=>String(s==null?"":s).replace(YEN,"￥").replace(MD_ESC,"$1");
 const PREFS=["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
+
+/* 勤務地の生データ（「【アクセス】」「〒150-6015」「東京都港区南青山1-12-3 ○○ビル5F」など）を
+   カード用に「都道府県＋市区町村」へ整える。詳細パネルには生データをそのまま出す（情報を落とさない）。
+   ⚠ 市区町村の切り出しは遅延マッチ＋[市町村]?。greedyにすると「中央区日本橋富沢町」を拾って壊れる。 */
+const BARE_CITY={"東京":"東京都","大阪":"大阪府","京都":"京都府","名古屋":"愛知県名古屋市","福岡":"福岡県福岡市","札幌":"北海道札幌市","横浜":"神奈川県横浜市","神戸":"兵庫県神戸市","仙台":"宮城県仙台市","広島":"広島県広島市"};
+function locLabel(loc){
+  loc=String(loc||"");
+  const areas=PREFS.filter(p=>loc.includes(p));
+  const lines=loc.split(/\n/).map(s=>s.trim()).filter(Boolean)
+    .map(s=>s.replace(/^[【\[][^】\]]*[】\]]\s*/,"").replace(/^[■◆●○・*\-]+\s*/,"").trim())
+    .filter(s=>s && !/^[〒\d\-−ー\s]+$/.test(s));   /* 郵便番号だけの行は捨てる */
+  let base="";
+  for(const s of lines){
+    const p=PREFS.find(x=>s.includes(x)); if(!p) continue;
+    const rest=s.slice(s.indexOf(p)+p.length);
+    const m=rest.match(/^\s*([^\s0-9０-９]{1,8}?[市区町村郡][市町村]?)/);   /* 四日市市・町田市を落とさない */
+    base=m?p+m[1]:p; break;
+  }
+  if(!base && areas.length) base=areas[0];
+  if(!base){
+    const f=(lines[0]||"").replace(/(オフィス|勤務地|勤務|本社|支社|エリア|市内|都内|府内|県内)$/,"").trim();
+    base=BARE_CITY[f] || (f && f.length<=8 ? (lines[0]||"").trim() : "");
+  }
+  if(base && areas.length>1) base+=" 他"+(areas.length-1);
+  return base;
+}
+
+/* 求人リストに出す2行の概要。仕事内容の Markdown を素の文にして頭だけ切る */
+function plainLead(src){
+  if(!src) return "";
+  const t = String(src).replace(/\r/g,"")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g,"")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g,"$1")
+    .replace(/^#{1,6}\s*/gm,"")
+    .replace(/^\s*[-*・–—]\s*/gm,"")
+    .replace(/[*_`>|\\]/g,"")
+    .replace(/\s+/g," ").trim();
+  return t.length>120 ? t.slice(0,120)+"…" : t;
+}
+/* 掲載から NEW_DAYS 日以内なら NEW バッジを出す。
+   ⚠ createdAt は data/jobs.json に入っているときだけ効く（node fetch-jobs.js で付く）。
+      無いあいだは NEW バッジも「新着順」も出ない。件数を偽らないための仕様。 */
+const NEW_DAYS = 14;
 
 /* enrich each job: prefectures + remote flag + salary sort key */
 JOBS.forEach(j=>{
   const loc=(j.location||"");
   j.areas=PREFS.filter(p=>loc.includes(p));
+  j.locShort=locLabel(loc);
   const rtxt=loc+" "+(j.jobContent||"")+" "+(j.benefits||"");
   j.remote=/在宅|リモート|テレワーク|フルリモート/.test(rtxt);
   j._skey = (j.salaryMax!=null?j.salaryMax:(j.salaryMin!=null?j.salaryMin:-1));
@@ -964,7 +1284,10 @@ JOBS.forEach(j=>{
   const gm=String(j.jobCategory||"").match(/（([^（）]+)）\s*$/);
   j.jobGroup = gm?gm[1]:"";
   j._hay = [j.company,j.position,j.title,j.jobCategory,(j.industry||[]).join(" "),j.location,j.jobContent,j.must,j.welcome,j.idealPerson].filter(Boolean).join(" ").toLowerCase();
+  j._ts = j.createdAt ? (Date.parse(j.createdAt)||0) : 0;
+  j._lead = plainLead(j.jobContent || j.must || j.companyInfo || "");
 });
+const HAS_DATES = JOBS.some(j=>j._ts>0);
 
 function fmtSalary(j){
   const mn=j.salaryMin, mx=j.salaryMax;
@@ -986,6 +1309,7 @@ function rich(src){
     s=s.replace(/(^|[^"=\/])(https?:\/\/[^\s<)）"]+)/g,(m,p,u)=>p+'<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>');
     s=s.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
     s=s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g,'$1<strong>$2</strong>');
+    s=s.replace(YEN,"￥").replace(MD_ESC_HTML,"$1");
     return s;
   };
   const flushList=()=>{ if(listBuf.length){ html+="<ul>"+listBuf.map(x=>"<li>"+inline(x)+"</li>").join("")+"</ul>"; listBuf=[]; } };
@@ -1005,7 +1329,6 @@ function rich(src){
 
 /* ---------- facets config ---------- */
 const facetDefs=[
-  {key:"kubun", title:"区分", type:"chip", multi:true, get:j=>j.kubun?[j.kubun]:[]},
   {key:"areas", title:"勤務地エリア", type:"check", multi:true, searchable:true, get:j=>j.areas},
   {key:"jobCategory", title:"職種カテゴリ", type:"check", multi:true, searchable:true, get:j=>j.jobCategory?[j.jobCategory]:[]},
   {key:"industry", title:"業界", type:"check", multi:true, searchable:true, get:j=>j.industry||[]},
@@ -1038,7 +1361,8 @@ function jobMatches(j){
 }
 function sortJobs(arr){
   const a=arr.slice();
-  if(state.sort==="salaryHigh") a.sort((x,y)=>y._skey-x._skey);
+  if(state.sort==="new") a.sort((x,y)=>(y._ts||0)-(x._ts||0));
+  else if(state.sort==="salaryHigh") a.sort((x,y)=>y._skey-x._skey);
   else if(state.sort==="salaryLow") a.sort((x,y)=>(x._skey<0?1e9:x._skey)-(y._skey<0?1e9:y._skey));
   else if(state.sort==="company") a.sort((x,y)=>String(x.company||"").localeCompare(String(y.company||""),"ja"));
   else a.sort((x,y)=>y._skey-x._skey);
@@ -1132,6 +1456,7 @@ function renderActiveChips(){
   const any=h.length>0;
   if(any) h+=`<button class="clear-all" id="clearAll">すべてクリア</button>`;
   box.innerHTML=h;
+  const none=$("#condNone"); if(none) none.hidden=any;
 }
 function chipHtml(k,v,label){
   return `<span class="achip">${esc(label)}<button data-rm-k="${esc(k)}" data-rm-v="${esc(v)}" aria-label="${esc(label)}を外す"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></span>`;
@@ -1164,25 +1489,76 @@ function clearFacetSilent(k){
 }
 
 /* ---------- results ---------- */
-let filtered=[], shown=0; const PAGE=24;
+/* ワークポート型：1ページ 30/50/100 件でページ送りする（無限スクロールにはしない。
+   「何ページ目を見ていたか」が分かるほうが、条件を変えながら探す人には戻りやすい） */
+let filtered=[], page=1, perPage=30;
+
 function apply(){
   filtered=sortJobs(JOBS.filter(jobMatches));
-  shown=0;
+  page=1;
   $("#resCount").textContent=filtered.length;
   $("#drawerCount").textContent=filtered.length;
   renderActiveChips();
   updateBadge();
-  const grid=$("#grid"); grid.innerHTML="";
   $("#empty").hidden=filtered.length>0;
-  renderMore();
+  renderPage();
 }
+function pageCount(){ return Math.max(1, Math.ceil(filtered.length/perPage)); }
+function renderPage(){
+  const total=pageCount();
+  if(page>total) page=total;
+  const start=(page-1)*perPage;
+  $("#grid").innerHTML = filtered.slice(start, start+perPage).map(rowHtml).join("");
+  renderPager();
+  paintFavs();
+}
+function gotoPage(n){
+  page=Math.min(Math.max(1,n), pageCount());
+  renderPage();
+  const top=document.querySelector(".results");
+  if(top) window.scrollTo({top: top.getBoundingClientRect().top + window.pageYOffset - 76, behavior:"smooth"});
+  track("page_change",{page:page, results:filtered.length});
+}
+/* ページ番号は 先頭・末尾・現在地の前後2つ だけ出し、間は「…」でたたむ */
+function pageItems(cur,total){
+  const out=[], win=2;
+  for(let i=1;i<=total;i++){
+    if(i===1 || i===total || (i>=cur-win && i<=cur+win)) out.push(i);
+    else if(out[out.length-1]!=="gap") out.push("gap");
+  }
+  return out;
+}
+function renderPager(){
+  const total=pageCount(), el=$("#pager");
+  if(!filtered.length || total<=1){ el.innerHTML=""; return; }
+  let h=`<button class="pager__nav" data-page="${page-1}"${page<=1?" disabled":""}>前へ</button>`;
+  pageItems(page,total).forEach(it=>{
+    h += it==="gap"
+      ? `<span class="gap">…</span>`
+      : `<button data-page="${it}"${it===page?' aria-current="page"':''} aria-label="${it}ページ目">${it}</button>`;
+  });
+  h+=`<button class="pager__nav" data-page="${page+1}"${page>=total?" disabled":""}>次へ</button>`;
+  el.innerHTML=h;
+}
+$("#pager").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-page]");
+  if(b && !b.disabled) gotoPage(+b.dataset.page);
+});
+$("#perPage").addEventListener("change",e=>{
+  perPage=+e.target.value||30; page=1; renderPage();
+  track("perpage_change",{per_page:perPage});
+});
+
 function updateBadge(){
   let n=(state.remote?1:0)+(state.salaryMin>0?1:0)+facetDefs.reduce((s,f)=>s+state.sel[f.key].size,0);
   const b=$("#filterBadge"); b.hidden=n===0; b.textContent=n;
 }
+
+/* 求人1件＝横長カード1行。タイトル・「詳細を見る」は求人詳細へ、
+   「応募する」は転職支援サービスの申し込みフォーム（apply.html）へ。 */
 /* ---- 企業ロゴ ----
    j.logo（リポジトリ内の画像パス）があればそれを出す。無ければ社名の頭文字タイル。
-   ⚠ Airtable の添付URLは数時間で失効するので、直接は使えない。ロゴを出すときは
+   ⚠ Airtable の添付URLは数時間で失効するので直接は使えない。ロゴを出すときは
    画像をリポジトリに取り込み、jobs.json の logo にそのパスを入れること。
    ⚠ 外部の favicon サービス（google.com/s2/favicons 等）は使わない。
    訪問者がどの求人を見たかが第三者に渡るため、このサイトの方針に反する。 */
@@ -1194,41 +1570,38 @@ function coInitial(name){
   return m ? m[0].toUpperCase() : "?";
 }
 function logoHtml(j){
-  if(j.logo) return `<span class="card__logo"><img src="${esc(j.logo)}" alt="" loading="lazy" decoding="async"></span>`;
-  return `<span class="card__logo" aria-hidden="true">${esc(coInitial(j.company))}</span>`;
+  if(j.logo) return `<span class="jrow__logo"><img src="${esc(j.logo)}" alt="" loading="lazy" decoding="async"></span>`;
+  return `<span class="jrow__logo" aria-hidden="true">${esc(coInitial(j.company))}</span>`;
 }
-function cardHtml(j){
+function rowHtml(j){
   const tags=[];
   if(j.kubun && j.kubun!=="中途") tags.push(`<span class="tag tag--kubun">${esc(j.kubun)}</span>`);
-  if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
   if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
+  if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
   if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
-  const ind=(j.industry&&j.industry[0])?`<span class="card__ind">${esc(j.industry[0])}</span>`:"";
-  const loc=j.location?`<span class="card__loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${esc((j.location||"").split(/\n/)[0])}</span></span>`:"";
-  return `<button class="card" data-id="${esc(j.id)}">
+  const ind=(j.industry&&j.industry[0])?`<span class="jrow__ind">${esc(j.industry[0])}</span>`:"";
+  const isNew = j._ts && (Date.now()-j._ts) < NEW_DAYS*864e5;
+  const name = j.position||j.jobCategory||j.title||"求人";
+  return `<article class="jrow" data-id="${esc(j.id)}">
     ${favBtn(j.id)}
-    <div class="card__eyebrow">${logoHtml(j)}<span class="card__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
-    <h3 class="card__title">${esc(j.position||j.jobCategory||j.title||"求人")}</h3>
+    <div class="jrow__top">${isNew?`<span class="jrow__new">NEW</span>`:""}${logoHtml(j)}<span class="jrow__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
+    <h3 class="jrow__title"><a href="${esc(jobHref(j))}" data-job="${esc(j.id)}">${esc(name)}</a></h3>
     <div class="card__tags">${tags.join("")}</div>
-    <div class="card__foot">
-      <div class="card__salary"><span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}</span></div>
-      ${loc}
+    ${j._lead?`<p class="jrow__desc">${esc(j._lead)}</p>`:""}
+    <dl class="jrow__meta">
+      <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span></dd>
+      ${j.locShort?`<dt>勤務地</dt><dd>${esc(j.locShort)}</dd>`:""}
+    </dl>
+    <div class="jrow__act">
+      <a class="btn-detail" href="${esc(jobHref(j))}" data-job="${esc(j.id)}">詳細を見る</a>
+      <a class="btn-apply" href="${esc(applyHref(j))}" data-apply="${esc(j.id)}">応募する
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
-  </button>`;
+  </article>`;
 }
-function renderMore(){
-  const next=filtered.slice(shown,shown+PAGE);
-  const grid=$("#grid");
-  grid.insertAdjacentHTML("beforeend", next.map(cardHtml).join(""));
-  shown+=next.length;
-  $("#loadMore").hidden = shown>=filtered.length;
-  paintFavs();
-}
-$("#loadMore").addEventListener("click",renderMore);
 $("#grid").addEventListener("click",e=>{
   const f=e.target.closest(".fav");
-  if(f){ e.preventDefault(); e.stopPropagation(); toggleFav(f.dataset.fav); return; }
-  const c=e.target.closest(".card"); if(c) openDetail(c.dataset.id);
+  if(f){ e.preventDefault(); e.stopPropagation(); toggleFav(f.dataset.fav); }
 });
 $("#emptyReset").addEventListener("click",resetAll);
 
@@ -1296,30 +1669,33 @@ document.addEventListener("click",async e=>{
   track("job_share",{method:kind, job_id:currentJob.id, company:currentJob.company||""});
 });
 
-/* ---------- detail panel ---------- */
-let lastFocus=null;
-function metaRow(k,v){ return v?`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`:""; }
-function openDetail(id){
-  const j=JOBS.find(x=>x.id===id); if(!j) return;
-  currentJob=j;
-  pushSeen(j.id);
-  track("job_detail_open", {job_id:j.id, job_name:j.position||j.jobCategory||j.title||"", company:j.company||"", job_category:j.jobCategory||"", salary_max:j.salaryMax||0});
-  lastFocus=document.activeElement;
-  const tags=[];
-  if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
-  if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
-  if(j.kubun) tags.push(`<span class="tag">${esc(j.kubun)}</span>`);
-  (j.industry||[]).forEach(i=>tags.push(`<span class="tag">${esc(i)}</span>`));
-  if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
+/* ---------- 求人詳細（別ページ相当のビュー） ----------
+   ワークポート/JAC と同じく、求人詳細は「一覧とは別のページ」として扱う。
+   静的サイトなので実体は同じ index.html だが、?job=<求人ID> を pushState で
+   積むので、戻るボタン・URL共有・ブラウザ履歴が普通のページと同じように動く。 */
+const BASE_TITLE = document.title;
+let listScroll = 0;
 
-  const url=(typeof j.url==="string"&&/^https?:\/\//.test(j.url))?j.url:null;
-  const siteRow = url?`<dt>企業サイト</dt><dd><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url.replace(/^https?:\/\//,"").replace(/\/$/,""))}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a></dd>`:"";
+function metaRow(k,v){ return v?`<dt>${esc(k)}</dt><dd>${esc(mdUnesc(v))}</dd>`:""; }
+function detailOpen(){ return !$("#detail").hidden; }
+function jobName(j){ return j.position||j.jobCategory||j.title||"求人"; }
 
-  /* 当社は人材紹介（推薦）であって求人広告ではないので、主導線は「相談」。
-     書類を出す導線は残すが、実態どおり「推薦を依頼する」と書く。 */
-  const cta = `<div class="pd-cta">
-      <a class="btn-primary" href="${esc(consultUrl(j))}" target="_blank" rel="noopener">この求人について詳しい話を聞く
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+function crumbList(){
+  return `<a href="https://www.agent-best.net/" target="_blank" rel="noopener">ホーム</a>
+    <span class="sep">›</span><span class="cur">求人情報一覧</span>`;
+}
+function crumbJob(j){
+  return `<a href="https://www.agent-best.net/" target="_blank" rel="noopener">ホーム</a>
+    <span class="sep">›</span><a href="./" data-golist>求人情報一覧</a>
+    <span class="sep">›</span><span class="cur">${esc(jobName(j))}</span>`;
+}
+
+/* 応募・相談のボタン群。「応募する」＝ apply.html（転職支援サービスの申し込み）。 */
+function ctaHtml(j){
+  return `<div class="pd-cta">
+      <a class="btn-apply" href="${esc(applyHref(j))}" data-apply="${esc(j.id)}">この求人に応募する
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn-ghost" href="${esc(consultUrl(j))}" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
       <a class="btn-ghost" data-cta="tel" href="${esc(inquiryUrl(j,WAY_TEL))}"${INQUIRY_FORM_URL?' target="_blank" rel="noopener"':''}>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.4 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
         電話で軽く話を聞きたい</a>
@@ -1327,11 +1703,45 @@ function openDetail(id){
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
         メールで質問する</a>
     </div>
-    <p class="pd-ctanote">当社は人材紹介会社です。この求人へは、担当エージェント（株式会社エージェントベスト）が<b>企業へ推薦</b>する形で選考が進みます。<b>ご利用は無料</b>です（紹介手数料は採用企業負担）。<br>
+    <p class="pd-ctanote">「応募する」を押すと、<b>転職支援サービスの申し込みフォーム</b>に進みます。企業へ直接応募するのではなく、担当エージェント（株式会社エージェントベスト）が<b>企業へ推薦</b>する形で選考が進みます。<b>ご利用は無料</b>です（紹介手数料は採用企業負担）。<br>
       まだ転職を決めていない段階でもかまいません。<b>経歴書のご用意は不要</b>です。この求人の背景や求められている経験など、公開情報にないところからお話しします。</p>
     <p class="pd-ctamail">「電話で軽く話を聞きたい」は<b>日程を決めずに、こちらから折り返す</b>形です。ご希望の時間帯だけ伺います。${INQUIRY_FORM_URL?"":`<br>
       メールソフトが開かないときは、<b class="pd-ctamail__addr">${esc(CONTACT_MAIL)}</b> あてに直接お送りください。`}</p>`;
+}
 
+/* 右レール。スクロールしても年収と応募ボタンが視界から消えないようにする */
+function sideHtml(j){
+  return `<div class="dt-card">
+    <span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}</span>
+    <a class="btn-apply" href="${esc(applyHref(j))}" data-apply="${esc(j.id)}">この求人に応募する</a>
+    <a class="btn-detail" href="${esc(consultUrl(j))}" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
+    <p class="dt-card__note">押した先は<b>転職支援サービスの申し込み</b>です。企業へは<b>当社から推薦する形</b>で選考が進みます。<b>ご利用は無料</b>（手数料は採用企業負担）。</p>
+    <div class="dt-fav">
+      <span class="fav fav--bar" role="button" tabindex="0" data-fav="${esc(j.id)}">${STAR}</span>
+      <span>あとで見返せるよう保存する</span>
+    </div>
+  </div>`;
+}
+
+function openDetail(id){
+  const j=JOBS.find(x=>x.id===id);
+  if(!j) return false;
+  if(!detailOpen()) listScroll = window.pageYOffset;
+  currentJob=j;
+  pushSeen(j.id);
+  track("job_detail_open", {job_id:j.id, job_name:jobName(j), company:j.company||"", job_category:j.jobCategory||"", salary_max:j.salaryMax||0});
+
+  const tags=[];
+  if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
+  if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
+  if(j.kubun && j.kubun!=="中途") tags.push(`<span class="tag">${esc(j.kubun)}</span>`);
+  (j.industry||[]).forEach(i=>tags.push(`<span class="tag">${esc(i)}</span>`));
+  if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
+
+  const url=(typeof j.url==="string"&&/^https?:\/\//.test(j.url))?j.url:null;
+  const siteRow = url?`<dt>企業サイト</dt><dd><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url.replace(/^https?:\/\//,"").replace(/\/$/,""))}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a></dd>`:"";
+
+  const cta = ctaHtml(j);
   const sec=(title,body,isRich)=> body?`<div class="pd-sec"><h3>${esc(title)}</h3>${isRich?`<div class="rich">${rich(body)}</div>`:body}</div>`:"";
 
   const author = `<div class="pd-author">
@@ -1352,69 +1762,98 @@ function openDetail(id){
     metaRow("休日・休暇", j.holidays),
     metaRow("福利厚生", j.benefits),
   ].join("");
+  /* 会社概要は長文なので本文組み、残りの1行項目だけを表に残す */
   const coMeta = [
-    metaRow("会社概要", j.companyInfo),
     metaRow("所在地", j.companyAddress),
     metaRow("上場区分", j.listedStatus),
     siteRow,
   ].join("");
+  const coBody = j.companyInfo?`<div class="rich">${rich(j.companyInfo)}</div>`:"";
+  const coSec = (coBody||coMeta)
+    ?`<div class="pd-sec"><h3>企業情報</h3>${coBody}${coMeta?`<dl class="pd-meta">${coMeta}</dl>`:""}</div>`
+    :"";
 
-  $("#panelBody").innerHTML=`
-    <p class="pd-co">${esc(j.company||"企業非公開")}</p>
-    <h2 class="pd-title" id="pdTitle">${esc(j.position||j.jobCategory||j.title||"求人")}</h2>
-    <div class="pd-tags">${tags.join("")}</div>
-    <div class="pd-salary">
-      <div class="item"><span class="k">想定年収</span><span class="v gold">${esc(fmtSalary(j))}</span></div>
-      ${j.employment?`<div class="item"><span class="k">雇用形態</span><span class="v">${esc(j.employment)}</span></div>`:""}
-      ${(j.areas&&j.areas.length)?`<div class="item"><span class="k">エリア</span><span class="v" style="font-size:14px">${esc(j.areas.join("・"))}</span></div>`:""}
+  $("#detailBody").innerHTML=`
+    <div class="dt-head">
+      <p class="dt-co">${esc(j.company||"企業非公開")}</p>
+      <h1 class="dt-title" id="pdTitle">${esc(jobName(j))}</h1>
+      <div class="pd-tags">${tags.join("")}</div>
     </div>
-    ${cta}
+    ${coSec}
     ${sec("仕事内容", j.jobContent, true)}
     ${sec("必須条件", j.must, true)}
     ${sec("歓迎条件", j.welcome, true)}
     ${sec("求める人物像", j.idealPerson, true)}
     ${reqMeta?`<div class="pd-sec"><h3>募集要項</h3><dl class="pd-meta">${reqMeta}</dl></div>`:""}
     ${sec("選考プロセス", j.selectionProcess, true)}
-    ${coMeta?`<div class="pd-sec"><h3>企業情報</h3><dl class="pd-meta">${coMeta}</dl></div>`:""}
-    <div class="pd-sec"><h3>この求人が気になったら</h3>${cta}</div>
+    <div class="pd-sec"><h3>この求人に応募する</h3>${cta}</div>
     ${shareHtml(j)}
     ${author}
   `;
-  $("#panelBody").scrollTop=0;
-  $("#panelFav").dataset.fav=j.id;
-  $("#panelFav").innerHTML=STAR;
+  $("#detailSide").innerHTML=sideHtml(j);
+  const bar=$("#applybar");
+  bar.innerHTML=`<span class="sal"><small>想定年収</small>${esc(fmtSalary(j))}</span>
+    <a class="btn-apply" href="${esc(applyHref(j))}" data-apply="${esc(j.id)}">この求人に応募する</a>`;
+  bar.hidden=false;
+
+  $("#crumb").innerHTML=crumbJob(j);
+  $("#listView").hidden=true;
+  $("#detail").hidden=false;
+  document.body.classList.add("detail-open");
+  document.title = jobName(j) + (j.company?"｜"+j.company:"") + " - " + BASE_TITLE;
+  window.scrollTo(0,0);
   paintFavs();
-  $("#backdrop").classList.add("open");
-  $("#panel").classList.add("open");
-  document.body.style.overflow="hidden";
-  setJobParam(j.id);
-  $("#panelClose").focus();
+  return true;
 }
-function closeDetail(){
-  $("#backdrop").classList.remove("open");
-  $("#panel").classList.remove("open");
-  document.body.style.overflow="";
-  setJobParam(null);
-  if(lastFocus&&lastFocus.focus) lastFocus.focus();
+
+function showListView(){
+  $("#detail").hidden=true;
+  $("#listView").hidden=false;
+  $("#applybar").hidden=true;
+  document.body.classList.remove("detail-open");
+  $("#crumb").innerHTML=crumbList();
+  document.title=BASE_TITLE;
+  window.scrollTo(0, listScroll);
 }
-/* URLの ?job= を付け外しする。replaceState なので履歴は増えない＝戻るの挙動は今までどおり */
-function setJobParam(id){
-  if(!history.replaceState) return;
-  const p=new URLSearchParams(location.search);
-  if(id) p.set("job",id); else p.delete("job");
-  const q=p.toString();
-  history.replaceState(null,"",location.pathname+(q?"?"+q:"")+location.hash);
-}
-/* 共有されたリンク（?job=...）から来たときは、その求人を開いた状態にする */
-function openJobFromUrl(){
+
+/* URL（?job=…）と画面を合わせる。popstate＝戻る/進むからも呼ばれる */
+function route(){
   const id=new URLSearchParams(location.search).get("job");
-  if(!id) return;
-  if(JOBS.some(j=>j.id===id)) openDetail(id);
-  else setJobParam(null);   /* 掲載が終わっている求人。URLだけ消して一覧を見せる */
+  if(id){
+    if(openDetail(id)) return;
+    /* 掲載が終わっている求人。URLだけ消して一覧を見せる */
+    if(history.replaceState) history.replaceState({},"",location.pathname);
+  }
+  showListView();
 }
-$("#panelClose").addEventListener("click",closeDetail);
-$("#backdrop").addEventListener("click",closeDetail);
-document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if($("#panel").classList.contains("open")) closeDetail(); else closeDrawer(); } });
+function goDetail(id){
+  if(history.pushState) history.pushState({job:id},"","?job="+encodeURIComponent(id));
+  if(!openDetail(id)) showListView();
+}
+function goList(){
+  if(history.state && history.state.job && history.length>1){ history.back(); return; }
+  if(history.pushState) history.pushState({},"",location.pathname);
+  showListView();
+}
+window.addEventListener("popstate", route);
+$("#dtBack").addEventListener("click", goList);
+
+/* サイト内リンクはページ遷移させず、その場で差し替える */
+document.addEventListener("click",e=>{
+  if(e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const back=e.target.closest("a[data-golist]");
+  if(back){ e.preventDefault(); goList(); return; }
+  const a=e.target.closest("a[data-job]");
+  if(a){ e.preventDefault(); goDetail(a.dataset.job); }
+});
+/* 「応募する」は本当のページ遷移（apply.html）なので、遷移前に記録だけ取る */
+document.addEventListener("click",e=>{
+  const a=e.target.closest("a[data-apply]"); if(!a) return;
+  const j=JOBS.find(x=>x.id===a.dataset.apply)||{};
+  track("apply_click",{job_id:a.dataset.apply, job_name:jobName(j), company:j.company||"", salary_max:j.salaryMax||0});
+},true);
+
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeDrawer(); });
 
 /* ---------- keyword search ---------- */
 let qt;
@@ -1424,9 +1863,46 @@ $("#q").addEventListener("input",e=>{ clearTimeout(qt); qt=setTimeout(()=>{ stat
 },160); });
 $("#sort").addEventListener("change",e=>{ state.sort=e.target.value; apply(); });
 
+/* ---------- ヒーローの検索・人気の条件 ----------
+   ヒーローは入り口専用。状態は持たず、既存の #q ／ state ／ apply() にそのまま流す。 */
+function scrollToResults(){
+  const el=$(".results"); if(!el) return;
+  const top=el.getBoundingClientRect().top+window.pageYOffset-84; /* sticky なヘッダー分 */
+  window.scrollTo({top, behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
+}
+function setSalaryMin(v){
+  state.salaryMin=v;
+  const r=$("#salRange"); if(r) r.value=v;
+  const lbl=$("#salLbl"); if(lbl) lbl.textContent = v>0? v+"万円以上" : "指定なし";
+}
+$("#heroSearch").addEventListener("submit",e=>{
+  e.preventDefault();
+  const v=$("#heroQ").value.trim();
+  $("#q").value=v; state.q=v; apply(); scrollToResults();
+  if(v) track("search",{search_term:v, results:filtered.length, from:"hero"});
+});
+$("#heroQuick").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-hq]"); if(!b) return;
+  const k=b.dataset.hq;
+  if(k==="filter"){
+    /* スマホは絞り込みがドロワー、PCは左サイドバーに常時出ている */
+    if(matchMedia("(max-width:900px)").matches) openDrawer();
+    else $("#filters").scrollIntoView({block:"start", behavior:"smooth"});
+    track("filter_use",{filter:"hero_open"});
+    return;
+  }
+  if(k==="sal800") setSalaryMin(800);
+  else if(k==="sal1000") setSalaryMin(1000);
+  else if(k==="remote"){ state.remote=true; document.querySelector("[data-remote]")?.setAttribute("aria-pressed","true"); }
+  apply(); scrollToResults();
+  track("filter_use",{filter:"hero_"+k});
+});
+/* リモート可の求人が1件も無いときは、その条件を出さない */
+if(remoteCount>0) $("#hqRemote").hidden=false;
+
 /* ---------- mobile drawer ---------- */
 function openDrawer(){ $("#filters").classList.add("open"); $("#backdrop").classList.add("open"); document.body.style.overflow="hidden"; }
-function closeDrawer(){ $("#filters").classList.remove("open"); if(!$("#panel").classList.contains("open")){ $("#backdrop").classList.remove("open"); document.body.style.overflow=""; } }
+function closeDrawer(){ $("#filters").classList.remove("open"); if(!$("#mypanel").classList.contains("open")){ $("#backdrop").classList.remove("open"); document.body.style.overflow=""; } }
 $("#filterToggle").addEventListener("click",openDrawer);
 $("#filterClose").addEventListener("click",closeDrawer);
 $("#filterApply").addEventListener("click",closeDrawer);
@@ -1962,8 +2438,8 @@ function wireMypage(){
   if(qNo)  qNo.addEventListener("click",()=>{ const box=$("#quitBox"); if(box) box.hidden=true; });
   if(qYes) qYes.addEventListener("click",deleteAccount);
   $("#myBody").querySelectorAll("[data-open]").forEach(el=>{
-    el.addEventListener("click",e=>{ if(e.target.closest(".fav")) return; closeMypage(); openDetail(el.dataset.open); });
-    el.addEventListener("keydown",e=>{ if(e.key==="Enter"){ closeMypage(); openDetail(el.dataset.open); } });
+    el.addEventListener("click",e=>{ if(e.target.closest(".fav")) return; closeMypage(); goDetail(el.dataset.open); });
+    el.addEventListener("keydown",e=>{ if(e.key==="Enter"){ closeMypage(); goDetail(el.dataset.open); } });
   });
 }
 function authMsg(text, ok){
@@ -1972,7 +2448,6 @@ function authMsg(text, ok){
   el.className="auth__msg "+(ok?"ok":"ng");
 }
 function openMypage(){
-  if($("#panel").classList.contains("open")) closeDetail();
   renderMypage();
   $("#backdrop").classList.add("open");
   $("#mypanel").classList.add("open");
@@ -1982,7 +2457,7 @@ function openMypage(){
 }
 function closeMypage(){
   $("#mypanel").classList.remove("open");
-  if(!$("#panel").classList.contains("open")){
+  if(!$("#filters").classList.contains("open")){
     $("#backdrop").classList.remove("open");
     document.body.style.overflow="";
   }
@@ -2164,11 +2639,17 @@ $("#totalCount").textContent=JOBS.length;
 $("#count800").textContent=JOBS.filter(j=>j.salaryMax>=800).length;
 $("#count1000").textContent=JOBS.filter(j=>j.salaryMax>=1000).length;
 buildFilters();
+/* 掲載日が入っているデータのときだけ「新着順」を出し、既定にする（ワークポートと同じ） */
+if(HAS_DATES){
+  const sel=$("#sort");
+  sel.insertAdjacentHTML("afterbegin", '<option value="new">新着順</option>');
+  sel.value="new"; state.sort="new";
+}
 apply();
 updateMyBadge();
 paintFavs();
 initAuth();
-openJobFromUrl();
+route();
 </script>
 </body>
 </html>
