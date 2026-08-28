@@ -38,6 +38,14 @@ function build(dataFile, tplFile, outFile, placeholder, fallback, transform){
    Airtable 側に新卒・インターンが残っていても、ここで必ず落としてから埋め込む。
    ⚠ この関数を外すと、新卒・インターンの求人が「転職サイト」として公開される。 */
 function midCareerOnly(jobs){
+  /* ⚠ 区分が空の求人はここに落ちてくる（中途が9割なので既定は中途）。
+     ただし黙って載せると誤掲載に気づけないので、必ず名指しで警告する。 */
+  const noKubun = jobs.filter(j => !j.kubun);
+  if(noKubun.length){
+    console.log(`⚠ 区分が空の求人が ${noKubun.length}件あります。中途として載せます。Airtableで区分を入れてください:`);
+    noKubun.slice(0, 10).forEach(j => console.log(`   - ${j.company || '企業名なし'} / ${j.position || j.title || j.id}`));
+    if(noKubun.length > 10) console.log(`   …ほか ${noKubun.length - 10}件`);
+  }
   const kept = jobs.filter(j => !j.kubun || j.kubun === '中途');
   const dropped = jobs.length - kept.length;
   if(dropped > 0){
