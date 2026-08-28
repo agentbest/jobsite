@@ -812,6 +812,8 @@
 
   /* ---------- パンくず ---------- */
   .crumb{display:flex; align-items:center; flex-wrap:wrap; gap:7px; padding:14px 0 0; font-size:12px; color:var(--ink-3)}
+  /* 一覧（＝トップ）ではパンくずを空にしている。上の padding が残るとヒーローが下がるので消す */
+  .crumb:empty{display:none}
   .crumb a{color:var(--ink-3); text-decoration:none}
   .crumb a:hover{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
   .crumb .sep{opacity:.6}
@@ -1680,13 +1682,14 @@ function metaRow(k,v){ return v?`<dt>${esc(k)}</dt><dd>${esc(mdUnesc(v))}</dd>`:
 function detailOpen(){ return !$("#detail").hidden; }
 function jobName(j){ return j.position||j.jobCategory||j.title||"求人"; }
 
-function crumbList(){
-  return `<a href="/">ホーム</a>
-    <span class="sep">›</span><span class="cur">求人情報一覧</span>`;
-}
+/* パンくず。このサイトのトップ（/）＝求人情報一覧なので、「ホーム」と「求人情報一覧」は
+   同じページを指す。両方並べても階層が1つも増えないため、根は「ホーム」1つにまとめてある。
+   ⚠ 一覧そのものが根なので、一覧ではパンくずを出さない（空にすると .crumb:empty で消える）。
+   ⚠ 「ホーム」に data-golist を付けてあるので、通常クリックはリロードせず一覧へ戻る
+      （絞り込みとスクロール位置が残る）。⌘/Ctrl＋クリックは href="/" で普通に新規タブが開く。 */
+function crumbList(){ return ""; }
 function crumbJob(j){
-  return `<a href="/">ホーム</a>
-    <span class="sep">›</span><a href="./" data-golist>求人情報一覧</a>
+  return `<a href="/" data-golist>ホーム</a>
     <span class="sep">›</span><span class="cur">${esc(jobName(j))}</span>`;
 }
 
