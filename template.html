@@ -1685,11 +1685,12 @@ function jobName(j){ return j.position||j.jobCategory||j.title||"求人"; }
 /* パンくず。このサイトのトップ（/）＝求人情報一覧なので、「ホーム」と「求人情報一覧」は
    同じページを指す。両方並べても階層が1つも増えないため、根は「ホーム」1つにまとめてある。
    ⚠ 一覧そのものが根なので、一覧ではパンくずを出さない（空にすると .crumb:empty で消える）。
-   ⚠ 「ホーム」に data-golist を付けてあるので、通常クリックはリロードせず一覧へ戻る
-      （絞り込みとスクロール位置が残る）。⌘/Ctrl＋クリックは href="/" で普通に新規タブが開く。 */
+   ⚠ 「ホーム」には data-golist を付けない。ここは素の `/` 遷移＝トップを先頭から開く。
+      検索結果の続きに戻りたい人には「← 求人情報一覧に戻る」(#dtBack) があり、そちらは
+      絞り込みとスクロール位置を保って戻す。この2つは役割が別なので、寄せないこと。 */
 function crumbList(){ return ""; }
 function crumbJob(j){
-  return `<a href="/" data-golist>ホーム</a>
+  return `<a href="/">ホーム</a>
     <span class="sep">›</span><span class="cur">${esc(jobName(j))}</span>`;
 }
 
