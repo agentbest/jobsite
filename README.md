@@ -57,6 +57,11 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
 | fldcZfB9BkIPXNi0Z | URL(lookup) | url |
 | fldSfExGKjQUFanwx | 会社住所(lookup) | companyAddress |
 | fld4KFQmkPBfCiczK | 上場区分(lookup) | listedStatus |
+| fldPJIVJ0Tv4TQwaN | 対象卒業年（新卒・インターンのみ） | gradYear |
+
+⚠ **`gradYear` は新卒サイト（shinsotsu.agent-best.net）が使う。**
+jobs.json を作り直すときは、この列も必ず含めること（落とすと新卒サイトの卒業年の絞り込みが
+求人名からの推測に戻り、精度が落ちる）。
 
 `prefectures`（勤務地からの都道府県判定）と `remote`（在宅/リモート判定）は
 `template.html` 内の JS で実行時に自動付与している（データには持たせていない）。
