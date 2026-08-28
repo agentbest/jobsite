@@ -1681,11 +1681,11 @@ function detailOpen(){ return !$("#detail").hidden; }
 function jobName(j){ return j.position||j.jobCategory||j.title||"求人"; }
 
 function crumbList(){
-  return `<a href="https://www.agent-best.net/" target="_blank" rel="noopener">ホーム</a>
+  return `<a href="/">ホーム</a>
     <span class="sep">›</span><span class="cur">求人情報一覧</span>`;
 }
 function crumbJob(j){
-  return `<a href="https://www.agent-best.net/" target="_blank" rel="noopener">ホーム</a>
+  return `<a href="/">ホーム</a>
     <span class="sep">›</span><a href="./" data-golist>求人情報一覧</a>
     <span class="sep">›</span><span class="cur">${esc(jobName(j))}</span>`;
 }
