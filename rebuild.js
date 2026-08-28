@@ -86,5 +86,22 @@ if(jobs){
   }
 }
 
-const events = build('1day.json', '1day-template.html', '1day.html', '__EVENTS_DATA__', []);
-if(events) console.log('1day.html を再生成しました:', events.length, '件');
+/* 1day選考会も求人と同じで、Airtableの1つのテーブルを jobs と shinsotsu が共有している。
+   このサイトは中途の回だけを載せる。⚠ shinsotsu 側には鏡写しの newGradOnly() があり、
+   片方だけ直すと同じ回が両サイトに出る／どちらにも出ない状態になる。 */
+function midCareerEvents(events){
+  /* ⚠ 区分が空の回はここに落ちてくる（求人と同じく既定は中途）。
+     黙って載せると誤掲載に気づけないので、必ず名指しで警告する。 */
+  const noKubun = events.filter(e => !e.kubun);
+  if(noKubun.length){
+    console.log(`⚠ 区分が空の1day選考会が ${noKubun.length}件あります。中途として載せます。Airtableで区分を入れてください:`);
+    noKubun.forEach(e => console.log(`   - ${e.date || '日付なし'} / ${e.title || e.id}`));
+  }
+  const kept = events.filter(e => !e.kubun || e.kubun === '中途');
+  const dropped = events.length - kept.length;
+  if(dropped > 0) console.log(`中途以外の1day選考会を除外しました: ${dropped}件`);
+  return kept;
+}
+
+const events = build('1day.json', '1day-template.html', '1day.html', '__EVENTS_DATA__', [], midCareerEvents);
+if(events) console.log('1day.html を再生成しました:', events.length, '件（中途のみ）');

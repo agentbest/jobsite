@@ -31,6 +31,21 @@ template.html / apply-template.html / data/jobs.json を編集
 
 Airtable base「人材紹介事業」`appYkc36EvioYoL1A` / table「求人DB（求人票）」`tblyPZZasXTM2tcrV`（456件スナップショット。うち中途422件だけを載せる）。
 
+## 1day選考会（`1day.html`）
+
+開催情報は Airtable「1day選考会」`tbl1J80CGqiOTvuf7`。`node fetch-1day.js` → `data/1day.json` →
+`node rebuild.js` → `1day.html` の順。**求人と違い、取得は毎回 Airtable から手で回す。**
+
+- 「公開ステータス」が**非公開・未設定**の回は `fetch-1day.js` の時点で落ちる（＝サイトに出ない）。
+- ⚠ **このテーブルは shinsotsu.agent-best.net と共有している。**「区分」（2026-08-28追加・
+  `fldfhFRnZhuug3rl0`）で振り分ける。中途＝このサイト、新卒・インターン＝shinsotsu。
+  - `rebuild.js` の **`midCareerEvents()`** が中途以外を落とす。**shinsotsu 側には鏡写しの
+    `newGradOnly1day()` がある。片方だけ直すと、同じ回が両サイトに出る／どちらにも出ない。**
+  - **区分が空の回は中途扱い**（求人の `midCareerOnly()` と同じ既定）。ビルド時に回名を挙げて警告する。
+  - 記入例の行（非公開）に運用メモを入れてある。**複製したら区分を必ず見直すこと。**
+- 申し込みは Airtable フォーム `shr0K5l9MSiNMgUe6`（`applyUrl()` が回名と日付をプリフィル）。
+  ⚠ **shinsotsu 側はこのフォームを使わず、自前の `apply.html` に送っている。**
+
 ## サイトの位置づけ・表記
 
 - **中途採用（転職）のみを扱う**。2026-08-28に新卒・インターンの掲載をやめた（→「中途のみにする仕組み」）。

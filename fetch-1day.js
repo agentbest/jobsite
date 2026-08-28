@@ -103,6 +103,10 @@ async function fetchAll(){
         date:      fmtDate(f['開催日']),
         time:      f['時間'] || '',
         status,
+        /* 「中途」= jobs.agent-best.net、「新卒・インターン」= shinsotsu.agent-best.net。
+           ここでは落とさず、どちらに載せるかは各サイトの rebuild.js が決める
+           （求人の kubun と同じ建て付け。data 側は素のまま持っておく）。 */
+        kubun:     f['区分'] || '',
         title:     f['サイト掲載タイトル'] || '1day選考会',
         format:    f['開催形式'] || '',
         place:     f['会場・接続方法'] || '',
