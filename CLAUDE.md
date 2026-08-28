@@ -138,6 +138,15 @@ const SUPABASE_ANON_KEY = "";   // 埋める = メールログインモード（
 
 ⚠ **リージョンの罠**: Regionで「Asia-Pacific」を選ぶと**Singaporeになる**。「SPECIFIC REGIONS」から Northeast Asia (Tokyo) を明示的に選ぶこと。後から変更不可。`privacy.html` に「日本国内のデータセンターに保管」と書いてあるので、東京でないと記載と矛盾する。
 
+## 企業ロゴ（求人カード）
+
+`cardHtml` の `logoHtml(j)`。`j.logo` があれば画像、無ければ社名の頭文字タイル（`coInitial`）。
+
+- ⚠ **外部の favicon サービス（`google.com/s2/favicons` 等）は使わない。** 訪問者がどの求人を見たかが第三者に渡る。シェアボタンで外部SDKを避けているのと同じ理由
+- ⚠ **Airtable の添付URLは数時間で失効する。** 静的サイトから直接参照できない。ロゴを出すには画像をリポジトリに取り込み、`jobs.json` の `logo` にそのパスを入れる
+- Airtable の `求人DB（企業）` に `ロゴ` 列（`fld32OKkkAS1lJbr8`）はあるが、**2026-08-16時点で135社すべて空**。掲載中の456件が参照している企業は**24社だけ**なので、集めるならその24社から
+- `coInitial` は「株式会社」等を除去してから先頭を取る。英数字は2文字、日本語は1文字
+
 ## シェアボタン
 
 X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（＋スマホは端末の共有シート）。`template.html` の `shareHtml()`。

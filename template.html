@@ -248,6 +248,15 @@
   .card:hover{transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:color-mix(in srgb,var(--accent) 35%, var(--line))}
   .card:focus-visible{outline:2px solid var(--focus); outline-offset:3px}
   .card__eyebrow{display:flex; align-items:center; gap:8px; min-width:0; max-width:100%}
+  /* 企業ロゴ。画像が無い企業は社名の頭文字タイルにする。
+     ⚠ 外部の favicon サービスは使わない（訪問者の閲覧履歴が第三者に渡るため）。 */
+  .card__logo{
+    flex:0 0 auto; width:28px; height:28px; border-radius:7px; overflow:hidden;
+    display:grid; place-items:center; border:1px solid var(--line-2);
+    background:var(--accent-soft); color:var(--accent-ink);
+    font-size:12px; font-weight:800; line-height:1; letter-spacing:.01em;
+  }
+  .card__logo img{width:100%; height:100%; object-fit:contain; display:block; background:#fff}
   .card__co{font-size:12.5px; font-weight:700; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex-shrink:1}
   .card__ind{font-size:11.5px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-shrink:1; min-width:0}
   .card__ind::before{content:"·"; margin-right:8px; color:var(--line)}
@@ -1171,6 +1180,23 @@ function updateBadge(){
   let n=(state.remote?1:0)+(state.salaryMin>0?1:0)+facetDefs.reduce((s,f)=>s+state.sel[f.key].size,0);
   const b=$("#filterBadge"); b.hidden=n===0; b.textContent=n;
 }
+/* ---- 企業ロゴ ----
+   j.logo（リポジトリ内の画像パス）があればそれを出す。無ければ社名の頭文字タイル。
+   ⚠ Airtable の添付URLは数時間で失効するので、直接は使えない。ロゴを出すときは
+   画像をリポジトリに取り込み、jobs.json の logo にそのパスを入れること。
+   ⚠ 外部の favicon サービス（google.com/s2/favicons 等）は使わない。
+   訪問者がどの求人を見たかが第三者に渡るため、このサイトの方針に反する。 */
+const CO_TRIM=/^(株式会社|有限会社|合同会社|一般社団法人|特定非営利活動法人)\s*|\s*(株式会社|有限会社|合同会社)$/g;
+function coInitial(name){
+  const s=(name||"").replace(CO_TRIM,"").trim();
+  if(!s) return "?";
+  const m=s.match(/[A-Za-z0-9]{1,2}|[^\s]/);
+  return m ? m[0].toUpperCase() : "?";
+}
+function logoHtml(j){
+  if(j.logo) return `<span class="card__logo"><img src="${esc(j.logo)}" alt="" loading="lazy" decoding="async"></span>`;
+  return `<span class="card__logo" aria-hidden="true">${esc(coInitial(j.company))}</span>`;
+}
 function cardHtml(j){
   const tags=[];
   if(j.kubun && j.kubun!=="中途") tags.push(`<span class="tag tag--kubun">${esc(j.kubun)}</span>`);
@@ -1181,7 +1207,7 @@ function cardHtml(j){
   const loc=j.location?`<span class="card__loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${esc((j.location||"").split(/\n/)[0])}</span></span>`:"";
   return `<button class="card" data-id="${esc(j.id)}">
     ${favBtn(j.id)}
-    <div class="card__eyebrow"><span class="card__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
+    <div class="card__eyebrow">${logoHtml(j)}<span class="card__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
     <h3 class="card__title">${esc(j.position||j.jobCategory||j.title||"求人")}</h3>
     <div class="card__tags">${tags.join("")}</div>
     <div class="card__foot">
