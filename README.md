@@ -38,8 +38,9 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
 ### 企業ロゴの取得元（求人とは別テーブル）
 Table `求人DB（企業）` / `tblBNNH9sJjldPmZZ` の **ロゴ**（`fld32OKkkAS1lJbr8`・添付）と
 **企業ID**（`fldc00Oz8xvDq1r3T`・ファイル名に使う）。取り込みは `node fetch-logos.js`。
-2026-08-31時点で113社に登録があり、**掲載中の求人が参照している24社のうち22社**にロゴがある
-（未登録はエル・ティー・エスとブリッジワン）。
+2026-08-31時点で**掲載中の求人が参照している24社すべて**にロゴがある（＝中途426件は全件にロゴが出る）。
+⚠ `assets/logos/lts.png` と `bridgeone.png` は手でトリミングした版。`fetch-logos.js` を回すと
+Airtable の原本（余白の多いOGPバナー等）で上書きされるので、回したあとは見え方を確認すること。
 
 ### 使用フィールド（fieldId → jobs.json のキー）
 | fieldId | 内容 | jobs.json キー |
