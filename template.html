@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index,follow">
 <title>ミドル・ハイクラス転職 求人検索 — キャリアの選択肢</title>
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="canonical" href="https://jobs.agent-best.net/">
 <meta name="description" content="20代・30代を中心としたハイクラス転職の求人検索サイト。IT・Web、コンサル、M&amp;Aなどの中途求人を職種・業界・年収・エリアから絞り込めます。非公開求人も多数。株式会社エージェントベストが運営、ご利用は無料です。">
 <!-- SNSでシェアされたときの表示。静的サイトなので求人ごとの出し分けはできず、
@@ -108,7 +111,7 @@
     display:flex; align-items:center; gap:20px;
   }
   .brand{display:flex; align-items:center; gap:11px; text-decoration:none; flex-shrink:0}
-  .brand__mark{width:30px; height:30px; flex-shrink:0}
+  .brand__mark{width:auto; height:30px; flex-shrink:0}
   .brand__name{font-weight:800; letter-spacing:.02em; font-size:16px; line-height:1.1}
   .brand__sub{font-size:10.5px; letter-spacing:.22em; color:var(--ink-3); text-transform:uppercase; font-weight:600}
   .brand__txt{display:flex; flex-direction:column; gap:2px}
@@ -677,6 +680,11 @@
   .foot__brand{display:flex; flex-direction:column; gap:4px}
   .foot__brand strong{color:var(--ink); font-size:13.5px}
   .foot__brand span{max-width:70ch; line-height:1.7}
+  .foot__logo{display:block; height:32px; width:auto; margin-bottom:4px}
+  .foot__logo--dark{display:none}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .foot__logo--light{display:none} :root:not([data-theme="light"]) .foot__logo--dark{display:block} }
+  :root[data-theme="dark"] .foot__logo--light{display:none}
+  :root[data-theme="dark"] .foot__logo--dark{display:block}
   .foot__meta{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0; max-width:70ch}
   .foot__meta dt{font-weight:700}
   .foot__meta dd{margin:0; color:var(--ink-2)}
@@ -921,11 +929,7 @@
 <header class="topbar">
   <div class="topbar__inner">
     <a class="brand" href="#" aria-label="求人検索トップ" onclick="return false">
-      <svg class="brand__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <rect x="1" y="1" width="30" height="30" rx="8" fill="var(--accent)"/>
-        <path d="M16 7l7 4.5v9L16 25l-7-4.5v-9L16 7z" stroke="var(--gold)" stroke-width="1.6" fill="none"/>
-        <circle cx="16" cy="16" r="3.1" fill="var(--gold)"/>
-      </svg>
+      <img class="brand__mark" src="assets/mark.png" alt="" aria-hidden="true" width="156" height="120">
       <span class="brand__txt">
         <span class="brand__name">求人検索</span>
         <span class="brand__sub">MIDDLE &amp; HIGH CLASS</span>
@@ -1087,6 +1091,8 @@
 <footer class="site-foot">
   <div class="foot__inner">
     <div class="foot__brand">
+      <img class="foot__logo foot__logo--light" src="assets/logo.png" alt="株式会社エージェントベスト" width="508" height="120">
+      <img class="foot__logo foot__logo--dark" src="assets/logo-white.png" alt="" aria-hidden="true" width="508" height="120">
       <strong>ミドル・ハイクラス求人検索</strong>
       <span>人材紹介サービス「エージェントベスト」が運営しています。ご利用はすべて無料です（紹介手数料は採用企業からいただきます）。</span>
     </div>

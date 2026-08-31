@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index,follow">
 <title>1day選考会 — 1日で、複数社の選考が進む｜ミドル・ハイクラス求人検索</title>
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="canonical" href="https://jobs.agent-best.net/1day.html">
 <meta name="description" content="1日で複数社の選考が進む「1day選考会」。書類選考を経ずに複数社の担当者と直接会え、最短でその日のうちに次のステップへ。株式会社エージェントベストが運営する中途採用向けの選考イベントです。">
 <!-- Google Analytics 4 -->
@@ -288,6 +291,11 @@
   .foot__inner{max-width:var(--maxw); margin:0 auto; padding:30px 20px 40px; display:grid; gap:14px}
   .foot__brand strong{display:block; font-size:14px; font-weight:800; margin-bottom:4px}
   .foot__brand span{font-size:12.5px; color:var(--ink-2); line-height:1.7}
+  .foot__logo{display:block; height:32px; width:auto; margin-bottom:4px}
+  .foot__logo--dark{display:none}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .foot__logo--light{display:none} :root:not([data-theme="light"]) .foot__logo--dark{display:block} }
+  :root[data-theme="dark"] .foot__logo--light{display:none}
+  :root[data-theme="dark"] .foot__logo--dark{display:block}
   .foot__meta{display:grid; grid-template-columns:auto 1fr; gap:2px 14px; margin:0; font-size:12.5px}
   .foot__meta dt{color:var(--ink-3); white-space:nowrap}
   .foot__meta dd{margin:0; color:var(--ink-2)}
@@ -547,6 +555,8 @@
 <footer class="site-foot">
   <div class="foot__inner">
     <div class="foot__brand">
+      <img class="foot__logo foot__logo--light" src="assets/logo.png" alt="株式会社エージェントベスト" width="508" height="120">
+      <img class="foot__logo foot__logo--dark" src="assets/logo-white.png" alt="" aria-hidden="true" width="508" height="120">
       <strong>ミドル・ハイクラス求人検索</strong>
       <span>人材紹介サービス「エージェントベスト」が運営しています。ご利用はすべて無料です（紹介手数料は採用企業からいただきます）。</span>
     </div>
