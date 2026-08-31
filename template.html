@@ -223,23 +223,6 @@
   .intro .note svg{flex:none; color:var(--gold)}
 
   /* 特集ページへの導線 */
-  .intro-feat{
-    display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; margin-top:14px;
-    padding:11px 16px; border-radius:var(--r-card);
-    background:var(--accent-soft); border:1px solid color-mix(in srgb, var(--accent) 26%, transparent);
-    font-size:14px; line-height:1.6;
-  }
-  .intro-feat__lbl{
-    font-size:11px; font-weight:800; letter-spacing:.1em; color:#fff; flex:none;
-    background:var(--accent); padding:3px 9px; border-radius:var(--r-pill);
-  }
-  .intro-feat span.txt{color:var(--ink-2); min-width:0}
-  .intro-feat a{
-    display:inline-flex; align-items:center; gap:5px; flex:none;
-    color:var(--accent-ink); font-weight:800; text-decoration:underline; text-underline-offset:3px;
-  }
-  .intro-feat a:hover{text-decoration-thickness:2px}
-  .intro-feat a svg{flex:none; opacity:.8}
 
   .layout{display:grid; grid-template-columns:288px 1fr; gap:34px; padding-bottom:80px; align-items:start}
   /* grid/flex の子は既定で min-width:auto のため、長い社名などで横スクロールが出る。明示的に潰す */
@@ -775,7 +758,6 @@
     .intro p{font-size:15.5px}
     .intro .note{font-size:14.5px; align-items:flex-start}
     .intro .note svg{margin-top:4px}
-    .intro-feat{font-size:14.5px}
 
     .joblist{gap:12px}
     .jrow{padding:18px 16px 16px}
