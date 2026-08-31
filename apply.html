@@ -229,7 +229,8 @@
   .foot__inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:grid; gap:16px}
   .foot__brand{display:flex; flex-direction:column; gap:4px}
   .foot__brand strong{color:var(--ink); font-size:13.5px}
-  .foot__logo{display:block; height:32px; width:auto; margin-bottom:4px}
+  /* 縦並びのflexなので align-self を指定しないと画像が幅いっぱいに伸びる */
+  .foot__logo{display:block; align-self:flex-start; height:32px; width:auto; max-width:100%; margin-bottom:4px}
   .foot__logo--dark{display:none}
   @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .foot__logo--light{display:none} :root:not([data-theme="light"]) .foot__logo--dark{display:block} }
   :root[data-theme="dark"] .foot__logo--light{display:none}
