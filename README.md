@@ -16,6 +16,9 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
 - `apply-template.html` … その元テンプレート（`__JOBS_MINI__` が差し込み位置）
 - `data/jobs.json` … Airtable から取得した求人データ 456 件（正規化済み・compact JSON）
   ⚠ このうち **中途 422 件だけ**が `index.html` に入る。`rebuild.js` の `midCareerOnly()` が新卒・インターンを落とす。
+- `data/logos.json` … 企業ロゴの対応表（企業名 → `assets/logos/…` のパス・22社）
+- `assets/logos/` … 企業ロゴの画像本体（Airtable「求人DB（企業）」の ロゴ 列から取り込み）
+- `fetch-logos.js` … ロゴを取り込み直すスクリプト（実行: `node fetch-logos.js` → `node rebuild.js`）
 - `SUPABASE_SETUP.md` … マイページに「会員登録・ログイン」を足すときの手順書
 - `APPLY_SETUP.md` … **応募フォームの受け皿（Supabase の applications テーブル）を作る手順書**
 - `rebuild.js` … `data/jobs.json` を各テンプレートに流し込んで HTML を再生成
@@ -31,6 +34,12 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
 - Base: `人材紹介事業` / baseId `appYkc36EvioYoL1A`
 - Table: `求人DB（求人票）` / tableId `tblyPZZasXTM2tcrV`（全 456 件。サイトに出るのは中途 422 件）
 - 会社情報は Table `求人DB（企業）` / `tblBNNH9sJjldPmZZ` とリンク（会社名・会社情報・URL・会社住所・上場区分は lookup で取得済み）
+
+### 企業ロゴの取得元（求人とは別テーブル）
+Table `求人DB（企業）` / `tblBNNH9sJjldPmZZ` の **ロゴ**（`fld32OKkkAS1lJbr8`・添付）と
+**企業ID**（`fldc00Oz8xvDq1r3T`・ファイル名に使う）。取り込みは `node fetch-logos.js`。
+2026-08-31時点で113社に登録があり、**掲載中の求人が参照している24社のうち22社**にロゴがある
+（未登録はエル・ティー・エスとブリッジワン）。
 
 ### 使用フィールド（fieldId → jobs.json のキー）
 | fieldId | 内容 | jobs.json キー |
@@ -107,10 +116,10 @@ jobs.json を作り直すときは、この列も必ず含めること（落と�
 - 表示件数 30 / 50 / 100 件のページネーション
 - 求人詳細ページ（仕事内容などを Markdown 整形表示・企業サイトへのリンク・シェアボタン）
 - 4ステップの申し込みフォーム `apply.html`（送信先は Supabase・入力途中は端末に一時保存）
-- 求人カードの企業ロゴ … `jobs.json` の `logo`（リポジトリ内の画像パス）があれば画像、
-  無ければ社名の頭文字タイル。⚠ **外部の favicon サービスは使わない**（訪問者がどの求人を
-  見たかが第三者に渡るため）。⚠ **Airtable の添付URLは数時間で失効する**ので直接は使えない。
-  画像をリポジトリに取り込んでパスを入れること
+- 求人カード・求人詳細の企業ロゴ … Airtable「求人DB（企業）」の ロゴ 列から取り込んだ画像
+  （`assets/logos/`）。無い企業は社名の頭文字タイル。取り込みは `node fetch-logos.js`
+  ⚠ **外部の favicon サービスは使わない**（訪問者がどの求人を見たかが第三者に渡るため）。
+  ⚠ **Airtable の添付URLは数時間で失効する**ので直接は使えない
 - ライト/ダークテーマ、スマホ対応
 - **マイページ（気になる求人）** … 求人カード右上の★で保存 → ヘッダー「マイページ」から一覧
   - 初期状態は **localStorage（その端末だけ）** に保存。サーバー不要・費用ゼロ

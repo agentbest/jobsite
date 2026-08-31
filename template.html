@@ -332,6 +332,24 @@
     font-size:12px; font-weight:800; line-height:1; letter-spacing:.01em;
   }
   .jrow__logo img{width:100%; height:100%; object-fit:contain; display:block; background:#fff}
+  /* ⚠ ロゴは正方形とは限らない。「ロゴス」のような横長のワードマークを28px角に
+     押し込むと高さ5pxほどになって読めない。画像のときだけタイルを横に伸ばす。
+     頭文字タイル（画像なし）は正方形のまま。 */
+  /* ⚠ 高さは % ではなく px で指定する。display:grid のタイルの中で img に height:100% を
+     使うと、親の高さが内容依存になって循環し、画像がタイルからはみ出す（実際に起きた）。 */
+  .jrow__logo--img{
+    display:flex; align-items:center; justify-content:center;
+    width:auto; min-width:28px; max-width:88px; padding:0 4px;
+    background:#fff; border-color:var(--line);
+  }
+  .jrow__logo--img img{width:auto; height:22px; max-width:80px}
+  /* 求人詳細のヘッダーでも同じタイルを使う（大きめ）。クラス名は jrow__ のままで、
+     カードと詳細で見た目がずれないようにしている。 */
+  .jrow__logo--lg{width:44px; height:44px; border-radius:10px; font-size:17px}
+  /* ⚠ width:auto をここにも書く。--lg（幅44px固定）が後ろにあるので、
+     書かないとタイルが44pxのまま画像だけ横にはみ出して切れる。 */
+  .jrow__logo--lg.jrow__logo--img{width:auto; min-width:44px; max-width:140px; padding:0 6px}
+  .jrow__logo--lg.jrow__logo--img img{height:34px; max-width:128px}
   .jrow__ind{font-size:12px; color:var(--ink-3); min-width:0; overflow-wrap:anywhere}
   .jrow__ind::before{content:"·"; margin-right:8px; color:var(--line)}
   .jrow__title{margin:0 0 10px; padding-right:44px; font-size:18px; font-weight:800; line-height:1.5}
@@ -851,7 +869,8 @@
   .dt-grid{display:grid; grid-template-columns:1fr 328px; gap:36px; align-items:start}
   .dt-grid > *{min-width:0}
   .dt-head{margin-bottom:22px}
-  .dt-co{font-size:14px; font-weight:700; color:var(--accent); margin:0 0 6px}
+  .dt-co-row{display:flex; align-items:center; gap:10px; margin:0 0 8px}
+  .dt-co{font-size:14px; font-weight:700; color:var(--accent); margin:0; min-width:0; overflow-wrap:anywhere}
   .dt-title{margin:0 0 14px; font-size:clamp(1.35rem,2.6vw,1.75rem); font-weight:800; line-height:1.4; text-wrap:balance}
   .dt-back{
     display:inline-flex; align-items:center; gap:6px; margin-bottom:4px;
@@ -1595,9 +1614,11 @@ function coInitial(name){
   const m=s.match(/[A-Za-z0-9]{1,2}|[^\s]/);
   return m ? m[0].toUpperCase() : "?";
 }
-function logoHtml(j){
-  if(j.logo) return `<span class="jrow__logo"><img src="${esc(j.logo)}" alt="" loading="lazy" decoding="async"></span>`;
-  return `<span class="jrow__logo" aria-hidden="true">${esc(coInitial(j.company))}</span>`;
+function logoHtml(j, extra){
+  const cls = "jrow__logo" + (extra ? " " + extra : "");
+  /* alt は空。すぐ隣に社名テキストが出ているので、読み上げが二重になるのを避ける。 */
+  if(j.logo) return `<span class="${cls} jrow__logo--img"><img src="${esc(j.logo)}" alt="" loading="lazy" decoding="async"></span>`;
+  return `<span class="${cls}" aria-hidden="true">${esc(coInitial(j.company))}</span>`;
 }
 function rowHtml(j){
   const tags=[];
@@ -1803,7 +1824,7 @@ function openDetail(id){
 
   $("#detailBody").innerHTML=`
     <div class="dt-head">
-      <p class="dt-co">${esc(j.company||"企業非公開")}</p>
+      <div class="dt-co-row">${logoHtml(j,"jrow__logo--lg")}<p class="dt-co">${esc(j.company||"企業非公開")}</p></div>
       <h1 class="dt-title" id="pdTitle">${esc(jobName(j))}</h1>
       <div class="pd-tags">${tags.join("")}</div>
     </div>

@@ -1,5 +1,5 @@
 // 使い方: このフォルダで  node rebuild.js  を実行すると、
-//   data/jobs.json  → template.html        → index.html
+//   data/jobs.json（＋ data/logos.json） → template.html        → index.html
 //   data/jobs.json  → apply-template.html  → apply.html   （求人の見出しだけを差し込む）
 //   data/1day.json  → 1day-template.html   → 1day.html
 // を再生成します。data/1day.json は  node fetch-1day.js  で Airtable から取得します。
@@ -57,7 +57,44 @@ function midCareerOnly(jobs){
   return kept;
 }
 
-const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', [], midCareerOnly);
+/* 企業ロゴ。Airtable「求人DB（企業）」の ロゴ 列から取り込んだ画像を、
+   data/logos.json（企業名 → リポジトリ内のパス）経由で求人1件ずつに差し込む。
+   ⚠ ロゴを jobs.json 側に書かないのは、jobs.json が Airtable からの
+     「取り直すたび丸ごと入れ替わるスナップショット」だから。書くと毎回消える。
+   ⚠ Airtable の添付URLは数時間で失効するので、URLを直接持たせてはいけない。
+     画像は assets/logos/ に置いて、そのパスを logos.json に書く（node fetch-logos.js）。
+   企業名の完全一致で引く。Airtable 側で社名を変えたら logos.json も直すこと。 */
+function attachLogos(jobs){
+  const logoPath = path.join(dir, 'data', 'logos.json');
+  if(!fs.existsSync(logoPath)){
+    console.log('data/logos.json が無いので、ロゴは頭文字タイルのままにします。');
+    return jobs;
+  }
+  const logos = JSON.parse(fs.readFileSync(logoPath, 'utf8'));
+  /* ⚠ ファイルが実在しないパスを埋め込むと、カードに壊れた画像が出る。
+     頭文字タイルの方がまだきれいなので、無いものは名指しで警告して落とす。 */
+  const usable = {};
+  for(const [company, rel] of Object.entries(logos)){
+    if(fs.existsSync(path.join(dir, rel))) usable[company] = rel;
+    else console.log(`⚠ ロゴ画像が見つかりません（頭文字タイルにします）: ${company} → ${rel}`);
+  }
+  let hit = 0;
+  const missing = new Set();
+  jobs.forEach(j => {
+    const rel = usable[j.company];
+    if(rel){ j.logo = rel; hit++; }
+    else if(j.company) missing.add(j.company);
+  });
+  console.log(`企業ロゴ: ${hit}件の求人に表示（${Object.keys(usable).length}社）`);
+  if(missing.size){
+    console.log(`ロゴ未登録の企業 ${missing.size}社（頭文字タイルで表示）:`);
+    [...missing].forEach(c => console.log(`   - ${c}`));
+  }
+  return jobs;
+}
+
+const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', [],
+  data => attachLogos(midCareerOnly(data)));
 if(jobs) console.log('index.html を再生成しました:', jobs.length, '件（中途のみ）');
 
 /* 申し込みフォームは「どの求人から来たか」を見出しに出すだけなので、
