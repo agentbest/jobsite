@@ -142,3 +142,28 @@ function midCareerEvents(events){
 
 const events = build('1day.json', '1day-template.html', '1day.html', '__EVENTS_DATA__', [], midCareerEvents);
 if(events) console.log('1day.html を再生成しました:', events.length, '件（中途のみ）');
+
+/* 1day選考会は専用ページをナビから外し、検索結果の1位のPR枠に一本化した。
+   index.html にはPR枠に出すぶん（直近3件の日程・タイトル・参加企業）だけを渡す。
+   ⚠ 1day.json を更新したら rebuild.js を回すこと。回さないと一覧のPR枠が古いままになる。 */
+function onedayMini(list){
+  const today = new Date().toISOString().slice(0, 10);
+  return (list || [])
+    .filter(e => e.status !== 'closed')
+    .filter(e => !e._iso || e._iso >= today)
+    .slice(0, 3)
+    .map(e => ({
+      date: e.date || '',
+      title: e.title || '1day選考会',
+      company: e.companyLabel || '',
+    }));
+}
+{
+  const indexPath = path.join(dir, 'index.html');
+  if(fs.existsSync(indexPath)){
+    const mini = onedayMini(events);
+    const html = fs.readFileSync(indexPath, 'utf8').replace('__ONEDAY_MINI__', () => embed(mini));
+    fs.writeFileSync(indexPath, html, 'utf8');
+    console.log('検索結果1位のPR枠:', mini.length ? `次回 ${mini[0].date}（掲載 ${mini.length}件）` : '開催なし（案内を受け取る導線を表示）');
+  }
+}

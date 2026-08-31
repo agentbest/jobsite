@@ -411,6 +411,27 @@
   .pager .gap{color:var(--ink-3); padding:0 2px; font-family:var(--mono)}
   .pager__nav{font-family:var(--sans)!important; font-weight:700}
 
+  /* 検索結果の1位に固定で出す1day選考会のPR枠。
+     ナビ・特集行から1dayを外した代わりに、ここが唯一の入口になっている。 */
+  .prslot{
+    position:relative; background:color-mix(in srgb,var(--accent) 5%, var(--surface));
+    border:1px solid color-mix(in srgb,var(--accent) 28%, var(--line));
+    border-radius:var(--r-card); padding:18px 22px 16px; min-width:0;
+  }
+  .prslot__top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px}
+  .prslot__lbl{
+    flex:none; font-size:10.5px; font-weight:800; letter-spacing:.08em; line-height:1;
+    padding:4px 7px; border-radius:4px; background:var(--accent); color:#fff;
+  }
+  .prslot__cat{font-size:12.5px; font-weight:700; color:var(--accent-ink); letter-spacing:.02em}
+  .prslot__title{margin:0 0 6px; font-size:17px; line-height:1.5}
+  .prslot__title a{color:var(--ink); text-decoration:none}
+  .prslot__title a:hover{text-decoration:underline; text-underline-offset:3px}
+  .prslot__desc{margin:0; color:var(--ink-2); font-size:13.5px; line-height:1.85}
+  .prslot__meta{display:flex; flex-wrap:wrap; gap:4px 10px; margin:10px 0 0; font-size:13px}
+  .prslot__meta dt{font-weight:700; color:var(--ink-3)}
+  .prslot__meta dd{margin:0; color:var(--ink-2)}
+  .prslot__act{margin-top:14px}
   .empty{text-align:center; padding:80px 20px; color:var(--ink-3)}
   .empty svg{color:var(--line); margin-bottom:14px}
   .empty h3{margin:0 0 6px; color:var(--ink-2); font-size:17px}
@@ -938,7 +959,6 @@
     </a>
     <nav class="gnav" aria-label="メインメニュー">
       <a href="./" aria-current="page">求人を探す</a>
-      <a href="1day.html">1day選考会</a>
       <a href="apply.html">転職支援サービス</a>
     </nav>
     <div class="search">
@@ -1008,13 +1028,6 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <span>掲載しているのは求人の一部です。重要なポジションほど公開されず、<b>非公開で動いています</b>。</span>
     </p>
-    <div class="intro-feat">
-      <span class="intro-feat__lbl">特集</span>
-      <span class="txt">1日で複数社の選考が進む「1day選考会」を開催しています。</span>
-      <a href="1day.html">1day選考会を見る
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-    </div>
     <div class="line-line">
       <span>掲載していない<b>非公開求人</b>もあります。希望を送っていただければ個別にお探しします。</span>
       <a class="line-btn" href="https://lin.ee/RUrPtec" target="_blank" rel="noopener noreferrer" data-line-cta="jobs-intro"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>LINEで相談する</span></a>
@@ -1103,7 +1116,6 @@
       <dt>許可番号</dt><dd>有料職業紹介事業 13-ユ-316964</dd>
     </dl>
     <nav class="foot__links">
-      <a href="1day.html">1day選考会</a>
       <a href="https://www.agent-best.net/" target="_blank" rel="noopener">運営会社サイト</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー（人材紹介）</a>
@@ -1162,6 +1174,31 @@
 
 <script>
 const JOBS = __JOBS_DATA__;
+/* 1day選考会は開催数が少ないので、専用ページをナビに置くのをやめ、
+   検索結果の1位に固定のPR枠として出している（ページ1のときだけ）。
+   開催がある回は日程を出し、無いときは案内を受け取る導線に切り替える。
+   ONEDAY は rebuild.js が data/1day.json から差し込む（直近3件・このサイトの区分のみ）。 */
+const ONEDAY = __ONEDAY_MINI__;
+function prSlotHtml(){
+  const next = (ONEDAY && ONEDAY[0]) || null;
+  const link = next ? "1day.html" : "apply.html";
+  const cta  = next ? "開催予定を見る" : "開催の案内を受け取る";
+  const title = next ? (next.title || "1day選考会") : "1日で複数社、まとめて選考が進みます";
+  const desc = next
+    ? "1日で複数社の選考が進みます。日程・参加企業は詳細ページでご確認ください。"
+    : "書類選考や日程調整を挟まずに、1日で複数社と会える選考会です。次回の開催が決まりしだい、ご登録いただいた方へご案内します。";
+  const meta = next
+    ? `<dl class="prslot__meta"><dt>次回開催</dt><dd>${esc(next.date||"日程調整中")}</dd>${next.company?`<dt>参加企業</dt><dd>${esc(next.company)}</dd>`:""}</dl>`
+    : "";
+  return `<article class="prslot">
+    <div class="prslot__top"><span class="prslot__lbl">PR</span><span class="prslot__cat">1day選考会</span></div>
+    <h3 class="prslot__title"><a href="${link}">${esc(title)}</a></h3>
+    <p class="prslot__desc">${desc}</p>
+    ${meta}
+    <div class="prslot__act"><a class="btn-detail" href="${link}">${cta}</a></div>
+  </article>`;
+}
+
 
 /* ---------- 応募・相談の導線設定 ----------
    APPLY_PAGE … 「応募する」の遷移先。ワークポート/JAC と同じ建て付けで、
@@ -1560,7 +1597,7 @@ function renderPage(){
   const total=pageCount();
   if(page>total) page=total;
   const start=(page-1)*perPage;
-  $("#grid").innerHTML = filtered.slice(start, start+perPage).map(rowHtml).join("");
+  $("#grid").innerHTML = (page === 1 ? prSlotHtml() : "") + filtered.slice(start, start+perPage).map(rowHtml).join("");
   renderPager();
   paintFavs();
 }
