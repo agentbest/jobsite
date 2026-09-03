@@ -27,17 +27,17 @@
 </script>
 <style>
   :root{
-    --paper:#F7F6F2; --surface:#FFFFFF; --surface-2:#F1F0EA;
-    --ink:#1B1E2B; --ink-2:#4A4E60; --ink-3:#787C8C;
-    --line:#E4E2D9; --line-2:#EDECE5;
-    --accent:#33409A; --accent-strong:#3D4CC0; --accent-soft:#ECEEF9; --accent-ink:#2A3585;
-    --gold:#9C6F1E; --gold-soft:#F6EEDD;
-    --good:#2C8A66; --good-soft:#E3F1EA;
+    --paper:#F5F7FA; --surface:#FFFFFF; --surface-2:#EEF1F6;
+    --ink:#161A26; --ink-2:#4A5261; --ink-3:#6E7686;
+    --line:#DDE2EA; --line-2:#EAEEF4;
+    --accent:#1E3A8A; --accent-strong:#2A4CAE; --accent-soft:#E9EDF9; --accent-ink:#1B3374;
+    --gold:#C1841F; --gold-soft:#FBF1DE;
+    --good:#0F7B57; --good-soft:#E2F2EB;
     --bad:#C0392B;
-    --focus:#4E61D6;
-    --cta:#B3701A; --cta-ink:#FFFFFF; --cta-hover:#8F5A13;
-    --shadow-sm:0 1px 2px rgba(27,30,43,.05), 0 1px 3px rgba(27,30,43,.06);
-    --shadow-md:0 4px 12px rgba(27,30,43,.08), 0 2px 4px rgba(27,30,43,.05);
+    --focus:#2A4CAE;
+    --cta:#D6362A; --cta-ink:#FFFFFF; --cta-hover:#B22A20;
+    --shadow-sm:0 1px 2px rgba(21,26,40,.05), 0 1px 3px rgba(21,26,40,.06);
+    --shadow-md:0 4px 12px rgba(21,26,40,.08), 0 2px 4px rgba(21,26,40,.05);
     --r-card:14px; --r-input:10px; --r-pill:999px;
     --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic","Noto Sans JP",Meiryo,system-ui,sans-serif;
     --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,monospace;
@@ -45,22 +45,22 @@
   }
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
-      --paper:#12131B; --surface:#1A1C27; --surface-2:#232633;
-      --ink:#EDEEF4; --ink-2:#B9BCCB; --ink-3:#868AA0;
-      --line:#2C2F3D; --line-2:#242735;
-      --accent:#93A2F2; --accent-strong:#AEB9F7; --accent-soft:#20243A; --accent-ink:#C3CCFA;
-      --gold:#DDB463; --gold-soft:#2A2416; --good:#5FBE93; --good-soft:#16281F; --bad:#F1948A;
-      --focus:#93A2F2; --cta:#DDB463; --cta-ink:#241C08; --cta-hover:#EBC57C;
+      --paper:#0F131A; --surface:#171C26; --surface-2:#1F2530;
+      --ink:#EAEEF5; --ink-2:#B4BCCA; --ink-3:#828C9E;
+      --line:#2A313D; --line-2:#232A35;
+      --accent:#8FA6F0; --accent-strong:#AFC0F8; --accent-soft:#1B2338; --accent-ink:#BFCDFA;
+      --gold:#E0AE5E; --gold-soft:#2A2416; --good:#4FBE8E; --good-soft:#12241B; --bad:#F1948A;
+      --focus:#8FA6F0; --cta:#D6392C; --cta-ink:#FFFFFF; --cta-hover:#E44D3D;
       --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 6px 18px rgba(0,0,0,.4);
     }
   }
   :root[data-theme="dark"]{
-    --paper:#12131B; --surface:#1A1C27; --surface-2:#232633;
-    --ink:#EDEEF4; --ink-2:#B9BCCB; --ink-3:#868AA0;
-    --line:#2C2F3D; --line-2:#242735;
-    --accent:#93A2F2; --accent-strong:#AEB9F7; --accent-soft:#20243A; --accent-ink:#C3CCFA;
-    --gold:#DDB463; --gold-soft:#2A2416; --good:#5FBE93; --good-soft:#16281F; --bad:#F1948A;
-    --focus:#93A2F2; --cta:#DDB463; --cta-ink:#241C08; --cta-hover:#EBC57C;
+    --paper:#0F131A; --surface:#171C26; --surface-2:#1F2530;
+    --ink:#EAEEF5; --ink-2:#B4BCCA; --ink-3:#828C9E;
+    --line:#2A313D; --line-2:#232A35;
+    --accent:#8FA6F0; --accent-strong:#AFC0F8; --accent-soft:#1B2338; --accent-ink:#BFCDFA;
+    --gold:#E0AE5E; --gold-soft:#2A2416; --good:#4FBE8E; --good-soft:#12241B; --bad:#F1948A;
+    --focus:#8FA6F0; --cta:#D6392C; --cta-ink:#FFFFFF; --cta-hover:#E44D3D;
     --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 6px 18px rgba(0,0,0,.4);
   }
 
@@ -101,14 +101,14 @@
 
   .head{padding:26px 0 18px}
   .head h1{margin:0 0 10px; font-size:clamp(1.5rem,3.4vw,2rem); line-height:1.3; font-weight:800; display:flex; align-items:center; gap:12px; flex-wrap:wrap}
-  .head .free{font-size:12px; font-weight:800; letter-spacing:.08em; padding:5px 11px; border-radius:var(--r-pill); background:var(--cta); color:var(--cta-ink)}
+  .head .free{font-size:12px; font-weight:800; letter-spacing:.08em; padding:5px 11px; border-radius:var(--r-pill); background:var(--good-soft); color:var(--good); border:1px solid color-mix(in srgb, var(--good) 30%, transparent)}
   .head p{margin:0 0 8px; color:var(--ink-2); font-size:15px}
   .head .caution{
     display:flex; gap:9px; margin-top:14px; padding:12px 15px; border-radius:var(--r-card);
-    background:var(--gold-soft); border:1px solid color-mix(in srgb, var(--gold) 34%, transparent);
+    background:var(--surface-2); border:1px solid var(--line);
     font-size:13px; line-height:1.8; color:var(--ink-2);
   }
-  .head .caution svg{flex:none; margin-top:3px; color:var(--gold)}
+  .head .caution svg{flex:none; margin-top:3px; color:var(--ink-3)}
 
   /* 応募対象の求人 */
   .jobref{
@@ -118,7 +118,7 @@
   .jobref__lbl{font-size:11px; font-weight:800; letter-spacing:.12em; color:var(--ink-3); margin:0 0 6px}
   .jobref__co{font-size:13px; font-weight:700; color:var(--accent); margin:0 0 2px}
   .jobref__title{margin:0 0 6px; font-size:16.5px; font-weight:800; line-height:1.5}
-  .jobref__sal{font-family:var(--mono); font-weight:800; font-size:14px; color:var(--gold)}
+  .jobref__sal{font-family:var(--mono); font-weight:800; font-size:14px; color:var(--ink)}
   .jobref__back{display:inline-block; margin-top:8px; font-size:12.5px; color:var(--accent); text-decoration:underline; text-underline-offset:3px}
 
   /* ---------- ステップ表示 ---------- */

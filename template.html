@@ -33,17 +33,17 @@
 </script>
 <style>
   :root{
-    --paper:#F7F6F2; --surface:#FFFFFF; --surface-2:#F1F0EA;
-    --ink:#1B1E2B; --ink-2:#4A4E60; --ink-3:#787C8C;
-    --line:#E4E2D9; --line-2:#EDECE5;
-    --accent:#33409A; --accent-strong:#3D4CC0; --accent-soft:#ECEEF9; --accent-ink:#2A3585;
-    --gold:#9C6F1E; --gold-soft:#F6EEDD;
-    --good:#2C8A66; --good-soft:#E3F1EA;
-    --focus:#4E61D6;
-    --cta:#B3701A; --cta-ink:#FFFFFF; --cta-hover:#8F5A13;
-    --shadow-sm:0 1px 2px rgba(27,30,43,.05), 0 1px 3px rgba(27,30,43,.06);
-    --shadow-md:0 4px 12px rgba(27,30,43,.08), 0 2px 4px rgba(27,30,43,.05);
-    --shadow-lg:0 24px 60px rgba(20,22,35,.22);
+    --paper:#F5F7FA; --surface:#FFFFFF; --surface-2:#EEF1F6;
+    --ink:#161A26; --ink-2:#4A5261; --ink-3:#6E7686;
+    --line:#DDE2EA; --line-2:#EAEEF4;
+    --accent:#1E3A8A; --accent-strong:#2A4CAE; --accent-soft:#E9EDF9; --accent-ink:#1B3374;
+    --gold:#C1841F; --gold-soft:#FBF1DE;
+    --good:#0F7B57; --good-soft:#E2F2EB;
+    --focus:#2A4CAE;
+    --cta:#D6362A; --cta-ink:#FFFFFF; --cta-hover:#B22A20;
+    --shadow-sm:0 1px 2px rgba(21,26,40,.05), 0 1px 3px rgba(21,26,40,.06);
+    --shadow-md:0 4px 12px rgba(21,26,40,.08), 0 2px 4px rgba(21,26,40,.05);
+    --shadow-lg:0 24px 60px rgba(16,20,34,.22);
     --r-card:14px; --r-input:10px; --r-pill:999px;
     --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic","Noto Sans JP",Meiryo,system-ui,sans-serif;
     --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,monospace;
@@ -51,36 +51,36 @@
   }
   @media (prefers-color-scheme:dark){
     :root{
-      --paper:#12131B; --surface:#1A1C27; --surface-2:#232633;
-      --ink:#EDEEF4; --ink-2:#B9BCCB; --ink-3:#868AA0;
-      --line:#2C2F3D; --line-2:#242735;
-      --accent:#93A2F2; --accent-strong:#AEB9F7; --accent-soft:#20243A; --accent-ink:#C3CCFA;
-      --gold:#DDB463; --gold-soft:#2A2416;
-      --good:#5FBE93; --good-soft:#16281F;
-      --focus:#93A2F2;
-      --cta:#DDB463; --cta-ink:#241C08; --cta-hover:#EBC57C;
+      --paper:#0F131A; --surface:#171C26; --surface-2:#1F2530;
+      --ink:#EAEEF5; --ink-2:#B4BCCA; --ink-3:#828C9E;
+      --line:#2A313D; --line-2:#232A35;
+      --accent:#8FA6F0; --accent-strong:#AFC0F8; --accent-soft:#1B2338; --accent-ink:#BFCDFA;
+      --gold:#E0AE5E; --gold-soft:#2A2416;
+      --good:#4FBE8E; --good-soft:#12241B;
+      --focus:#8FA6F0;
+      --cta:#D6392C; --cta-ink:#FFFFFF; --cta-hover:#E44D3D;
       --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 6px 18px rgba(0,0,0,.4);
       --shadow-lg:0 30px 70px rgba(0,0,0,.6);
     }
   }
   :root[data-theme="light"]{
-    --paper:#F7F6F2; --surface:#FFFFFF; --surface-2:#F1F0EA;
-    --ink:#1B1E2B; --ink-2:#4A4E60; --ink-3:#787C8C;
-    --line:#E4E2D9; --line-2:#EDECE5;
-    --accent:#33409A; --accent-strong:#3D4CC0; --accent-soft:#ECEEF9; --accent-ink:#2A3585;
-    --gold:#9C6F1E; --gold-soft:#F6EEDD; --good:#2C8A66; --good-soft:#E3F1EA; --focus:#4E61D6;
-    --cta:#B3701A; --cta-ink:#FFFFFF; --cta-hover:#8F5A13;
-    --shadow-sm:0 1px 2px rgba(27,30,43,.05),0 1px 3px rgba(27,30,43,.06);
-    --shadow-md:0 4px 12px rgba(27,30,43,.08),0 2px 4px rgba(27,30,43,.05);
-    --shadow-lg:0 24px 60px rgba(20,22,35,.22);
+    --paper:#F5F7FA; --surface:#FFFFFF; --surface-2:#EEF1F6;
+    --ink:#161A26; --ink-2:#4A5261; --ink-3:#6E7686;
+    --line:#DDE2EA; --line-2:#EAEEF4;
+    --accent:#1E3A8A; --accent-strong:#2A4CAE; --accent-soft:#E9EDF9; --accent-ink:#1B3374;
+    --gold:#C1841F; --gold-soft:#FBF1DE; --good:#0F7B57; --good-soft:#E2F2EB; --focus:#2A4CAE;
+    --cta:#D6362A; --cta-ink:#FFFFFF; --cta-hover:#B22A20;
+    --shadow-sm:0 1px 2px rgba(21,26,40,.05),0 1px 3px rgba(21,26,40,.06);
+    --shadow-md:0 4px 12px rgba(21,26,40,.08),0 2px 4px rgba(21,26,40,.05);
+    --shadow-lg:0 24px 60px rgba(16,20,34,.22);
   }
   :root[data-theme="dark"]{
-    --paper:#12131B; --surface:#1A1C27; --surface-2:#232633;
-    --ink:#EDEEF4; --ink-2:#B9BCCB; --ink-3:#868AA0;
-    --line:#2C2F3D; --line-2:#242735;
-    --accent:#93A2F2; --accent-strong:#AEB9F7; --accent-soft:#20243A; --accent-ink:#C3CCFA;
-    --gold:#DDB463; --gold-soft:#2A2416; --good:#5FBE93; --good-soft:#16281F; --focus:#93A2F2;
-    --cta:#DDB463; --cta-ink:#241C08; --cta-hover:#EBC57C;
+    --paper:#0F131A; --surface:#171C26; --surface-2:#1F2530;
+    --ink:#EAEEF5; --ink-2:#B4BCCA; --ink-3:#828C9E;
+    --line:#2A313D; --line-2:#232A35;
+    --accent:#8FA6F0; --accent-strong:#AFC0F8; --accent-soft:#1B2338; --accent-ink:#BFCDFA;
+    --gold:#E0AE5E; --gold-soft:#2A2416; --good:#4FBE8E; --good-soft:#12241B; --focus:#8FA6F0;
+    --cta:#D6392C; --cta-ink:#FFFFFF; --cta-hover:#E44D3D;
     --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 6px 18px rgba(0,0,0,.4);
     --shadow-lg:0 30px 70px rgba(0,0,0,.6);
   }
@@ -144,7 +144,7 @@
      ライト・ダークどちらでも同じ見え方になるよう、中は常に白文字で組む。 */
   .hero{
     position:relative; margin:18px 0 0; border-radius:18px; overflow:hidden;
-    background:#131832; box-shadow:var(--shadow-md); isolation:isolate;
+    background:#111726; box-shadow:var(--shadow-md); isolation:isolate;
   }
   .hero__bg{
     position:absolute; inset:0; width:100%; height:100%;
@@ -159,15 +159,15 @@
   .hero__inner{position:relative; padding:44px 44px 38px; max-width:660px; color:#fff}
   .hero__eyebrow{
     display:inline-flex; align-items:center; gap:8px; margin:0 0 12px;
-    font-size:11.5px; font-weight:800; letter-spacing:.14em; color:#F0D9A6;
+    font-size:11.5px; font-weight:800; letter-spacing:.14em; color:rgba(255,255,255,.78);
   }
-  .hero__eyebrow::before{content:""; width:22px; height:2px; background:#DDB463; border-radius:2px}
+  .hero__eyebrow::before{content:""; width:22px; height:2px; background:#FF8A72; border-radius:2px}
   .hero h1{
     margin:0 0 12px; font-size:clamp(1.62rem,3.3vw,2.35rem); line-height:1.24;
     letter-spacing:.01em; font-weight:800; text-wrap:balance; color:#fff;
     text-shadow:0 2px 18px rgba(8,10,28,.45);
   }
-  .hero h1 em{font-style:normal; color:#F2CE84}
+  .hero h1 em{font-style:normal; color:#FF8A72}
   .hero__sub{
     margin:0 0 20px; font-size:15px; line-height:1.75; color:rgba(255,255,255,.90);
     max-width:34em; text-shadow:0 1px 12px rgba(8,10,28,.4);
@@ -182,10 +182,10 @@
   .hero__search input{
     width:100%; padding:13px 14px 13px 42px; font:inherit; font-size:15px;
     border-radius:var(--r-input); border:1px solid transparent;
-    background:#fff; color:#1B1E2B; box-shadow:0 6px 20px rgba(8,10,28,.22);
+    background:#fff; color:#161A26; box-shadow:0 6px 20px rgba(8,10,28,.22);
   }
   .hero__search input::placeholder{color:#8A8E9E}
-  .hero__search input:focus{outline:none; box-shadow:0 0 0 4px rgba(226,190,116,.5), 0 6px 20px rgba(8,10,28,.22)}
+  .hero__search input:focus{outline:none; box-shadow:0 0 0 4px rgba(214,54,42,.45), 0 6px 20px rgba(8,10,28,.22)}
   .hero__search button{
     flex:none; padding:13px 22px; border:none; border-radius:var(--r-input);
     background:var(--cta); color:var(--cta-ink); font-weight:800; font-size:15px;
@@ -207,20 +207,20 @@
   .hero__stats div{display:flex; align-items:baseline; gap:7px}
   .hero__stats b{
     font-family:var(--mono); font-variant-numeric:tabular-nums;
-    font-size:21px; font-weight:700; color:#F2CE84; line-height:1.2;
+    font-size:21px; font-weight:700; color:#FFFFFF; line-height:1.2;
   }
-  .hero__stats span{font-size:12.5px; color:rgba(255,255,255,.82)}
+  .hero__stats span{font-size:12.5px; color:rgba(255,255,255,.72)}
 
   .intro{padding:20px 0 22px}
   .intro p{margin:0; color:var(--ink-2); font-size:15px; max-width:60ch}
   .intro .note{
     display:inline-flex; align-items:center; gap:8px; margin-top:12px;
     padding:7px 14px; border-radius:var(--r-pill);
-    background:var(--gold-soft); border:1px solid color-mix(in srgb, var(--gold) 36%, transparent);
+    background:var(--surface); border:1px solid var(--line);
     color:var(--ink); font-size:14px; line-height:1.5; max-width:100%;
   }
-  .intro .note b{color:var(--gold); font-weight:800}
-  .intro .note svg{flex:none; color:var(--gold)}
+  .intro .note b{color:var(--ink); font-weight:800}
+  .intro .note svg{flex:none; color:var(--ink-3)}
 
   /* 特集ページへの導線 */
 
@@ -355,14 +355,14 @@
   }
   .jrow__meta dt{color:var(--ink-3); font-weight:700; white-space:nowrap}
   .jrow__meta dd{margin:0; color:var(--ink); min-width:0; overflow-wrap:anywhere}
-  .jrow__sal{font-family:var(--mono); font-weight:800; font-size:15px; color:var(--gold); font-variant-numeric:tabular-nums}
+  .jrow__sal{font-family:var(--mono); font-weight:800; font-size:15px; color:var(--ink); font-variant-numeric:tabular-nums}
   .jrow__act{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center}
   .card__tags{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px}
   /* 長い職種名でも切れないよう、はみ出す時だけ折り返す */
   .tag{font-size:11.5px; padding:3px 9px; border-radius:6px; background:var(--surface-2); color:var(--ink-2); font-weight:600; max-width:100%; overflow-wrap:anywhere; line-height:1.5}
   .tag--cat{background:var(--accent-soft); color:var(--accent-ink)}
   .tag--remote{background:var(--good-soft); color:var(--good)}
-  .tag--kubun{background:var(--gold-soft); color:var(--gold); font-weight:800}
+  .tag--kubun{background:var(--accent-soft); color:var(--accent-ink); font-weight:800}
 
   /* ---------- ボタン（応募・詳細） ---------- */
   .btn-apply{
@@ -436,9 +436,13 @@
   .fav--bar{position:static; width:40px; height:40px; border-color:var(--line); background:var(--surface)}
 
   .mybtn{width:auto; padding:0 13px; gap:7px; display:inline-flex; align-items:center; font-weight:700; font-size:13.5px}
-  .mybtn .badge{background:var(--gold); color:#fff; border-radius:999px; font-size:11px; padding:1px 7px; font-family:var(--mono); font-weight:700}
-  :root[data-theme="dark"] .mybtn .badge{color:#241c08}
-  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .mybtn .badge{color:#241c08} }
+  .mybtn .badge{background:var(--accent); color:#fff; border-radius:999px; font-size:11px; padding:1px 7px; font-family:var(--mono); font-weight:700}
+  :root[data-theme="dark"] .mybtn .badge{color:#0F131A}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .mybtn .badge{color:#0F131A} }
+  /* 未読メッセージは★の件数と別の色にする（同じ色だと数字の意味が混ざる） */
+  .mybtn .badge--msg{background:#C0392B; color:#fff}
+  :root[data-theme="dark"] .mybtn .badge--msg{color:#fff}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .mybtn .badge--msg{color:#fff} }
 
   .auth{border:1px solid var(--line); border-radius:var(--r-card); background:var(--surface-2); padding:18px 18px 16px; margin-bottom:26px}
   .auth h3{margin:0 0 6px; font-size:15px; letter-spacing:.01em}
@@ -537,6 +541,43 @@
   .doc__msg.ng{color:#C0392B}
   :root[data-theme="dark"] .doc__msg.ng{color:#F1948A}
 
+  /* 担当者とのメッセージ（スカウト・DM）。ログイン中だけ、マイページの一番上に出る。
+     求人企業ではなく当社の担当者との1対1のやりとり。スレッドは会員ひとりにつき1本。 */
+  .msgs{margin-bottom:26px}
+  .msgs__new{color:#fff; background:#C0392B; border-radius:999px; font-size:11px; font-family:var(--mono); padding:1px 8px; margin-left:6px; font-weight:700}
+  .msgs__list{
+    display:flex; flex-direction:column; gap:12px; max-height:340px; overflow-y:auto;
+    padding:14px; border:1px solid var(--line); border-radius:var(--r-card); background:var(--surface-2);
+  }
+  .msgs__empty{margin:0; font-size:12.5px; color:var(--ink-3); line-height:1.8}
+  .msg{max-width:88%; display:flex; flex-direction:column; gap:5px}
+  .msg--staff{align-self:flex-start}
+  .msg--me{align-self:flex-end; align-items:flex-end}
+  .msg__body{
+    padding:10px 13px; border-radius:13px; font-size:13px; line-height:1.8;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink); word-break:break-word;
+  }
+  .msg--me .msg__body{border-color:transparent; background:var(--accent); color:#fff}
+  .msg__meta{font-size:11px; color:var(--ink-3); font-family:var(--mono)}
+  .msg__unread{color:#C0392B; font-family:var(--font); font-weight:700; margin-left:5px}
+  :root[data-theme="dark"] .msg__unread{color:#F1948A}
+  .msg__job{
+    display:block; width:100%; text-align:left; margin-top:2px; padding:9px 12px;
+    border:1px solid var(--line); border-radius:11px; background:var(--surface);
+    font-family:inherit; font-size:12.5px; line-height:1.6; color:var(--ink-2); cursor:pointer;
+  }
+  .msg__job:hover{border-color:var(--accent); color:var(--accent)}
+  .msg__job b{display:block; color:var(--ink); font-weight:700}
+  .msg--me .msg__job{background:var(--surface); color:var(--ink-2)}
+  .msgs__form{margin-top:12px}
+  .msgs__form textarea{
+    width:100%; padding:11px 12px; font-family:inherit; font-size:14px; line-height:1.7; resize:vertical;
+    border:1px solid var(--line); border-radius:var(--r-input); background:var(--surface); color:var(--ink);
+  }
+  .msgs__form textarea:focus-visible{outline:2px solid var(--focus); outline-offset:1px}
+  .msgs__row{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:9px}
+  .msgs__row .auth__msg{margin:0}
+
   /* 退会（アカウントの削除）。取り返しがつかないので、開く→確認する の2段階にしている */
   .quit{margin-top:18px; padding-top:14px; border-top:1px dashed var(--line)}
   .quit__open{
@@ -553,10 +594,10 @@
   .quit__box ul{margin:0 0 10px; padding-left:1.2em; font-size:12.5px; color:var(--ink-2); line-height:1.8}
   .quit__act{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
   .quit__btn{
-    padding:9px 15px; border:0; border-radius:var(--r-input); background:#C0392B; color:#fff;
+    padding:9px 15px; border:1px solid #C0392B; border-radius:var(--r-input); background:transparent; color:#C0392B;
     font-weight:700; font-size:13px; white-space:nowrap;
   }
-  .quit__btn:hover{background:#A93226}
+  .quit__btn:hover{background:#C0392B; color:#fff}
   .quit__btn[disabled]{opacity:.55; cursor:default}
 
   .myrow{
@@ -568,7 +609,7 @@
   .myrow:hover{border-color:color-mix(in srgb,var(--accent) 35%, var(--line)); box-shadow:var(--shadow-sm)}
   .myrow__co{font-size:12px; font-weight:700; color:var(--accent)}
   .myrow__title{margin:2px 0 6px; font-size:15px; font-weight:700; line-height:1.5}
-  .myrow__sal{font-family:var(--mono); font-weight:800; font-size:14px; color:var(--gold)}
+  .myrow__sal{font-family:var(--mono); font-weight:800; font-size:14px; color:var(--ink)}
   .myrow .fav{top:12px; right:10px}
   .myempty{text-align:center; padding:34px 10px; color:var(--ink-3); font-size:13.5px; line-height:1.9}
   .myempty svg{color:var(--line); margin-bottom:6px}
@@ -598,7 +639,7 @@
   .pd-salary .item{display:flex; flex-direction:column; gap:3px}
   .pd-salary .k{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:700}
   .pd-salary .v{font-family:var(--mono); font-weight:800; font-size:17px; color:var(--ink); font-variant-numeric:tabular-nums}
-  .pd-salary .v.gold{color:var(--gold)}
+  .pd-salary .v.gold{color:var(--ink)}
   .pd-cta{display:flex; gap:10px; margin:18px 0 6px; flex-wrap:wrap}
   .btn-primary{display:inline-flex; align-items:center; gap:8px; padding:12px 22px; background:var(--accent); color:#fff; border:none; border-radius:var(--r-pill); font-weight:700; font-size:14px; text-decoration:none; transition:background .15s}
   .btn-primary:hover{background:var(--accent-strong)}
@@ -894,7 +935,7 @@
   .dt-side{position:sticky; top:96px; display:flex; flex-direction:column; gap:12px}
   .dt-card{border:1px solid var(--line); border-radius:var(--r-card); background:var(--surface); padding:20px; box-shadow:var(--shadow-sm)}
   .dt-card .k{display:block; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:700}
-  .dt-card .v{display:block; font-family:var(--mono); font-weight:800; font-size:19px; color:var(--gold); font-variant-numeric:tabular-nums; margin-bottom:14px}
+  .dt-card .v{display:block; font-family:var(--mono); font-weight:800; font-size:19px; color:var(--ink); font-variant-numeric:tabular-nums; margin-bottom:14px}
   .dt-card .btn-apply{width:100%; padding:14px; font-size:15px}
   .dt-card .btn-detail{width:100%; margin-top:9px}
   .dt-card__note{margin:12px 0 0; font-size:11.5px; line-height:1.75; color:var(--ink-3)}
@@ -908,7 +949,7 @@
     background:color-mix(in srgb, var(--surface) 94%, transparent);
     backdrop-filter:saturate(180%) blur(10px); border-top:1px solid var(--line);
   }
-  .applybar .sal{flex:0 0 auto; font-family:var(--mono); font-weight:800; font-size:13.5px; color:var(--gold); line-height:1.3}
+  .applybar .sal{flex:0 0 auto; font-family:var(--mono); font-weight:800; font-size:13.5px; color:var(--ink); line-height:1.3}
   .applybar .sal small{display:block; font-family:var(--sans); font-size:10px; color:var(--ink-3); letter-spacing:.08em}
   .applybar .btn-apply{flex:1; padding:14px}
 
@@ -954,7 +995,7 @@
       </button>
       <button class="iconbtn mybtn" id="myBtn" aria-label="マイページを開く">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9L12 3.6z"/></svg>
-        <span class="mybtn__txt">マイページ</span><span class="badge" id="myBadge" hidden>0</span>
+        <span class="mybtn__txt">マイページ</span><span class="badge" id="myBadge" hidden>0</span><span class="badge badge--msg" id="msgBadge" hidden title="未読のメッセージ">0</span>
       </button>
       <button class="iconbtn" id="themeBtn" aria-label="テーマ切り替え">
         <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg>
@@ -1147,7 +1188,7 @@
   </div>
   <label class="consent">
     <input type="checkbox" id="signalConsent">
-    <span>保存した求人に関するご連絡や、条件の近い求人のご案内をメールで受け取ります（任意・いつでも停止できます）</span>
+    <span>担当者からのメッセージや、条件の近い求人のご案内をメールで受け取ります（任意・いつでも停止できます）</span>
   </label>
   <p class="auth__msg" id="signalMsg" hidden></p>
   <p class="auth__note">登録をもって<a href="terms.html" target="_blank" rel="noopener">利用規約</a>と<a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に同意いただいたものとみなします。求人のご案内は上のチェックを入れた場合にのみお送りします。</p>
@@ -2328,7 +2369,7 @@ function profileHtml(){
     ${hasConsentCols?`<div class="pf"><span class="pf__t">求人のご案内</span>
       <label class="consent">
         <input type="checkbox" id="profConsent"${p.contact_consent?" checked":""}>
-        <span>保存した求人に関するご連絡や、条件の近い求人のご案内をメールで受け取る<br>
+        <span>担当者からのメッセージや、条件の近い求人のご案内をメールで受け取る<br>
           <span style="color:var(--ink-3)">チェックを外して保存すると、以後お送りしません。選考中のご連絡など、ご相談いただいた件についての事務連絡は引き続きお送りします。</span></span>
       </label>
     </div>`:""}
@@ -2418,6 +2459,123 @@ function applyProfileSearch(){
   track("profile_search",{jobs:p.desired_jobs.length, areas:p.desired_areas.length, salary:state.salaryMin});
 }
 
+/* ---- 担当者とのメッセージ（スカウト・DM） ----
+   送り主は常に当社の担当者。求人企業が直接送る形ではない（企業のログインは無い）。
+   会員ひとりにつきスレッドは1本だけ。設定手順は MESSAGES_SETUP.md。
+
+   ⚠ messages テーブルがまだ無い環境では、読み込みに失敗して msgsReady が false のままになり、
+   メッセージ欄そのものが出ない。マイページの他の機能は今までどおり動く。 */
+const MSG_MAX=2000;
+let msgs=[];          /* 古い順 */
+let msgUnread=0;
+let msgsReady=false;
+
+function updateMsgBadge(){
+  const el=$("#msgBadge"); if(!el) return;
+  el.textContent=msgUnread; el.hidden = msgUnread===0;
+}
+async function loadMessages(){
+  if(!sb||!me){ msgs=[]; msgUnread=0; msgsReady=false; updateMsgBadge(); return; }
+  try{
+    const {data,error}=await sb.from("messages")
+      .select("id,from_staff,body,job_id,job_name,company,created_at,read_at")
+      .eq("user_id",me.id).order("created_at",{ascending:true}).limit(200);
+    if(error) throw error;
+    msgs=data||[];
+    msgUnread=msgs.filter(m=>m.from_staff&&!m.read_at).length;
+    msgsReady=true;
+  }catch(e){
+    console.warn("メッセージを読み込めませんでした（MESSAGES_SETUP.md のSQLは実行済みですか）",e);
+    msgs=[]; msgUnread=0; msgsReady=false;
+  }
+  updateMsgBadge();
+}
+/* 既読にする。本文は書き換えられないよう、update ポリシーではなく関数で処理している。
+   画面はあえて描き直さない（「新着」の目印は今回の表示の間は残したほうが分かりやすい）。 */
+async function markMessagesRead(){
+  if(!sb||!me||!msgUnread) return;
+  try{
+    const {error}=await sb.rpc("mark_messages_read");
+    if(error) throw error;
+    const now=new Date().toISOString();
+    msgs.forEach(m=>{ if(m.from_staff&&!m.read_at) m.read_at=now; });
+    msgUnread=0; updateMsgBadge();
+  }catch(e){ console.warn("既読にできませんでした",e); }
+}
+function msgTime(s){
+  const d=new Date(s); if(isNaN(d)) return "";
+  const p=n=>String(n).padStart(2,"0");
+  return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+/* 添えられた求人。掲載が終わっていても、送った時点の企業名・求人名は残しておく */
+function msgJobHtml(m){
+  if(!m.job_id&&!m.job_name) return "";
+  const j=m.job_id?JOBS.find(x=>x.id===m.job_id):null;
+  const co=esc(j?(j.company||"企業非公開"):(m.company||"企業非公開"));
+  const nm=esc(j?jobName(j):(m.job_name||"求人"));
+  if(!j) return `<span class="msg__job" aria-disabled="true"><b>${nm}</b>${co}<br><span class="msg__meta">この求人は募集が終了しました</span></span>`;
+  return `<button class="msg__job" data-open="${esc(j.id)}"><b>${nm}</b>${co}　${esc(fmtSalary(j))}</button>`;
+}
+function msgRowHtml(m){
+  const mine=!m.from_staff;
+  const unread=m.from_staff&&!m.read_at;
+  return `<div class="msg ${mine?"msg--me":"msg--staff"}">
+    <div class="msg__body">${esc(m.body||"").replace(/\n/g,"<br>")}</div>
+    ${msgJobHtml(m)}
+    <div class="msg__meta">${mine?"あなた":"担当者"}　${esc(msgTime(m.created_at))}${unread?'<span class="msg__unread">新着</span>':""}</div>
+  </div>`;
+}
+function messagesHtml(){
+  if(!me||!msgsReady) return "";
+  const list = msgs.length
+    ? msgs.map(msgRowHtml).join("")
+    : `<p class="msgs__empty">まだメッセージはありません。<br>
+        求人についてのご質問や、ご希望に近い求人を探してほしいといったご依頼を、ここからお送りいただけます。</p>`;
+  return `<section class="msgs">
+    <div class="mysec mysec--row" style="margin-top:0">
+      <span>担当者とのメッセージ${msgUnread?`<b class="msgs__new">新着 ${msgUnread}</b>`:""}</span>
+    </div>
+    <div class="msgs__list" id="msgList">${list}</div>
+    <div class="msgs__form">
+      <textarea id="msgText" rows="3" maxlength="${MSG_MAX}" placeholder="例：この求人の残業時間と、リモートの頻度を知りたいです。" aria-label="担当者へのメッセージ"></textarea>
+      <div class="msgs__row">
+        <button class="auth__btn" id="msgSend">送信する</button>
+        <p class="auth__msg" id="msgMsg" hidden></p>
+      </div>
+    </div>
+    <p class="auth__note">やりとりを見るのは当社の担当者だけです。求人企業へは、ご本人の同意なくお伝えしません。</p>
+  </section>`;
+}
+function msgMsg(text, ok){
+  const el=$("#msgMsg"); if(!el) return;
+  el.hidden=false; el.textContent=text; el.className="auth__msg "+(ok?"ok":"ng");
+}
+async function sendMessage(){
+  const ta=$("#msgText"); if(!ta||!sb||!me) return;
+  const body=ta.value.trim();
+  if(!body){ msgMsg("メッセージを入力してください。",false); return; }
+  if(body.length>MSG_MAX){ msgMsg(`${MSG_MAX}文字まででお願いします。`,false); return; }
+  const btn=$("#msgSend"); btn.disabled=true; btn.textContent="送信中…";
+  try{
+    const {error}=await sb.from("messages").insert({
+      user_id:me.id, from_staff:false, body:body,
+      member_email:me.email||null,
+      member_name:(myProfile&&myProfile.full_name)||null
+    });
+    if(error) throw error;
+    track("message_send",{});
+    await loadMessages();
+    renderMypage();
+    msgMsg("送信しました。担当者からご返信します。",true);
+    const box=$("#msgList"); if(box) box.scrollTop=box.scrollHeight;
+  }catch(e){
+    console.warn(e);
+    msgMsg("送信できませんでした。時間をおいて試すか、お問い合わせください。",false);
+  }finally{
+    const b=$("#msgSend"); if(b){ b.disabled=false; b.textContent="送信する"; }
+  }
+}
+
 /* ---- マイページ本体 ---- */
 function authBoxHtml(){
   if(!authEnabled()){
@@ -2439,7 +2597,7 @@ function authBoxHtml(){
       </div>
       <label class="consent">
         <input type="checkbox" id="authConsent">
-        <span>保存した求人に関するご連絡や、条件の近い求人のご案内をメールで受け取ります（任意・いつでも停止できます）</span>
+        <span>担当者からのメッセージや、条件の近い求人のご案内をメールで受け取ります（任意・いつでも停止できます）</span>
       </label>
       <p class="auth__msg" id="authMsg" hidden></p>
       <p class="auth__note">いま★を付けている求人は、ログインすると自動的に引き継がれます。</p>
@@ -2489,7 +2647,10 @@ function renderMypage(){
       </div>` + seenList.map(myRowHtml).join("") +
       `<p class="auth__note">最近見た求人は、ログインの有無にかかわらず、この端末の中だけに保存されます。</p>`;
   }
-  $("#myBody").innerHTML=authBoxHtml()+body;
+  /* メッセージは一番上。スカウトが届いたときに真っ先に目に入るのはここでなければ意味がない。
+     未ログインのときは messagesHtml() が空文字を返すので、これまでどおりログイン欄が先頭に来る。 */
+  $("#myBody").innerHTML=messagesHtml()+authBoxHtml()+body;
+  const ml=$("#msgList"); if(ml) ml.scrollTop=ml.scrollHeight;
   paintFavs();
   wireMypage();
 }
@@ -2504,6 +2665,11 @@ function wireMypage(){
   if(psearch) psearch.addEventListener("click",applyProfileSearch);
   const sclear=$("#seenClear");
   if(sclear) sclear.addEventListener("click",clearSeen);
+  const msend=$("#msgSend");
+  if(msend) msend.addEventListener("click",sendMessage);
+  const mtext=$("#msgText");
+  /* Enter は改行のまま。長文を書く欄で送信に割り当てると事故る（Ctrl/⌘+Enter だけ送信） */
+  if(mtext) mtext.addEventListener("keydown",e=>{ if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); sendMessage(); } });
   const qOpen=$("#quitOpen"), qNo=$("#quitNo"), qYes=$("#quitYes");
   if(qOpen) qOpen.addEventListener("click",()=>{
     const box=$("#quitBox"); if(!box) return;
@@ -2528,7 +2694,8 @@ function openMypage(){
   $("#mypanel").classList.add("open");
   document.body.style.overflow="hidden";
   $("#myClose").focus();
-  track("mypage_open",{favorites:favs.size, logged_in:!!me});
+  track("mypage_open",{favorites:favs.size, logged_in:!!me, unread:msgUnread});
+  markMessagesRead();
 }
 function closeMypage(){
   $("#mypanel").classList.remove("open");
@@ -2588,7 +2755,9 @@ async function sendMagicLink(){
 }
 async function signOut(){
   try{ await sb.auth.signOut(); }catch(e){ console.warn(e); }
-  me=null; myProfile=null; renderMypage();
+  me=null; myProfile=null;
+  msgs=[]; msgUnread=0; msgsReady=false; updateMsgBadge();
+  renderMypage();
 }
 /* 退会。書類の実体はストレージAPIで先に消す（delete_own_account はDBの行しか消せない）。
    auth.users の削除は本人でも直接はできないので、Supabase側の関数を呼ぶ。 */
@@ -2608,6 +2777,7 @@ async function deleteAccount(){
     if(error) throw error;
     try{ await sb.auth.signOut(); }catch(e){ console.warn(e); }
     me=null; myProfile=null;
+    msgs=[]; msgUnread=0; msgsReady=false; updateMsgBadge();
     favs=new Set(); saveLocalFavs();
     seen=[]; saveSeen();
     updateMyBadge(); paintFavs();
@@ -2689,9 +2859,10 @@ async function onSignedIn(user){
       else myProfile=Object.assign({},myProfile||{},{contact_consent:true, contact_consent_at:at});
     }
   }catch(e){ console.warn("ログイン後の同期に失敗しました",e); }
+  await loadMessages();
   hideSignal(false);
   paintFavs(); updateMyBadge();
-  if($("#mypanel").classList.contains("open")) renderMypage();
+  if($("#mypanel").classList.contains("open")){ renderMypage(); markMessagesRead(); }
 }
 async function initAuth(){
   if(!authEnabled()) return;
@@ -2700,7 +2871,7 @@ async function initAuth(){
     sb=window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     sb.auth.onAuthStateChange((ev,session)=>{
       if(session&&session.user){ onSignedIn(session.user); }
-      else if(ev==="SIGNED_OUT"){ me=null; myProfile=null; }
+      else if(ev==="SIGNED_OUT"){ me=null; myProfile=null; msgs=[]; msgUnread=0; msgsReady=false; updateMsgBadge(); }
     });
     const {data}=await sb.auth.getSession();
     if(data&&data.session) await onSignedIn(data.session.user);
@@ -2725,6 +2896,13 @@ updateMyBadge();
 paintFavs();
 initAuth();
 route();
+/* 通知メールの「マイページを開く」リンク（?mypage=1）で来た人は、開いた時点でマイページを出す。
+   ログインの復元は initAuth の後になるので、先に開いておいて onSignedIn 側で描き直す。 */
+if(new URLSearchParams(location.search).get("mypage")==="1"){
+  openMypage();
+  const u=new URL(location.href); u.searchParams.delete("mypage");
+  history.replaceState(null,"",u.pathname+u.search+u.hash);
+}
 </script>
 <script>
   /* LINE友だち追加のクリックをGA4へ。LINE側では流入元が分からないので、

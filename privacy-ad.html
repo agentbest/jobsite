@@ -19,20 +19,20 @@
 </script>
 <style>
   :root{
-    --paper:#F7F6F2; --surface:#FFFFFF; --surface-2:#F1F0EA;
-    --ink:#1B1E2B; --ink-2:#4A4E60; --ink-3:#787C8C;
-    --line:#E4E2D9; --line-2:#EDECE5;
-    --accent:#33409A; --accent-strong:#3D4CC0; --accent-soft:#ECEEF9;
-    --gold:#9C6F1E; --gold-soft:#F6EEDD;
+    --paper:#F5F7FA; --surface:#FFFFFF; --surface-2:#EEF1F6;
+    --ink:#161A26; --ink-2:#4A5261; --ink-3:#6E7686;
+    --line:#DDE2EA; --line-2:#EAEEF4;
+    --accent:#1E3A8A; --accent-strong:#2A4CAE; --accent-soft:#E9EDF9;
+    --gold:#C1841F; --gold-soft:#FBF1DE;
     --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic","Noto Sans JP",Meiryo,system-ui,sans-serif;
   }
   @media (prefers-color-scheme:dark){
     :root{
-      --paper:#12131B; --surface:#1A1C27; --surface-2:#232633;
-      --ink:#EDEEF4; --ink-2:#B9BCCB; --ink-3:#868AA0;
-      --line:#2C2F3D; --line-2:#242735;
-      --accent:#93A2F2; --accent-strong:#AEB9F7; --accent-soft:#20243A;
-      --gold:#DDB463; --gold-soft:#2A2416;
+      --paper:#0F131A; --surface:#171C26; --surface-2:#1F2530;
+      --ink:#EAEEF5; --ink-2:#B4BCCA; --ink-3:#828C9E;
+      --line:#2A313D; --line-2:#232A35;
+      --accent:#8FA6F0; --accent-strong:#AFC0F8; --accent-soft:#1B2338;
+      --gold:#E0AE5E; --gold-soft:#2A2416;
     }
   }
   *{box-sizing:border-box}
@@ -59,7 +59,7 @@
   dt{font-weight:700; white-space:nowrap; color:var(--ink-3)}
   dd{margin:0; color:var(--ink)}
   .note{
-    background:var(--gold-soft); border:1px solid color-mix(in srgb, var(--gold) 36%, transparent);
+    background:var(--surface); border:1px solid var(--line);
     border-radius:12px; padding:14px 18px; font-size:13.5px; color:var(--ink);
   }
   footer{border-top:1px solid var(--line); background:var(--surface); padding:24px 0 60px; font-size:12.5px; color:var(--ink-3)}
