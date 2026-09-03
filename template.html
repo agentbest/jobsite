@@ -268,11 +268,16 @@
   .fchip:hover{border-color:var(--ink-3)}
   .fchip[aria-pressed="true"]{background:var(--accent-soft); border-color:var(--accent); color:var(--accent-ink); font-weight:700}
 
-  .salary-val{font-family:var(--mono); font-weight:700; color:var(--ink); font-size:14px}
-  input[type="range"]{-webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:4px; background:var(--line); margin:14px 0 4px}
-  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:var(--accent); border:3px solid var(--surface); box-shadow:var(--shadow-sm); cursor:pointer}
-  input[type="range"]::-moz-range-thumb{width:20px; height:20px; border:3px solid var(--surface); border-radius:50%; background:var(--accent); cursor:pointer}
-  .range-scale{display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+  /* 年収は下限・上限の2つのプルダウンで絞る。上は2,000万円で頭打ち（それ以上は「2,000万円以上」に畳む） */
+  .salrange{display:flex; align-items:center; gap:7px; margin-top:10px}
+  .salrange select{
+    flex:1 1 0; min-width:0; padding:8px 26px 8px 10px; font-size:13px; font-family:inherit; line-height:1.4;
+    border:1px solid var(--line); border-radius:9px; color:var(--ink); appearance:none; cursor:pointer;
+    background:var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236E7686' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 8px center;
+  }
+  .salrange select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .salrange select.is-set{border-color:var(--accent); color:var(--accent-ink); font-weight:700}
+  .salrange__sep{flex:none; font-size:12.5px; color:var(--ink-3)}
 
   /* ---------- Results ---------- */
   .resbar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:16px}
@@ -282,7 +287,7 @@
   .sortsel label{font-size:12px; color:var(--ink-3); font-weight:600}
   .sortsel select{
     padding:8px 30px 8px 12px; font-size:13.5px; border:1px solid var(--line); border-radius:9px;
-    background:var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23787C8C' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 10px center;
+    background:var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236E7686' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 10px center;
     color:var(--ink); appearance:none; cursor:pointer; font-family:inherit;
   }
   .sortsel select:focus{outline:none; border-color:var(--accent)}
@@ -1447,7 +1452,7 @@ const facetDefs=[
   {key:"employment", title:"雇用形態", type:"chip", multi:true, get:j=>j.employment?[j.employment]:[]},
 ];
 
-const state={ q:"", sort:"reco", salaryMin:0, remote:false, sel:{} };
+const state={ q:"", sort:"reco", salaryMin:0, salaryMax:0, remote:false, sel:{} };
 facetDefs.forEach(f=>state.sel[f.key]=new Set());
 
 /* option counts (global, computed once) */
@@ -1458,13 +1463,40 @@ facetDefs.forEach(f=>{
   facetOptions[f.key]=[...m.entries()].sort((a,b)=>b[1]-a[1]);
 });
 const remoteCount=JOBS.filter(j=>j.remote).length;
-const MAXSAL=Math.min(3000,Math.ceil(Math.max(0,...JOBS.map(j=>j._skey))/100)*100);
+/* ---------- 年収の絞り込み ----------
+   実データは上限4,000万円まであるが、2,000万円超は5件ほどの外れ値で、そこまで目盛りを伸ばすと
+   中央値（上限側で900万円前後）の刻みが潰れる。2,000万円＝上限側の95パーセンタイルで頭打ちにし、
+   それ以上は下限側の「2,000万円以上」に畳む。 */
+const SAL_CAP=2000;
+const SAL_MIN_OPTS=[300,400,500,600,700,800,900,1000,1200,1500,SAL_CAP];
+const SAL_MAX_OPTS=[400,500,600,700,800,900,1000,1200,1500,SAL_CAP];
+const salFmt=v=>v.toLocaleString("ja-JP")+"万円";
+/* プロフィールの希望年収など、刻みに無い値が来ても近い段に寄せる */
+function salSnap(v){ v=+v||0; if(v<=0) return 0; if(v>=SAL_CAP) return SAL_CAP; return SAL_MIN_OPTS.filter(x=>x<=v).pop()||0; }
+function salLabel(){
+  const lo=state.salaryMin, hi=state.salaryMax;
+  if(lo>0&&hi>0) return lo===hi?salFmt(lo):lo.toLocaleString("ja-JP")+"〜"+salFmt(hi);
+  if(lo>0) return salFmt(lo)+"以上";
+  if(hi>0) return salFmt(hi)+"以下";
+  return "";
+}
+function syncSalaryUI(){
+  const a=$("#salMin"), b=$("#salMax");
+  if(a){ a.value=String(state.salaryMin||0); a.classList.toggle("is-set", state.salaryMin>0); }
+  if(b){ b.value=String(state.salaryMax||0); b.classList.toggle("is-set", state.salaryMax>0); }
+}
 
 /* ---------- filtering ---------- */
 function jobMatches(j){
   if(state.q){ const toks=state.q.toLowerCase().split(/\s+/).filter(Boolean); if(!toks.every(t=>j._hay.includes(t))) return false; }
   if(state.remote && !j.remote) return false;
-  if(state.salaryMin>0){ const s=(j.salaryMax!=null?j.salaryMax:j.salaryMin); if(s==null||s<state.salaryMin) return false; }
+  if(state.salaryMin>0||state.salaryMax>0){
+    /* 求人の年収レンジと、指定したレンジが重なっていれば通す。年収非公開の求人は落とす（従来どおり） */
+    const lo=(j.salaryMin!=null?j.salaryMin:j.salaryMax), hi=(j.salaryMax!=null?j.salaryMax:j.salaryMin);
+    if(lo==null||hi==null) return false;
+    if(state.salaryMin>0 && hi<state.salaryMin) return false;
+    if(state.salaryMax>0 && lo>state.salaryMax) return false;
+  }
   for(const f of facetDefs){
     const sel=state.sel[f.key]; if(!sel.size) continue;
     const vals=f.get(j); if(!vals.some(v=>sel.has(v))) return false;
@@ -1491,9 +1523,18 @@ function buildFilters(){
       <div class="chip-row" style="margin-bottom:14px">
         <button class="fchip" role="button" aria-pressed="false" data-remote>リモート可 <span class="mono" style="color:var(--ink-3);font-size:11px">${remoteCount}</span></button>
       </div>
-      <div class="fgroup__head" style="margin-bottom:2px"><span class="fgroup__title" style="letter-spacing:.06em;text-transform:none;font-size:12.5px;color:var(--ink-2)">年収下限</span><span class="salary-val" id="salLbl">指定なし</span></div>
-      <input type="range" id="salRange" min="0" max="${MAXSAL}" step="50" value="0" aria-label="年収下限">
-      <div class="range-scale"><span>0</span><span>${MAXSAL}万円</span></div>
+      <div class="fgroup__head" style="margin-bottom:2px"><span class="fgroup__title" style="letter-spacing:.06em;text-transform:none;font-size:12.5px;color:var(--ink-2)">年収</span></div>
+      <div class="salrange">
+        <select id="salMin" aria-label="年収の下限">
+          <option value="0">下限なし</option>
+          ${SAL_MIN_OPTS.map(v=>`<option value="${v}">${v>=SAL_CAP?salFmt(v)+"以上":salFmt(v)}</option>`).join("")}
+        </select>
+        <span class="salrange__sep" aria-hidden="true">〜</span>
+        <select id="salMax" aria-label="年収の上限">
+          <option value="0">上限なし</option>
+          ${SAL_MAX_OPTS.map(v=>`<option value="${v}">${salFmt(v)}</option>`).join("")}
+        </select>
+      </div>
     </div>`;
   facetDefs.forEach(f=>{
     const opts=facetOptions[f.key]; if(!opts.length) return;
@@ -1540,11 +1581,19 @@ function buildFilters(){
     const grp=s.closest(".fgroup"); const term=s.value.trim().toLowerCase();
     grp.querySelectorAll(".opt").forEach(o=>{ o.classList.toggle("hidden", term && !o.dataset.opt.toLowerCase().includes(term)); });
   });
-  $("#salRange").addEventListener("input",e=>{
-    state.salaryMin=+e.target.value;
-    $("#salLbl").textContent = state.salaryMin>0?state.salaryMin+"万円以上":"指定なし";
-    apply();
-  });
+  /* 下限と上限が食い違ったら、いま動かしたほうを正としてもう一方を寄せる */
+  const onSal=e=>{
+    let lo=+$("#salMin").value||0, hi=+$("#salMax").value||0;
+    if(lo>0&&hi>0&&lo>hi){
+      if(e.target.id==="salMin"){ hi=SAL_MAX_OPTS.find(v=>v>=lo)||0; }
+      else { lo=SAL_MIN_OPTS.filter(v=>v<=hi).pop()||0; }
+    }
+    state.salaryMin=lo; state.salaryMax=hi;
+    syncSalaryUI(); apply();
+    track("filter_use",{filter:"salary", value:salLabel()||"none"});
+  };
+  $("#salMin").addEventListener("change",onSal);
+  $("#salMax").addEventListener("change",onSal);
 }
 function syncGroupState(k){
   const grp=$(`.fgroup[data-key="${k}"]`); if(!grp) return;
@@ -1563,7 +1612,7 @@ const facetTitle=Object.fromEntries(facetDefs.map(f=>[f.key,f.title]));
 function renderActiveChips(){
   const box=$("#activeChips"); let h="";
   if(state.remote) h+=chipHtml("remote","",'リモート可');
-  if(state.salaryMin>0) h+=chipHtml("salary","",state.salaryMin+"万円以上");
+  { const s=salLabel(); if(s) h+=chipHtml("salary","",s); }
   facetDefs.forEach(f=>state.sel[f.key].forEach(v=>{ h+=chipHtml(f.key,v,v); }));
   const any=h.length>0;
   if(any) h+=`<button class="clear-all" id="clearAll">すべてクリア</button>`;
@@ -1577,7 +1626,7 @@ $("#activeChips").addEventListener("click",e=>{
   const b=e.target.closest("[data-rm-k]");
   if(b){ const k=b.dataset.rmK,v=b.dataset.rmV;
     if(k==="remote"){ state.remote=false; document.querySelector("[data-remote]")?.setAttribute("aria-pressed","false"); }
-    else if(k==="salary"){ state.salaryMin=0; $("#salRange").value=0; $("#salLbl").textContent="指定なし"; }
+    else if(k==="salary"){ state.salaryMin=0; state.salaryMax=0; syncSalaryUI(); }
     else { state.sel[k].delete(v);
       const el=document.querySelector(`[data-facet="${k}"][data-val="${CSS.escape(v)}"]`);
       if(el){ if(el.type==="checkbox") el.checked=false; else el.setAttribute("aria-pressed","false"); }
@@ -1588,8 +1637,8 @@ $("#activeChips").addEventListener("click",e=>{
   if(e.target.closest("#clearAll")) resetAll();
 });
 function resetAll(){
-  state.q=""; $("#q").value=""; state.remote=false; state.salaryMin=0;
-  $("#salRange").value=0; $("#salLbl").textContent="指定なし";
+  state.q=""; $("#q").value=""; state.remote=false; state.salaryMin=0; state.salaryMax=0;
+  syncSalaryUI();
   document.querySelector("[data-remote]")?.setAttribute("aria-pressed","false");
   facetDefs.forEach(f=>clearFacetSilent(f.key));
   apply();
@@ -1662,7 +1711,7 @@ $("#perPage").addEventListener("change",e=>{
 });
 
 function updateBadge(){
-  let n=(state.remote?1:0)+(state.salaryMin>0?1:0)+facetDefs.reduce((s,f)=>s+state.sel[f.key].size,0);
+  let n=(state.remote?1:0)+((state.salaryMin>0||state.salaryMax>0)?1:0)+facetDefs.reduce((s,f)=>s+state.sel[f.key].size,0);
   const b=$("#filterBadge"); b.hidden=n===0; b.textContent=n;
 }
 
@@ -1987,9 +2036,7 @@ function scrollToResults(){
   window.scrollTo({top, behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
 }
 function setSalaryMin(v){
-  state.salaryMin=v;
-  const r=$("#salRange"); if(r) r.value=v;
-  const lbl=$("#salLbl"); if(lbl) lbl.textContent = v>0? v+"万円以上" : "指定なし";
+  state.salaryMin=salSnap(v); state.salaryMax=0; syncSalaryUI();
 }
 $("#heroSearch").addEventListener("submit",e=>{
   e.preventDefault();
@@ -2450,9 +2497,8 @@ function applyProfileSearch(){
     });
     syncGroupState("areas");
   }
-  state.salaryMin=p.desired_salary||0;
-  const r=$("#salRange"); if(r) r.value=state.salaryMin;
-  const lbl=$("#salLbl"); if(lbl) lbl.textContent = state.salaryMin>0?state.salaryMin+"万円以上":"指定なし";
+  state.salaryMin=salSnap(p.desired_salary||0); state.salaryMax=0;
+  syncSalaryUI();
   apply();
   closeMypage();
   window.scrollTo({top:0, behavior:"smooth"});
