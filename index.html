@@ -1479,12 +1479,24 @@ function rich(src){
   return html;
 }
 
+/* ---------- 雇用形態 ---------- */
+/* 「正社員・契約社員」のように複数の形態を募集している求人がある。
+   絞り込みでは1つずつの形態として扱う（「契約社員」で探した人にも出す）。
+   知らない表記が来たときは、そのまま1つの値として扱う。 */
+const EMP_TYPES=["正社員","契約社員","業務委託","無期雇用派遣","派遣社員","アルバイト・パート","インターン"];
+function empList(j){
+  const s=(j&&j.employment)?String(j.employment).trim():"";
+  if(!s) return [];
+  const hit=EMP_TYPES.filter(t=>s.includes(t));
+  return hit.length?hit:[s];
+}
+
 /* ---------- facets config ---------- */
 const facetDefs=[
   {key:"areas", title:"勤務地エリア", type:"check", multi:true, searchable:true, get:j=>j.areas},
   {key:"jobCategory", title:"職種カテゴリ", type:"check", multi:true, searchable:true, get:j=>j.jobCategory?[j.jobCategory]:[]},
   {key:"industry", title:"業界", type:"check", multi:true, searchable:true, get:j=>j.industry||[]},
-  {key:"employment", title:"雇用形態", type:"chip", multi:true, get:j=>j.employment?[j.employment]:[]},
+  {key:"employment", title:"雇用形態", type:"chip", multi:true, get:j=>empList(j)},
   {key:"empBand", title:"企業規模（従業員数）", type:"check", multi:true, order:EMP_BANDS.map(b=>b.label), get:j=>j.empBand?[j.empBand]:[]},
 ];
 
@@ -1778,7 +1790,7 @@ function logoHtml(j, extra){
 function rowHtml(j){
   const tags=[];
   if(j.kubun && j.kubun!=="中途") tags.push(`<span class="tag tag--kubun">${esc(j.kubun)}</span>`);
-  if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
+  empList(j).forEach(t=>tags.push(`<span class="tag">${esc(t)}</span>`));
   if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
   if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
   const ind=(j.industry&&j.industry[0])?`<span class="jrow__ind">${esc(j.industry[0])}</span>`:"";
@@ -1938,7 +1950,7 @@ function openDetail(id){
 
   const tags=[];
   if(j.jobCategory) tags.push(`<span class="tag tag--cat">${esc(j.jobCategory)}</span>`);
-  if(j.employment) tags.push(`<span class="tag">${esc(j.employment)}</span>`);
+  empList(j).forEach(t=>tags.push(`<span class="tag">${esc(t)}</span>`));
   if(j.kubun && j.kubun!=="中途") tags.push(`<span class="tag">${esc(j.kubun)}</span>`);
   (j.industry||[]).forEach(i=>tags.push(`<span class="tag">${esc(i)}</span>`));
   if(j.remote) tags.push(`<span class="tag tag--remote">リモート可</span>`);
