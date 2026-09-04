@@ -1389,6 +1389,39 @@ function plainLead(src){
       無いあいだは NEW バッジも「新着順」も出ない。件数を偽らないための仕様。 */
 const NEW_DAYS = 14;
 
+/* ---------- 従業員数 ----------
+   Airtable「求人DB（企業）」の 従業員数 は自由記述で、「約290名（2025年9月）」
+   「連結3,039名、単体835名（2026年4月1日現在）」のように書き方がそろっていない。
+   絞り込みに使えるよう、最初に出てくる「n名／n人」を人数として読み、規模の段に振り分ける。
+   （data/employees.json → rebuild.js の attachEmployees() で j.employees に原文が入る）
+
+   ⚠ 求人詳細に出すのは**原文のまま**。読み取った数字は絞り込みとカードの段にだけ使う。
+      「連結」「グループ含む」などの但し書きを落として1つの数字にしてしまうと、
+      当社が勝手に丸めた人数を企業の公表値のように見せることになる。
+   ⚠ 「役員4名 正社員75名」のような先頭は従業員数ではないので読み飛ばす。
+   ⚠ 「非公開」など読めなかった企業は段に入れない（＝企業規模で絞ると出ない）。
+      推測で段に入れると、絞り込みの結果が事実と食い違う。 */
+const EMP_BANDS=[
+  {max:50,       label:"〜50名"},
+  {max:100,      label:"51〜100名"},
+  {max:300,      label:"101〜300名"},
+  {max:1000,     label:"301〜1,000名"},
+  {max:Infinity, label:"1,001名以上"},
+];
+function empNum(raw){
+  if(!raw) return null;
+  const s=String(raw).replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[，、]/g,",");
+  const re=/([0-9][0-9,.\s]*?)\s*[名人]/g;
+  let m;
+  while((m=re.exec(s))){
+    if(/(役員|取締役|監査役|代表)[^0-9]{0,4}$/.test(s.slice(Math.max(0,m.index-8), m.index))) continue;
+    const n=parseInt(m[1].replace(/[,.\s]/g,""),10);
+    if(n>0 && n<2000000) return n;
+  }
+  return null;
+}
+function empBand(n){ return n==null ? "" : EMP_BANDS.find(b=>n<=b.max).label; }
+
 /* enrich each job: prefectures + remote flag + salary sort key */
 JOBS.forEach(j=>{
   const loc=(j.location||"");
@@ -1403,6 +1436,8 @@ JOBS.forEach(j=>{
   j._hay = [j.company,j.position,j.title,j.jobCategory,(j.industry||[]).join(" "),j.location,j.jobContent,j.must,j.welcome,j.idealPerson].filter(Boolean).join(" ").toLowerCase();
   j._ts = j.createdAt ? (Date.parse(j.createdAt)||0) : 0;
   j._lead = plainLead(j.jobContent || j.must || j.companyInfo || "");
+  j.empCount = empNum(j.employees);
+  j.empBand  = empBand(j.empCount);
 });
 const HAS_DATES = JOBS.some(j=>j._ts>0);
 
@@ -1450,6 +1485,7 @@ const facetDefs=[
   {key:"jobCategory", title:"職種カテゴリ", type:"check", multi:true, searchable:true, get:j=>j.jobCategory?[j.jobCategory]:[]},
   {key:"industry", title:"業界", type:"check", multi:true, searchable:true, get:j=>j.industry||[]},
   {key:"employment", title:"雇用形態", type:"chip", multi:true, get:j=>j.employment?[j.employment]:[]},
+  {key:"empBand", title:"企業規模（従業員数）", type:"check", multi:true, order:EMP_BANDS.map(b=>b.label), get:j=>j.empBand?[j.empBand]:[]},
 ];
 
 const state={ q:"", sort:"reco", salaryMin:0, salaryMax:0, remote:false, sel:{} };
@@ -1460,7 +1496,10 @@ const facetOptions={};
 facetDefs.forEach(f=>{
   const m=new Map();
   JOBS.forEach(j=>f.get(j).forEach(v=>{ if(v!=null&&v!=="") m.set(v,(m.get(v)||0)+1); }));
-  facetOptions[f.key]=[...m.entries()].sort((a,b)=>b[1]-a[1]);
+  /* 既定は件数の多い順。ただし企業規模のように順序に意味がある facet は order で並べる */
+  facetOptions[f.key]= f.order
+    ? [...m.entries()].sort((a,b)=>f.order.indexOf(a[0])-f.order.indexOf(b[0]))
+    : [...m.entries()].sort((a,b)=>b[1]-a[1]);
 });
 const remoteCount=JOBS.filter(j=>j.remote).length;
 /* ---------- 年収の絞り込み ----------
@@ -1754,6 +1793,7 @@ function rowHtml(j){
     <dl class="jrow__meta">
       <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span></dd>
       ${j.locShort?`<dt>勤務地</dt><dd>${esc(j.locShort)}</dd>`:""}
+      ${j.empBand?`<dt>従業員数</dt><dd>${esc(j.empBand)}</dd>`:""}
     </dl>
     <div class="jrow__act">
       <a class="btn-detail" href="${esc(jobHref(j))}" data-job="${esc(j.id)}">詳細を見る</a>
@@ -1930,6 +1970,7 @@ function openDetail(id){
   /* 会社概要は長文なので本文組み、残りの1行項目だけを表に残す */
   const coMeta = [
     metaRow("所在地", j.companyAddress),
+    metaRow("従業員数", j.employees),
     metaRow("上場区分", j.listedStatus),
     siteRow,
   ].join("");

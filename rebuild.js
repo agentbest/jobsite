@@ -93,8 +93,37 @@ function attachLogos(jobs){
   return jobs;
 }
 
+/* 従業員数。Airtable「求人DB（企業）」の 従業員数 列を、data/employees.json（企業名 → 原文）
+   経由で求人1件ずつに差し込む（node fetch-employees.js で取得）。
+   ⚠ ロゴと同じで jobs.json 側には書かない。jobs.json は Airtable からの
+     「取り直すたび丸ごと入れ替わるスナップショット」なので、書くと毎回消える。
+   ⚠ 原文のまま渡す。人数として読んで規模の段に振り分けるのは template.html 側
+     （empNum / EMP_BANDS）。段の切り方を変えるのに Airtable を取り直さずに済ませるため。
+   企業名の完全一致で引く。Airtable 側で社名を変えたら employees.json も直すこと。 */
+function attachEmployees(jobs){
+  const empPath = path.join(dir, 'data', 'employees.json');
+  if(!fs.existsSync(empPath)){
+    console.log('data/employees.json が無いので、従業員数と「企業規模」の絞り込みは出しません。');
+    return jobs;
+  }
+  const emp = JSON.parse(fs.readFileSync(empPath, 'utf8'));
+  let hit = 0;
+  const missing = new Set();
+  jobs.forEach(j => {
+    const v = emp[j.company];
+    if(v){ j.employees = v; hit++; }
+    else if(j.company) missing.add(j.company);
+  });
+  console.log(`従業員数: ${hit}件の求人に表示（${Object.keys(emp).length}社）`);
+  if(missing.size){
+    console.log(`従業員数が未登録の企業 ${missing.size}社（「企業規模」で絞ると出ません）:`);
+    [...missing].forEach(c => console.log(`   - ${c}`));
+  }
+  return jobs;
+}
+
 const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', [],
-  data => attachLogos(midCareerOnly(data)));
+  data => attachEmployees(attachLogos(midCareerOnly(data))));
 if(jobs) console.log('index.html を再生成しました:', jobs.length, '件（中途のみ）');
 
 /* 申し込みフォームは「どの求人から来たか」を見出しに出すだけなので、
