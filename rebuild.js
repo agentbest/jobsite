@@ -24,6 +24,12 @@ function build(dataFile, tplFile, outFile, placeholder, fallback, transform){
   let data = fallback;
   if(fs.existsSync(dataPath)){
     data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+  }else if(dataFile === 'jobs.json' && fs.existsSync(path.join(dir, 'data', 'jobs'))){
+    /* data/jobs.json は 50MB 超になったのでリポジトリに置かない（.gitignore）。
+       無い端末では data/jobs/<求人ID>.json（＝掲載中の中途求人の全項目）から復元する。 */
+    const d = path.join(dir, 'data', 'jobs');
+    data = fs.readdirSync(d).filter(f => f.endsWith('.json')).map(f => JSON.parse(fs.readFileSync(path.join(d, f), 'utf8')));
+    console.log(`data/jobs.json が無いので data/jobs/*.json から復元しました: ${data.length}件（新しい求人を載せるには node fetch-jobs.js）`);
   }else{
     console.log(`data/${dataFile} が無いので空で生成します。`);
   }
@@ -132,9 +138,96 @@ function attachEmployees(jobs){
   return jobs;
 }
 
+/* ---------- 一覧用の軽い項目だけを index.html に埋め、本文は data/jobs/<求人ID>.json に分ける ----------
+   2026-09-06 に掲載を422件→5,700件超に広げた。全項目を埋め込むと index.html が 20MB を超えるので、
+   一覧・検索・絞り込みに要る項目（下の LIGHT_KEYS）だけを埋め、仕事内容・条件・企業情報などの長文は
+   求人を開いたときにブラウザが data/jobs/<求人ID>.json を読む（template.html の loadDetail）。
+   ⚠ 検索の対象は一覧側の項目＋タグ＋リード文（lead）。本文の全文検索はしない。 */
+const PREFS = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
+/* template.html の plainLead() と同じ。カードの2行目に出すリード文（120字） */
+function plainLead(src){
+  if(!src) return '';
+  const t = String(src).replace(/\r/g, '')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/^\s*[-*・–—]\s*/gm, '')
+    .replace(/[*_`>|\\]/g, '')
+    .replace(/\s+/g, ' ').trim();
+  return t.length > 120 ? t.slice(0, 120) + '…' : t;
+}
+/* 一覧用の項目。キーを行ごとに繰り返さず {k:[キー], r:[[値…]]} の表形式で埋める（5,700件で約1MB節約）。
+   タグは名前ではなく data/tags.json の並び順の番号（t）で持つ（1件あたり平均27タグ。名前だと4MB超になる）。
+   template.html 側で展開する（JOBS の定義と JOBS.forEach の中）。 */
+const LIGHT_KEYS = ['id','company','position','title','employment','kubun','salaryMin','salaryMax','location',
+  'jobCategory','industry','url','listedStatus','createdAt','gradYear','t','logo','employees','employeeCount','areas','remote','lead'];
+function lighten(full){
+  const tagPath = path.join(dir, 'data', 'tags.json');
+  const tagIdx = new Map();
+  if(fs.existsSync(tagPath)) JSON.parse(fs.readFileSync(tagPath, 'utf8')).forEach((t, i) => tagIdx.set(t.name, i));
+  const rows = full.map(j => {
+    const o = {};
+    LIGHT_KEYS.forEach(k => { if(j[k] !== undefined && j[k] !== null && j[k] !== '') o[k] = j[k]; });
+    /* 求人タイトル(表示)は「会社名＋ポジション」なので、ポジションがあれば持たない（検索は会社名・ポジションで引ける） */
+    if(o.position) delete o.title;
+    /* 勤務地はカードでは県＋市区町村に整形されるだけなので長い原文は切る（詳細では原文が出る） */
+    if(typeof o.location === 'string' && o.location.length > 70) o.location = o.location.slice(0, 70);
+    if(typeof o.createdAt === 'string') o.createdAt = o.createdAt.slice(0, 10);
+    o.t = (j.tags || []).map(n => tagIdx.get(n)).filter(i => i !== undefined);
+    const loc = j.location || '';
+    o.areas = PREFS.filter(p => loc.includes(p));
+    o.remote = /在宅|リモート|テレワーク|フルリモート/.test(loc + ' ' + (j.jobContent || '') + ' ' + (j.benefits || ''));
+    const lead = plainLead(j.jobContent || j.must || j.companyInfo || '');
+    o.lead = lead.length > 72 ? lead.slice(0, 72) + '…' : lead;
+    return LIGHT_KEYS.map(k => (o[k] === undefined ? null : o[k]));
+  });
+  /* 行末の null は落として短くする（展開側は足りない列を空として扱う） */
+  rows.forEach(r => { while(r.length && r[r.length - 1] === null) r.pop(); });
+  return { k: LIGHT_KEYS, r: rows };
+}
+function writeDetails(full){
+  const d = path.join(dir, 'data', 'jobs');
+  fs.mkdirSync(d, { recursive: true });
+  const keep = new Set(full.map(j => `${j.id}.json`));
+  let removed = 0;
+  fs.readdirSync(d).forEach(f => { if(f.endsWith('.json') && !keep.has(f)){ fs.unlinkSync(path.join(d, f)); removed++; } });
+  full.forEach(j => fs.writeFileSync(path.join(d, `${j.id}.json`), JSON.stringify(j), 'utf8'));
+  console.log(`data/jobs/ に求人の詳細を書き出しました: ${full.length}件${removed ? `（掲載終了 ${removed}件を削除）` : ''}`);
+}
+
 const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', [],
-  data => attachEmployees(attachLogos(midCareerOnly(data))));
-if(jobs) console.log('index.html を再生成しました:', jobs.length, '件（中途のみ）');
+  data => { const full = attachEmployees(attachLogos(midCareerOnly(data))); writeDetails(full); return lighten(full); });
+const jobRows = jobs ? jobs.r.map(r => { const o = {}; jobs.k.forEach((k, i) => { if(r[i] != null) o[k] = r[i]; }); return o; }) : [];
+if(jobs) console.log('index.html を再生成しました:', jobRows.length, '件（中途のみ・一覧用の項目だけ内蔵）');
+
+/* タグの目録（data/tags.json ＝ node fetch-tags.js で取得）。
+   絞り込みをカテゴリごとの箱に分けるための「名前・スラッグ・カテゴリ」だけを持つ。
+   ⚠ 件数はここに入れない。中途だけに絞ったあとの件数はブラウザ側で数える。
+   ⚠ 求人1件ずつのタグは data/jobs.json の tags 側にある。突き合わせは**タグ名の完全一致**。
+     Airtableでタグ名を変えたら、求人側のタグも付け直す（node fetch-jobs.js からやり直す）。 */
+function attachTags(){
+  const indexPath = path.join(dir, 'index.html');
+  if(!fs.existsSync(indexPath)) return;
+  const tagPath = path.join(dir, 'data', 'tags.json');
+  let tags = [];
+  if(fs.existsSync(tagPath)) tags = JSON.parse(fs.readFileSync(tagPath, 'utf8'));
+  else console.log('data/tags.json が無いので、タグの絞り込みは出しません（node fetch-tags.js）。');
+  const html = fs.readFileSync(indexPath, 'utf8').replace('__TAGS_DATA__', () => embed(tags));
+  fs.writeFileSync(indexPath, html, 'utf8');
+  if(!tags.length) return;
+  /* 目録にあるのに、どの求人にも付いていないタグを名指しで出す。
+     絞り込みには0件として出るので、消したいときは Airtable の「サイト掲載」を落とす。 */
+  const used = new Set();
+  jobRows.forEach(j => (j.t || []).forEach(i => { if(tags[i]) used.add(tags[i].name); }));
+  const unused = tags.filter(t => !used.has(t.name));
+  const cats = new Set(tags.map(t => t.cat).filter(Boolean));
+  console.log(`タグ: ${tags.length}件 / ${cats.size}カテゴリを絞り込みに出します`
+    + `（掲載中の求人に付いているのは ${tags.length - unused.length}件）`);
+  if(unused.length) console.log(`  0件のタグ ${unused.length}件（絞り込みには出ます）: ${unused.map(t => t.name).join(', ')}`);
+  const noTag = jobRows.filter(j => !j.t || !j.t.length).length;
+  if(noTag) console.log(`  ⚠ タグが1つも付いていない求人が ${noTag}件あります（node fetch-jobs.js からやり直してください）`);
+}
+attachTags();
 
 /* 申し込みフォームは「どの求人から来たか」を見出しに出すだけなので、
    求人データ全部（3.5MB）ではなく ID・企業名・職種名・年収だけを持たせる。 */
@@ -146,12 +239,8 @@ function fmtSalary(j){
   return '';
 }
 if(jobs){
-  const mini = jobs.map(j => ({
-    id: j.id,
-    company: j.company || '',
-    name: j.position || j.jobCategory || j.title || '求人',
-    salary: fmtSalary(j),
-  }));
+  /* 表形式 [id, 会社名, 職種名, 年収]。apply-template.html 側で {id,company,name,salary} に展開する */
+  const mini = jobRows.map(j => [j.id, j.company || '', j.position || j.jobCategory || j.title || '求人', fmtSalary(j)]);
   const tplPath = path.join(dir, 'apply-template.html');
   if(fs.existsSync(tplPath)){
     const out = fs.readFileSync(tplPath, 'utf8').replace('__JOBS_MINI__', () => embed(mini));

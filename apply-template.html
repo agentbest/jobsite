@@ -520,7 +520,8 @@
 
 /* rebuild.js が data/jobs.json から「ID・企業名・職種名・年収」だけを差し込む。
    求人データ全部（3.5MB）は要らないので、このページには最小限だけ持たせている。 */
-const JOBS_MINI = __JOBS_MINI__;
+/* rebuild.js が [id, 会社名, 職種名, 年収] の表形式で埋める（5,700件を軽く持つため）。ここでオブジェクトに戻す */
+const JOBS_MINI = (__JOBS_MINI__).map(r=>Array.isArray(r)?{id:r[0],company:r[1],name:r[2],salary:r[3]}:r);
 
 const SUPABASE_URL      = "https://jvdnabtpxcyfnogdulea.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_kVUJIz-lImX0AD5eALVVaA_YiDqi7GQ";

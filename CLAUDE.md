@@ -1,7 +1,7 @@
 # jobsite — 求人検索サイト jobs.agent-best.net
 
 Airtableの求人を検索できる**静的な中途採用求人サイト「求人検索 — キャリアの選択肢」**（求職者向け・一般公開）。マイページ（会員機能）付き。
-掲載は**中途のみ**（スナップショット456件のうち中途422件）。
+掲載は**中途のみ**（2026-09-06から Airtable の中途求人を**全件**載せる。取得時点で5,773件中の中途5,732件）。
 
 - 公開URL: https://jobs.agent-best.net/ （GitHub Pages・HTTPS強制）
 - リポジトリ: **Public**（機密なし＝求人データ／テンプレ／rebuild.js のみと確認済み）
@@ -18,8 +18,8 @@ template.html / apply-template.html / data/jobs.json を編集
 
 | 生成物 | テンプレ | 差し込むもの |
 |---|---|---|
-| `index.html`（約3.3MB） | `template.html` | `__JOBS_DATA__` ＝ 中途求人422件の全項目 |
-| `apply.html`（約135KB） | `apply-template.html` | `__JOBS_MINI__` ＝ ID・企業名・職種名・年収**だけ** |
+| `index.html`（約5.4MB・gzip後1.6MB） | `template.html` | `__JOBS_DATA__` ＝ 中途求人5,700件超の**一覧用の項目だけ**（表形式 `{k,r}`・タグは番号）。本文は `data/jobs/<求人ID>.json` |
+| `apply.html`（約1.2MB） | `apply-template.html` | `__JOBS_MINI__` ＝ ID・企業名・職種名・年収**だけ**（表形式 `[id,会社名,職種名,年収]`） |
 | `1day.html` | `1day-template.html` | `__EVENTS_DATA__` |
 
 ⚠ **`apply.html` に求人データ全部を持たせない。** 申し込みフォームが必要なのは「どの求人から来たか」の
@@ -29,7 +29,29 @@ template.html / apply-template.html / data/jobs.json を編集
 
 ## データ元
 
-Airtable base「人材紹介事業」`appYkc36EvioYoL1A` / table「求人DB（求人票）」`tblyPZZasXTM2tcrV`（456件スナップショット。うち中途422件だけを載せる）。
+Airtable base「人材紹介事業」`appYkc36EvioYoL1A` / table「求人DB（求人票）」`tblyPZZasXTM2tcrV`（**全件**。うち中途だけを載せる）。
+
+## ⚠ データの持ち方（2026-09-06 に作り替え）
+
+掲載を422件→5,700件超に広げたとき、全項目を `index.html` に埋めると **20MB超**になったので、次の2段構えにした。
+
+```
+node fetch-jobs.js  → data/jobs.json（全件・全項目・約56MB。⚠ .gitignore。リポジトリに入れない）
+node fetch-tags.js / fetch-logos.js / fetch-employees.js
+node rebuild.js     → index.html      … 一覧・検索・絞り込みに要る項目だけ（表形式）を埋め込む
+                    → data/jobs/<求人ID>.json … 求人1件ずつの全項目（本文）。求人を開いたときに読む
+                    → apply.html / 1day.html
+```
+
+- **一覧側（`index.html` に内蔵）**: id・会社名・ポジション・雇用形態・年収・勤務地（70字まで）・職種・業界・URL・上場区分・掲載日・
+  タグ（`data/tags.json` の並び順の**番号**）・ロゴ・従業員数・都道府県（`areas`）・リモート可（`remote`）・リード文（`lead` 72字）。
+  `areas`/`remote`/`lead` は本文が要るので **`rebuild.js` が先に計算して埋める**（`lighten()`）。
+- **詳細側（`data/jobs/*.json`）**: 仕事内容・必須／歓迎条件・求める人物像・選考プロセス・給与原文・勤務時間・休日・福利厚生・企業情報 など全部。
+  `template.html` の `loadDetail()` が `?job=` を開いたときに fetch して `Object.assign` で足す（`_full` フラグ）。読み込むまでは見出し・タグ・年収だけ先に出す。
+- **検索（キーワード）は一覧側の項目＋タグ＋リード文が対象**。本文の全文検索はしない（以前は仕事内容・条件も対象だった）。
+- **`data/jobs.json` が無い端末でも `rebuild.js` は動く**（`data/jobs/*.json` から復元する）。ただし新しい求人を載せるには `node fetch-jobs.js` が要る。
+- `data/jobs/` は掲載中の中途求人だけ。`rebuild.js` が掲載終了ぶんのファイルを消す。
+- **タグの番号は `data/tags.json` の並び順**。`fetch-tags.js` を回して順番が変わったら、必ず `rebuild.js` も回す（番号がずれる）。
 
 ## 1day選考会（`1day.html` ＋ 検索結果1位のPR枠）
 
@@ -259,6 +281,9 @@ const SUPABASE_ANON_KEY = "";   // 埋める = メールログインモード（
   `bucket_id='documents' and (storage.foldername(name))[1] = auth.uid()::text`。
   これとバケット非公開が「他人の履歴書を見られない」の担保。**消すと全員の書類が漏れる。**
 - **`delete_own_account()` の where 句**。`security definer` 関数で `auth.uid()` の行しか消せないようにしてある。**緩めると他人のアカウントが消せる。**
+- **`messages` の RLS**（select は本人かスタッフ／insert は `from_staff` の値で送り主を固定／update は張らない）。
+  緩めると、会員が当社を名乗る・他人のやりとりを読む・本文を書き換える、のどれかができるようになる。
+  くわしくは「メッセージ（スカウト・DM）」の節。
 - **Secret key / service_role は絶対にサイトに貼らない。**
 
 ### 実装メモ（ハマりどころ）
@@ -284,6 +309,66 @@ const SUPABASE_ANON_KEY = "";   // 埋める = メールログインモード（
 | 鍵 | **Publishable key**（`sb_publishable_…`）。旧anonキーではない |
 
 ⚠ **リージョンの罠**: Regionで「Asia-Pacific」を選ぶと**Singaporeになる**。「SPECIFIC REGIONS」から Northeast Asia (Tokyo) を明示的に選ぶこと。後から変更不可。`privacy.html` に「日本国内のデータセンターに保管」と書いてあるので、東京でないと記載と矛盾する。
+
+## メッセージ（スカウト・DM）— 2026-09-03 実装
+
+マイページに**担当者 ↔ 会員の1対1メッセージ**を足した。**送り主は常に当社**で、
+求人企業のアカウントも企業側のログインも無い（＝人材紹介の建て付けのまま。求人広告モデルではない）。
+設定手順とSQLは **`MESSAGES_SETUP.md`**。
+
+```
+スカウト管理画面.bat（手元だけ）─┐
+                                 ├→ Supabase public.messages ─→ Webhook ─→ Apps Script ─→ メール
+マイページのメッセージ欄 ────────┘
+```
+
+| 置き場所 | 中身 |
+|---|---|
+| `template.html` の「担当者とのメッセージ」ブロック | 会員側のUI（`messagesHtml` / `loadMessages` / `sendMessage` / `markMessagesRead`） |
+| `admin/` ＋ `スカウト管理画面.bat` | 運営側の管理画面。**`.gitignore` で除外＝GitHubに上げない** |
+| `MESSAGES_SETUP.md` | SQL・運営アカウント・ウェブフックの手順 |
+| `jobsite-notify\通知スクリプト.gs` の `notifyMessage_` | メール通知（会員あて／担当者あて） |
+
+### ⚠ 受信同意（緩めない）
+
+**メール通知を送るかどうかの判定は、管理画面の1か所にしかない。**
+送信時に `profiles.contact_consent` が true の会員だけ `messages.member_email` を埋め、
+Apps Script は **`member_email` が入っている行だけ**メールを出す。
+
+- **同意の判定を Apps Script 側にも増やさないこと。** 2か所になると片方だけ直して事故る
+- 同意が無い会員にもメッセージ自体はマイページに届く（メールが飛ばないだけ）
+- 会員あての通知メールには**送信者情報と配信停止の方法**を必ず入れる（特定電子メール法）
+
+### ⚠ RLS（緩めない）
+
+- **`messages` に update ポリシーを張らない。** 張ると会員が「当社から」の本文を書き換えられる。
+  既読は `mark_messages_read()` / `mark_thread_read(uuid)`（security definer）だけで付ける
+- insert の check が `会員は from_staff=false のみ／スタッフは from_staff=true のみ` になっている。
+  **ここを緩めると、会員が当社を名乗ってメッセージを作れる**
+- **`staff` テーブルに載っている人は全会員の氏名・希望条件・メールを読める。** 追加は手でSQLを流すだけにしてあり、
+  画面からの導線はわざと作っていない
+
+### 実装メモ
+
+- **`messages` テーブルが無い環境では、メッセージ欄ごと出ない**（`msgsReady` が false のまま）。
+  マイページの他の機能は今までどおり動く。`hasConsentCols` と同じ退避の考え方
+- ヘッダーのバッジは**★の件数（藍）と未読（赤 `.badge--msg`）で別**。同じ色にすると数字の意味が混ざる
+- メッセージに添えた求人は `job_id` に加えて `job_name` / `company` も控えている。
+  **掲載が終わっても文面が読める**ようにするため
+- 通知メールのリンク **`?mypage=1`** で開くとマイページが自動で開く（`template.html` 末尾）
+- 管理画面は**メール＋パスワード**でログインする。マジックリンクは手元のページに戻せないため。
+  運営アカウントは Supabase の Authentication から手で作る（会員用ログインとは別）
+- 管理画面を `file://` で開かない。`スカウト管理画面.bat`（`admin/server.js`・127.0.0.1:8787）で開く。
+  file:// だとセッションが残らず、`data/jobs.json` の fetch も CORS で弾かれる
+- 一斉送信は**2段階**（1回目は確認・15秒で戻る）。送ったメッセージは取り消せない
+- ⚠ **差し込みは「空のとき」を必ず考える。** プロフィールのお名前は任意入力なので、
+  `{{name}}さん` をそのまま置換すると**「さん」だけ残った文面が送られる**（2026-09-03に実際に送ってしまった）。
+  求人を添えないときの `■ {{company}}／{{position}}（{{salary}}）` も同じで「■ ／（）」になる。
+  `fillBody()` で、**お名前が空なら「さん」ごと消す／求人が無ければその行をまるごと落とす**ようにしてある。
+  送信前に管理画面が黄色の注意書きで知らせる（**プレビューを押す習慣をつける**）
+
+⚠ **新卒サイト（shinsotsu）には入れていない。** 入れるなら Supabase プロジェクトが別なので、
+SQL・管理画面・ウェブフックを一式もう1本作ることになる。
 
 ## 企業ロゴ（求人カード・求人詳細）
 
@@ -360,7 +445,7 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 
 ## GA4
 
-測定ID `G-1XXMP8Y1B4`。カスタムイベント: `job_detail_open` / `apply_click` / `apply_form_open` / `apply_step` / `apply_submit` / `apply_error` / `inquiry_click` / `consult_click` / `search` / `filter_use` / `page_change` / `perpage_change` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss`。
+測定ID `G-1XXMP8Y1B4`。カスタムイベント: `job_detail_open` / `apply_click` / `apply_form_open` / `apply_step` / `apply_submit` / `apply_error` / `inquiry_click` / `consult_click` / `search` / `filter_use` / `page_change` / `perpage_change` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss` / `message_send`。
 
 **応募のファネルは `apply_click`（一覧・詳細で押した）→ `apply_form_open`（フォームに着いた）→ `apply_step`（step2〜4に進んだ）→ `apply_submit`（送信できた）** で見る。`apply_step` の落ち方で、どの設問が重いか分かる。
 

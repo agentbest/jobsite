@@ -319,7 +319,7 @@ grant execute on function public.delete_own_account() to authenticated;
 - **書類の実体（ストレージのファイル）は、関数を呼ぶ前にサイト側が Storage API で削除**します。
   この関数が消せるのはDBの管理行だけなので、順番を入れ替えるとファイルが残ります。
 
-なお、**応募の記録（Airtable側）はここでは消えません**。利用規約 第5項にその旨を書いています。
+なお、**応募の記録（Airtable側）はここでは消えません**。利用規約 第6項にその旨を書いています。
 
 **担当者が中身を見るには**、左メニューの **Storage** → `documents` を開きます。
 フォルダ名は会員のユーザーIDです。誰のものかは **Table Editor** の `profiles` と突き合わせて確認します。
