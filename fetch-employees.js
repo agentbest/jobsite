@@ -1,5 +1,6 @@
 // 使い方: このフォルダで  node fetch-employees.js  を実行すると、
-// Airtable「求人DB（企業）」の 従業員数 列を data/employees.json（企業名 → 原文）に書き出します。
+// Airtable「求人DB（企業）」の 従業員数（原文）と 従業員数（数値）を
+// data/employees.json に書き出します。
 // そのあと  node rebuild.js  を実行すると、求人カード・求人詳細・絞り込みに反映されます。
 //
 // ★ このリポジトリは Public です。トークンをこのファイルに書かないでください。
@@ -9,21 +10,26 @@
 //      3) ..\bes-crm\config.js（同じ端末に BES CRM がある場合）
 //
 // ⚠ なぜ jobs.json に書かずに別ファイルにするのか
-//    ロゴ（fetch-logos.js → data/logos.json）と同じ理由。jobs.json は Airtable から
+//    ロゴ（fetch-logos.js → data/logos.json）と同じ理由。jobs.json は Airtable からの
 //    「取り直すたび丸ごと入れ替わるスナップショット」なので、企業テーブル由来の情報を
 //    そこに書くと取り直すたびに消える。企業名で引く別ファイルに持たせる。
 //
-// ⚠ 従業員数は自由記述の列で、「約290名（2025年9月）」「連結3,039名、単体835名」のように
-//    書き方がそろっていない。原文はそのまま持ち、人数として読む処理は template.html 側に置いてある
-//    （empNum / EMP_BANDS）。ここで数値化しないのは、段の切り方を変えるたびに
-//    Airtable を取り直さなくて済むようにするため。
+// ⚠ 人数は Airtable の「従業員数（数値）」列が正。ここで原文から推測しない。
+//    2026-09-05に企業テーブル側へ数値列を作って491社ぶん入れた。
+//    数値が空の会社は「企業規模」で絞り込めない（＝サイトに段が出ない）。それが正しい状態で、
+//    埋めるべきときは Airtable の列を埋める。
+//
+// ⚠ 原文（従業員数）も一緒に持つ。求人詳細に出すのは原文のまま。
+//    「連結3,039名、単体835名」のような但し書きを落として1つの数字にすると、
+//    当社が勝手に丸めた人数を企業の公表値のように見せることになる。
 
 const fs = require('fs'), path = require('path');
 
 const BASE_ID  = 'appYkc36EvioYoL1A';   // base「人材紹介事業」
 const TABLE_ID = 'tblBNNH9sJjldPmZZ';   // table「求人DB（企業）」
-const F_NAME   = 'Name';                // 企業名（primary）
-const F_EMP    = '従業員数';            // flda7sYQBsb05X781
+const F_NAME   = 'fld03vEbeabi8IQDN';   // Name（企業名・primary）
+const F_RAW    = 'flda7sYQBsb05X781';   // 従業員数（原文）
+const F_NUM    = 'fldTazycQVisRgCpR';   // 従業員数（数値）
 const dir = __dirname;
 
 /* ---------- トークンの取得（fetch-logos.js と同じ） ---------- */
@@ -63,8 +69,8 @@ async function fetchAll(){
   do{
     const url = new URL(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`);
     url.searchParams.set('pageSize', '100');
-    url.searchParams.append('fields[]', F_NAME);
-    url.searchParams.append('fields[]', F_EMP);
+    url.searchParams.set('returnFieldsByFieldId', 'true');
+    [F_NAME, F_RAW, F_NUM].forEach(f => url.searchParams.append('fields[]', f));
     if(offset) url.searchParams.set('offset', offset);
     const res = await fetch(url, { headers:{ Authorization:`Bearer ${TOKEN}` } });
     if(!res.ok){
@@ -79,6 +85,28 @@ async function fetchAll(){
   return out;
 }
 
+/* ---------- 原文から人数を読む（照合専用。値としては使わない） ----------
+   原文だけ直して「従業員数（数値）」を直し忘れた会社を見つけるためのもの。
+   実装は 端末0\【求人DB】AirTable｜DB加工用\従業員数_書き直し\fill.js と同じ。 */
+function guessNum(raw){
+  if(!raw) return null;
+  const s = String(raw).replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[，、]/g, ',');
+  const re = /([0-9][0-9,.\s]*?)\s*[名人]/g;
+  let m;
+  while((m = re.exec(s))){
+    if(/(役員|取締役|監査役|代表)[^0-9]{0,4}$/.test(s.slice(Math.max(0, m.index - 8), m.index))) continue;
+    const n = parseInt(m[1].replace(/[,.\s]/g, ''), 10);
+    if(n > 0 && n < 2000000) return n;
+  }
+  const re2 = /([0-9][0-9,]*)\s*([年月日万倍%％]?)/g;
+  while((m = re2.exec(s))){
+    if(m[2]) continue;
+    const n = parseInt(m[1].replace(/,/g, ''), 10);
+    if(n > 0 && n < 2000000) return n;
+  }
+  return null;
+}
+
 (async () => {
   /* 掲載している求人に出てくる企業だけに絞る（ロゴと同じ考え方） */
   const jobsPath = path.join(dir, 'data', 'jobs.json');
@@ -91,26 +119,40 @@ async function fetchAll(){
 
   const records = await fetchAll();
   const map = {};
+  const noNum = [], drift = [];
   for(const rec of records){
     const f = rec.fields || {};
     const name = (f[F_NAME] || '').trim();
-    const emp  = (f[F_EMP]  || '').trim();
-    if(!name || !emp) continue;
-    if(!wanted.has(name)) continue;
-    /* 「―」「—」など、記載なしを意味する記号だけの値は載せない */
-    if(!/[0-9０-９]/.test(emp) && !/非公開/.test(emp)) continue;
-    map[name] = emp;
+    const raw  = (f[F_RAW]  || '').trim();
+    const num  = (typeof f[F_NUM] === 'number') ? f[F_NUM] : null;
+    if(!name || !wanted.has(name)) continue;
+    if(!raw && num == null) continue;
+    map[name] = num == null ? { raw } : { raw, n: num };
+    if(raw && num == null) noNum.push([name, raw]);
+    const g = guessNum(raw);
+    if(num != null && g != null && g !== num) drift.push([name, raw, num, g]);
   }
 
   const sorted = {};
   Object.keys(map).sort((a, b) => a.localeCompare(b, 'ja')).forEach(k => sorted[k] = map[k]);
   fs.writeFileSync(path.join(dir, 'data', 'employees.json'), JSON.stringify(sorted, null, 2) + '\n', 'utf8');
 
+  const withNum = Object.values(map).filter(v => typeof v.n === 'number').length;
+  console.log(`data/employees.json を書き出しました: ${Object.keys(map).length}社（うち人数あり ${withNum}社）/ 掲載企業 ${wanted.size}社`);
+
   const missing = [...wanted].filter(c => !map[c]);
-  console.log(`data/employees.json を書き出しました: ${Object.keys(map).length}社 / 掲載企業 ${wanted.size}社`);
   if(missing.length){
     console.log(`従業員数が未記入の企業 ${missing.length}社（Airtableの「従業員数」列を埋めてください）:`);
     missing.forEach(c => console.log(`   - ${c}`));
+  }
+  if(noNum.length){
+    console.log(`原文はあるが「従業員数（数値）」が空の企業 ${noNum.length}社（企業規模で絞り込めません）:`);
+    noNum.forEach(([n, r]) => console.log(`   - ${n} … ${r}`));
+  }
+  /* ⚠ 原文を直して数値列を直し忘れた会社は、ここで名指しされる。黙って古い人数で絞り込ませない */
+  if(drift.length){
+    console.log(`⚠ 原文と「従業員数（数値）」が食い違う企業 ${drift.length}社（Airtableの数値列を直してください）:`);
+    drift.forEach(([n, r, num, g]) => console.log(`   - ${n} … 数値列 ${num} / 原文からは ${g}（${r}）`));
   }
   console.log('続けて  node rebuild.js  を実行すると求人カード・求人詳細・絞り込みに反映されます。');
 })().catch(err => {

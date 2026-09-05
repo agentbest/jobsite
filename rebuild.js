@@ -97,8 +97,10 @@ function attachLogos(jobs){
    経由で求人1件ずつに差し込む（node fetch-employees.js で取得）。
    ⚠ ロゴと同じで jobs.json 側には書かない。jobs.json は Airtable からの
      「取り直すたび丸ごと入れ替わるスナップショット」なので、書くと毎回消える。
-   ⚠ 原文のまま渡す。人数として読んで規模の段に振り分けるのは template.html 側
-     （empNum / EMP_BANDS）。段の切り方を変えるのに Airtable を取り直さずに済ませるため。
+   ⚠ 人数（employeeCount）は Airtable の「従業員数（数値）」列が正。原文から推測しない。
+     人数が空の会社は「企業規模」の段に入らない（＝絞り込みで出ない）。埋めるときは Airtable の列を埋める。
+   ⚠ 原文（employees）は原文のまま渡す。求人詳細にはこちらをそのまま出す。
+     段の切り方（EMP_BANDS）だけは template.html 側にあり、人数から計算している。
    企業名の完全一致で引く。Airtable 側で社名を変えたら employees.json も直すこと。 */
 function attachEmployees(jobs){
   const empPath = path.join(dir, 'data', 'employees.json');
@@ -107,17 +109,25 @@ function attachEmployees(jobs){
     return jobs;
   }
   const emp = JSON.parse(fs.readFileSync(empPath, 'utf8'));
-  let hit = 0;
-  const missing = new Set();
+  let hit = 0, withNum = 0;
+  const missing = new Set(), noNum = new Set();
   jobs.forEach(j => {
+    /* 値は {raw, n}。昔の「企業名 → 原文の文字列」だけの形も読めるようにしてある */
     const v = emp[j.company];
-    if(v){ j.employees = v; hit++; }
-    else if(j.company) missing.add(j.company);
+    if(!v){ if(j.company) missing.add(j.company); return; }
+    const o = (typeof v === 'string') ? { raw: v } : v;
+    if(o.raw){ j.employees = o.raw; hit++; }
+    if(typeof o.n === 'number'){ j.employeeCount = o.n; withNum++; }
+    else if(j.company) noNum.add(j.company);
   });
-  console.log(`従業員数: ${hit}件の求人に表示（${Object.keys(emp).length}社）`);
+  console.log(`従業員数: ${hit}件の求人に表示（うち人数あり ${withNum}件・${Object.keys(emp).length}社）`);
   if(missing.size){
     console.log(`従業員数が未登録の企業 ${missing.size}社（「企業規模」で絞ると出ません）:`);
     [...missing].forEach(c => console.log(`   - ${c}`));
+  }
+  if(noNum.size){
+    console.log(`人数が読めない企業 ${noNum.size}社（原文は出るが「企業規模」では絞り込めません）:`);
+    [...noNum].forEach(c => console.log(`   - ${c}`));
   }
   return jobs;
 }

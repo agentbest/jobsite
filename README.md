@@ -19,9 +19,9 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
 - `data/logos.json` … 企業ロゴの対応表（企業名 → `assets/logos/…` のパス・22社）
 - `assets/logos/` … 企業ロゴの画像本体（Airtable「求人DB（企業）」の ロゴ 列から取り込み）
 - `fetch-logos.js` … ロゴを取り込み直すスクリプト（実行: `node fetch-logos.js` → `node rebuild.js`）
-- `data/employees.json` … 従業員数の対応表（企業名 → Airtableの原文・24社）
+- `data/employees.json` … 従業員数の対応表（企業名 → `{raw:原文, n:人数}`・24社）
 - `fetch-employees.js` … 従業員数を取り込み直すスクリプト（実行: `node fetch-employees.js` → `node rebuild.js`）
-  ⚠ 原文のまま持つ。人数として読んで「企業規模」の段に振り分けるのは `template.html` の `empNum` / `EMP_BANDS`。
+  ⚠ 人数は Airtable の「従業員数（数値）」列が正。**サイト側で原文から推測しない**。空の企業は「企業規模」で絞り込めない。
 - `SUPABASE_SETUP.md` … マイページに「会員登録・ログイン」を足すときの手順書
 - `APPLY_SETUP.md` … **応募フォームの受け皿（Supabase の applications テーブル）を作る手順書**
 - `rebuild.js` … `data/jobs.json` を各テンプレートに流し込んで HTML を再生成
