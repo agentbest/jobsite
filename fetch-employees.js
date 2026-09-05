@@ -85,26 +85,32 @@ async function fetchAll(){
   return out;
 }
 
-/* ---------- 原文から人数を読む（照合専用。値としては使わない） ----------
+/* ---------- 原文と数値列の照合（値としては使わない） ----------
    原文だけ直して「従業員数（数値）」を直し忘れた会社を見つけるためのもの。
-   実装は 端末0\【求人DB】AirTable｜DB加工用\従業員数_書き直し\fill.js と同じ。 */
-function guessNum(raw){
-  if(!raw) return null;
+
+   ⚠ 「原文の何番目の数字が正しいか」は判定しない。連結・単体の両方が書いてある会社では
+      どちらを採るかが方針の問題（当社は連結・グループを採る）で、書き順では決まらないため。
+      ここで見るのは「数値列の人数が、原文のどこにも出てこない」ケースだけ。
+      例: 原文が「約37名（グループ含むと約180名）」で数値列が180 → 原文にあるので警告しない。
+          原文を「250名」に直したのに数値列が180のまま → 原文に無いので警告する。
+   ⚠ 原文に人数が1つも書かれていない会社は警告しない。estie のように、原文が「非公開」でも
+      人数だけ別に聞いて入れている会社があり、原文からは正誤を判定できないため。 */
+function numsIn(raw){
+  if(!raw) return [];
   const s = String(raw).replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[，、]/g, ',');
-  const re = /([0-9][0-9,.\s]*?)\s*[名人]/g;
-  let m;
-  while((m = re.exec(s))){
-    if(/(役員|取締役|監査役|代表)[^0-9]{0,4}$/.test(s.slice(Math.max(0, m.index - 8), m.index))) continue;
+  const out = [];
+  for(const m of s.matchAll(/([0-9][0-9,.\s]*?)\s*[名人]/g)){
     const n = parseInt(m[1].replace(/[,.\s]/g, ''), 10);
-    if(n > 0 && n < 2000000) return n;
+    if(n > 0 && n < 2000000) out.push(n);
   }
-  const re2 = /([0-9][0-9,]*)\s*([年月日万倍%％]?)/g;
-  while((m = re2.exec(s))){
+  /* 「名／人」が付いていない書き方（「259」「205（連結：253）名」）も候補に入れる。
+     年月日・万・倍・％に続く数字は人数ではないので除く */
+  for(const m of s.matchAll(/([0-9][0-9,]*)\s*([年月日万倍%％]?)/g)){
     if(m[2]) continue;
     const n = parseInt(m[1].replace(/,/g, ''), 10);
-    if(n > 0 && n < 2000000) return n;
+    if(n > 0 && n < 2000000) out.push(n);
   }
-  return null;
+  return out;
 }
 
 (async () => {
@@ -129,8 +135,8 @@ function guessNum(raw){
     if(!raw && num == null) continue;
     map[name] = num == null ? { raw } : { raw, n: num };
     if(raw && num == null) noNum.push([name, raw]);
-    const g = guessNum(raw);
-    if(num != null && g != null && g !== num) drift.push([name, raw, num, g]);
+    const found = numsIn(raw);
+    if(num != null && raw && found.length && !found.includes(num)) drift.push([name, raw, num, found]);
   }
 
   const sorted = {};
@@ -151,8 +157,8 @@ function guessNum(raw){
   }
   /* ⚠ 原文を直して数値列を直し忘れた会社は、ここで名指しされる。黙って古い人数で絞り込ませない */
   if(drift.length){
-    console.log(`⚠ 原文と「従業員数（数値）」が食い違う企業 ${drift.length}社（Airtableの数値列を直してください）:`);
-    drift.forEach(([n, r, num, g]) => console.log(`   - ${n} … 数値列 ${num} / 原文からは ${g}（${r}）`));
+    console.log(`⚠ 数値列の人数が原文のどこにも出てこない企業 ${drift.length}社（Airtableの数値列を直してください）:`);
+    drift.forEach(([n, r, num, found]) => console.log(`   - ${n} … 数値列 ${num} / 原文にある人数は ${found.join('・')}（${r}）`));
   }
   console.log('続けて  node rebuild.js  を実行すると求人カード・求人詳細・絞り込みに反映されます。');
 })().catch(err => {
