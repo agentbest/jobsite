@@ -1770,6 +1770,12 @@ facetDefs.forEach(f=>{
 });
 /* ツリー：親の並び → 子の並び */
 const facetTree={};
+/* 2段（大分類→中分類）にするかどうかは選択肢の数で決める。
+   選択肢が少ないうちに親を作ると「子が1つだけの親」が並ぶだけで、かえって探しにくい。
+   ⚠ **新卒サイト（shinsotsu）と同じコードにしてある。** 向こうは求人41件・職種4種なので
+     ここが false になって1段で出る。求人が増えれば自動で2段になる。 */
+const TREE_MIN_LEAVES=20;
+const FACET_FLAT={};
 TREE_DEFS.forEach(f=>{
   const g=GLOBAL_CNT[f.key];
   const groups=new Map();
@@ -1781,14 +1787,19 @@ TREE_DEFS.forEach(f=>{
     : arr.slice().sort((a,b)=>(g.get(b)||0)-(g.get(a)||0));
   facetTree[f.key]=byOrder([...groups.keys()],f.parentOrder)
     .map(p=>[p, byOrder([...groups.get(p)],f.childOrder)]);
+  const leaves=facetTree[f.key].reduce((n,x)=>n+x[1].length,0);
+  FACET_FLAT[f.key]=!(leaves>=TREE_MIN_LEAVES && leaves>=facetTree[f.key].length*2);
 });
 /* 平たい facet（チェック欄・チップ） */
 const facetOptions={};
 facetDefs.forEach(f=>{
-  if(f.type==="tree") return;
+  if(f.type==="tree" && !FACET_FLAT[f.key]) return;
   const g=GLOBAL_CNT[f.key];
   let list;
-  if(f.optionList){
+  if(f.type==="tree"){
+    /* 1段で出すツリー。親は並べず、子だけを件数の多い順に並べる（親は絞り込みの値としては生きている） */
+    list=facetTree[f.key].reduce((a,x)=>a.concat(x[1]),[]).sort((a,b)=>(g.get(b)||0)-(g.get(a)||0));
+  }else if(f.optionList){
     /* タグは目録の順に全部出す。掲載中の求人に1件も無いタグも出す（松岡さんの方針）。
        ただし6割以上に付くタグは押しても絞れないので末尾に回す */
     const broad=v=>((g.get(v)||0) > JOBS.length*TAG_BROAD_RATIO)?1:0;
@@ -1952,7 +1963,7 @@ function buildFilters(){
     </div>`;
   facetDefs.forEach(f=>{
     if(f.key==="remote") return;                       /* 上に手で置いてある */
-    const tree=f.type==="tree" ? facetTree[f.key] : null;
+    const tree=(f.type==="tree" && !FACET_FLAT[f.key]) ? facetTree[f.key] : null;
     const optCount=tree ? tree.reduce((s,g)=>s+1+g[1].length,0) : (facetOptions[f.key]||[]).length;
     if(!optCount) return;
     const body=()=>{
@@ -1974,7 +1985,7 @@ function buildFilters(){
       }else{
         const scroll=optCount>8?"scroll":"";
         b+=`<div class="facet-list ${scroll}">`+facetOptions[f.key].map(v=>
-          optHtml(f.key,v,v,"",f.isTag?TAG_DESC[v]:"")).join("")+`</div>`;
+          optHtml(f.key,v,(f.labelOf?f.labelOf(v):v),"",f.isTag?TAG_DESC[v]:"")).join("")+`</div>`;
       }
       return b;
     };
@@ -2544,6 +2555,23 @@ function showListView(){
   window.scrollTo(0, listScroll);
 }
 
+/* ツリーの親（職種の大分類・勤務地のブロック）をまとめて選ぶ。
+   2段で出ているときは親そのものを1つ選べばよい（条件チップも1個で済む）。
+   1段で出ているときは親のチェック欄が無いので、配下の値を1つずつ選ぶ。 */
+function pickGroup(key,parent){
+  if(!state.sel[key]) return;
+  const mark=v=>{ state.sel[key].add(v);
+    const el=document.querySelector(`[data-facet="${key}"][data-val="${CSS.escape(v)}"]`);
+    if(el) el.checked=true; };
+  if(FACET_FLAT[key]){
+    const g=(facetTree[key]||[]).find(t=>t[0]===parent);
+    if(g) g[1].forEach(mark);
+  }else if(GLOBAL_CNT[key].has(parent)){
+    mark(parent);
+  }
+  syncGroupState(key);
+}
+
 /* チップ型の絞り込みを外（ヒーローなど）から押す */
 function pickChip(key,val){
   if(!state.sel[key]) return;
@@ -3094,32 +3122,14 @@ function readProfileForm(){
     contact_consent: !!($("#profConsent")||{}).checked
   };
 }
-/* 希望条件をそのまま検索条件に流し込む（大分類→該当する職種カテゴリを全部ON） */
+/* 希望条件をそのまま検索条件に流し込む。希望職種（職種の大分類）と希望勤務地（ブロック）は
+   絞り込みのツリーの親と同じ値なので、pickGroup にそのまま渡せる。 */
 function applyProfileSearch(){
   const p=readProfileForm();
   clearFacet("jobCategory");
-  if(p.desired_jobs.length){
-    /* 職種は大分類→中分類のツリーなので、大分類をそのまま1つ選べばよい */
-    p.desired_jobs.forEach(val=>{
-      if(!GLOBAL_CNT.jobCategory.has(val)) return;   /* その大分類の求人が無い */
-      state.sel.jobCategory.add(val);
-      const el=document.querySelector(`[data-facet="jobCategory"][data-val="${CSS.escape(val)}"]`);
-      if(el) el.checked=true;
-    });
-    syncGroupState("jobCategory");
-  }
-  /* 希望勤務地：ブロック → 実際に求人がある都道府県に展開して絞り込む */
+  if(p.desired_jobs.length) p.desired_jobs.forEach(g=>pickGroup("jobCategory",g));
   clearFacet("areas");
-  if(p.desired_areas.length){
-    /* 勤務地もブロック→都道府県のツリー。ブロック名がそのまま絞り込みの値になっている */
-    p.desired_areas.forEach(val=>{
-      if(!GLOBAL_CNT.areas.has(val)) return;         /* そのブロックの求人が無い */
-      state.sel.areas.add(val);
-      const el=document.querySelector(`[data-facet="areas"][data-val="${CSS.escape(val)}"]`);
-      if(el) el.checked=true;
-    });
-    syncGroupState("areas");
-  }
+  if(p.desired_areas.length) p.desired_areas.forEach(b=>pickGroup("areas",b));
   state.salaryMin=salSnap(p.desired_salary||0); state.salaryMax=0;
   syncSalaryUI();
   apply();
