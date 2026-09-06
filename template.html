@@ -252,8 +252,27 @@
   .fgroup--fold[open]>summary .fgroup__chev{transform:rotate(180deg)}
   .fgroup__fold-body{padding:0 2px 16px}
   .fgroup--fold .facet-list{max-height:280px}
-  /* 掲載中の求人に1件も無いタグ。押しても0件なので薄く出す（消さないのは方針） */
+  /* いまの条件では0件になる選択肢。押しても結果が変わらないので押せなくする。
+     消さずに残すのは、その条件が「無い」のか「今の条件では0件」なのかを見分けられるようにするため。 */
+  .opt.is-zero{opacity:.45; cursor:default}
+  .opt.is-zero:hover{background:none}
   .opt.is-zero .lbl{color:var(--ink-3)}
+  .fchip:disabled{opacity:.45; cursor:default}
+  .fchip:disabled:hover{border-color:var(--line)}
+  .fchip .cnt{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+
+  /* 大分類→中分類の2段。親そのものが絞り込みの値（親を押す＝配下すべて） */
+  .trow{display:flex; align-items:center; gap:2px}
+  .trow .opt{flex:1; min-width:0}
+  .tkid{flex:none; width:26px; height:26px; display:grid; place-items:center; background:none; border:none; color:var(--ink-3); border-radius:6px; cursor:pointer}
+  .tkid:hover{background:var(--surface-2); color:var(--ink-2)}
+  .tkid .fgroup__chev{transition:transform .18s}
+  .tkid[aria-expanded="true"] .fgroup__chev{transform:rotate(180deg)}
+  .tkids{margin:0 0 4px 26px; border-left:1px solid var(--line-2); padding-left:7px}
+  .opt--p .lbl{font-weight:700}
+  .opt--c .lbl{font-size:13px; color:var(--ink-2)}
+  .tnode.hidden{display:none}
+  .tnode.is-zero .tkid{opacity:.45}
 
   .facet-search{width:100%; padding:7px 11px; font-size:13px; border:1px solid var(--line); border-radius:8px; background:var(--surface); color:var(--ink); margin-bottom:9px}
   .facet-search:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
@@ -883,6 +902,7 @@
     .opt .cnt{font-size:12.5px}
     .opt .box{width:19px; height:19px}
     .fchip{font-size:14px; padding:8px 15px}
+    .tkid{width:36px; height:36px}          /* 大分類を開く矢印。指で押せる大きさに */
     .facet-list{max-height:44vh}
     .fgroup__title{font-size:12.5px}
 
@@ -1430,6 +1450,40 @@ const YEN=/\\(?=[0-9])/g;
 const mdUnesc=s=>String(s==null?"":s).replace(YEN,"￥").replace(MD_ESC,"$1");
 const PREFS=["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
 
+/* 都道府県が書かれていない求人（「取引先構内」「大阪市北区…」「東京」など）のための手掛かり。
+   ⚠ 使うのは**都道府県名が1つも見つからなかったときだけ**。見つかったらそちらが正。
+   ⚠ 他県にも同じ地名があるものは入れない（福島＝大阪市福島区、長崎＝豊島区長崎、
+     北区・中央区・港区・西区＝政令市に同名の区がある）。誤検知は「別の県で探している人に
+     関係ない求人を出す」ことになるので、拾える件数より正しさを優先する。 */
+const AREA_HINT={};
+{
+  const BARE_NG=new Set(["福島県","長崎県","大分県","宮崎県","山口県"]);   /* 略称が他の地名と衝突する */
+  PREFS.forEach(p=>{ if(p!=="北海道" && !BARE_NG.has(p)) AREA_HINT[p.replace(/[都府県]$/,"")]=p; });
+  Object.assign(AREA_HINT,{
+    "札幌":"北海道","仙台":"宮城県","盛岡":"岩手県","秋田市":"秋田県","山形市":"山形県",
+    "郡山市":"福島県","いわき市":"福島県","福島市":"福島県","水戸":"茨城県","つくば":"茨城県",
+    "宇都宮":"栃木県","前橋":"群馬県","高崎":"群馬県","さいたま":"埼玉県","川口市":"埼玉県",
+    "船橋":"千葉県","柏市":"千葉県","横浜":"神奈川県","川崎市":"神奈川県","相模原":"神奈川県",
+    "甲府":"山梨県","松本市":"長野県","金沢":"石川県","四日市":"三重県","浜松":"静岡県",
+    "名古屋":"愛知県","豊田市":"愛知県","岡崎市":"愛知県","大津市":"滋賀県","堺市":"大阪府",
+    "神戸":"兵庫県","西宮":"兵庫県","姫路":"兵庫県","下関":"山口県","山口市":"山口県",
+    "高松":"香川県","松山市":"愛媛県","北九州":"福岡県","博多":"福岡県","天神":"福岡県",
+    "長崎市":"長崎県","佐世保":"長崎県","大分市":"大分県","宮崎市":"宮崎県","那覇":"沖縄県",
+  });
+}
+/* 東京23区のうち、他の政令市に同名の区が無いものだけ */
+const TOKYO_WARDS=["千代田区","新宿区","文京区","台東区","墨田区","江東区","品川区","目黒区","大田区",
+  "世田谷区","渋谷区","中野区","杉並区","豊島区","荒川区","板橋区","練馬区","足立区","葛飾区","江戸川区"];
+function areasOf(loc){
+  loc=String(loc||"");
+  const hit=PREFS.filter(p=>loc.includes(p));
+  if(hit.length) return hit;
+  const out=new Set();
+  if(TOKYO_WARDS.some(w=>loc.includes(w))) out.add("東京都");
+  for(const k in AREA_HINT) if(loc.includes(k)) out.add(AREA_HINT[k]);
+  return [...out];
+}
+
 /* 勤務地の生データ（「【アクセス】」「〒150-6015」「東京都港区南青山1-12-3 ○○ビル5F」など）を
    カード用に「都道府県＋市区町村」へ整える。詳細パネルには生データをそのまま出す（情報を落とさない）。
    ⚠ 市区町村の切り出しは遅延マッチ＋[市町村]?。greedyにすると「中央区日本橋富沢町」を拾って壊れる。 */
@@ -1502,14 +1556,17 @@ JOBS.forEach(j=>{
   const loc=(j.location||"");
   /* areas / remote / lead は rebuild.js が本文から先に計算して埋めてある（本文は index.html に無いため）。
      無いとき（古いデータ）だけここで計算する */
-  j.areas=(Array.isArray(j.areas)&&j.areas.length)?j.areas:PREFS.filter(p=>loc.includes(p));
+  j.areas=(Array.isArray(j.areas)&&j.areas.length)?j.areas:areasOf(loc);
   j.locShort=locLabel(loc);
   const rtxt=loc+" "+(j.jobContent||"")+" "+(j.benefits||"");
-  j.remote=(typeof j.remote==="boolean")?j.remote:/在宅|リモート|テレワーク|フルリモート/.test(rtxt);
+  /* リモート可の判定は2つある。①勤務地・仕事内容・待遇の本文（rebuild.js が入れる j.remote）と
+     ②Airtableのタグ。**どちらかが立っていればリモート可**とする。本文だけだと「リモート」の語が
+     勤務時間や休日の欄にある求人を取りこぼし、タグだけだと未付与の求人を取りこぼすため。 */
+  const rtag=(j.tags||[]).some(t=>t==="リモート・在宅勤務可"||t==="フルリモート可"||t==="ハイブリッド勤務"||t==="リモート応相談");
+  j.remote=((typeof j.remote==="boolean")?j.remote:/在宅|リモート|テレワーク|フルリモート/.test(rtxt))||rtag;
   j._skey = (j.salaryMax!=null?j.salaryMax:(j.salaryMin!=null?j.salaryMin:-1));
-  /* 「法人営業（営業）」→「営業」。末尾の括弧が職種の大分類。プロフィールの希望職種に使う */
-  const gm=String(j.jobCategory||"").match(/（([^（）]+)）\s*$/);
-  j.jobGroup = gm?gm[1]:"";
+  /* 「法人営業（営業）」→「営業」。末尾の括弧が職種の大分類。プロフィールの希望職種と職種ツリーの親に使う */
+  j.jobGroup = j.jobCategory ? jobGroupOf(j.jobCategory) : "";
   j._hay = [j.company,j.position,j.title,j.jobCategory,(j.industry||[]).join(" "),(j.tags||[]).join(" "),j.location,j.lead,j.jobContent,j.must,j.welcome,j.idealPerson].filter(Boolean).join(" ").toLowerCase();
   j._ts = j.createdAt ? (Date.parse(j.createdAt)||0) : 0;
   j._lead = j.lead || plainLead(j.jobContent || j.must || j.companyInfo || "");
@@ -1567,59 +1624,192 @@ function empList(j){
   return hit.length?hit:[s];
 }
 
+/* ---------- 勤務地のブロック ----------
+   47都道府県をそのまま並べると、東京3,500件の下に青森6件が同じ重みで並んで探せない。
+   ブロック（親）→都道府県（子）の2段にする。
+   ⚠ マイページの「希望勤務地」（applyProfileSearch）と**同じ配列**を使う。
+     ここを分けると、希望条件から検索したときのブロック名が絞り込みと食い違う。
+   ⚠ ブロック内の並びは求人数の多い順（見て分かるように手で並べてある）。 */
+const AREA_BLOCKS=[
+  ["関東",       ["東京都","神奈川県","埼玉県","千葉県","茨城県","栃木県","群馬県"]],
+  ["関西",       ["大阪府","京都府","兵庫県","滋賀県","奈良県","和歌山県"]],
+  ["東海",       ["愛知県","静岡県","岐阜県","三重県"]],
+  ["九州・沖縄", ["福岡県","熊本県","長崎県","鹿児島県","大分県","宮崎県","佐賀県","沖縄県"]],
+  ["東北",       ["宮城県","福島県","岩手県","青森県","山形県","秋田県"]],
+  ["北海道",     ["北海道"]],
+  ["中国",       ["広島県","岡山県","山口県","鳥取県","島根県"]],
+  ["北陸・甲信越",["石川県","長野県","新潟県","福井県","富山県","山梨県"]],
+  ["四国",       ["愛媛県","香川県","高知県","徳島県"]]
+];
+const AREA_BLOCK_OF={};
+AREA_BLOCKS.forEach(([name,list])=>list.forEach(p=>AREA_BLOCK_OF[p]=name));
+
+/* ---------- 業界の大分類 ----------
+   求人が持っているのは中分類（Airtableの業界マスタ）だけ。大分類はタグ側にあるが、
+   タグと中分類の2か所に同じ条件が並ぶのを避けるため、ここで中分類→大分類の対応を持って
+   1つのツリーにまとめる。
+   ⚠ Airtableの業界マスタに中分類を足したら、ここにも足す。書き忘れると「その他」に落ちる
+     （消えはしないが、大分類で絞ったときに出てこない）。 */
+const IND_GROUP={
+  "システム・ソリューション":"IT・通信","インターネット・Webサービス":"IT・通信",
+  "人材（派遣・紹介）":"人材・教育","教育":"人材・教育",
+  "その他メーカー":"メーカー","電機":"メーカー","精密機械":"メーカー","自動車":"メーカー",
+  "その他コンサル":"コンサル・シンクタンク","総合・ITコンサル":"コンサル・シンクタンク",
+  "戦略コンサル":"コンサル・シンクタンク","シンクタンク":"コンサル・シンクタンク",
+  "金融コンサル（財務・会計）":"コンサル・シンクタンク",
+  "総合不動産・デベロッパー":"不動産・建設","住宅・インテリア":"不動産・建設","建設":"不動産・建設",
+  "その他金融":"金融","銀行・証券":"金融","カード・リース・信販":"金融",
+  "M&Aアドバイザリーファーム":"金融","資産運用（PE・アセマネ・ファンド）":"金融",
+  "専門商社":"商社","広告":"広告・マスコミ","芸能・エンタメ（映像・音楽他）":"広告・マスコミ",
+  "電力・ガス・エネルギー":"インフラ・交通","運輸・物流（陸運・海運・倉庫）":"インフラ・交通",
+  "ホテル":"旅行・観光","福祉":"医療・福祉","医療機関・調剤薬局":"医療・福祉",
+  "百貨店・スーパー・コンビニ":"小売・流通","その他卸売り":"小売・流通",
+  "レストラン・フードサービス":"サービス・外食","専門・その他サービス":"サービス・外食"
+};
+
 /* ---------- タグ ----------
    求人1件に平均26タグ付く。280タグを1つの箱に並べると探せないので、
-   タグマスタの「タグカテゴリ」ごとに絞り込みの箱を1つずつ作る（＝facet が増える）。
-   ⚠ 「業界（中分類）」は下の industry facet（業界マスタ由来）とまったく同じ中身なので、
-     タグ側からは出さない。二重に出すと同じ条件が2か所に並ぶ。 */
-const TAG_DUP_CAT="業界（中分類）";
+   タグマスタの「タグカテゴリ」ごとに絞り込みの箱を1つずつ作る（＝facet が増える）。 */
+/* 箱ごと出さないカテゴリ。業界は下の industry ツリー（大分類→中分類）に一本化した。 */
+const TAG_CAT_SKIP=new Set(["業界（中分類）","業界（大分類）"]);
+/* 個別に出さないタグ。**左に同じ条件が2か所あると件数が食い違って見える**ので、
+   専用の絞り込みがあるほうに寄せる。
+   ⚠ 「出さない」のは左の一覧だけ。求人詳細のタグリンク（?tag=…）や
+     ヒーローの「タグで探す」からは今までどおり絞り込める（scan は全タグを見る）。 */
+const TAG_SKIP=new Set([
+  "首都圏勤務","東京23区勤務","地方勤務","関西勤務","東海勤務",              /* → 勤務地 */
+  "年収600万円以上","年収800万円以上","年収1000万円以上","年収1500万円以上", /* → 年収 */
+  "従業員1000名以上","従業員100名以下",                                    /* → 企業規模 */
+  "上場企業","非上場・オーナー企業",                                        /* → 上場区分 */
+  "リモート・在宅勤務可"                                                   /* → リモート可 */
+]);
+/* 6割以上の求人に付くタグは、押しても求人がほとんど絞れない。消しはしないが箱の末尾に回す
+   （件数の多い順のままだと、一番効かないタグが一番上に来る）。 */
+const TAG_BROAD_RATIO=0.6;
+
 const TAG_CAT=Object.fromEntries(TAGS.map(t=>[t.name,t.cat||""]));
 const TAG_BY_SLUG=Object.fromEntries(TAGS.map(t=>[t.slug,t.name]));
 const TAG_SLUG=Object.fromEntries(TAGS.map(t=>[t.name,t.slug]));
 const TAG_DESC=Object.fromEntries(TAGS.map(t=>[t.name,t.desc||""]));
 /* カテゴリの並びはタグマスタの表示順のまま（＝求職者に見せたい順） */
-const TAG_CATS=[...new Set(TAGS.map(t=>t.cat).filter(c=>c&&c!==TAG_DUP_CAT))];
+const TAG_CATS_ALL=[...new Set(TAGS.map(t=>t.cat).filter(Boolean))];   /* 求人詳細のタグ一覧はこちら（全部出す） */
+const TAG_CATS=TAG_CATS_ALL.filter(c=>!TAG_CAT_SKIP.has(c));           /* 左の絞り込みに箱を作るのはこちら */
 const tagFacetKey=c=>"tag:"+c;
 /* 求人に付いているタグのうち、目録に無いものは出さない（Airtableで消したタグの残骸） */
 function jobTags(j){ return (j.tags||[]).filter(t=>TAG_CAT[t]!==undefined); }
 
-/* ---------- facets config ---------- */
+/* 「法人営業（営業）」→「営業」。末尾の括弧が職種の大分類 */
+function jobGroupOf(v){ const m=String(v||"").match(/（([^（）]+)）\s*$/); return m?m[1]:"その他"; }
+
+/* ---------- facets config ----------
+   type:"tree" は 親（大分類）→子（中分類）の2段。
+     ・親も子も**そのまま絞り込みの値**として使える（親を選ぶ＝その配下すべて、が1クリック）
+     ・state.sel には親の名前も子の名前も入る。親と子の名前は重ならない
+       （「関東」と「東京都」、「エンジニア」と「SE（Web・オープン系）（エンジニア）」）。
+       重なる名前を作ると親子の区別がつかなくなるので、大分類名を子にも使わないこと。
+   件数は絞り込むたびに数え直す（scan）。「押したら0件」を無くすのが狙い。 */
 const facetDefs=[
-  {key:"areas", title:"勤務地エリア", type:"check", multi:true, searchable:true, get:j=>j.areas},
-  {key:"jobCategory", title:"職種カテゴリ", type:"check", multi:true, searchable:true, get:j=>j.jobCategory?[j.jobCategory]:[]},
-  {key:"industry", title:"業界（中分類）", type:"check", multi:true, searchable:true, get:j=>j.industry||[]},
-  {key:"employment", title:"雇用形態", type:"chip", multi:true, get:j=>empList(j)},
-  {key:"empBand", title:"企業規模（従業員数）", type:"check", multi:true, order:EMP_BANDS.map(b=>b.label), get:j=>j.empBand?[j.empBand]:[]},
+  {key:"remote", title:"リモート", type:"chip", get:j=>j.remote?["リモート可"]:[]},
+  {key:"areas", title:"勤務地", type:"tree", searchable:true,
+   leaf:j=>j.areas||[], parentOf:p=>AREA_BLOCK_OF[p]||"その他",
+   parentOrder:AREA_BLOCKS.map(b=>b[0]), childOrder:AREA_BLOCKS.reduce((a,b)=>a.concat(b[1]),[])},
+  {key:"jobCategory", title:"職種", type:"tree", searchable:true,
+   leaf:j=>j.jobCategory?[j.jobCategory]:[], parentOf:v=>jobGroupOf(v),
+   labelOf:v=>v.replace(/（[^（）]+）\s*$/,"")},
+  {key:"industry", title:"業界", type:"tree", searchable:true,
+   leaf:j=>j.industry||[], parentOf:v=>IND_GROUP[v]||"その他"},
+  {key:"employment", title:"雇用形態", type:"chip", get:j=>empList(j)},
+  {key:"empBand", title:"企業規模（従業員数）", type:"check", order:EMP_BANDS.map(b=>b.label), get:j=>j.empBand?[j.empBand]:[]},
+  {key:"listed", title:"上場区分", type:"chip", order:["上場","非上場"], get:j=>j.listedStatus?[j.listedStatus]:[]}
 ];
+
 /* タグのカテゴリを facet として足す。既定は閉じておく（開きっぱなしだと左が長くなりすぎる） */
 TAG_CATS.forEach(cat=>{
   const names=TAGS.filter(t=>t.cat===cat).map(t=>t.name);
   facetDefs.push({
-    key:tagFacetKey(cat), title:cat, type:"check", multi:true, searchable:true,
-    collapsible:true, isTag:true, optionList:names,
-    get:j=>jobTags(j).filter(t=>TAG_CAT[t]===cat),
+    key:tagFacetKey(cat), title:cat, type:"check", searchable:true,
+    collapsible:true, isTag:true, optionList:names.filter(n=>!TAG_SKIP.has(n)),
+    get:j=>jobTags(j).filter(t=>TAG_CAT[t]===cat)
   });
 });
 
 const state={ q:"", sort:"reco", salaryMin:0, salaryMax:0, remote:false, sel:{} };
 facetDefs.forEach(f=>state.sel[f.key]=new Set());
 
-/* option counts (global, computed once) */
-const facetOptions={};
+/* ---------- 各求人の「絞り込みに使う値」を先に作っておく ----------
+   件数を数え直すたびに f.get(j) を呼ぶと、5,700件×20箱×タグ26個で毎回数百万回になって重い。
+   求人ごとに { facetのキー: [値…] } を1回だけ作る。ツリーの親（「関東」「エンジニア」）も
+   同じ配列に混ぜて入れる ＝ 親を選んでも子を選んでも同じ仕組みで当たる。
+   ⚠ 左に出さないタグ（TAG_SKIP）もここには入れる。詳細ページのタグリンクから絞り込めるようにするため。 */
+const TREE_DEFS=facetDefs.filter(f=>f.type==="tree");
+JOBS.forEach(j=>{
+  const fv={};
+  facetDefs.forEach(f=>{
+    let vals;
+    if(f.type==="tree"){
+      const leaves=f.leaf(j).filter(Boolean);
+      if(!leaves.length) return;
+      const set=new Set(leaves);
+      leaves.forEach(v=>{ const p=f.parentOf(v); if(p) set.add(p); });
+      vals=[...set];
+    }else{
+      vals=f.get(j).filter(v=>v!=null&&v!=="");
+      if(!vals.length) return;
+    }
+    fv[f.key]=vals;
+  });
+  j._fv=fv;
+});
+
+/* ---------- 絞り込みの選択肢（並びは1回だけ決める。件数だけが毎回変わる） ---------- */
+const GLOBAL_CNT={};      /* facetキー → Map(値→全件での件数)。並び順を決めるのに使う */
 facetDefs.forEach(f=>{
   const m=new Map();
-  JOBS.forEach(j=>f.get(j).forEach(v=>{ if(v!=null&&v!=="") m.set(v,(m.get(v)||0)+1); }));
+  JOBS.forEach(j=>{ const a=j._fv[f.key]; if(a) a.forEach(v=>m.set(v,(m.get(v)||0)+1)); });
+  GLOBAL_CNT[f.key]=m;
+});
+/* ツリー：親の並び → 子の並び */
+const facetTree={};
+TREE_DEFS.forEach(f=>{
+  const g=GLOBAL_CNT[f.key];
+  const groups=new Map();
+  JOBS.forEach(j=>f.leaf(j).forEach(v=>{ if(!v) return; const p=f.parentOf(v)||"その他";
+    if(!groups.has(p)) groups.set(p,new Set()); groups.get(p).add(v); }));
+  const byOrder=(arr,order)=>order
+    ? arr.slice().sort((a,b)=>{ const i=order.indexOf(a), k=order.indexOf(b);
+        return (i<0?999:i)-(k<0?999:k) || (g.get(b)||0)-(g.get(a)||0); })
+    : arr.slice().sort((a,b)=>(g.get(b)||0)-(g.get(a)||0));
+  facetTree[f.key]=byOrder([...groups.keys()],f.parentOrder)
+    .map(p=>[p, byOrder([...groups.get(p)],f.childOrder)]);
+});
+/* 平たい facet（チェック欄・チップ） */
+const facetOptions={};
+facetDefs.forEach(f=>{
+  if(f.type==="tree") return;
+  const g=GLOBAL_CNT[f.key];
+  let list;
   if(f.optionList){
-    /* タグは目録の順に全部出す。掲載中の求人に1件も無いタグも 0 で出す（松岡さんの方針） */
-    facetOptions[f.key]=f.optionList.map(v=>[v, m.get(v)||0]);
+    /* タグは目録の順に全部出す。掲載中の求人に1件も無いタグも出す（松岡さんの方針）。
+       ただし6割以上に付くタグは押しても絞れないので末尾に回す */
+    const broad=v=>((g.get(v)||0) > JOBS.length*TAG_BROAD_RATIO)?1:0;
+    list=f.optionList.slice().sort((a,b)=>broad(a)-broad(b) || (g.get(b)||0)-(g.get(a)||0));
+  }else if(f.order){
+    list=[...g.keys()].sort((a,b)=>f.order.indexOf(a)-f.order.indexOf(b));
   }else{
-    /* 既定は件数の多い順。ただし企業規模のように順序に意味がある facet は order で並べる */
-    facetOptions[f.key]= f.order
-      ? [...m.entries()].sort((a,b)=>f.order.indexOf(a[0])-f.order.indexOf(b[0]))
-      : [...m.entries()].sort((a,b)=>b[1]-a[1]);
+    list=[...g.keys()].sort((a,b)=>(g.get(b)||0)-(g.get(a)||0));
   }
+  facetOptions[f.key]=list;
 });
 const TAG_FACET_KEYS=facetDefs.filter(f=>f.isTag).map(f=>f.key);
+/* タグ名 → その条件を持っている facet のキー。?tag=… やヒーローのタグから絞り込むのに使う。
+   業界のタグ（大分類・中分類）は箱を出していないが、industry ツリーに同じ名前の値があるのでそこへ回す
+   （今までは中分類のタグリンクが静かに効かなかった）。 */
+function tagFacetOf(name){
+  const c=TAG_CAT[name];
+  if(c==="業界（中分類）"||c==="業界（大分類）") return "industry";
+  const k=tagFacetKey(c);
+  return state.sel[k]?k:null;
+}
 
 /* 掲載中の求人での、タグごとの件数。カードに出す3つを選ぶのに使う */
 const TAG_COUNT={};
@@ -1639,7 +1829,7 @@ const CARD_TAG_ORDER=["働き方・勤務時間","休日・休暇","残業・働
   "給与・報酬","年齢・ライフステージ","企業属性","組織・カルチャー","キャリア・成長",
   "選考・入社","事業フェーズ・仕事の性質","福利厚生・手当","プロダクト・事業モデル",
   "注目領域","支援している業界","システム・技術領域"];
-const CARD_TAG_SKIP=new Set(["業界（大分類）",TAG_DUP_CAT,"勤務地・通勤"]);
+const CARD_TAG_SKIP=new Set(["業界（大分類）","業界（中分類）","勤務地・通勤"]);
 const cardTagRank=t=>{ const i=CARD_TAG_ORDER.indexOf(TAG_CAT[t]); return i<0?99:i; };
 function cardTags(j){
   return jobTags(j)
@@ -1647,7 +1837,7 @@ function cardTags(j){
     .sort((a,b)=>cardTagRank(a)-cardTagRank(b) || (TAG_COUNT[a]||0)-(TAG_COUNT[b]||0))
     .slice(0,CARD_TAG_MAX);
 }
-const remoteCount=JOBS.filter(j=>j.remote).length;
+const remoteCount=GLOBAL_CNT.remote.get("リモート可")||0;
 /* ---------- 年収の絞り込み ----------
    実データは上限4,000万円まであるが、2,000万円超は5件ほどの外れ値で、そこまで目盛りを伸ばすと
    中央値（上限側で900万円前後）の刻みが潰れる。2,000万円＝上限側の95パーセンタイルで頭打ちにし、
@@ -1671,10 +1861,10 @@ function syncSalaryUI(){
   if(b){ b.value=String(state.salaryMax||0); b.classList.toggle("is-set", state.salaryMax>0); }
 }
 
-/* ---------- filtering ---------- */
-function jobMatches(j){
+/* ---------- filtering ----------
+   キーワードと年収は箱（facet）ではないので先に見る。 */
+function baseMatch(j){
   if(state.q){ const toks=state.q.toLowerCase().split(/\s+/).filter(Boolean); if(!toks.every(t=>j._hay.includes(t))) return false; }
-  if(state.remote && !j.remote) return false;
   if(state.salaryMin>0||state.salaryMax>0){
     /* 求人の年収レンジと、指定したレンジが重なっていれば通す。年収非公開の求人は落とす（従来どおり） */
     const lo=(j.salaryMin!=null?j.salaryMin:j.salaryMax), hi=(j.salaryMax!=null?j.salaryMax:j.salaryMin);
@@ -1682,11 +1872,37 @@ function jobMatches(j){
     if(state.salaryMin>0 && hi<state.salaryMin) return false;
     if(state.salaryMax>0 && lo>state.salaryMax) return false;
   }
-  for(const f of facetDefs){
-    const sel=state.sel[f.key]; if(!sel.size) continue;
-    const vals=f.get(j); if(!vals.some(v=>sel.has(v))) return false;
-  }
   return true;
+}
+/* 1回のなめで「結果」と「左に出す件数」を同時に作る。
+   箱の中は OR（東京都 or 大阪府）、箱どうしは AND（勤務地 and 職種）。
+   ⚠ 件数は**その箱だけ条件を外した状態**で数える。そうしないと、選んだ瞬間に
+     同じ箱の他の選択肢が全部0件になって、条件を選び直せなくなる。
+     実装：条件を外せば通る箱がちょうど1つの求人は、その箱の件数にだけ足す。 */
+function scan(){
+  const counts={}; facetDefs.forEach(f=>counts[f.key]=new Map());
+  const active=[]; facetDefs.forEach(f=>{ if(state.sel[f.key].size) active.push(f.key); });
+  const na=active.length, hits=[];
+  for(let i=0;i<JOBS.length;i++){
+    const j=JOBS[i]; if(!baseMatch(j)) continue;
+    const fv=j._fv;
+    let fail=0, failKey=null;
+    for(let a=0;a<na;a++){
+      const key=active[a], arr=fv[key], sel=state.sel[key];
+      let ok=false;
+      if(arr) for(let x=0;x<arr.length;x++){ if(sel.has(arr[x])){ ok=true; break; } }
+      if(!ok){ failKey=key; if(++fail>1) break; }
+    }
+    if(fail>1) continue;
+    if(fail===1){
+      const arr=fv[failKey];
+      if(arr){ const m=counts[failKey]; for(let x=0;x<arr.length;x++){ const v=arr[x]; m.set(v,(m.get(v)||0)+1); } }
+      continue;
+    }
+    hits.push(j);
+    for(const key in fv){ const m=counts[key], arr=fv[key]; for(let x=0;x<arr.length;x++){ const v=arr[x]; m.set(v,(m.get(v)||0)+1); } }
+  }
+  return {hits,counts};
 }
 function sortJobs(arr){
   const a=arr.slice();
@@ -1699,14 +1915,27 @@ function sortJobs(arr){
 }
 
 /* ---------- render facets (once) ---------- */
+/* 選択肢1つにつき「件数の span」と「行」を覚えておく。絞り込むたびに件数だけ書き換える。
+   HTMLを作り直さないのは、開いた箱・入力中の検索語・スクロール位置を壊さないため。 */
+const CNT_EL={};
+function regCnt(key,val,row,cntEl,input,node){
+  (CNT_EL[key]=CNT_EL[key]||new Map()).set(val,{row,cnt:cntEl,input,node});
+}
+const CHEV=`<svg class="fgroup__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
+const BOX=`<span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12l5 5L20 6"/></svg></span>`;
+function optHtml(key,val,label,cls,title){
+  return `<label class="opt${cls?" "+cls:""}" data-opt="${esc(label)}"${title?` title="${esc(title)}"`:""}>`
+    +`<input type="checkbox" data-facet="${esc(key)}" data-val="${esc(val)}">${BOX}`
+    +`<span class="lbl">${esc(label)}</span><span class="cnt">0</span></label>`;
+}
 function buildFilters(){
   const wrap=$("#filterGroups");
   let h="";
-  /* keyword hint + remote + salary as first group */
-  h+=`<div class="fgroup" data-static="work">
+  /* リモート可＋年収。リモートは facet（remote）だが、年収と並べたいのでここに手で置く */
+  h+=`<div class="fgroup" data-static="work" data-key="remote">
       <div class="fgroup__head"><span class="fgroup__title">働き方・年収</span></div>
       <div class="chip-row" style="margin-bottom:14px">
-        <button class="fchip" role="button" aria-pressed="false" data-remote>リモート可 <span class="mono" style="color:var(--ink-3);font-size:11px">${remoteCount}</span></button>
+        <button class="fchip" role="button" aria-pressed="false" data-facet="remote" data-val="リモート可">リモート可 <span class="cnt mono">0</span></button>
       </div>
       <div class="fgroup__head" style="margin-bottom:2px"><span class="fgroup__title" style="letter-spacing:.06em;text-transform:none;font-size:12.5px;color:var(--ink-2)">年収</span></div>
       <div class="salrange">
@@ -1721,46 +1950,66 @@ function buildFilters(){
         </select>
       </div>
     </div>`;
-  const CHEV=`<svg class="fgroup__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
   facetDefs.forEach(f=>{
-    const opts=facetOptions[f.key]; if(!opts.length) return;
+    if(f.key==="remote") return;                       /* 上に手で置いてある */
+    const tree=f.type==="tree" ? facetTree[f.key] : null;
+    const optCount=tree ? tree.reduce((s,g)=>s+1+g[1].length,0) : (facetOptions[f.key]||[]).length;
+    if(!optCount) return;
     const body=()=>{
       let b="";
-      if(f.searchable && opts.length>7) b+=`<input class="facet-search" data-fsearch="${f.key}" placeholder="${esc(f.title)}を検索" aria-label="${esc(f.title)}を絞り込み">`;
-      if(f.type==="chip"){
-        b+=`<div class="chip-row">`+opts.map(([v,c])=>`<button class="fchip" role="button" aria-pressed="false" data-facet="${f.key}" data-val="${esc(v)}">${esc(v)} <span class="mono" style="color:var(--ink-3);font-size:11px">${c}</span></button>`).join("")+`</div>`;
+      if(f.searchable && optCount>7) b+=`<input class="facet-search" data-fsearch="${esc(f.key)}" placeholder="${esc(f.title)}を検索" aria-label="${esc(f.title)}を絞り込み">`;
+      if(tree){
+        /* 親（大分類）はそれ自体が絞り込みの値。右のボタンで子（中分類）を開く */
+        b+=`<div class="facet-list scroll ftree">`+tree.map(([p,kids])=>`
+          <div class="tnode">
+            <div class="trow">
+              ${optHtml(f.key,p,p,"opt--p")}
+              <button class="tkid" type="button" aria-expanded="false" aria-label="${esc(p)}の内訳を開く">${CHEV}</button>
+            </div>
+            <div class="tkids" hidden>${kids.map(v=>optHtml(f.key,v,(f.labelOf?f.labelOf(v):v),"opt--c")).join("")}</div>
+          </div>`).join("")+`</div>`;
+      }else if(f.type==="chip"){
+        b+=`<div class="chip-row">`+facetOptions[f.key].map(v=>
+          `<button class="fchip" role="button" aria-pressed="false" data-facet="${esc(f.key)}" data-val="${esc(v)}">${esc(v)} <span class="cnt mono">0</span></button>`).join("")+`</div>`;
       }else{
-        const scroll=opts.length>8?"scroll":"";
-        b+=`<div class="facet-list ${scroll}">`+opts.map(([v,c])=>`
-          <label class="opt${c===0?" is-zero":""}" data-opt="${esc(v)}"${f.isTag&&TAG_DESC[v]?` title="${esc(TAG_DESC[v])}"`:""}>
-            <input type="checkbox" data-facet="${f.key}" data-val="${esc(v)}">
-            <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12l5 5L20 6"/></svg></span>
-            <span class="lbl">${esc(v)}</span><span class="cnt">${c}</span>
-          </label>`).join("")+`</div>`;
+        const scroll=optCount>8?"scroll":"";
+        b+=`<div class="facet-list ${scroll}">`+facetOptions[f.key].map(v=>
+          optHtml(f.key,v,v,"",f.isTag?TAG_DESC[v]:"")).join("")+`</div>`;
       }
       return b;
     };
     if(f.collapsible){
       /* 折りたたみ。開閉は <details> に任せる（JSを足さない） */
-      h+=`<details class="fgroup fgroup--fold" data-key="${f.key}">
+      h+=`<details class="fgroup fgroup--fold" data-key="${esc(f.key)}">
           <summary class="fgroup__sum">
             <span class="fgroup__title">${esc(f.title)}</span>
-            <span class="fgroup__sum-r"><span class="fgroup__badge" hidden></span><span class="fgroup__n">${opts.length}</span>${CHEV}</span>
+            <span class="fgroup__sum-r"><span class="fgroup__badge" hidden></span><span class="fgroup__n">${optCount}</span>${CHEV}</span>
           </summary>
           <div class="fgroup__fold-body">
-            <div class="fgroup__head"><span class="fgroup__title" style="letter-spacing:.04em;text-transform:none;font-size:12px">タグで絞り込む</span><button class="fgroup__clear" data-clear="${f.key}">クリア</button></div>
+            <div class="fgroup__head"><span class="fgroup__title" style="letter-spacing:.04em;text-transform:none;font-size:12px">タグで絞り込む</span><button class="fgroup__clear" data-clear="${esc(f.key)}">クリア</button></div>
             ${body()}
           </div>
         </details>`;
     }else{
-      h+=`<div class="fgroup" data-key="${f.key}">
+      h+=`<div class="fgroup" data-key="${esc(f.key)}">
           <div class="fgroup__head">
             <span class="fgroup__title">${esc(f.title)}</span>
-            <button class="fgroup__clear" data-clear="${f.key}">クリア</button>
+            <button class="fgroup__clear" data-clear="${esc(f.key)}">クリア</button>
           </div>${body()}</div>`;
     }
   });
   wrap.innerHTML=h;
+
+  /* 件数の span を覚える（以後は textContent の書き換えだけ） */
+  wrap.querySelectorAll("[data-facet]").forEach(el=>{
+    const key=el.dataset.facet, val=el.dataset.val;
+    if(el.tagName==="INPUT"){
+      const row=el.closest(".opt");
+      regCnt(key,val,row,row.querySelector(".cnt"),el,el.closest(".tnode"));
+    }else{
+      regCnt(key,val,el,el.querySelector(".cnt"),null,null);
+    }
+  });
 
   wrap.addEventListener("change",e=>{
     const el=e.target.closest("input[data-facet]"); if(!el) return;
@@ -1770,18 +2019,37 @@ function buildFilters(){
     syncGroupState(k); apply();
   });
   wrap.addEventListener("click",e=>{
+    /* ツリーの開閉 */
+    const tk=e.target.closest(".tkid");
+    if(tk){ const node=tk.closest(".tnode"), kids=node.querySelector(".tkids");
+      const open=kids.hidden; kids.hidden=!open; tk.setAttribute("aria-expanded",String(open)); return; }
     const chip=e.target.closest(".fchip[data-facet]");
-    if(chip){ const k=chip.dataset.facet,v=chip.dataset.val,on=chip.getAttribute("aria-pressed")==="true";
+    if(chip){ if(chip.disabled) return;
+      const k=chip.dataset.facet,v=chip.dataset.val,on=chip.getAttribute("aria-pressed")==="true";
       if(on){state.sel[k].delete(v);chip.setAttribute("aria-pressed","false");} else {state.sel[k].add(v);chip.setAttribute("aria-pressed","true"); track("filter_use", {filter:k, value:v});}
       syncGroupState(k); apply(); return; }
-    const rc=e.target.closest("[data-remote]");
-    if(rc){ state.remote=!state.remote; rc.setAttribute("aria-pressed",state.remote); apply(); return; }
     const cl=e.target.closest("[data-clear]");
     if(cl){ clearFacet(cl.dataset.clear); return; }
   });
   wrap.addEventListener("input",e=>{
     const s=e.target.closest("[data-fsearch]"); if(!s) return;
-    const grp=s.closest(".fgroup"); const term=s.value.trim().toLowerCase();
+    const grp=s.closest(".fgroup"), term=s.value.trim().toLowerCase();
+    const nodes=grp.querySelectorAll(".tnode");
+    if(nodes.length){
+      /* ツリー：子が引っかかったら親ごと出して開く。親が引っかかったら配下は全部出す */
+      nodes.forEach(n=>{
+        const p=n.querySelector(".opt--p"), kids=[...n.querySelectorAll(".opt--c")];
+        const phit=!term || p.dataset.opt.toLowerCase().includes(term);
+        let any=phit;
+        kids.forEach(k=>{ const hit=phit || k.dataset.opt.toLowerCase().includes(term);
+          k.classList.toggle("hidden",!hit); if(hit) any=true; });
+        n.classList.toggle("hidden",!any);
+        const box=n.querySelector(".tkids"), btn=n.querySelector(".tkid");
+        if(term && any && !phit){ box.hidden=false; btn.setAttribute("aria-expanded","true"); }
+        if(!term){ box.hidden=true; btn.setAttribute("aria-expanded","false"); }
+      });
+      return;
+    }
     grp.querySelectorAll(".opt").forEach(o=>{ o.classList.toggle("hidden", term && !o.dataset.opt.toLowerCase().includes(term)); });
   });
   /* 下限と上限が食い違ったら、いま動かしたほうを正としてもう一方を寄せる */
@@ -1797,6 +2065,23 @@ function buildFilters(){
   };
   $("#salMin").addEventListener("change",onSal);
   $("#salMax").addEventListener("change",onSal);
+}
+/* ---------- 件数の塗り替え ----------
+   「押したら0件」を無くすのがこの絞り込みの肝。0件になる選択肢は薄くして押せなくする
+   （消さないのは、その条件が"無い"のか"今の条件では0件"なのかを見分けられるようにするため）。 */
+function paintCounts(counts){
+  for(const key in CNT_EL){
+    const m=counts[key], sel=state.sel[key];
+    CNT_EL[key].forEach((r,v)=>{
+      const n=(m&&m.get(v))||0;
+      if(r.cnt) r.cnt.textContent=n.toLocaleString("ja-JP");
+      const dead=n===0 && !sel.has(v);
+      r.row.classList.toggle("is-zero",dead);
+      if(r.input) r.input.disabled=dead;
+      else if(r.row.tagName==="BUTTON") r.row.disabled=dead;
+      if(r.node) r.node.classList.toggle("is-zero",dead);
+    });
+  }
 }
 function syncGroupState(k){
   /* キーに「tag:カテゴリ名」が来るが、引用符の中なので : も日本語もそのままでよい */
@@ -1819,9 +2104,8 @@ function clearFacet(k){
 const facetTitle=Object.fromEntries(facetDefs.map(f=>[f.key,f.title]));
 function renderActiveChips(){
   const box=$("#activeChips"); let h="";
-  if(state.remote) h+=chipHtml("remote","",'リモート可');
   { const s=salLabel(); if(s) h+=chipHtml("salary","",s); }
-  facetDefs.forEach(f=>state.sel[f.key].forEach(v=>{ h+=chipHtml(f.key,v,v); }));
+  facetDefs.forEach(f=>state.sel[f.key].forEach(v=>{ h+=chipHtml(f.key,v,f.labelOf?f.labelOf(v):v); }));
   const any=h.length>0;
   if(any) h+=`<button class="clear-all" id="clearAll">すべてクリア</button>`;
   box.innerHTML=h;
@@ -1833,8 +2117,7 @@ function chipHtml(k,v,label){
 $("#activeChips").addEventListener("click",e=>{
   const b=e.target.closest("[data-rm-k]");
   if(b){ const k=b.dataset.rmK,v=b.dataset.rmV;
-    if(k==="remote"){ state.remote=false; document.querySelector("[data-remote]")?.setAttribute("aria-pressed","false"); }
-    else if(k==="salary"){ state.salaryMin=0; state.salaryMax=0; syncSalaryUI(); }
+    if(k==="salary"){ state.salaryMin=0; state.salaryMax=0; syncSalaryUI(); }
     else { state.sel[k].delete(v);
       const el=document.querySelector(`[data-facet="${k}"][data-val="${CSS.escape(v)}"]`);
       if(el){ if(el.type==="checkbox") el.checked=false; else el.setAttribute("aria-pressed","false"); }
@@ -1845,9 +2128,8 @@ $("#activeChips").addEventListener("click",e=>{
   if(e.target.closest("#clearAll")) resetAll();
 });
 function resetAll(){
-  state.q=""; $("#q").value=""; state.remote=false; state.salaryMin=0; state.salaryMax=0;
+  state.q=""; $("#q").value=""; state.salaryMin=0; state.salaryMax=0;
   syncSalaryUI();
-  document.querySelector("[data-remote]")?.setAttribute("aria-pressed","false");
   facetDefs.forEach(f=>clearFacetSilent(f.key));
   apply();
 }
@@ -1863,10 +2145,12 @@ function clearFacetSilent(k){
 let filtered=[], page=1, perPage=30;
 
 function apply(){
-  filtered=sortJobs(JOBS.filter(jobMatches));
+  const r=scan();
+  filtered=sortJobs(r.hits);
   page=1;
   $("#resCount").textContent=filtered.length;
   $("#drawerCount").textContent=filtered.length;
+  paintCounts(r.counts);
   renderActiveChips();
   updateBadge();
   $("#empty").hidden=filtered.length>0;
@@ -1919,7 +2203,7 @@ $("#perPage").addEventListener("change",e=>{
 });
 
 function updateBadge(){
-  let n=(state.remote?1:0)+((state.salaryMin>0||state.salaryMax>0)?1:0)+facetDefs.reduce((s,f)=>s+state.sel[f.key].size,0);
+  let n=((state.salaryMin>0||state.salaryMax>0)?1:0)+facetDefs.reduce((s,f)=>s+state.sel[f.key].size,0);
   const b=$("#filterBadge"); b.hidden=n===0; b.textContent=n;
 }
 
@@ -2162,13 +2446,15 @@ function renderDetail(j, keepScroll){
   /* この求人のタグ。カテゴリごとにまとめて全部出す（カードは3つに絞っているので、全部見えるのはここだけ）。
      押すとそのタグで絞り込んだ一覧に戻る（?tag=スラッグ）。 */
   const tagSec=(()=>{
-    /* 業界（中分類）は上の見出しにすでに出ているので、ここでは繰り返さない */
-    const list=jobTags(j).filter(t=>TAG_CAT[t]!==TAG_DUP_CAT);
+    /* 業界（中分類）は上の見出しにすでに出ているので、ここでは繰り返さない。
+       ⚠ 使うのは TAG_CATS ではなく TAG_CATS_ALL。左の絞り込みに箱を出していないカテゴリ
+         （業界（大分類））も、ここでは見出し付きで出す（押せば絞り込める）。 */
+    const list=jobTags(j).filter(t=>TAG_CAT[t]!=="業界（中分類）");
     if(!list.length) return "";
     const byCat=new Map();
-    TAG_CATS.forEach(c=>{ const v=list.filter(t=>TAG_CAT[t]===c); if(v.length) byCat.set(c,v); });
+    TAG_CATS_ALL.forEach(c=>{ const v=list.filter(t=>TAG_CAT[t]===c); if(v.length) byCat.set(c,v); });
     /* 目録にカテゴリが無いタグは最後にまとめる */
-    const rest=list.filter(t=>!TAG_CATS.includes(TAG_CAT[t]));
+    const rest=list.filter(t=>!TAG_CATS_ALL.includes(TAG_CAT[t]));
     if(rest.length) byCat.set("その他",rest);
     if(!byCat.size) return "";
     let b="";
@@ -2258,6 +2544,15 @@ function showListView(){
   window.scrollTo(0, listScroll);
 }
 
+/* チップ型の絞り込みを外（ヒーローなど）から押す */
+function pickChip(key,val){
+  if(!state.sel[key]) return;
+  state.sel[key].add(val);
+  const el=document.querySelector(`[data-facet="${key}"][data-val="${CSS.escape(val)}"]`);
+  if(el) el.setAttribute("aria-pressed","true");
+  syncGroupState(key);
+}
+
 /* ---------- タグでの絞り込み（?tag=スラッグ） ----------
    タグは絞り込みの中では数が多く、外から名指しで来ることがある（メール・SNS・社内共有）。
    そのためタグだけURLに乗せられるようにしてある。カンマ区切りで複数指定できる。
@@ -2265,11 +2560,11 @@ function showListView(){
      タグだけ書き戻すと「URLと画面が合っているように見えて合っていない」状態になる）。 */
 function selectTags(names){
   if(!names.length) return false;
-  TAG_FACET_KEYS.forEach(k=>clearFacetSilent(k));
+  TAG_FACET_KEYS.concat("industry").forEach(k=>clearFacetSilent(k));
   let n=0;
   names.forEach(name=>{
-    const k=tagFacetKey(TAG_CAT[name]);
-    if(!state.sel[k]) return;            // 目録から消えたタグ
+    const k=tagFacetOf(name);
+    if(!k) return;                       // 目録から消えたタグ
     state.sel[k].add(name); n++;
     const el=document.querySelector(`[data-facet="${k}"][data-val="${CSS.escape(name)}"]`);
     if(el) el.checked=true;
@@ -2379,7 +2674,7 @@ $("#heroQuick").addEventListener("click",e=>{
   }
   if(k==="sal800") setSalaryMin(800);
   else if(k==="sal1000") setSalaryMin(1000);
-  else if(k==="remote"){ state.remote=true; document.querySelector("[data-remote]")?.setAttribute("aria-pressed","true"); }
+  else if(k==="remote"){ pickChip("remote","リモート可"); }
   apply(); scrollToResults();
   track("filter_use",{filter:"hero_"+k});
 });
@@ -2585,17 +2880,8 @@ const AGE_OPTS=(()=>{ const a=[]; for(let n=18;n<=70;n++) a.push({v:n,t:n+"歳"}
 const TIMING_OPTS=["すぐにでも","3ヶ月以内","半年以内","1年以内","良い求人があれば"];
 /* 希望勤務地は地域ブロックで聞く（都道府県だと選ぶのが大変で、求人も11都府県にしか無いため）。
    「この希望条件で求人を探す」では、ブロック→実際に求人がある都道府県に展開して絞り込む。 */
-const AREA_BLOCKS=[
-  ["関東",       ["茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県"]],
-  ["東海",       ["岐阜県","静岡県","愛知県","三重県"]],
-  ["関西",       ["滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県"]],
-  ["北海道",     ["北海道"]],
-  ["東北",       ["青森県","岩手県","宮城県","秋田県","山形県","福島県"]],
-  ["北陸・甲信越",["新潟県","富山県","石川県","福井県","山梨県","長野県"]],
-  ["中国",       ["鳥取県","島根県","岡山県","広島県","山口県"]],
-  ["四国",       ["徳島県","香川県","愛媛県","高知県"]],
-  ["九州・沖縄", ["福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]]
-];
+/* AREA_BLOCKS（希望勤務地のブロック）は左の絞り込みと共通なので、facet の定義側で持っている。
+   ここで作り直すと、絞り込みのブロック名と希望条件のブロック名がずれる。 */
 const INDUSTRY_OPTS=[
   "IT・インターネット","SIer・システム開発","コンサルティング","金融（銀行・証券・保険）",
   "メーカー・製造","商社","建設・不動産","人材・教育","広告・マーケティング",
@@ -2607,14 +2893,9 @@ const JOB_GROUPS=(()=>{
   JOBS.forEach(j=>{ if(j.jobGroup) m.set(j.jobGroup,(m.get(j.jobGroup)||0)+1); });
   return [...m.entries()].sort((a,b)=>b[1]-a[1]);
 })();
-/* ブロックごとの求人件数（0件のブロックも選べるようにしておく＝ご希望として受け取るため） */
-const AREA_COUNTS=(()=>{
-  const m=new Map();
-  AREA_BLOCKS.forEach(([name,prefs])=>{
-    m.set(name, JOBS.filter(j=>j.areas&&j.areas.some(a=>prefs.includes(a))).length);
-  });
-  return m;
-})();
+/* ブロックごとの求人件数（0件のブロックも選べるようにしておく＝ご希望として受け取るため）。
+   左の絞り込みと同じ数（GLOBAL_CNT）を使う。別々に数えると同じブロックで違う件数が出る。 */
+const AREA_COUNTS=new Map(AREA_BLOCKS.map(([name])=>[name, GLOBAL_CNT.areas.get(name)||0]));
 
 /* ---- 履歴書・職務経歴書（ログイン中のみ・任意） ----
    Supabase Storage の非公開バケットに {ユーザーID}/resume.pdf の形で置く。
@@ -2818,25 +3099,24 @@ function applyProfileSearch(){
   const p=readProfileForm();
   clearFacet("jobCategory");
   if(p.desired_jobs.length){
-    const vals=new Set();
-    JOBS.forEach(j=>{ if(j.jobGroup&&j.jobCategory&&p.desired_jobs.includes(j.jobGroup)) vals.add(j.jobCategory); });
-    vals.forEach(val=>{
+    /* 職種は大分類→中分類のツリーなので、大分類をそのまま1つ選べばよい */
+    p.desired_jobs.forEach(val=>{
+      if(!GLOBAL_CNT.jobCategory.has(val)) return;   /* その大分類の求人が無い */
       state.sel.jobCategory.add(val);
       const el=document.querySelector(`[data-facet="jobCategory"][data-val="${CSS.escape(val)}"]`);
-      if(el){ if(el.type==="checkbox") el.checked=true; else el.setAttribute("aria-pressed","true"); }
+      if(el) el.checked=true;
     });
     syncGroupState("jobCategory");
   }
   /* 希望勤務地：ブロック → 実際に求人がある都道府県に展開して絞り込む */
   clearFacet("areas");
   if(p.desired_areas.length){
-    const prefs=new Set();
-    AREA_BLOCKS.forEach(([name,list])=>{ if(p.desired_areas.includes(name)) list.forEach(x=>prefs.add(x)); });
-    prefs.forEach(val=>{
-      if(!JOBS.some(j=>j.areas&&j.areas.includes(val))) return;   /* 求人が無い県はチェック欄自体が無い */
+    /* 勤務地もブロック→都道府県のツリー。ブロック名がそのまま絞り込みの値になっている */
+    p.desired_areas.forEach(val=>{
+      if(!GLOBAL_CNT.areas.has(val)) return;         /* そのブロックの求人が無い */
       state.sel.areas.add(val);
       const el=document.querySelector(`[data-facet="areas"][data-val="${CSS.escape(val)}"]`);
-      if(el){ if(el.type==="checkbox") el.checked=true; else el.setAttribute("aria-pressed","true"); }
+      if(el) el.checked=true;
     });
     syncGroupState("areas");
   }
