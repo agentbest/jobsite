@@ -6,6 +6,7 @@
 > | 1. SQL（staff / messages / RLS / 既読関数） | **✅ 実行済み** |
 > | 1-追加. 運営が書類を参照できるポリシー | **✅ 実行済み**（既存の本人用4本は無傷） |
 > | 1-補. `profiles.email` の空を埋める | **✅ 実行済み**（1件。トリガー作成前の会員だった） |
+> | **1-2. 中途／新卒を見分ける列（`messages.site` / `profiles.site`）** | ⬜ **未**（下の「手順1-2」） |
 > | 2. 運営アカウント作成＋ staff 登録 | **✅ 完了**（`r_matsuoka+scout@agent-best.net` / staff 登録済み） |
 > | 3. Apps Script の貼り直し＋既存デプロイの更新 | **✅ 完了**（バージョン4・2026/09/03 18:15・URLは変わらず） |
 > | 4. `messages_notify` ウェブフック | **✅ 作成済み**（profiles_notify と同じURL・同じ合言葉） |
@@ -15,7 +16,7 @@
 > **疎通確認済み**：`messages` に1件入れて通知メールが1秒で届くことを確認し、その行は削除しました
 > （Supabase → ウェブフック → Apps Script → Gmail が一本につながっています）。
 >
-> 残りは **通しテスト** と **5（push）** だけです。
+> 残りは **手順1-2のSQL**・**通しテスト**・**5（push）** です。
 >
 > | アカウント | 役割 |
 > |---|---|
@@ -125,6 +126,42 @@ create policy "運営は会員一覧を読める" on public.profiles
 > **なぜ update ポリシーを張らないか**：張ると、会員が自分のスレッドにある
 > 「当社から」のメッセージの本文まで書き換えられてしまいます。既読を付けるだけなら
 > `mark_messages_read()` で足ります。
+
+---
+
+## 手順1-2. 中途と新卒を見分ける列を足す（2026-09-11・agentbest/backlog #20）
+
+中途（`jobs.agent-best.net`）と新卒（`shinsotsu.agent-best.net`）は
+**同じ Supabase プロジェクト `jobsite-tokyo` を共有している**ので、会員も求人も1つのテーブルに混ざります。
+どちらのサイトの人かが分からないと、通知メールのリンクが**相手のサイトに無い求人**へ飛びます。
+
+```sql
+-- 送ったメッセージがどちらのサイトのものか（列を足す前の行は中途扱いになる）
+alter table public.messages add column if not exists site text not null default 'jobsite';
+
+-- 会員が最初にどちらのサイトから登録したか（空 = 中途扱い）
+alter table public.profiles add column if not exists site text;
+```
+
+| 値 | サイト |
+|---|---|
+| `jobsite` | 中途 `https://jobs.agent-best.net` |
+| `shinsotsu` | 新卒 `https://shinsotsu.agent-best.net` |
+
+- **`profiles.site` は各サイトの `template.html` が1度だけ書きます**（`rememberSite()`）。
+  会員が次にログインしたときに、その**サイトの `SITE_KEY`** が入ります。**すでに入っている値は上書きしません**
+  （両方のサイトを使う人がいるため、「最初に登録したサイト」を残す）。
+- ⚠ **この列を埋め直すバックフィルSQLは流さないでください。** `profiles` の UPDATE は
+  `profiles_notify` ウェブフックを起こすので、**更新した件数だけ「会員情報が更新されました」が届きます**。
+  空のままの行は中途として扱われます（新卒サイトの公開は2026-09-06で、それ以前の会員は全員中途のため
+  実害がありません）。Apps Script 側も、**site を埋めただけの更新では通知を出しません**
+  （`doPost` の `skipped: site backfill`）。
+- **`messages.site` は管理画面が送信時に入れます**（会員のサイトをそのまま入れる）。
+  Apps Script はこれを見て、通知メールの「マイページを開く」と「ご紹介した求人」のリンク先を切り替えます。
+- 管理画面は**相手のサイトと違う求人を添えたまま送れません**（黄色の注意書きを出し、送信も止めます）。
+
+> 列がまだ無いあいだも、管理画面もマイページも**今までどおり動きます**（`site` を落として読み書きする
+> 退避が入れてあります）。ただし新卒会員へのリンクは中途サイトのままになります。
 
 ---
 

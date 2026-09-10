@@ -2757,6 +2757,12 @@ $("#themeBtn").addEventListener("click",()=>setTheme(currentTheme()==="dark"?"li
      Supabase でプロジェクトを作り、下の2つを貼り付けるだけで切り替わります。
      手順は同じフォルダの SUPABASE_SETUP.md を参照。
    ========================================================================= */
+/* このサイトの識別子。中途（jobs）と新卒（shinsotsu）で Supabase を共有しているので、
+   会員がどちらから登録したかを profiles.site に記録し、スカウトの通知メールの
+   リンク先を切り替えるのに使う（agentbest/backlog #20）。
+   ⚠ 中途は "jobsite"、新卒は "shinsotsu"。値を変えると相手のサイトへ飛ばすことになる。 */
+const SITE_KEY = "jobsite";
+
 const SUPABASE_URL = "https://jvdnabtpxcyfnogdulea.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_kVUJIz-lImX0AD5eALVVaA_YiDqi7GQ";
 
@@ -3508,6 +3514,19 @@ async function saveProfile(){
   }catch(e){ authMsg("保存できませんでした。時間をおいて試してください。",false); console.warn(e); }
   finally{ btn.disabled=false; btn.textContent="プロフィールを保存"; }
 }
+/* どちらのサイトの会員かを1度だけ記録する（agentbest/backlog #20）。
+   ⚠ すでに入っている値は上書きしない。両方のサイトを使う人もいるので、
+     「最初に登録したサイト」を残す。スカウトの通知メールのリンク先がこれで決まる。
+   ⚠ site 列がまだ無い環境では何もしない（マイページの他の機能は今までどおり動く）。 */
+async function rememberSite(user){
+  try{
+    const {data,error}=await sb.from("profiles").select("site").eq("id",user.id).maybeSingle();
+    if(error||(data&&data.site)) return;   /* 記録済みなら何もしない。行がまだ無ければ作る */
+    /* updated_at は触らない。触ると「会員情報が更新されました」の通知メールが飛ぶ */
+    const up=await sb.from("profiles").upsert({id:user.id, site:SITE_KEY});
+    if(up.error) console.warn("登録サイトを記録できませんでした",up.error);
+  }catch(e){ console.warn("登録サイトを記録できませんでした",e); }
+}
 async function onSignedIn(user){
   me=user;
   try{
@@ -3537,6 +3556,7 @@ async function onSignedIn(user){
       if(error) console.warn("受信同意の保存に失敗しました",error);
       else myProfile=Object.assign({},myProfile||{},{contact_consent:true, contact_consent_at:at});
     }
+    await rememberSite(user);
   }catch(e){ console.warn("ログイン後の同期に失敗しました",e); }
   await loadMessages();
   hideSignal(false);
