@@ -3518,7 +3518,10 @@ async function saveProfile(){
    ⚠ すでに入っている値は上書きしない。両方のサイトを使う人もいるので、
      「最初に登録したサイト」を残す。スカウトの通知メールのリンク先がこれで決まる。
    ⚠ site 列がまだ無い環境では何もしない（マイページの他の機能は今までどおり動く）。 */
+let siteRemembered=false;   /* ログイン直後に auth のイベントが重なると onSignedIn が2〜3回走る */
 async function rememberSite(user){
+  if(siteRemembered) return;
+  siteRemembered=true;
   try{
     const {data,error}=await sb.from("profiles").select("site").eq("id",user.id).maybeSingle();
     if(error||(data&&data.site)) return;   /* 記録済みなら何もしない。行がまだ無ければ作る */
