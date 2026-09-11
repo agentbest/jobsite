@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中途採用 | イー・フォース株式会社</title>
+<meta name="description" content="イー・フォース株式会社の中途採用ページ。組み込みエンジニア（C言語3年以上・年収500万円〜）とプリセールス（法人営業経験・年収450〜800万円・リモート可）を募集。受託ではなく自社製品のRTOSをつくる仕事です。">
+<meta property="og:title" content="中途採用 | イー・フォース株式会社">
+<meta property="og:description" content="RTOSを、自分の手でつくる側へ。受託ではなく自社製品。国内でも稀少なリアルタイムOSメーカーで働く。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/cover-toy.png">
+<link rel="icon" href="assets/img/eforce-logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+
+<header class="header">
+  <div class="wrap header__in">
+    <a class="brand" href="index.html" aria-label="イー・フォース 採用情報 トップ">
+      <img class="brand__logo" src="assets/img/eforce-logo.jpg" alt="eForce" width="280" height="91">
+      <span class="brand__tag">Mid-career</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="メニュー"><span></span><span></span><span></span></button>
+    <nav class="nav" id="nav">
+      <a href="index.html">Entrance Book</a>
+      <a href="#why">選ばれる理由</a>
+      <a href="#roles">職種</a>
+      <a href="#voice">社員の声</a>
+      <a href="#spec">募集要項</a>
+      <a href="#faq">FAQ</a>
+      <div class="header__cta">
+        <a class="btn btn--ghost btn--sm" href="shinsotsu.html">新卒採用</a>
+        <a class="btn btn--cyan btn--sm" href="https://herp.careers/v1/eforce" target="_blank" rel="noopener">エントリー</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================ HERO -->
+<section class="hero">
+  <canvas class="hero__canvas" aria-hidden="true"></canvas>
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap hero__in">
+    <div>
+      <p class="eyebrow">Mid-career Recruiting</p>
+      <h1>RTOSを、<br>自分の手で<em>つくる側</em>へ。</h1>
+      <p class="hero__lead">受託ではなく、自社製品。それもアプリケーションではなく、OSそのもの。イー・フォースは、μITRON4.0仕様のリアルタイムOS「μC3」とTCP/IPスタック「μNet3」を自社開発し、東芝・パナソニック・ソニー・日立をはじめ500社超のメーカーに採用されてきた、国内でも稀少なRTOSメーカーです。</p>
+      <div class="hero__actions">
+        <a class="btn btn--cyan btn--lg" href="#roles">募集職種を見る <span class="arrow">↓</span></a>
+        <a class="btn btn--ghost btn--lg" href="https://herp.careers/v1/eforce" target="_blank" rel="noopener">エントリーする ↗</a>
+      </div>
+      <p class="hero__note">// 組み込みエンジニア 年収500万円〜 ／ プリセールス 年収450〜800万円 ／ フレックス ／ リモート可</p>
+    </div>
+    <div class="term rv" aria-hidden="true">
+      <div class="term__bar"><i></i><i></i><i></i><span>kernel/uc3_task.c — porting to Cortex-R</span></div>
+<pre><span class="c">/* コンテキストスイッチ：ここが「OSをつくる」仕事 */</span>
+<span class="k">void</span> <span class="f">_kernel_dispatch</span>(<span class="k">void</span>)
+{
+    <span class="k">TCB</span> *next = <span class="f">_kernel_pick_highest</span>();   <span class="c">// 優先度ビットマップ</span>
+    <span class="k">if</span> (next != _kernel_cur) {
+        <span class="f">_kernel_save_ctx</span>(_kernel_cur);
+        _kernel_cur = next;
+        <span class="f">_kernel_restore_ctx</span>(next);      <span class="c">// asm: Cortex-R</span>
+    }
+}
+<span class="c">// 目標: 割込み応答 数μs、ROM 数KB。「最適」を数字で示す</span><span class="blink">▍</span></pre>
+      <div class="term__status"><span>lang: <b>C / asm</b></span><span>targets: <b>Cortex-M/A/R, RX</b></span><span>vendors: <b>16</b></span><span>ships in: <b>1000+ products</b></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-label="製品導入実績">
+  <div class="marquee__track">
+    <ul><li>東芝</li><li>パナソニック</li><li>富士通</li><li>カシオ計算機</li><li>ソニー</li><li>シャープ</li><li>オムロン</li><li>アズビル</li><li>ローム</li><li>JVCケンウッド</li><li>富士電機</li><li>セガ</li><li>日本電気</li><li>日本光電工業</li><li>堀場製作所</li><li>ブラザー工業</li><li>日本無線</li><li>日立製作所</li><li>ヤマハ</li></ul>
+    <ul aria-hidden="true"><li>東芝</li><li>パナソニック</li><li>富士通</li><li>カシオ計算機</li><li>ソニー</li><li>シャープ</li><li>オムロン</li><li>アズビル</li><li>ローム</li><li>JVCケンウッド</li><li>富士電機</li><li>セガ</li><li>日本電気</li><li>日本光電工業</li><li>堀場製作所</li><li>ブラザー工業</li><li>日本無線</li><li>日立製作所</li><li>ヤマハ</li></ul>
+  </div>
+</div>
+
+<!-- ============================================================ 選ばれる理由 -->
+<section class="sec sec--white" id="why">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">01 / Why eForce</p>
+        <h2 class="sec__title">経験者がイー・フォースを選ぶ理由</h2>
+      </div>
+      <div class="sec__lead"><p>世界的大手メーカーから、ITミドルベンチャーから。転職してきたメンバーの理由は、突き詰めると3つに集約されます。</p></div>
+    </div>
+    <div class="reasons">
+      <div class="reason rv">
+        <span class="reason__no">01</span>
+        <h3 class="reason__t">「使う」から「つくる」へ。自社製品のOS</h3>
+        <div class="reason__d"><p>受託開発中心ではなく、パッケージビジネス。創業以来のこだわりです。μC3のカーネル、μNet3のプロトコルスタック、ファイルシステム、BLEスタック——ハードウェアに密着したソフトウェアをゼロから設計し、製品として世に出します。</p></div>
+      </div>
+      <div class="reason rv rv-d1">
+        <span class="reason__no">02</span>
+        <h3 class="reason__t">調査・技術選定から関われる</h3>
+        <div class="reason__d"><p>「なぜこれを選ぶか」から開発が始まります。16社のCPUメーカーへの対応、新しいプロセッサへのポーティング、お客様ごとのカスタマイズ。決められた仕様を実装するだけの仕事ではありません。</p></div>
+      </div>
+      <div class="reason rv rv-d2">
+        <span class="reason__no">03</span>
+        <h3 class="reason__t">技術と、生活と。どちらも諦めない</h3>
+        <div class="reason__d"><p>フレックス（エンジニアのコアタイム 11:00〜15:00）、リモート週1〜2日、年間休日130日、私服。「基盤から支える技術の面白さと、家族との時間。どちらも諦めない働き方」は、社員インタビューのタイトルそのものです。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 何をつくるか -->
+<section class="sec sec--paper2">
+  <div class="wrap">
+    <div class="split">
+      <div class="split__body rv">
+        <p class="sec__num">02 / What we build</p>
+        <h3 style="margin-top:12px">極限まで軽量化・高速化されたコードを、1000製品以上へ</h3>
+        <p>μITRON4.0仕様の「μC3/Standard」、小型メモリ環境に特化した「μC3/Compact」、わずか12KBのメモリで動作するTCP/IPスタック「μNet3」。処理効率と安定性を両立し、医療機器や産業機器など、リアルタイム性と信頼性が求められる現場で幅広く活用されています。独自開発による柔軟なカスタマイズ性も評価され、国内外の大手メーカーへの導入実績も多数あります。</p>
+        <ul class="checks">
+          <li>各種デバイスドライバの開発（Ethernet、USB、SD、BLE、LCD、Wi-Fiなど）</li>
+          <li>各種TCP/IPスタック開発（PPP、SSL、IPv6など）</li>
+          <li>各種プロセッサへのOS移植（ARM7 / 9 / 11、Cortex-M / A / R、RXなど）</li>
+          <li>マルチコアAMP型RTOS、Linuxとの共存、機能安全認証取得済みRTOS</li>
+          <li>IoTプラットフォーム「iot-mos」、自転車×観光DX「HaNeRi」（AWS・アプリ・CMS）</li>
+        </ul>
+        <a class="link" href="index.html#cases">開発事例をくわしく見る →</a>
+      </div>
+      <div class="split__media rv rv-d1"><img src="assets/img/iotmos-booth.jpg" alt="展示会に出展した iot-mos のブース" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 職種 -->
+<section class="sec sec--white" id="roles">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">03 / Positions</p>
+        <h2 class="sec__title">募集職種</h2>
+      </div>
+      <div class="sec__lead"><p>エンジニアと、技術で売るプリセールス。どちらも「最高のモノではなく、最適なモノ」をお客様と一緒に決めていく仕事です。</p></div>
+    </div>
+    <div class="roles">
+      <article class="role rv">
+        <div class="role__head">
+          <span class="role__k">01 — EMBEDDED ENGINEER</span>
+          <h3 class="role__t">組み込みエンジニア</h3>
+          <p class="role__s">低レイヤー好きでスキルアップしたい方へ</p>
+        </div>
+        <div class="role__body">
+          <div>
+            <h4>仕事内容</h4>
+            <ul class="dots">
+              <li>リアルタイムOS「μC3」シリーズ、TCP/IPスタック「μNet3」などの自社製品の設計・開発・保守</li>
+              <li>デバイスドライバ（Ethernet、USB、BLE、LCDなど）の開発</li>
+              <li>各種マイコン／SoC（Cortex-M/A/R、ARM7〜11、RXほか）へのポーティング</li>
+              <li>医療・産業・家電メーカーの製品開発に対する技術支援・カスタマイズ</li>
+            </ul>
+          </div>
+          <div class="role__must">
+            <h4>必須要件</h4>
+            <ul class="dots"><li>C言語を用いた開発経験が3年以上</li></ul>
+          </div>
+          <div>
+            <h4>想定年収</h4>
+            <div class="role__pay"><b>500万円〜</b><span>月給30万〜50万円＋賞与年2回（みなし残業20時間分 47,900円〜79,800円を含む）</span></div>
+          </div>
+          <div class="tags"><span class="tag">C</span><span class="tag">RTOS</span><span class="tag">TCP/IP</span><span class="tag">Cortex-M/A/R</span><span class="tag">ポーティング</span></div>
+        </div>
+        <div class="role__foot">
+          <a class="btn btn--primary" href="https://herp.careers/v1/eforce/Jp7OuwB57Pny" target="_blank" rel="noopener">この職種にエントリー ↗</a>
+        </div>
+      </article>
+
+      <article class="role rv rv-d1">
+        <div class="role__head">
+          <span class="role__k">02 — PRE-SALES</span>
+          <h3 class="role__t">プリセールス</h3>
+          <p class="role__s">自社ソフトウェアの技術営業｜フレックス・リモート勤務可</p>
+        </div>
+        <div class="role__body">
+          <div>
+            <h4>仕事内容</h4>
+            <ul class="dots">
+              <li>顧客ニーズの分析、技術的な提案</li>
+              <li>デモンストレーションと技術検証、技術サポート</li>
+              <li>競合製品との比較、カスタマイズソリューションの提案</li>
+              <li>トレーニングとサポート（対象製品：μC3 ／ μNet3 ／ iot-mos）</li>
+            </ul>
+          </div>
+          <div class="role__must">
+            <h4>必須要件</h4>
+            <ul class="dots"><li>法人営業のご経験がある方</li></ul>
+            <h4 style="margin-top:12px">歓迎要件</h4>
+            <ul class="dots" style="font-weight:400"><li style="font-weight:400">組み込み領域での仕事経験がある方</li><li style="font-weight:400">プリセールスもしくは技術営業のご経験がある方</li></ul>
+          </div>
+          <div>
+            <h4>想定年収</h4>
+            <div class="role__pay"><b>450〜800万円</b><span>月給30万〜60万円＋賞与年2回（みなし残業40時間分 71,429円〜142,857円を含む）</span></div>
+          </div>
+          <div class="tags"><span class="tag">技術営業</span><span class="tag">製品開発のプロが相手</span><span class="tag">リモート勤務可</span><span class="tag">コアタイム 10:00〜15:00</span></div>
+        </div>
+        <div class="role__foot">
+          <a class="btn btn--primary" href="https://herp.careers/v1/eforce/7dDjpMWUKiuj" target="_blank" rel="noopener">この職種にエントリー ↗</a>
+        </div>
+      </article>
+    </div>
+    <p style="margin-top:18px;font-size:13px;color:var(--ink-3)">※ 上記以外の職種（WEBエンジニアなど）も、時期によって募集していることがあります。最新は <a class="link" href="https://herp.careers/v1/eforce" target="_blank" rel="noopener">募集一覧（HERP）↗</a> をご覧ください。</p>
+  </div>
+</section>
+
+<!-- ============================================================ 社員の声 -->
+<section class="sec sec--paper2" id="voice">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">04 / Voices</p>
+        <h2 class="sec__title">転職してきたメンバーの声</h2>
+      </div>
+      <div class="sec__lead"><p>世界有数のメーカー、ITミドルベンチャー——前職はさまざま。「約20名のイー・フォースを選んだ理由」をそれぞれの言葉で。</p></div>
+    </div>
+    <div class="people">
+      <a class="person person--hl rv" href="https://www.wantedly.com/companies/eforce/post_articles/157218" target="_blank" rel="noopener">
+        <span class="person__team">世界的大手メーカーから / IoT</span>
+        <span class="person__q">世界的大手メーカーから約20名のイー・フォースを選んだ理由</span>
+        <span class="person__who">エンジニア（IoTチーム）｜K.K.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d1" href="https://www.wantedly.com/companies/eforce/post_articles/212469" target="_blank" rel="noopener">
+        <span class="person__team">世界有数のメーカーから / カーネル</span>
+        <span class="person__q">お互いの技術力を活かし合える尊重の風土が入社の決め手！世界有数のメーカーからイー・フォースを選んだ理由</span>
+        <span class="person__who">エンジニア（カーネルチーム）｜I.T.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d2" href="https://www.wantedly.com/companies/eforce/post_articles/963694" target="_blank" rel="noopener">
+        <span class="person__team">カーネル / 働き方</span>
+        <span class="person__q">「基盤から支える」技術の面白さと、家族との時間。どちらも諦めない働き方</span>
+        <span class="person__who">エンジニア（カーネルチーム）｜K.A.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv" href="https://www.wantedly.com/companies/eforce/post_articles/881260" target="_blank" rel="noopener">
+        <span class="person__team">ITミドルベンチャーから / WEB</span>
+        <span class="person__q">ITミドルベンチャーからイー・フォースを選んだ理由｜SaaSからより大きなソリューションに挑戦できる環境へ</span>
+        <span class="person__who">WEBエンジニア｜N.H.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d1" href="https://www.wantedly.com/companies/eforce/post_articles/224310" target="_blank" rel="noopener">
+        <span class="person__team">カーネル</span>
+        <span class="person__q">「ベンチャー企業の勢い」と「落ち着いた雰囲気」の両方を兼ね備えたイー・フォース！志が高いメンバーと製品開発に前向きに取り組めることが魅力！</span>
+        <span class="person__who">エンジニア（カーネルチーム）｜S.M.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d2" href="https://www.wantedly.com/companies/eforce/post_articles/301291" target="_blank" rel="noopener">
+        <span class="person__team">セールス</span>
+        <span class="person__q">製品開発のプロ相手に提案営業！利用者の購買体験の向上に貢献</span>
+        <span class="person__who">営業（アカウントマネージャー）｜T.H.<i>READ ↗</i></span>
+      </a>
+    </div>
+    <div class="quote rv" style="margin-top:32px">
+      <p class="quote__body">クライアントから言われたことに、その場で「No」と言わないようにしています。まず話を聞いて、100%はできないとしても、70%とかお互いの意見が一致するところまでちゃんと話し合って仕事を進める。ただ、理不尽な要求にはキッパリと「No」と言いますよ。それが独立系のメーカーの強みでもあります。</p>
+      <p class="quote__by"><b>與曽井 陽一</b>　代表取締役</p>
+      <p class="quote__link"><a class="link" href="https://www.eforce.co.jp/recruit/top_interview/" target="_blank" rel="noopener">トップインタビューを読む ↗</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 働き方 -->
+<section class="sec sec--dark" id="workstyle">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">05 / Work style</p>
+        <h2 class="sec__title">働き方</h2>
+      </div>
+      <div class="sec__lead"><p>集中する時間と、話し合う時間と、家に帰る時間。全部を自分で設計できるように、制度はシンプルにしています。</p></div>
+    </div>
+    <div class="flow">
+      <div class="flow__step rv"><p class="flow__n">FLEX</p><h3 class="flow__t">フレックスタイム制</h3><p class="flow__d">1日7.5時間。コアタイムはエンジニア 11:00〜15:00、営業 10:00〜15:00。</p></div>
+      <div class="flow__step rv rv-d1"><p class="flow__n">REMOTE</p><h3 class="flow__t">リモート週1〜2日</h3><p class="flow__d">オフィスは人形町駅 徒歩3分。プリセールスはリモート勤務可。</p></div>
+      <div class="flow__step rv rv-d2"><p class="flow__n">HOLIDAY</p><h3 class="flow__t">年間休日130日</h3><p class="flow__d">完全週休2日（土日）・祝日・GW・夏季5日・年末年始9日前後。有給、慶弔、メモリアル休暇。</p></div>
+      <div class="flow__step rv rv-d3"><p class="flow__n">OFFICE</p><h3 class="flow__t">私服・コーヒー・仮眠</h3><p class="flow__d">私服勤務（オフィスカジュアルでなくてOK）。コーヒー飲み放題、ウォーターサーバ、仮眠グッズ。</p></div>
+    </div>
+    <div class="gallery rv" style="margin-top:28px;grid-template-columns:repeat(4,1fr)">
+      <figure><img src="assets/img/office-6f.jpg" alt="執務スペース" loading="lazy"><figcaption>執務スペース</figcaption></figure>
+      <figure><img src="assets/img/office-meeting.jpg" alt="フリースペースでの打ち合わせ" loading="lazy"><figcaption>フリースペースでの打ち合わせ</figcaption></figure>
+      <figure><img src="assets/img/office-chair.jpg" alt="仮眠グッズ" loading="lazy"><figcaption>疲れたときに安らげる仮眠グッズも</figcaption></figure>
+      <figure><img src="assets/img/office-coffee.jpg" alt="コーヒーメーカー" loading="lazy"><figcaption>豆を挽く社員も</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 募集要項 -->
+<section class="sec sec--paper2" id="spec">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">06 / Requirements</p>
+        <h2 class="sec__title">募集要項</h2>
+      </div>
+      <div class="sec__lead"><p>職種ごとに異なる項目（給与・必須要件・みなし残業）は上の職種カードのとおりです。最新の内容はエントリー先（HERP）の求人票をご確認ください。</p></div>
+    </div>
+    <div class="spec rv">
+      <table>
+        <tr><th>募集職種</th><td>組み込みエンジニア ／ プリセールス</td></tr>
+        <tr><th>雇用形態</th><td>正社員（試用期間6か月）</td></tr>
+        <tr><th>応募資格</th><td><p><b>組み込みエンジニア</b>：C言語を用いた開発経験が3年以上</p><p><b>プリセールス</b>：法人営業のご経験がある方（歓迎：組み込み領域での仕事経験、プリセールス／技術営業の経験）</p></td></tr>
+        <tr><th>給与</th><td><p><b>組み込みエンジニア</b>：年収500万円〜（月給30万〜50万円＋賞与年2回、みなし残業20時間 47,900円〜79,800円）</p><p><b>プリセールス</b>：年収450万〜800万円（月給30万〜60万円＋賞与年2回、みなし残業40時間 71,429円〜142,857円）</p><ul><li>前職給与や経験を考慮して決定します</li><li>昇給年1回（7月）</li><li>賞与年2回（業績による）</li></ul></td></tr>
+        <tr><th>勤務地</th><td><p>東京都中央区日本橋富沢町5-4 ゲンベエビル（プリセールスはリモート勤務可）</p><ul><li>都営浅草線 人形町駅より徒歩3分</li><li>都営新宿線 浜町駅・馬喰横山駅より徒歩6分</li><li>JR横須賀線 馬喰町駅より徒歩7分</li><li>半蔵門線 水天宮前駅より徒歩8分</li></ul></td></tr>
+        <tr><th>勤務時間</th><td>10:00〜17:30（休憩60分）<br>フレックス制（1日の労働時間：7.5時間）<br>コアタイム：エンジニア 11:00〜15:00 ／ 営業 10:00〜15:00<br>リモート制度あり（週1〜2日）</td></tr>
+        <tr><th>休日休暇</th><td><p>年間休日130日（昨年度実績）</p><ul><li>完全週休2日制（土・日）</li><li>祝日</li><li>GW、夏季（5日）、年末年始（9日前後）</li><li>年次有給休暇</li><li>慶弔休暇</li><li>メモリアル休暇</li></ul></td></tr>
+        <tr><th>福利厚生</th><td><ul><li>交通費全額支給</li><li>社会保険完備</li><li>社員旅行あり</li><li>私服勤務</li><li>コーヒー飲み放題</li><li>ウォーターサーバあり</li></ul></td></tr>
+        <tr><th>応募方法</th><td>各職種のエントリーボタン（HERP）からご応募ください。選考の流れはエントリー後にご案内します。</td></tr>
+      </table>
+      <p class="spec__note">出典：HERP 求人票（組み込みエンジニア／プリセールス）および Entrance Book（2026年2月更新）。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FAQ -->
+<section class="sec sec--white" id="faq">
+  <div class="wrap">
+    <div class="sec__head sec__head--center rv">
+      <div>
+        <p class="sec__num">07 / FAQ</p>
+        <h2 class="sec__title">よくある質問</h2>
+      </div>
+    </div>
+    <div class="faq rv">
+      <details>
+        <summary>RTOSの開発経験がなくても応募できますか？</summary>
+        <div class="faq__a"><p>組み込みエンジニアの必須要件は「C言語を用いた開発経験が3年以上」です。RTOSそのものの開発経験は問いません。低レイヤーへの興味と、C言語で腰を据えて開発してきた経験があれば、カーネルやドライバは入社後に自社製品のコードを読みながら深めていけます。</p></div>
+      </details>
+      <details>
+        <summary>受託開発はありますか？</summary>
+        <div class="faq__a"><p>創業以来「受託開発中心ではなくパッケージビジネスをしたい」というこだわりで、自社製品の開発・販売・サポートを中核にしています。お客様の製品へのポーティングやカスタマイズは自社製品の延長として行います。</p></div>
+      </details>
+      <details>
+        <summary>どんなプロセッサ・分野を扱いますか？</summary>
+        <div class="faq__a"><p>ARM7 / 9 / 11、Cortex-M / A / R、RXなど、16社のCPUメーカーに対応しています。分野は医療機器、計測器、コンシューマ（デジタルカメラ、ゲーム、ロボット、楽器、カーナビ）、産業機器、設備機器、通信モジュールなど。</p></div>
+      </details>
+      <details>
+        <summary>リモートワークとフレックスについて教えてください。</summary>
+        <div class="faq__a"><p>リモート制度があり、週1〜2日が目安です（プリセールスはリモート勤務可）。フレックス制で1日7.5時間、コアタイムはエンジニア 11:00〜15:00、営業 10:00〜15:00です。</p></div>
+      </details>
+      <details>
+        <summary>プリセールスは、技術のバックグラウンドが必要ですか？</summary>
+        <div class="faq__a"><p>必須要件は「法人営業のご経験」です。組み込み領域の経験やプリセールス／技術営業の経験は歓迎要件。相手は製品開発のプロなので、製品（μC3 / μNet3 / iot-mos）の理解は入社後にエンジニアと一緒に深めていきます。</p></div>
+      </details>
+      <details>
+        <summary>選考の流れを教えてください。</summary>
+        <div class="faq__a"><p>HERPからエントリーいただいた後、面談・面接の日程をご案内します。面談では、この Entrance Book の内容を前提にお話しできると、お互いにとって有意義な時間になります。</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CTA -->
+<section class="sec cta">
+  <div class="wrap cta__in rv">
+    <p class="eyebrow" style="justify-content:center">Entry — Mid-career</p>
+    <h2 class="cta__t">「最適なモノ」を、一緒につくりませんか。</h2>
+    <p class="cta__d">興味さえあれば、色々なことができる環境を整えています。まずはエントリーを。カジュアルにお話しするところから始めましょう。</p>
+    <div class="cta__actions">
+      <a class="btn btn--cyan btn--lg" href="https://herp.careers/v1/eforce/Jp7OuwB57Pny" target="_blank" rel="noopener">組み込みエンジニアにエントリー ↗</a>
+      <a class="btn btn--primary btn--lg" href="https://herp.careers/v1/eforce/7dDjpMWUKiuj" target="_blank" rel="noopener">プリセールスにエントリー ↗</a>
+    </div>
+    <p class="cta__note">2027年卒の学生の方は <a href="shinsotsu.html" style="text-decoration:underline;text-underline-offset:4px">新卒採用ページ</a> へ</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <h4>Company</h4>
+        <dl>
+          <dt>商号</dt><dd>イー・フォース株式会社（eForce Co.,Ltd.）</dd>
+          <dt>設立</dt><dd>2006年12月1日</dd>
+          <dt>資本金</dt><dd>1800万円</dd>
+          <dt>代表者</dt><dd>代表取締役 與曽井 陽一</dd>
+          <dt>従業員</dt><dd>32名（2026年6月現在）</dd>
+          <dt>事業内容</dt><dd>組込みシステム向けパッケージソフトウェアの開発、販売、サポート</dd>
+        </dl>
+      </div>
+      <div>
+        <h4>Access</h4>
+        <p>〒103-0006<br>東京都中央区日本橋富沢町5-4 ゲンベエビル</p>
+        <ul>
+          <li>人形町駅（都営浅草線）A4出口 徒歩3分</li>
+          <li>浜町駅（都営新宿線）A1出口 徒歩6分</li>
+          <li>馬喰町駅（JR横須賀線）1番出口 徒歩7分</li>
+          <li>水天宮前駅（半蔵門線）7番出口 徒歩8分</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Links</h4>
+        <ul>
+          <li><a href="index.html">Entrance Book（採用トップ）</a></li>
+          <li><a href="shinsotsu.html">新卒採用（2027年卒）</a></li>
+          <li><a href="https://www.eforce.co.jp/" target="_blank" rel="noopener">イー・フォース 公式サイト ↗</a></li>
+          <li><a href="https://herp.careers/v1/eforce" target="_blank" rel="noopener">募集一覧（HERP）↗</a></li>
+          <li><a href="https://www.eforce.co.jp/recruit/culture/" target="_blank" rel="noopener">イー・フォースのカルチャー ↗</a></li>
+          <li><a href="https://www.eforce.co.jp/privacy/" target="_blank" rel="noopener">プライバシーポリシー ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> eForce Co.,Ltd. All Rights Reserved.</span>
+      <span>Mid-career — last updated 2026.09</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>

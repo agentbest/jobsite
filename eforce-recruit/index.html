@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrance Book | イー・フォース株式会社 採用情報</title>
+<meta name="description" content="リアルタイムOS「μC3」を自社開発する国内でも稀少な技術ベンチャー、イー・フォースの採用ページ。事業領域・開発事例・チーム・働く環境・募集要項（新卒／中途）をまとめました。">
+<meta property="og:title" content="Entrance Book | イー・フォース株式会社 採用情報">
+<meta property="og:description" content="最高のモノではなく、最適なモノを。RTOS・IoT・データ活用の3領域で、社会の“見えないけれど確実に動く技術”をつくる仲間を探しています。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/cover-toy.png">
+<link rel="icon" href="assets/img/eforce-logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+
+<header class="header">
+  <div class="wrap header__in">
+    <a class="brand" href="index.html" aria-label="イー・フォース 採用情報 トップ">
+      <img class="brand__logo" src="assets/img/eforce-logo.jpg" alt="eForce" width="280" height="91">
+      <span class="brand__tag">Entrance Book</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="メニュー"><span></span><span></span><span></span></button>
+    <nav class="nav" id="nav">
+      <a href="#business">事業領域</a>
+      <a href="#cases">開発事例</a>
+      <a href="#culture">カルチャー</a>
+      <a href="#people">メンバー</a>
+      <a href="#environment">働く環境</a>
+      <div class="header__cta">
+        <a class="btn btn--ghost btn--sm" href="shinsotsu.html">新卒採用</a>
+        <a class="btn btn--cyan btn--sm" href="career.html">中途採用</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================ HERO -->
+<section class="hero">
+  <canvas class="hero__canvas" aria-hidden="true"></canvas>
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap hero__in">
+    <div>
+      <p class="eyebrow">Entrance Book — for candidates</p>
+      <h1>最高のモノではなく、<br><em>最適なモノ</em>をつくる。</h1>
+      <p class="hero__lead">イー・フォースは、リアルタイムOS「μC3」とミドルウェアをゼロから自社開発する、国内でも稀少なRTOSメーカーです。家電・医療機器・産業ロボット・車載制御・ドローン——社会のあらゆる機器の内側で「見えないけれど確実に動く技術」をつくり、IoTとデータ活用へ領域を広げています。</p>
+      <div class="hero__actions">
+        <a class="btn btn--cyan btn--lg" href="shinsotsu.html">新卒採用（27卒）を見る <span class="arrow">→</span></a>
+        <a class="btn btn--ghost btn--lg" href="career.html">中途採用を見る <span class="arrow">→</span></a>
+      </div>
+      <p class="hero__note">// 東京・日本橋 ／ フレックス ／ リモート週1〜2日 ／ 年間休日130日前後</p>
+    </div>
+    <div class="term rv" aria-hidden="true">
+      <div class="term__bar"><i></i><i></i><i></i><span>main.c — μC3/Standard (μITRON4.0)</span></div>
+<pre><span class="c">/* センサー値を読み、ネットワークへ送るタスク */</span>
+<span class="k">void</span> <span class="f">tsk_sensor</span>(<span class="k">VP_INT</span> exinf)
+{
+    <span class="k">for</span> (;;) {
+        <span class="f">wai_sem</span>(<span class="n">SEM_ADC</span>);            <span class="c">// 変換完了を待つ</span>
+        <span class="k">int</span> v = <span class="f">adc_read</span>(<span class="n">CH0</span>);
+        <span class="f">snd_dtq</span>(<span class="n">DTQ_NET</span>, (<span class="k">VP_INT</span>)v); <span class="c">// 通信タスクへ</span>
+        <span class="f">dly_tsk</span>(<span class="n">10</span>);                 <span class="c">// 10ms 周期</span>
+    }
+}
+<span class="k">ER</span> ercd = <span class="f">act_tsk</span>(<span class="n">TSK_SENSOR</span>);<span class="blink">▍</span></pre>
+      <div class="term__status"><span>RTOS: <b>μC3</b></span><span>TCP/IP: <b>μNet3</b></span><span>target: <b>Cortex-M</b></span><span>ports: <b>16 CPU vendors</b></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 導入先の分野（マーキー） -->
+<div class="marquee" aria-label="製品が使われている分野">
+  <div class="marquee__track">
+    <ul>
+      <li>医療機器（生体情報モニタ）</li><li>産業ロボット</li><li>車載制御ユニット</li><li>産業用ドローン</li><li>電子楽器</li><li>家電</li><li>スマートメーター</li><li>IoTゲートウェイ</li><li>計量ラベルプリンタ</li><li>ゲーム機</li><li>自動改札機</li><li>監視カメラ</li><li>E-bike</li><li>電車のサイネージ</li>
+    </ul>
+    <ul aria-hidden="true">
+      <li>医療機器（生体情報モニタ）</li><li>産業ロボット</li><li>車載制御ユニット</li><li>産業用ドローン</li><li>電子楽器</li><li>家電</li><li>スマートメーター</li><li>IoTゲートウェイ</li><li>計量ラベルプリンタ</li><li>ゲーム機</li><li>自動改札機</li><li>監視カメラ</li><li>E-bike</li><li>電車のサイネージ</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ 数字 -->
+<section class="stats" aria-label="イー・フォースを数字で見る">
+  <div class="wrap">
+    <div class="stats__grid">
+      <div class="stat rv"><div class="stat__v"><span data-count="2006" data-plain>2006</span></div><div class="stat__l">創業（東京・日本橋）</div></div>
+      <div class="stat rv rv-d1"><div class="stat__v"><span data-count="1000">1000</span><small>+</small></div><div class="stat__l">導入製品数（累計）</div></div>
+      <div class="stat rv rv-d2"><div class="stat__v"><span data-count="500">500</span><small>社+</small></div><div class="stat__l">採用いただいたお客様</div></div>
+      <div class="stat rv rv-d3"><div class="stat__v"><span data-count="16">16</span><small>社</small></div><div class="stat__l">対応CPUメーカー</div></div>
+      <div class="stat rv rv-d4"><div class="stat__v"><span data-count="32">32</span><small>名</small></div><div class="stat__l">従業員数（2026年6月）</div></div>
+      <div class="stat rv rv-d4"><div class="stat__v"><span data-count="130">130</span><small>日</small></div><div class="stat__l">年間休日（昨年度実績）</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ はじめに -->
+<section class="sec sec--white" id="intro">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">00 / Introduction</p>
+        <h2 class="sec__title">はじめに</h2>
+      </div>
+      <div class="sec__lead">
+        <p>この度はイー・フォースに興味を持ってくれて本当にありがとうございます！この「Entrance Book」は、イー・フォースに興味を持ってくださった方に、私たちのことをより知っていただくために作成しました。面談や面接のお時間を、お互いにとってより有意義なものにするためにご覧いただきたい内容をまとめております。どうぞご覧ください！</p>
+      </div>
+    </div>
+    <div class="grid grid--2" style="align-items:start">
+      <div class="deck rv">
+        <iframe src="https://speakerdeck.com/player/3810b82d4be843d7b99bc1858f99e0fb" title="【会社紹介資料】イー・フォース株式会社_2025年7月" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="rv rv-d1">
+        <p class="card__kicker">会社紹介資料</p>
+        <h3 style="font-size:22px;margin:8px 0 12px">【会社紹介資料】イー・フォース株式会社（2025年7月）</h3>
+        <p style="color:var(--ink-2)">事業の全体像・製品ラインナップ・組織の考え方をまとめたスライドです。左のプレーヤーで閲覧できない場合は、Speaker Deck で直接ご覧ください。</p>
+        <a class="link" href="https://speakerdeck.com/eforce/hui-she-shao-jie-zi-liao-ihuosuzhu-shi-hui-she-2025nian-7yue" target="_blank" rel="noopener">Speaker Deck で開く ↗</a>
+        <div style="margin-top:28px;padding:18px 20px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper)">
+          <p class="card__kicker" style="margin-bottom:6px">Mission</p>
+          <p style="font-weight:700;font-size:17px;margin:0">RTOS・組込みソフトウェアで、開発を高効率に、最適な形へ。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 事業領域 -->
+<section class="sec sec--paper2" id="business">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">01 / Business</p>
+        <h2 class="sec__title">3つの中核領域</h2>
+      </div>
+      <div class="sec__lead">
+        <p>「最高のモノ」ではなく、「最適なモノ」を届ける——それがイー・フォースのものづくりの姿勢です。高性能を追い求めるあまり競争力を失うプロダクトの在り方に疑問を持ち、お客様にとって“ちょうどよい”ソリューションを提供することを目指しています。仕様や機能を一方的に押しつけるのではなく、開発段階から伴走し、最適な提案を行うことを大切にしています。</p>
+        <p>組込み開発の中でも数少ないリアルタイムOS（RTOS）メーカーとして、μITRON4.0仕様に準拠した「μC3」シリーズをはじめ、TCP/IPスタックやFATファイルシステムなどのミドルウェアをすべて自社開発。社会インフラや産業機器、医療、コンシューマ機器など、幅広い分野に導入されてきました。</p>
+      </div>
+    </div>
+
+    <div class="biz">
+      <article class="biz__item rv">
+        <span class="biz__no">01 — EMBEDDED</span>
+        <div class="biz__media biz__media--contain"><img src="assets/img/uc3-ecosystem.png" alt="μC3とμNet3を中心に、μITRON・マルチコア・TCP/IP・File System・BLEなどが並ぶ製品構成図" loading="lazy"></div>
+        <div class="biz__body">
+          <h3 class="biz__title">Embedded事業</h3>
+          <p class="biz__sub">リアルタイムOSの自社開発・販売</p>
+          <div class="biz__text">
+            <p>私たちの原点であり、中核をなすのが組込み向けリアルタイムOS（RTOS）や各種ミドルウェアの開発です。μITRON4.0仕様に準拠した「μC3」をはじめ、小型メモリ環境でも高速に動作するTCP/IPスタック、FATファイルシステムなど、ハードウェアに密着したソフトウェアを自社でゼロから開発・提供しています。</p>
+            <p>家庭用電化製品、医療機器、産業ロボット、自動車制御ユニットなど、私たちの製品は社会のあらゆる領域で「見えないけれど確実に動く技術」として活用されており、導入実績は1000製品以上。国内有数の大手メーカーからも継続的な信頼を得ています。</p>
+          </div>
+          <div class="tags"><span class="tag">μC3/Standard</span><span class="tag">μC3/Compact</span><span class="tag">μNet3</span><span class="tag">μC3+Linux</span><span class="tag">BLE Stack</span></div>
+        </div>
+      </article>
+
+      <article class="biz__item rv rv-d1">
+        <span class="biz__no">02 — IoT</span>
+        <div class="biz__media"><img src="assets/img/iotmos-booth.jpg" alt="展示会に出展した iot-mos のブース" loading="lazy"></div>
+        <div class="biz__body">
+          <h3 class="biz__title">IoT事業</h3>
+          <p class="biz__sub">プラットフォーム開発・センサー連携</p>
+          <div class="biz__text">
+            <p>センサーデバイスからクラウド、スマホアプリ、スマートスピーカーまでを一気通貫でつなぐ——IoT開発の豊富な知見を活かし、セミオーダー型のIoTプラットフォーム「iot-mos（アイモス）」を提供しています。</p>
+            <p>給湯器のスマート化、介護現場でのバイタルセンサー導入、駐車場や施設の混雑状況の可視化など、多様なユースケースに対応。単なる通信モジュールやデバイス制御にとどまらず、ユーザー体験や現場の業務改善まで含めたソリューション提供を強みとしています。</p>
+          </div>
+          <div class="tags"><span class="tag">iot-mos</span><span class="tag">BLE / LTE / EnOcean</span><span class="tag">AWS</span><span class="tag">スマホアプリ</span></div>
+        </div>
+      </article>
+
+      <article class="biz__item rv rv-d2">
+        <span class="biz__no">03 — DATA</span>
+        <div class="biz__media"><img src="assets/img/haneri-key.jpg" alt="自転車とIoTでつくる新しい観光のかたち HaNeRi" loading="lazy"></div>
+        <div class="biz__body">
+          <h3 class="biz__title">データ活用事業</h3>
+          <p class="biz__sub">自転車 × DX「HaNeRi（ハネリ）」</p>
+          <div class="biz__text">
+            <p>IoTで集めたデータを活用し、社会課題の解決に挑む。自転車観光を軸に展開する「HaNeRi」では、回生電動アシスト自転車や各種センサーから走行データを取得し、地域の「観光促進」「交通安全」「環境対策」「健康増進」など、複合的な社会価値を創出するプラットフォームを構築しています。</p>
+            <p>自治体や大学、観光事業者との連携も積極的に行い、フィールドでの実証実験も複数実施中。スマートツーリズム、ウェルビーイング、脱炭素といったキーワードに直結する取り組みです。</p>
+          </div>
+          <div class="tags"><span class="tag">E-bike</span><span class="tag">GPS / 走行データ</span><span class="tag">クラウド解析</span><span class="tag">自治体連携</span></div>
+          <a class="link" href="https://www.haneri.jp/" target="_blank" rel="noopener">HaNeRi 公式サイト ↗</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 開発事例 -->
+<section class="sec sec--dark" id="cases">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">02 / Case Studies</p>
+        <h2 class="sec__title">開発事例</h2>
+      </div>
+      <div class="sec__lead">
+        <p>「何をつくっている会社か」は、事例がいちばん早い。Embedded／IoT／データ活用、それぞれの現場でイー・フォースの技術がどう使われているかをご紹介します。</p>
+      </div>
+    </div>
+
+    <div data-tabs>
+      <div class="tabs" role="tablist" aria-label="事業ごとの開発事例">
+        <button class="tab" role="tab" id="tab-emb" aria-controls="panel-emb">01 Embedded</button>
+        <button class="tab" role="tab" id="tab-iot" aria-controls="panel-iot">02 IoT</button>
+        <button class="tab" role="tab" id="tab-data" aria-controls="panel-data">03 データ活用</button>
+      </div>
+
+      <!-- Embedded -->
+      <div class="panel" role="tabpanel" id="panel-emb" aria-labelledby="tab-emb">
+        <div class="grid grid--2">
+          <article class="case rv">
+            <p class="case__use">医療機器 ／ 生体情報モニタ</p>
+            <h3 class="case__co">日本光電工業株式会社 様</h3>
+            <dl>
+              <dt>導入背景</dt><dd>安定したリアルタイム性能と省電力性を両立した医療機器の実現</dd>
+              <dt>導入内容</dt><dd>RTOS（μC3）とTCP/IPスタックを中心とした組込みソフトウェアを提供</dd>
+              <dt>効果</dt><dd>迅速な起動、安定動作、小メモリ環境での通信機能実装を支援し、製品の信頼性向上に貢献</dd>
+            </dl>
+            <a class="link" href="https://www.eforce.co.jp/case/nihonkoden/" target="_blank" rel="noopener">事例の詳細 ↗</a>
+          </article>
+          <article class="case rv rv-d1">
+            <p class="case__use">産業用計量機器 ／ 計量ラベルプリンタ</p>
+            <h3 class="case__co">株式会社イシダ 様</h3>
+            <dl>
+              <dt>導入背景</dt><dd>表示／印刷制御の安定性とネットワーク接続性の確保</dd>
+              <dt>導入内容</dt><dd>RTOSとTCP/IPスタック、デバイスドライバのカスタマイズ提供</dd>
+              <dt>効果</dt><dd>複雑な制御を安定運用でき、製品の信頼性・拡張性を確保</dd>
+            </dl>
+            <a class="link" href="https://www.eforce.co.jp/case/ishida/" target="_blank" rel="noopener">事例の詳細 ↗</a>
+          </article>
+          <article class="case rv rv-d2">
+            <p class="case__use">電子楽器 ／ 電子ピアノ</p>
+            <h3 class="case__co">株式会社河合楽器製作所 様</h3>
+            <dl>
+              <dt>導入背景</dt><dd>タッチレスポンスなど高精度なタイミング制御とリアルタイム性が要求される製品特性</dd>
+              <dt>導入内容</dt><dd>RTOS（μC3）とネットワーク通信モジュール</dd>
+              <dt>効果</dt><dd>ユーザーインターフェースと音源制御の両立が可能となり、演奏性の向上に寄与</dd>
+            </dl>
+            <a class="link" href="https://www.eforce.co.jp/case/kawai/" target="_blank" rel="noopener">事例の詳細 ↗</a>
+          </article>
+          <article class="case rv rv-d3">
+            <p class="case__use">産業用ドローン ／ 制御システム</p>
+            <h3 class="case__co">株式会社TKKワークス 様</h3>
+            <dl>
+              <dt>導入背景</dt><dd>従来のベアメタル開発から脱却し、再利用性と開発効率を高める必要があった</dd>
+              <dt>導入内容</dt><dd>リアルタイムOS「μC3」のライセンス導入と実装支援</dd>
+              <dt>効果</dt><dd>タスク制御や割込み処理の標準化により、各案件への展開が容易になり、設計の柔軟性と品質が向上</dd>
+            </dl>
+            <a class="link" href="https://www.eforce.co.jp/case/tkkworks/" target="_blank" rel="noopener">事例の詳細 ↗</a>
+          </article>
+        </div>
+      </div>
+
+      <!-- IoT -->
+      <div class="panel" role="tabpanel" id="panel-iot" aria-labelledby="tab-iot">
+        <p style="color:var(--on-dark-2);max-width:60em;margin-bottom:22px">長年培ってきた組込み・通信制御の技術を活かし、デバイスからクラウド、スマホアプリまでを一貫して支援できるIoTプラットフォーム「iot-mos（アイモス）」を提供しています。業界や用途を問わず、さまざまな現場の課題解決に取り組んでいます。</p>
+        <div class="grid grid--2">
+          <article class="case rv">
+            <p class="case__use">給湯器 × IoT化</p>
+            <h3 class="case__co">スマートホームを実現する遠隔操作</h3>
+            <div class="case__text"><p>従来の給湯器リモコンにiot-mosを組み込むことで、スマートフォンやスマートスピーカーからの遠隔操作を実現。クラウドに接続されたリモコンが、利用状況をログとして蓄積し、ユーザーの利便性だけでなくメーカー側のサービス向上にも貢献しています。</p></div>
+          </article>
+          <article class="case rv rv-d1">
+            <p class="case__use">駐車場 × センサー連携</p>
+            <h3 class="case__co">空き状況をリアルタイム表示</h3>
+            <div class="case__text"><p>車室ごとに設置されたセンサーが駐車状況をセンシング。iot-mosを通じてその情報をクラウドへ送信し、サイネージやWebアプリでリアルタイムに空き状況を可視化。現場の混雑回避や利便性向上につながっています。</p></div>
+          </article>
+          <article class="case rv rv-d2">
+            <p class="case__use">介護 × センサーデバイス</p>
+            <h3 class="case__co">負荷軽減と安心の両立</h3>
+            <div class="case__text"><p>高齢者の就寝中の心拍や呼吸状態を非接触でセンシングし、クラウドに記録。異常時は自動でアラートを発報することで、介護スタッフの負荷を大幅に軽減。家庭向けサービスとしての展開も視野に入れています。</p></div>
+          </article>
+          <article class="case rv rv-d3">
+            <p class="case__use">BLE × カメラ連携</p>
+            <h3 class="case__co">生体反応を起点にした自動撮影</h3>
+            <div class="case__text"><p>BLE搭載の活動量計で取得した心拍データをiot-mos経由で常時モニタリング。一定値を超えた場合には、ゲートウェイに接続されたカメラが自動起動し、状況を記録。フィットネス分野や研究用途でも注目されています。</p></div>
+          </article>
+          <article class="case rv">
+            <p class="case__use">UWB × ロボット遠隔制御</p>
+            <h3 class="case__co">屋内位置測位システム</h3>
+            <div class="case__text"><p>東京大学と連携し、ロボットの遠隔制御用途に向けてUWB無線を用いた高精度屋内測位技術を構築。センチメートル精度のリアルタイム位置把握を実現。</p></div>
+          </article>
+          <article class="case rv rv-d1">
+            <p class="case__use">LTE × 防災</p>
+            <h3 class="case__co">地滑り監視ソリューション</h3>
+            <div class="case__text"><p>傾斜地の土砂崩れ兆候を検出するセンサーを用い、LTEモジュール経由でクラウドへ送信。遠隔地からのリスクモニタリングが可能。</p></div>
+          </article>
+        </div>
+        <p style="margin-top:22px"><a class="link" href="https://www.iot-mos.jp/" target="_blank" rel="noopener">iot-mos 公式サイト ↗</a></p>
+      </div>
+
+      <!-- データ活用 -->
+      <div class="panel" role="tabpanel" id="panel-data" aria-labelledby="tab-data">
+        <div class="grid grid--2" style="align-items:start">
+          <div>
+            <p style="color:var(--on-dark-2)">地域社会の課題解決にテクノロジーで貢献するべく、自転車観光を起点としたデータ活用サービス「HaNeRi（ハネリ）」を展開しています。回生電動アシスト自転車や各種センサーから得られる走行データをクラウドに蓄積し、観光振興・交通安全・健康増進・環境対策など、地域が抱える多様な課題の解決に活用する仕組みです。地方自治体や大学と連携しながら、都市部から地方まで全国各地で実証実験を行い、「人の流れ」や「まちの魅力」の見える化に貢献しています。</p>
+            <article class="case rv" style="margin-top:18px">
+              <p class="case__use">導入事例 ／ 群馬県前橋市</p>
+              <h3 class="case__co">「道の駅まえばし赤城」実証実験</h3>
+              <div class="case__text"><p>観光用E-bikeと連携し、HaNeRiを活用した走行データの収集と可視化の実証実験を実施。観光客の移動ルートや滞在時間を分析することで、エリア全体の回遊性向上や観光戦略の立案に寄与しました。</p></div>
+              <a class="link" href="https://www.iot-mos.jp/news/2023/04/567/" target="_blank" rel="noopener">実証の詳細 ↗</a>
+            </article>
+          </div>
+          <div>
+            <img src="assets/img/haneri-column.jpg" alt="HaNeRi コラムのキービジュアル" style="border-radius:var(--radius);margin-bottom:18px" loading="lazy">
+            <h3 style="font-size:16px;color:var(--white);margin-bottom:10px;font-family:var(--font-mono);letter-spacing:.1em">TECH POINTS</h3>
+            <ul style="display:grid;gap:10px">
+              <li class="case rv"><b style="color:var(--white)">クラウド連携型データ基盤の構築</b><span class="case__text">センサーデバイスから得られたデータは、リアルタイムでクラウドに蓄積・分析。ユーザーが自転車に乗るだけで自然にデータが集まる仕組みを実現。</span></li>
+              <li class="case rv rv-d1"><b style="color:var(--white)">スマホアプリ＆ダッシュボードで直感的に可視化</b><span class="case__text">一般ユーザーは専用アプリで走行履歴を確認でき、自治体や運営側は管理画面で利用状況を統計的に分析可能。</span></li>
+              <li class="case rv rv-d2"><b style="color:var(--white)">観光×公共政策×健康の三位一体アプローチ</b><span class="case__text">観光プロモーション・移動インフラ整備・住民の健康促進を同時に支援することができます。</span></li>
+            </ul>
+            <p style="margin-top:16px;display:flex;gap:18px;flex-wrap:wrap"><a class="link" href="https://www.haneri.jp/case" target="_blank" rel="noopener">実績紹介 ↗</a><a class="link" href="https://www.haneri.jp/" target="_blank" rel="noopener">運営メディア HaNeRi ↗</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 技術スタック -->
+<section class="sec sec--white" id="tech">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">03 / Tech Stack</p>
+        <h2 class="sec__title">扱う技術</h2>
+      </div>
+      <div class="sec__lead"><p>マイコンのレジスタからクラウドのダッシュボードまで。“フルレイヤ”を1社の中で横断できるのが、イー・フォースで働く面白さです。</p></div>
+    </div>
+    <div class="stack">
+      <div class="stack__col rv">
+        <p class="stack__h">RTOS / Middleware</p>
+        <div class="chips"><span class="chip">μC3 (μITRON4.0)</span><span class="chip">μNet3 TCP/IP</span><span class="chip">IPv6 / PPP / SSL</span><span class="chip">FAT File System</span><span class="chip">μC3+Linux</span><span class="chip">マルチコア AMP</span><span class="chip">機能安全 RTOS</span></div>
+      </div>
+      <div class="stack__col rv rv-d1">
+        <p class="stack__h">Device / Porting</p>
+        <div class="chips"><span class="chip">C言語</span><span class="chip">Cortex-M / A / R</span><span class="chip">ARM7〜11</span><span class="chip">RX</span><span class="chip">Ethernet / USB / SD</span><span class="chip">BLE / Wi-Fi / WiSun</span><span class="chip">LCD ドライバ</span></div>
+      </div>
+      <div class="stack__col rv rv-d2">
+        <p class="stack__h">IoT / Cloud / App</p>
+        <div class="chips"><span class="chip">iot-mos</span><span class="chip">AWS</span><span class="chip">LTE / EnOcean / UWB</span><span class="chip">スマホアプリ</span><span class="chip">Webアプリ / CMS</span><span class="chip">ダッシュボード</span><span class="chip">スマートスピーカー連携</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ カルチャー -->
+<section class="sec sec--paper2" id="culture">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">04 / Culture</p>
+        <h2 class="sec__title">常に、成長し続ける。</h2>
+      </div>
+      <div class="sec__lead"><p>イー・フォースでは、下記のマインドを以てものづくりを支え続ける製品を創っています。共感された方は是非エントリーください。</p></div>
+    </div>
+
+    <div class="values">
+      <div class="values__box rv">
+        <div class="values__h"><span class="mono">PHILOSOPHY</span><h3>経営理念 — 7つの提言</h3></div>
+        <ol>
+          <li><b>ものづくりに誇りを</b></li>
+          <li><b>成長を続けられる仕事を</b></li>
+          <li><b>最高のモノではなく、最適なモノを提供する</b></li>
+          <li><b>しっかり考える（全員で知恵をしぼる）</b></li>
+          <li><b>価値提案を明確に伝える</b></li>
+          <li><b>計画して成果を明確にする</b></li>
+          <li><b>継続する</b></li>
+        </ol>
+      </div>
+      <div class="values__box rv rv-d1">
+        <div class="values__h"><span class="mono">PRINCIPLES</span><h3>7つの行動指針</h3></div>
+        <ol>
+          <li><b>仕事に対して全力で取り組む</b><span>目の前にある仕事を黙々とこなせば、実力がつき周囲からも評価される。</span></li>
+          <li><b>他者貢献をする</b><span>他者のために仕事をしているという意識を持つと、他者から支持される。</span></li>
+          <li><b>まずはやってみる</b><span>ある程度の準備ができたら、考え過ぎず、まずは「はじめてみる」。ダメなら修正したり止めても良い。</span></li>
+          <li><b>規則に無いルールも守れる</b><span>決められたルールに頼らずに自身で正しい判断をすることができる。</span></li>
+          <li><b>約束を守る、時間を守る</b><span>約束や時間を守れば、周囲から信頼される。信頼されれば、沢山の仕事が任される。</span></li>
+          <li><b>物事を客観的に考える</b><span>誰が正しいか？ではなく、何が正しいのか？を考える。</span></li>
+          <li><b>主体性を持つ</b><span>何が起ころうと、自分自身で判断し、行動を選択する能力を持つ。</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="quote rv" style="margin-top:40px">
+      <p class="quote__body">当社では、他ではあまりできない経験ができると思います。興味さえあれば、色々なことができる環境を整えていますので、様々なことにトライしたい方には向いていると思います。興味がある人はぜひお会いしましょう。</p>
+      <p class="quote__by"><b>與曽井 陽一</b>　代表取締役 ／ 座右の銘は相田みつをの「頑張らなくていいからさ、具体的に動くことだね」</p>
+      <p class="quote__link"><a class="link" href="https://www.eforce.co.jp/recruit/top_interview/" target="_blank" rel="noopener">トップインタビューを読む ↗</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ チーム -->
+<section class="sec sec--white" id="people">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">05 / People</p>
+        <h2 class="sec__title">一緒に働く仲間</h2>
+      </div>
+      <div class="sec__lead"><p>世界的大手メーカー、ITミドルベンチャー、新卒——入社の経路はさまざま。それぞれの「イー・フォースを選んだ理由」をインタビューで公開しています。</p></div>
+    </div>
+    <div class="people">
+      <a class="person rv" href="https://www.wantedly.com/companies/eforce/post_articles/157221" target="_blank" rel="noopener">
+        <span class="person__team">組み込み / ネットワーク</span>
+        <span class="person__q">今よりもっと最先端の技術に触れたくてイー・フォースに入社しました！</span>
+        <span class="person__who">エンジニア（ネットワークチーム）｜T.H.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d1" href="https://www.wantedly.com/companies/eforce/post_articles/963694" target="_blank" rel="noopener">
+        <span class="person__team">組み込み / カーネル</span>
+        <span class="person__q">「基盤から支える」技術の面白さと、家族との時間。どちらも諦めない働き方</span>
+        <span class="person__who">エンジニア（カーネルチーム）｜K.A.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d2" href="https://www.wantedly.com/companies/eforce/post_articles/212469" target="_blank" rel="noopener">
+        <span class="person__team">組み込み / カーネル</span>
+        <span class="person__q">お互いの技術力を活かし合える尊重の風土が入社の決め手！世界有数のメーカーからイー・フォースを選んだ理由</span>
+        <span class="person__who">エンジニア（カーネルチーム）｜I.T.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv" href="https://www.wantedly.com/companies/eforce/post_articles/963696" target="_blank" rel="noopener">
+        <span class="person__team">組み込み / カーネル</span>
+        <span class="person__q">「なぜこれを選ぶか」から始まる開発──調査・技術選定から関われる環境で見つけた手応え</span>
+        <span class="person__who">エンジニア（カーネルチーム）｜K.V.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d1" href="https://www.wantedly.com/companies/eforce/post_articles/157218" target="_blank" rel="noopener">
+        <span class="person__team">IoT</span>
+        <span class="person__q">世界的大手メーカーから約20名のイー・フォースを選んだ理由</span>
+        <span class="person__who">エンジニア（IoTチーム）｜K.K.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d2" href="https://www.wantedly.com/companies/eforce/post_articles/886511" target="_blank" rel="noopener">
+        <span class="person__team">IoT / 新卒入社</span>
+        <span class="person__q">ハード、組み込みからウェブまでマルチな開発可能！新卒社員（20卒）が入社を決めた理由！</span>
+        <span class="person__who">エンジニア（IoTチーム）｜T.H.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv" href="https://www.wantedly.com/companies/eforce/post_articles/224310" target="_blank" rel="noopener">
+        <span class="person__team">組み込み / カーネル</span>
+        <span class="person__q">「ベンチャー企業の勢い」と「落ち着いた雰囲気」の両方を兼ね備えたイー・フォース！志が高いメンバーと製品開発に前向きに取り組めることが魅力！</span>
+        <span class="person__who">エンジニア（カーネルチーム）｜S.M.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d1" href="https://www.wantedly.com/companies/eforce/post_articles/301291" target="_blank" rel="noopener">
+        <span class="person__team">セールス</span>
+        <span class="person__q">製品開発のプロ相手に提案営業！利用者の購買体験の向上に貢献</span>
+        <span class="person__who">営業（アカウントマネージャー）｜T.H.<i>READ ↗</i></span>
+      </a>
+      <a class="person rv rv-d2" href="https://www.wantedly.com/companies/eforce/post_articles/881260" target="_blank" rel="noopener">
+        <span class="person__team">WEBエンジニア</span>
+        <span class="person__q">ITミドルベンチャーからイー・フォースを選んだ理由｜SaaSからより大きなソリューションに挑戦できる環境へ</span>
+        <span class="person__who">WEBエンジニア｜N.H.<i>READ ↗</i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 働く環境 -->
+<section class="sec sec--paper2" id="environment">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="sec__num">06 / Environment</p>
+        <h2 class="sec__title">働く環境</h2>
+      </div>
+      <div class="sec__lead"><p>東京・日本橋のオフィス。フレックスとリモートを組み合わせ、集中する時間と話し合う時間を自分で設計できる環境です。</p></div>
+    </div>
+    <div class="env">
+      <div class="gallery rv">
+        <figure><img src="assets/img/office-6f.jpg" alt="執務スペース" loading="lazy"><figcaption>執務スペース</figcaption></figure>
+        <figure><img src="assets/img/office-meeting.jpg" alt="フリースペースでの打ち合わせの様子" loading="lazy"><figcaption>フリースペースでの打ち合わせの様子</figcaption></figure>
+        <figure><img src="assets/img/office-chair.jpg" alt="疲れたときに安らげる仮眠グッズも" loading="lazy"><figcaption>疲れたときに安らげる仮眠グッズも</figcaption></figure>
+        <figure><img src="assets/img/office-coffee.jpg" alt="社内のコーヒーメーカー" loading="lazy"><figcaption>社内にはコーヒーメーカーもあり豆を挽く社員も</figcaption></figure>
+      </div>
+      <div class="facts rv rv-d1">
+        <div class="fact"><div class="fact__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b>フレックスタイム制</b><span>コアタイム 11:00〜15:00（エンジニア）／ 10:00〜15:00（営業）・1日7.5時間</span></div></div>
+        <div class="fact"><div class="fact__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div><div><b>リモート制度あり</b><span>週1〜2日</span></div></div>
+        <div class="fact"><div class="fact__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.6 8.3L17 4.7a2 2 0 0 0-1.4-.6H8.4A2 2 0 0 0 7 4.7L3.4 8.3a1 1 0 0 0 0 1.4L6 12v8h12v-8l2.6-2.3a1 1 0 0 0 0-1.4z"/></svg></div><div><b>私服勤務</b><span>オフィスカジュアルでなくてOK</span></div></div>
+        <div class="fact"><div class="fact__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><div><b>年間休日130日前後</b><span>完全週休2日制（土日）・祝日・GW・夏季（5日）・年末年始（9日前後）</span></div></div>
+        <div class="fact"><div class="fact__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></div><div><b>社会保険完備</b><span>交通費全額支給・社員旅行あり・コーヒー飲み放題・ウォーターサーバ</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 募集への振り分け -->
+<section class="sec sec--dark" id="recruit">
+  <div class="wrap">
+    <div class="sec__head sec__head--center rv">
+      <div>
+        <p class="sec__num">07 / Join us</p>
+        <h2 class="sec__title">募集要項</h2>
+        <p class="sec__lead" style="margin-top:12px">新卒・中途で専用ページを用意しています。ご自身に合うほうへお進みください。</p>
+      </div>
+    </div>
+    <div class="paths">
+      <a class="path path--new rv" href="shinsotsu.html">
+        <span class="path__k">NEW GRADUATE ／ 2027年卒</span>
+        <span class="path__t">新卒採用</span>
+        <div class="path__d"><p>低レイヤーが好きで、スキルアップしたい人へ。RTOSのカーネルからIoTのクラウドまで、フルレイヤで手を動かせる新卒枠です。</p></div>
+        <ul><li>組み込みエンジニア</li><li>IoTエンジニア</li><li>年収400万円〜</li></ul>
+        <span class="btn btn--cyan">新卒採用ページへ <span class="arrow">→</span></span>
+      </a>
+      <a class="path rv rv-d1" href="career.html">
+        <span class="path__k">MID-CAREER ／ 経験者</span>
+        <span class="path__t">中途採用</span>
+        <div class="path__d"><p>受託ではなく「自社製品」を、しかもOSそのものを。C言語で戦ってきた組み込みエンジニアと、技術で売るプリセールスを募集しています。</p></div>
+        <ul><li>組み込みエンジニア</li><li>プリセールス</li><li>年収500万円〜 ／ 450〜800万円</li></ul>
+        <span class="btn btn--primary">中途採用ページへ <span class="arrow">→</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <h4>Company</h4>
+        <dl>
+          <dt>商号</dt><dd>イー・フォース株式会社（eForce Co.,Ltd.）</dd>
+          <dt>設立</dt><dd>2006年12月1日</dd>
+          <dt>資本金</dt><dd>1800万円</dd>
+          <dt>代表者</dt><dd>代表取締役 與曽井 陽一</dd>
+          <dt>従業員</dt><dd>32名（2026年6月現在）</dd>
+          <dt>事業内容</dt><dd>組込みシステム向けパッケージソフトウェアの開発、販売、サポート</dd>
+        </dl>
+      </div>
+      <div>
+        <h4>Access</h4>
+        <p>〒103-0006<br>東京都中央区日本橋富沢町5-4 ゲンベエビル</p>
+        <ul>
+          <li>人形町駅（都営浅草線）A4出口 徒歩3分</li>
+          <li>浜町駅（都営新宿線）A1出口 徒歩6分</li>
+          <li>馬喰町駅（JR横須賀線）1番出口 徒歩7分</li>
+          <li>水天宮前駅（半蔵門線）7番出口 徒歩8分</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Links</h4>
+        <ul>
+          <li><a href="https://www.eforce.co.jp/" target="_blank" rel="noopener">イー・フォース 公式サイト ↗</a></li>
+          <li><a href="https://herp.careers/v1/eforce" target="_blank" rel="noopener">募集一覧（HERP）↗</a></li>
+          <li><a href="https://www.eforce.co.jp/recruit/top_interview/" target="_blank" rel="noopener">トップインタビュー ↗</a></li>
+          <li><a href="https://www.eforce.co.jp/recruit/culture/" target="_blank" rel="noopener">イー・フォースのカルチャー ↗</a></li>
+          <li><a href="https://www.iot-mos.jp/" target="_blank" rel="noopener">iot-mos ↗</a></li>
+          <li><a href="https://www.haneri.jp/" target="_blank" rel="noopener">HaNeRi ↗</a></li>
+          <li><a href="https://www.kumikomi.jp/" target="_blank" rel="noopener">クミコミ ↗</a></li>
+          <li><a href="https://www.eforce.co.jp/privacy/" target="_blank" rel="noopener">プライバシーポリシー ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> eForce Co.,Ltd. All Rights Reserved.</span>
+      <span>Entrance Book — last updated 2026.09</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>
