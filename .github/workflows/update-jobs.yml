@@ -51,7 +51,9 @@ jobs:
           node fetch-jobs.js
           node fetch-tags.js
           node fetch-employees.js
-          node fetch-1day.js
+          # 1day選考会は開催が無い期間が長く、テーブルが無い／権限が無いことがある（2026-09-12 時点で
+          # tbl1J80CGqiOTvuf7 は base に存在しない）。失敗しても求人の更新は止めない。data/1day.json は前回のまま。
+          node fetch-1day.js || echo "::warning::1day選考会の取得に失敗しました（求人の更新は続けます）"
 
       - name: 再生成
         run: node rebuild.js

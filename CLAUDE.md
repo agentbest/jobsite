@@ -589,6 +589,8 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 - **必要な設定（1回だけ）**: Settings → Secrets and variables → Actions → `AIRTABLE_TOKEN`（Airtable の Personal access token）。
   **これが無いと毎朝失敗する**（エラーメッセージで分かる）。Public リポジトリでも Secrets は見えない。
 - ⚠ **`fetch-logos.js` は回さない**（手でトリミングした `lts.png` / `bridgeone.png` が上書きされる）。ロゴは手元で回して確認してから push。
+- `fetch-1day.js` の失敗は警告だけで止めない。**2026-09-12 時点で「1day選考会」テーブル `tbl1J80CGqiOTvuf7` は base に存在しない**
+  （削除された模様。`data/1day.json` は0件のまま残っている）。再開するときは `fetch-1day.js` の `TABLE_ID` を新しいテーブルに直す。
 - ⚠ **掲載件数が前回より 20% 以上減ったら push しない**（Airtable 側の事故で 5,700ページが一気に消えるのを防ぐ）。本当に減らすときは手元で rebuild して push。
 - 手元と Actions の両方が同じファイルを触るので、**手元で作業する前に `git pull`** すること。
 - これで `data/first-seen.json` の掲載開始日が毎日積み上がり、掲載終了の求人ページ（`job/`・`data/jobs/`）も自動で消える。
