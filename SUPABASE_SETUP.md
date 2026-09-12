@@ -152,9 +152,54 @@ alter table public.profiles add column if not exists desired_areas        text[]
 alter table public.profiles add column if not exists desired_salary_ideal int;    -- 希望年収の理想（万円）
 ```
 
-> `desired_salary` は「最低ライン」、`desired_salary_ideal` は「理想」です。画面上もそう表示しています。
 > `desired_areas` に入るのは都道府県ではなく **地域ブロック名**（関東／東海／関西 …）です。
 > ブロックの定義は `template.html` の `AREA_BLOCKS` にあります。
+>
+> ⚠ このとき足した `age`／`experience_jobs`／`desired_salary_ideal` は、
+> **2026-09-12 に画面から外しました**（下の「希望条件を絞り込みとそろえる」を参照）。
+> 列は残してあるので、このSQLはそのまま実行して構いません。
+
+### 追加：希望条件を絞り込みとそろえる（2026-09-12）⚠ 未実行だと新しい欄が出ません
+
+プロフィールに保存する希望条件を、**左サイドバーの絞り込みと1対1**にしました。
+年収は下限だけでなく**幅（下限〜上限）**で、タグ・業界・リモート可・雇用形態・企業規模・上場区分も
+希望条件として保存します。同じ SQL Editor で実行します。
+
+```sql
+alter table public.profiles add column if not exists desired_salary_max int;     -- 希望年収の上限（万円）
+alter table public.profiles add column if not exists desired_remote     boolean; -- リモート可を希望する
+alter table public.profiles add column if not exists desired_industries text[];  -- 希望業界（業界の大分類・複数）
+alter table public.profiles add column if not exists desired_employment text[];  -- 雇用形態（正社員 など・複数）
+alter table public.profiles add column if not exists desired_emp_bands  text[];  -- 企業規模（従業員数の段・複数）
+alter table public.profiles add column if not exists desired_listed     text[];  -- 上場区分（上場／非上場・複数）
+alter table public.profiles add column if not exists desired_tags       text[];  -- 気になるタグ（複数）
+```
+
+> ⚠ **この SQL を実行するまで、新しい欄はマイページに出ません。**
+> 列が無いことを `template.html` の `hasPrefCols` が見つけて、その欄だけ隠します
+> （お名前・希望年収の下限・希望職種・希望勤務地・書類・受信同意は今までどおり動きます）。
+> 列名は `template.html` の `PREF_COLS` と同じにしてください。
+>
+> **入る値は絞り込みと同じ名前**です。`desired_industries` は業界の大分類（IT・通信 …）、
+> `desired_emp_bands` は `EMP_BANDS` の段（101〜300名 …）、`desired_tags` はタグ名。
+> 別の言い方で入れると「この希望条件で求人を探す」で当たらなくなります。
+>
+> **画面から外した項目**（年齢／経験のある職種／現在のお仕事の業種／転職を考えている時期／希望年収の理想）は、
+> サイトから読み書きしなくなりました。⚠ **列はまだ落とさないでください。**
+> `profiles` は新卒サイト shinsotsu と**共有**していて、向こうの `template.html` はまだこれらの列を読みます。
+> 落とすのは shinsotsu 側を同じ形に直したあとで、次のSQLを手で流してください（**既存会員の入力値は消えます**）。
+>
+> ```sql
+> -- ⚠ shinsotsu 側を直してから。実行すると入力済みの値も消えます
+> -- alter table public.profiles drop column if exists age;
+> -- alter table public.profiles drop column if exists experience_jobs;
+> -- alter table public.profiles drop column if exists current_industry;
+> -- alter table public.profiles drop column if exists timing;
+> -- alter table public.profiles drop column if exists desired_salary_ideal;
+> ```
+>
+> ⚠ スカウト管理画面（`admin/`・手元だけ）が `age`／`timing` などを読んでいる場合は、
+> 列を落とす前にそちらも直してください。
 
 ### 追加：求人案内の受信同意（2026-08-16）
 

@@ -538,6 +538,24 @@
   .pf__chip input:checked+span{border-color:var(--accent); background:color-mix(in srgb,var(--accent) 10%, var(--surface)); color:var(--accent); font-weight:700}
   .pf__chip input:checked+span .cnt{color:var(--accent)}
   .pf__chip input:focus-visible+span{outline:2px solid var(--focus); outline-offset:1px}
+  /* 年収の幅（下限〜上限）。左の絞り込みの年収と同じ形にしてある */
+  .pf__range{display:flex; gap:8px; align-items:center}
+  .pf__range select{flex:1 1 0; min-width:0}
+  .pf__range span{flex:0 0 auto; font-size:12.5px; color:var(--ink-3)}
+  /* 気になるタグ。200を超えるタグを平らに並べると選べないので、
+     左の絞り込みと同じカテゴリごとに畳む（既定は閉じる） */
+  .pf__cat{border:1px solid var(--line); border-radius:var(--r-input); background:var(--surface); padding:9px 11px; margin-bottom:6px}
+  .pf__cat>summary{
+    display:flex; align-items:center; gap:6px; cursor:pointer; list-style:none;
+    font-size:12.5px; font-weight:700; color:var(--ink-2);
+  }
+  .pf__cat>summary::-webkit-details-marker{display:none}
+  .pf__cat>summary::after{content:"＋"; margin-left:auto; color:var(--ink-3); font-weight:400}
+  .pf__cat[open]>summary::after{content:"−"}
+  .pf__cat[open]>summary{margin-bottom:9px}
+  .pf__cat summary:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+  .pf__catn{font-family:var(--mono); font-size:11px; font-weight:400; color:var(--ink-3)}
+  .pf__catn.is-sel{color:var(--accent); font-weight:700}
   .prof__act{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:2px}
   .auth__btn--sm{padding:7px 12px; font-size:12.5px}
 
