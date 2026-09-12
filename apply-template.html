@@ -735,12 +735,11 @@ let sessionUserId=null;
     if(!user) return;
     sessionUserId=user.id;
     if(!val("email") && user.email) $("#email").value=user.email;
-    /* ⚠ プロフィールから先に埋めるのはお名前だけ。マイページのプロフィールは
-       「左の絞り込みと同じ希望条件」に絞っていて、転職時期・現在の業種は持っていない
-       （この2つはこのフォームで改めて伺う）。消した列を select に入れると
-       エラーで prefill ごと動かなくなるので、列を足すときは profiles 側と合わせる。 */
-    const p=await sb.from("profiles").select("full_name").eq("id",user.id).maybeSingle();
-    if(p.data && !val("name") && p.data.full_name) $("#name").value=p.data.full_name;
+    const p=await sb.from("profiles").select("full_name,current_industry,timing").eq("id",user.id).maybeSingle();
+    if(p.data){
+      if(!val("name") && p.data.full_name) $("#name").value=p.data.full_name;
+      if(!val("timing") && p.data.timing && TIMING.indexOf(p.data.timing)>=0) $("#timing").value=p.data.timing;
+    }
     saveDraft();
   }catch(e){ /* 読み込めなくてもフォームはそのまま使える */ }
 })();
