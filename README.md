@@ -24,6 +24,10 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
   ⚠ 人数は Airtable の「従業員数（数値）」列が正。**サイト側で原文から推測しない**。空の企業は「企業規模」で絞り込めない。
 - `SUPABASE_SETUP.md` … マイページに「会員登録・ログイン」を足すときの手順書
 - `APPLY_SETUP.md` … **応募フォームの受け皿（Supabase の applications テーブル）を作る手順書**
+- `job-template.html` / `landing-template.html` / `static-pages.js` … 検索エンジン向けの静的ページ
+  （`job/<求人ID>/`・`jobs/<職種>/<勤務地>/`・`area/<勤務地>/`・`sitemap.xml`）の元。詳細は `CLAUDE.md`「静的ページ」
+- `data/first-seen.json` … 求人ごとの掲載開始日（「新着順」と NEW バッジの元）。**消さない**
+- `.github/workflows/update-jobs.yml` … 毎朝 06:00 JST に Airtable から取り直して push する（要 Secret `AIRTABLE_TOKEN`）
 - `rebuild.js` … `data/jobs.json` を各テンプレートに流し込んで HTML を再生成
   - 実行: このフォルダで `node rebuild.js`
   - デザインや機能を変えたいときは `template.html` / `apply-template.html` を編集 → `node rebuild.js`
@@ -79,11 +83,12 @@ jobs.json を作り直すときは、この列も必ず含めること（落と�
 `prefectures`（勤務地からの都道府県判定）と `remote`（在宅/リモート判定）は
 `template.html` 内の JS で実行時に自動付与している（データには持たせていない）。
 
-### 任意フィールド `createdAt`（入れると「新着順」と NEW バッジが出る）
+### `createdAt` ＝ 掲載開始日（`data/first-seen.json`）
 
-`data/jobs.json` の各求人に `createdAt`（例 `"2026-08-01T09:00:00.000Z"`。Airtable の `createdTime` 相当）を
-足すと、並び替えに**「新着順」**が増えて既定になり、掲載14日以内の求人に **NEW バッジ**が付く。
-**入っていなければ、どちらも表示されない**（新しさを偽らないため）。いまの jobs.json には入っていない。
+並び替えの**「新着順」**（既定）と掲載14日以内の **NEW バッジ**は `createdAt` で動く。
+この値は Airtable の `createdTime` ではなく、`rebuild.js` が **求人が初めてビルドに現れた日**を
+`data/first-seen.json` に記録したもの（2026-09-02 の一括投入ぶんは日付なし＝NEW を付けない）。
+毎朝の自動更新で新しい求人が入るたびに日付が付く。
 
 ## 画面の形（ワークポート／JAC 型）
 

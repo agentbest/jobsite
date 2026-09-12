@@ -63,6 +63,51 @@ function midCareerOnly(jobs){
   return kept;
 }
 
+/* ---------- 掲載開始日（data/first-seen.json） ----------
+   「新着順」と NEW バッジの元になる日付。⚠ Airtable の createdTime をそのまま使わない。
+   2026-09-02 に 5,727件を一括投入したため、createdTime だと全件が同じ日＝全件に NEW が付き、
+   「新着順」が並び替えとして意味を持たなかった（2026-09-12 に発覚）。
+   ここでは「この求人がビルドに初めて現れた日」を data/first-seen.json（求人ID → YYYY-MM-DD）に
+   積み上げ、それを createdAt にする。Airtable 側に列を足さなくても、以後は本当の掲載開始日になる。
+   - 初回（ファイルが無いとき）は createdTime から種を作る。ただし同じ日に BULK_MIN 件以上ある日は
+     一括投入とみなして日付なしにする（NEW を付けない）。
+   - 2回目以降は、first-seen.json に無い求人だけ今日（JST）の日付を付ける（null の行＝日付なしのまま）。
+   - 掲載が終わった求人の行も消さない。取り下げ→再掲載で NEW が付き直るのを避けるため。
+   - Airtable の createdTime は recordCreatedAt に退避する（構造化データの datePosted の保険に使う）。
+   ⚠ first-seen.json を消すと全件が「日付なし」からやり直しになる。消さないこと。 */
+const BULK_MIN = 500;
+function todayJst(){ return new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10); }
+function applyFirstSeen(jobs){
+  const fsPath = path.join(dir, 'data', 'first-seen.json');
+  let seen = {};
+  if(fs.existsSync(fsPath)){
+    seen = JSON.parse(fs.readFileSync(fsPath, 'utf8'));
+  }else{
+    const byDay = {};
+    jobs.forEach(j => { const d = String(j.recordCreatedAt || j.createdAt || '').slice(0, 10); if(d) byDay[d] = (byDay[d] || 0) + 1; });
+    const bulk = Object.entries(byDay).filter(([, n]) => n >= BULK_MIN).map(([d]) => d);
+    /* 一括投入ぶんは null で「日付なし」と記録する（次回に「新しく現れた求人」と誤認しないため） */
+    jobs.forEach(j => {
+      const d = String(j.recordCreatedAt || j.createdAt || '').slice(0, 10);
+      seen[j.id] = (d && !bulk.includes(d)) ? d : null;
+    });
+    console.log(`data/first-seen.json を新しく作りました（一括投入日 ${bulk.join(', ') || 'なし'} の求人は日付なし）`);
+  }
+  const today = todayJst();
+  let added = 0;
+  jobs.forEach(j => {
+    if(!j.recordCreatedAt && j.createdAt) j.recordCreatedAt = j.createdAt;
+    if(!(j.id in seen)){ seen[j.id] = today; added++; }
+    if(seen[j.id]) j.createdAt = seen[j.id]; else delete j.createdAt;
+  });
+  /* 1行1件で書く（git の差分が「増えた求人の行」だけになる） */
+  fs.writeFileSync(fsPath, '{\n' + Object.entries(seen).map(([id, d]) => `${JSON.stringify(id)}:${JSON.stringify(d)}`).join(',\n') + '\n}\n', 'utf8');
+  const dated = jobs.filter(j => j.createdAt).length;
+  const fresh = jobs.filter(j => j.createdAt && (Date.now() - Date.parse(j.createdAt)) < 14 * 864e5).length;
+  console.log(`掲載開始日: 日付あり ${dated}件（今日から新たに付けた ${added}件・掲載14日以内 ${fresh}件）`);
+  return jobs;
+}
+
 /* 企業ロゴ。Airtable「求人DB（企業）」の ロゴ 列から取り込んだ画像を、
    data/logos.json（企業名 → リポジトリ内のパス）経由で求人1件ずつに差し込む。
    ⚠ ロゴを jobs.json 側に書かないのは、jobs.json が Airtable からの
@@ -229,8 +274,9 @@ function writeDetails(full){
   console.log(`data/jobs/ に求人の詳細を書き出しました: ${full.length}件${removed ? `（掲載終了 ${removed}件を削除）` : ''}`);
 }
 
+let fullJobs = [];   /* 掲載する求人の全項目（静的ページの生成に使う） */
 const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', [],
-  data => { const full = attachEmployees(attachLogos(midCareerOnly(data))); writeDetails(full); return lighten(full); });
+  data => { const full = attachEmployees(attachLogos(applyFirstSeen(midCareerOnly(data)))); writeDetails(full); fullJobs = full; return lighten(full); });
 const jobRows = jobs ? jobs.r.map(r => { const o = {}; jobs.k.forEach((k, i) => { if(r[i] != null) o[k] = r[i]; }); return o; }) : [];
 if(jobs) console.log('index.html を再生成しました:', jobRows.length, '件（中途のみ・一覧用の項目だけ内蔵）');
 
@@ -328,4 +374,16 @@ function onedayMini(list){
     fs.writeFileSync(indexPath, html, 'utf8');
     console.log('検索結果1位のPR枠:', mini.length ? `次回 ${mini[0].date}（掲載 ${mini.length}件）` : '開催なし（案内を受け取る導線を表示）');
   }
+}
+
+/* ---------- 静的ページ（job/<求人ID>/・jobs/<職種>/・area/<勤務地>/・sitemap.xml） ----------
+   検索エンジン向け。中身と理由は static-pages.js の先頭にある。
+   areas / remote は一覧側（lighten）と同じ規則で付ける（data/jobs/*.json には書かない）。 */
+if(jobs){
+  fullJobs.forEach(j => {
+    const loc = j.location || '';
+    j.areas = areasOf(loc);
+    j.remote = /在宅|リモート|テレワーク|フルリモート/.test(loc + ' ' + (j.jobContent || '') + ' ' + (j.benefits || ''));
+  });
+  require('./static-pages').build(dir, fullJobs);
 }

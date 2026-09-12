@@ -8,19 +8,24 @@ Airtableの求人を検索できる**静的な中途採用求人サイト「求�
 
 ## ⚠ ビルドフロー（最重要）
 
-**`index.html` と `apply.html` を直接編集しない。** 編集するのは `template.html` / `apply-template.html` / `data/jobs.json`。
+**`index.html` と `apply.html` を直接編集しない。** 編集するのは `template.html` / `apply-template.html` / `job-template.html` / `landing-template.html` / `data/jobs.json`。
 
 ```
-template.html / apply-template.html / data/jobs.json を編集
-  → node rebuild.js      （index.html・apply.html・1day.html を再生成・件数を表示）
+template.html / apply-template.html / job-template.html / landing-template.html / data/jobs.json を編集
+  → node rebuild.js      （index.html・apply.html・1day.html・job/・jobs/・area/・sitemap.xml を再生成・件数を表示。約50秒）
   → commit & push        （数十秒で反映）
 ```
+
+**毎朝 06:00 JST に GitHub Actions が同じことを自動でやる**（→「自動更新（GitHub Actions）」）。手で回すのはテンプレを変えたときだけ。
 
 | 生成物 | テンプレ | 差し込むもの |
 |---|---|---|
 | `index.html`（約5.4MB・gzip後1.6MB） | `template.html` | `__JOBS_DATA__` ＝ 中途求人5,700件超の**一覧用の項目だけ**（表形式 `{k,r}`・タグは番号）。本文は `data/jobs/<求人ID>.json` |
 | `apply.html`（約1.2MB） | `apply-template.html` | `__JOBS_MINI__` ＝ ID・企業名・職種名・年収**だけ**（表形式 `[id,会社名,職種名,年収]`） |
 | `1day.html` | `1day-template.html` | `__EVENTS_DATA__` |
+| `job/<求人ID>/index.html`（5,700件・約45KB/件） | `job-template.html` | 求人1件の本文・JobPosting 構造化データ・求人ごとの title/OGP（`static-pages.js`） |
+| `jobs/<職種>/`・`jobs/<職種>/<勤務地>/`・`area/<勤務地>/` | `landing-template.html` | 職種×勤務地の一覧（10件以上の組み合わせだけ） |
+| `sitemap.xml` / `robots.txt` / `assets/site.css` | — | `static-pages.js` が作る。`site.css` は `template.html` の `<style>` の写し |
 
 ⚠ **`apply.html` に求人データ全部を持たせない。** 申し込みフォームが必要なのは「どの求人から来たか」の
 見出しだけなので、`rebuild.js` が最小限に削って埋めている。全部入れると3.5MBのフォームになる。
@@ -203,12 +208,17 @@ node rebuild.js     → index.html      … 一覧・検索・絞り込みに要
 
 1ページ 30／50／100件（`perPage`）。条件を変えながら探す人が「何ページ目を見ていたか」で戻れるようにするため。
 
-### ⚠ 「新着順」と NEW バッジは、データに `createdAt` があるときだけ出る
+### ⚠ 「新着順」と NEW バッジの日付は `data/first-seen.json`（Airtable の createdTime ではない）
 
-`data/jobs.json` に `createdAt`（AirtableのcreatedTime相当）が入っていれば、
-並び替えに「新着順」が増えて既定になり、掲載14日以内（`NEW_DAYS`）の求人に NEW バッジが付く。
-**いまの jobs.json には入っていないので、どちらも出ない**（`HAS_DATES` が false）。
-件数や新しさを偽らないための仕様。出したければ jobs.json を作り直すときに `createdAt` を足す。
+`rebuild.js` の `applyFirstSeen()` が、**求人がビルドに初めて現れた日**を `data/first-seen.json`（求人ID → `YYYY-MM-DD`）に
+積み上げ、それを `createdAt` にする。並び替えの「新着順」（既定）と掲載14日以内（`NEW_DAYS`）の NEW バッジはこの日付で動く。
+
+- **2026-09-12 に作り替えた。** それまでは Airtable の `createdTime` をそのまま使っていて、2026-09-02 の一括投入で
+  5,727件が同じ日＝**全件に NEW が付き、「新着順」が並び替えとして意味を持たない**状態が公開されていた。
+- 一括投入ぶん（同じ日に `BULK_MIN`=500件以上）は `null`＝日付なし。NEW は付かず、新着順では後ろに並ぶ。
+- ⚠ **`data/first-seen.json` を消さない。** 消すと全件が日付なしからやり直しになる（一括投入の判定だけ再実行される）。
+- 掲載終了した求人の行も残す（取り下げ→再掲載で NEW が付き直るのを避けるため）。
+- Airtable の `createdTime` は `recordCreatedAt` に退避してある（構造化データの `datePosted` の保険）。
 
 **電話は Calendly ではなくフォーム**。Calendlyの電話面談15分は「日時を選ぶ」必要があり、「今すぐ軽く聞きたい」人には重い。フォームは**日程を決めず、希望時間帯だけ聞いて折り返す**。
 
@@ -543,7 +553,45 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 
 - **外部SDK（Twitter widgets.js・Facebook SDK）は読み込まない。** 読者の閲覧履歴が各社に渡るうえ表示も遅い。ただのリンクとして自前で持つ。
 - **コピーは合成クリック（`.click()`）では必ず失敗する。** テストは実クリックで確認すること。
-- 求人ごとのURLは `?job=<求人ID>`。求人詳細を別ページ扱いにしたので **pushState**（戻るで一覧に帰れる）。**OGPは求人ごとに出し分けできない**（静的サイト＝1つのHTML）ので、求人名はX投稿の本文側で補っている。`document.title` は求人ごとに書き換えている。
+- **共有するURLは静的ページ `/job/<求人ID>/`**（2026-09-12〜。`jobUrl()`）。求人ごとの title / OGP が出る。
+  検索画面の中で開くときは `?job=<求人ID>`（pushState・戻るで一覧に帰れる）。詳細を開いている間は `<link rel="canonical">` も
+  `/job/<求人ID>/` に切り替える（`setCanonical()`）＝検索エンジンの評価を静的ページに寄せる。
+
+## 静的ページ（検索エンジン向け）— 2026-09-12
+
+`index.html` は1枚の HTML で求人詳細は JS で開くため、**Google からは一覧1ページしか見えず、5,700件は検索に載っていなかった**。
+`rebuild.js` → `static-pages.js` が次を生成する（すべて生成物。**直接編集しない**）。
+
+| 生成物 | 中身 |
+|---|---|
+| `job/<求人ID>/index.html` | 求人1件のページ。`JobPosting` ＋ `BreadcrumbList` の構造化データ（Google しごと検索の入口）、求人ごとの title / description / OGP、応募・相談CTA、同じ職種の求人6件、担当者紹介 |
+| `jobs/<職種>/` | 職種（大分類）の一覧。`jobs/engineer/` など31ページ |
+| `jobs/<職種>/<勤務地>/` | 職種×勤務地（ブロック or 都道府県）。**10件以上（`LP_MIN`）の組み合わせだけ**作る（185ページ） |
+| `area/<勤務地>/` | 勤務地の一覧（55ページ） |
+| `sitemap.xml` | 上記すべて＋トップ（約6,000 URL）。`robots.txt` から参照。**Search Console に登録すること** |
+| `assets/site.css` | `template.html` の `<style>` の写し。静的ページはこれを読む＝検索画面と同じ見た目 |
+
+- 見た目は検索画面の求人詳細と**同じクラス名**（`.dt-grid` `.pd-sec` `.jrow` …）で組んである。`template.html` のクラス名を変えたら `static-pages.js` / `job-template.html` / `landing-template.html` も直す。
+- 応募先・Calendly・LINE・シェアのアイコン・従業員数の段は `static-pages.js` が **`template.html` の定数を正規表現で読む**（`readConst` / `readObject` / `readArray`）。定数の書き方（`const NAME = "…";`）を変えるとビルドが止まる。
+- ⚠ **CTAの注記と担当者紹介の文章は `template.html`（`ctaHtml` / `author`）と `static-pages.js` の2か所にある。片方だけ直さないこと。**
+- 一覧ページの「すべて見る」は検索画面へ `/?cat=<大分類>&area=<ブロック or 都道府県>` で入る（`template.html` の `applyFilterParams`。`?tag=` と同じく**入口専用**で書き戻さない）。
+- ⚠ **`GROUP_SLUG` / `PREF_SLUG` / `BLOCKS` のスラッグを変えると URL が変わる**（検索エンジンの評価がリセットされる）。職種の大分類が増えたら `GROUP_SLUG` に足す（無いものはビルド時に名指しで警告し、ページを作らない）。
+- `BLOCKS` は `template.html` の `AREA_BLOCKS` と**同じ名前**にしておく（`?area=` で渡すため）。北海道はブロックと県が同名なので県だけ。
+- JobPosting の `datePosted` は `createdAt`（掲載開始日）、無ければ `recordCreatedAt`。`validThrough` は分からないので入れない。`directApply: false`（当社経由で推薦する形のため）。
+- 静的ページには★（気になる）・マイページが無い。右レールの「検索画面で開く」（`/?job=<求人ID>`）から使う。
+- リポジトリは約260MB 増えた（5,700ファイル）。1回のビルドで変わるのは中身が変わった求人のページだけ。**テンプレを変えると全ページが変わる**ので、細かい修正はまとめてから push する。
+
+## 自動更新（GitHub Actions）— 2026-09-12
+
+`.github/workflows/update-jobs.yml` が**毎朝 06:00 JST** に `fetch-jobs → fetch-tags → fetch-employees → fetch-1day → rebuild` を回し、
+変更があれば `github-actions[bot]` が commit & push する（Pages のデプロイは今までどおり main をそのまま配信）。Actions タブの「Run workflow」で手動でも回せる。
+
+- **必要な設定（1回だけ）**: Settings → Secrets and variables → Actions → `AIRTABLE_TOKEN`（Airtable の Personal access token）。
+  **これが無いと毎朝失敗する**（エラーメッセージで分かる）。Public リポジトリでも Secrets は見えない。
+- ⚠ **`fetch-logos.js` は回さない**（手でトリミングした `lts.png` / `bridgeone.png` が上書きされる）。ロゴは手元で回して確認してから push。
+- ⚠ **掲載件数が前回より 20% 以上減ったら push しない**（Airtable 側の事故で 5,700ページが一気に消えるのを防ぐ）。本当に減らすときは手元で rebuild して push。
+- 手元と Actions の両方が同じファイルを触るので、**手元で作業する前に `git pull`** すること。
+- これで `data/first-seen.json` の掲載開始日が毎日積み上がり、掲載終了の求人ページ（`job/`・`data/jobs/`）も自動で消える。
 
 ## GA4
 
@@ -563,6 +611,7 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 
 ## push のルール
 
+- **作業前に `git pull`**（毎朝 Actions が push している）。
 - ローカルで **`node rebuild.js` を通してブラウザ確認してから** commit & push。コミットメッセージは日本語。**push後は必ず何を変えたか報告する。**
 - ローカル確認は `python -m http.server` などHTTPで開く（`file://` だと `history.pushState` が効かず、求人詳細の遷移が確認できない）。
 - **以下に触れるときは必ず止まって事前確認する**:

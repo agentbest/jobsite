@@ -8,10 +8,10 @@
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="assets/icon-192.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="canonical" href="https://jobs.agent-best.net/">
+<link rel="canonical" id="canon" href="https://jobs.agent-best.net/">
 <meta name="description" content="20代・30代を中心としたハイクラス転職の求人検索サイト。IT・Web、コンサル、M&amp;Aなどの中途求人を職種・業界・年収・エリアから絞り込めます。非公開求人も多数。株式会社エージェントベストが運営、ご利用は無料です。">
-<!-- SNSでシェアされたときの表示。静的サイトなので求人ごとの出し分けはできず、
-     共有されるのはこのサイト共通のカードになる（求人名は投稿本文側に入れている） -->
+<!-- SNSでシェアされたときの表示（この検索画面のぶん）。求人ごとのカードは静的ページ /job/<求人ID>/ が持つ
+     （共有ボタンはそちらのURLを渡す。rebuild.js → static-pages.js） -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ミドル・ハイクラス転職 求人検索">
 <meta property="og:title" content="ミドル・ハイクラス転職 求人検索 — キャリアの選択肢">
@@ -1523,8 +1523,9 @@ function plainLead(src){
   return t.length>120 ? t.slice(0,120)+"…" : t;
 }
 /* 掲載から NEW_DAYS 日以内なら NEW バッジを出す。
-   ⚠ createdAt は data/jobs.json に入っているときだけ効く（node fetch-jobs.js で付く）。
-      無いあいだは NEW バッジも「新着順」も出ない。件数を偽らないための仕様。 */
+   createdAt は「このサイトに初めて載った日」（rebuild.js の applyFirstSeen ＝ data/first-seen.json）。
+   ⚠ Airtable の createdTime ではない。2026-09-02 の一括投入で全件が同じ日になり、全件に NEW が付いていたため。
+      日付の無い求人（一括投入ぶん）には NEW が付かず、「新着順」でも後ろに並ぶ。件数や新しさを偽らないための仕様。 */
 const NEW_DAYS = 14;
 
 /* ---------- 従業員数 ----------
@@ -2278,7 +2279,7 @@ $("#emptyReset").addEventListener("click",resetAll);
    詳細パネルはURLが変わらない作りだったので、開いたときに ?job=<求人ID> を付けて
    「その求人を開いた状態のURL」を作れるようにした（replaceState なので戻るボタンの
    挙動は今までと変わらない）。共有されたリンクを開くとその求人が開く。
-   OGPは静的サイトなのでサイト共通のまま。求人名は投稿本文側に入れて補っている。 */
+   共有するURLは静的ページ /job/<求人ID>/（求人ごとの OGP が出る）。 */
 const SHARE_ICONS={
   x:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
   facebook:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047v-2.66c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.971H15.83c-1.491 0-1.956.93-1.956 1.886v2.264h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>',
@@ -2286,7 +2287,10 @@ const SHARE_ICONS={
   copy:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
   native:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>'
 };
-function jobUrl(j){ return location.origin+location.pathname+"?job="+encodeURIComponent(j.id); }
+/* 共有・検索エンジン向けの正式なURLは静的ページ /job/<求人ID>/（rebuild.js が生成。求人ごとの title/OGP・JobPosting 付き）。
+   ここ（?job=）は検索画面の中で開く用。共有リンクは静的ページのほうを渡す（SNSで求人名のカードが出る）。 */
+function jobUrl(j){ return location.origin+"/job/"+encodeURIComponent(j.id)+"/"; }
+function setCanonical(href){ const el=document.getElementById("canon"); if(el) el.href=href; }
 function jobShareText(j){
   const pos=j.position||j.jobCategory||j.title||"求人";
   const co=j.company?`｜${j.company}`:"";
@@ -2541,6 +2545,7 @@ function renderDetail(j, keepScroll){
   $("#detail").hidden=false;
   document.body.classList.add("detail-open");
   document.title = jobName(j) + (j.company?"｜"+j.company:"") + " - " + BASE_TITLE;
+  setCanonical("https://jobs.agent-best.net/job/"+encodeURIComponent(j.id)+"/");   /* 評価を静的ページに寄せる */
   if(!keepScroll) window.scrollTo(0,0);
   paintFavs();
 }
@@ -2552,6 +2557,7 @@ function showListView(){
   document.body.classList.remove("detail-open");
   $("#crumb").innerHTML=crumbList();
   document.title=BASE_TITLE;
+  setCanonical("https://jobs.agent-best.net/");
   window.scrollTo(0, listScroll);
 }
 
@@ -2620,7 +2626,33 @@ function goTag(slug){
   track("filter_use",{filter:"tag_click", value:name});
 }
 
-/* URL（?job=… / ?tag=…）と画面を合わせる。popstate＝戻る/進むからも呼ばれる */
+/* ---------- 職種・勤務地でのURL入口（?cat=大分類か中分類 / ?area=ブロックか都道府県） ----------
+   静的な一覧ページ（/jobs/engineer/tokyo/ など。rebuild.js が生成）の「すべて見る」から来る。
+   ?tag= と同じく入口専用で、絞り込みを変えてもURLには書き戻さない。 */
+function pickValue(key,val){
+  if(!state.sel[key] || !GLOBAL_CNT[key].has(val)) return false;
+  const isParent=(facetTree[key]||[]).some(t=>t[0]===val);
+  if(isParent && FACET_FLAT[key]){ pickGroup(key,val); return true; }   /* 1段表示のときは配下を全部選ぶ */
+  state.sel[key].add(val);
+  const el=document.querySelector(`[data-facet="${key}"][data-val="${CSS.escape(val)}"]`);
+  if(el) el.checked=true;
+  syncGroupState(key);
+  return true;
+}
+function applyFilterParams(p){
+  const cat=p.get("cat"), area=p.get("area");
+  if(!cat && !area) return false;
+  let n=0;
+  if(cat){ clearFacetSilent("jobCategory"); if(pickValue("jobCategory",cat)) n++; }
+  if(area){ clearFacetSilent("areas"); if(pickValue("areas",area)) n++; }
+  if(!n) return false;
+  apply();
+  track("filter_use",{filter:"url", value:[cat,area].filter(Boolean).join(" / ")});
+  return true;
+}
+
+/* URL（?job=… / ?tag=… / ?cat=…&area=…）と画面を合わせる。popstate＝戻る/進むからも呼ばれる */
+let routedFilter=false;   /* 初回に ?cat= / ?area= で来たら、ヒーローではなく結果まで送る */
 function route(){
   const p=new URLSearchParams(location.search);
   const id=p.get("job");
@@ -2632,6 +2664,7 @@ function route(){
   /* ⚠ tag が無いときは何もしない（クリアしない）。求人詳細から戻ったときに
      せっかく選んだ絞り込みが消えるのを避けるため。 */
   applyTagParam(p.get("tag"));
+  routedFilter=applyFilterParams(p);
   showListView();
 }
 function goDetail(id){
@@ -3598,6 +3631,7 @@ updateMyBadge();
 paintFavs();
 initAuth();
 route();
+if(routedFilter) setTimeout(scrollToResults, 150);   /* ヒーローの画像・フォントで高さが動くので少し待つ */
 /* 通知メールの「マイページを開く」リンク（?mypage=1）で来た人は、開いた時点でマイページを出す。
    ログインの復元は initAuth の後になるので、先に開いておいて onSignedIn 側で描き直す。 */
 if(new URLSearchParams(location.search).get("mypage")==="1"){
