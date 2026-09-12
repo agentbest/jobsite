@@ -270,13 +270,19 @@ function writeDetails(full){
   const keep = new Set(full.map(j => `${j.id}.json`));
   let removed = 0;
   fs.readdirSync(d).forEach(f => { if(f.endsWith('.json') && !keep.has(f)){ fs.unlinkSync(path.join(d, f)); removed++; } });
-  full.forEach(j => fs.writeFileSync(path.join(d, `${j.id}.json`), JSON.stringify(j), 'utf8'));
+  /* キーの並びを固定して書く（Airtable から取り直した回と復元した回で差分が出ないように） */
+  const canon = j => JSON.stringify(Object.fromEntries(Object.keys(j).sort().map(k => [k, j[k]])));
+  full.forEach(j => fs.writeFileSync(path.join(d, `${j.id}.json`), canon(j), 'utf8'));
   console.log(`data/jobs/ に求人の詳細を書き出しました: ${full.length}件${removed ? `（掲載終了 ${removed}件を削除）` : ''}`);
 }
 
 let fullJobs = [];   /* 掲載する求人の全項目（静的ページの生成に使う） */
 const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', [],
-  data => { const full = attachEmployees(attachLogos(applyFirstSeen(midCareerOnly(data)))); writeDetails(full); fullJobs = full; return lighten(full); });
+  data => {
+    /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
+       作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
+    const full = attachEmployees(attachLogos(applyFirstSeen(midCareerOnly(data)))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    writeDetails(full); fullJobs = full; return lighten(full); });
 const jobRows = jobs ? jobs.r.map(r => { const o = {}; jobs.k.forEach((k, i) => { if(r[i] != null) o[k] = r[i]; }); return o; }) : [];
 if(jobs) console.log('index.html を再生成しました:', jobRows.length, '件（中途のみ・一覧用の項目だけ内蔵）');
 
