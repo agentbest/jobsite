@@ -4,6 +4,7 @@
 //   jobs/<職種>/index.html    … 職種の求人一覧（例 /jobs/engineer/）
 //   jobs/<職種>/<勤務地>/     … 職種×勤務地の求人一覧（例 /jobs/engineer/tokyo/。件数が LP_MIN 以上のものだけ）
 //   area/<勤務地>/index.html  … 勤務地の求人一覧（例 /area/osaka/）
+//   company/<企業ID>/ ・ company/ … 企業ページ・企業一覧（company-pages.js。求人が0件でも消さない）
 //   sitemap.xml / robots.txt
 //   assets/site.css           … template.html の <style> をそのまま書き出したもの（静的ページはこれを読む）
 //
@@ -13,8 +14,8 @@
 //
 // ⚠ 見た目は template.html の CSS をそのまま使う（assets/site.css）。クラス名は検索画面の求人詳細と同じ。
 //    template.html 側でクラス名を変えたら、ここと job-template.html も直すこと。
-// ⚠ 文言（応募CTAの注記・担当者紹介）は template.html の ctaHtml() / author と同じ内容を持っている。
-//    片方だけ直さないこと。
+// 文言（応募CTAの注記・担当者紹介）は template.html の ctaHtml() / author から readFragment() で読む（2026-09-21〜）。
+//    ここには持たない。template.html 側を直せば静的ページにも反映される。
 // ⚠ 生成物（job/ jobs/ area/ sitemap.xml assets/site.css）は直接編集しない。次の rebuild で消える。
 const fs = require('fs'), path = require('path');
 
@@ -62,6 +63,14 @@ function readConst(tpl, name){
   const m = tpl.match(new RegExp(`const ${name}\\s*=\\s*("([^"\\\\]|\\\\.)*"|'([^'\\\\]|\\\\.)*')`));
   if(!m) throw new Error(`template.html に const ${name} が見つかりません`);
   return new Function(`return ${m[1]}`)();
+}
+/* template.html の HTML 断片をそのまま使う（CTA の注記・担当者紹介の文章を2か所に持たないため）。
+   <p class="クラス名">…</p> を1つだけ取る。中に ${…} が無い断片にだけ使うこと。 */
+function readFragment(tpl, cls){
+  const m = tpl.match(new RegExp(`<p class="${cls}">[\\s\\S]*?</p>`));
+  if(!m) throw new Error(`template.html に <p class="${cls}"> が見つかりません`);
+  if(/\$\{/.test(m[0])) throw new Error(`template.html の <p class="${cls}"> に \${…} が含まれています（静的ページでは展開できません）`);
+  return m[0];
 }
 function readObject(tpl, name){
   const m = tpl.match(new RegExp(`const ${name}\\s*=\\s*\\{([\\s\\S]*?)\\n\\};`));
@@ -118,6 +127,9 @@ function fmtSalary(j){
   if(mn != null) return `${mn}万円〜`;
   return '応相談';
 }
+/* template.html の salaryNote() と同じ。幅が 1,500万円以上の求人だけ「インセンティブ含む」を添える（backlog #5） */
+const SAL_WIDE = 1500;
+const salaryNote = j => (j.salaryMin != null && j.salaryMax != null && (j.salaryMax - j.salaryMin) >= SAL_WIDE) ? '<small class="sal-note" title="上限はインセンティブ・歩合を含む想定です">インセンティブ含む</small>' : '';
 const EMP_TYPES = ['正社員','契約社員','業務委託','無期雇用派遣','派遣社員','アルバイト・パート','インターン'];
 function empList(j){
   const s = (j && j.employment) ? String(j.employment).trim() : '';
@@ -183,7 +195,9 @@ function jobPage(ctx, j, related){
   const siteRow = url ? `<dt>企業サイト</dt><dd><a href="${esc(url)}" target="_blank" rel="noopener nofollow">${esc(url.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a></dd>` : '';
   const coMeta = [metaRow('所在地', j.companyAddress), metaRow('従業員数', j.employees), metaRow('上場区分', j.listedStatus), siteRow].join('');
   const coBody = j.companyInfo ? `<div class="rich">${rich(j.companyInfo)}</div>` : '';
-  const coSec = (coBody || coMeta) ? `<div class="pd-sec"><h3>企業情報</h3>${coBody}${coMeta ? `<dl class="pd-meta">${coMeta}</dl>` : ''}</div>` : '';
+  const coRec = ctx.coOf ? ctx.coOf(j) : null;
+  const coLink = coRec ? `<div class="pd-more"><a href="${esc(ctx.coPath(coRec))}">${esc(co)}の会社概要・募集中の求人（${coRec.jobs.length}件）を見る</a></div>` : '';
+  const coSec = (coBody || coMeta || coLink) ? `<div class="pd-sec"><h3>企業情報</h3>${coBody}${coMeta ? `<dl class="pd-meta">${coMeta}</dl>` : ''}${coLink}</div>` : '';
   const reqMeta = [metaRow('給与（原文）', j.salaryRaw), metaRow('勤務地', j.location), metaRow('勤務時間', j.workHours), metaRow('休日・休暇', j.holidays), metaRow('福利厚生', j.benefits)].join('');
 
   /* この求人のタグ。押すと検索画面でそのタグに絞り込む（?tag=スラッグ） */
@@ -233,8 +247,7 @@ function jobPage(ctx, j, related){
       <ol class="pd-line__steps"><li>友だち追加</li><li>この求人について送信</li><li>担当から返信</li><li>そのままLINEでやり取り</li></ol>
       <p class="pd-line__note">すでに友だちの方は②だけでかまいません（求人名が入った状態でLINEが開きます）。うまく開かないときは、LINEで ID <b>${esc(C.LINE_OA_ID)}</b> を検索してください。</p>
     </div>
-    <p class="pd-ctanote">「応募する」を押すと、<b>転職支援サービスの申し込みフォーム</b>に進みます。企業へ直接応募するのではなく、担当エージェント（株式会社エージェントベスト）が<b>企業へ推薦</b>する形で選考が進みます。<b>ご利用は無料</b>です（紹介手数料は採用企業負担）。<br>
-      まだ転職を決めていない段階でもかまいません。<b>経歴書のご用意は不要</b>です。この求人の背景や求められている経験など、公開情報にないところからお話しします。</p>
+    ${C.CTA_NOTE}
     <p class="pd-ctamail">「電話で軽く話を聞きたい」は<b>日程を決めずに、こちらから折り返す</b>形です。ご希望の時間帯だけ伺います。</p>`;
 
   const u = encodeURIComponent(canon), t = encodeURIComponent(`${name}｜${co}`);
@@ -260,11 +273,11 @@ function jobPage(ctx, j, related){
   const author = `<div class="pd-author">
       <p class="lbl">この求人を担当するエージェント</p>
       <p class="name"><a href="${esc(C.PROFILE_URL)}" target="_blank" rel="noopener">松岡 良次</a></p>
-      <p class="bio">株式会社エージェントベスト代表。大手人材会社およびスタートアップ人材企業にて、IT・スタートアップ・メガベンチャー企業の採用支援に従事。独立後はIT・スタートアップ・コンサル領域に特化し、20〜30代のキャリア支援を行う。（厚生労働大臣許可 13-ユ-316964）</p>
+      ${C.AUTHOR_BIO}
     </div>`;
 
   const main = `<div class="dt-head">
-      <div class="dt-co-row">${logoHtml(j, 'jrow__logo--lg')}<p class="dt-co">${esc(co)}</p></div>
+      <div class="dt-co-row">${logoHtml(j, 'jrow__logo--lg')}<p class="dt-co">${coRec ? `<a href="${esc(ctx.coPath(coRec))}" style="color:inherit">${esc(co)}</a>` : esc(co)}</p></div>
       <h1 class="dt-title">${esc(name)}</h1>
       <div class="pd-tags">${tags.join('')}</div>
     </div>
@@ -282,7 +295,7 @@ function jobPage(ctx, j, related){
     ${author}`;
 
   const side = `<div class="dt-card">
-    <span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}</span>
+    <span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}${salaryNote(j)}</span>
     <a class="btn-apply" href="${esc(apply)}" data-apply="${esc(j.id)}">この求人に応募する</a>
     <a class="btn-detail" href="${esc(consult)}" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
     <a class="line-btn" href="${esc(C.LINE_ADD_URL)}" target="_blank" rel="noopener noreferrer" data-line-cta="static-side">${C.LINE_ICON}<span>LINEで相談する</span></a>
@@ -356,12 +369,12 @@ function cardHtml(ctx, j){
   const band = ctx.empBandOf(j.employeeCount);
   const lead = plain(j.jobContent || j.must || j.companyInfo, 72);
   return `<article class="jrow">
-    <div class="jrow__top">${logoHtml(j)}<span class="jrow__co">${esc(j.company || '企業非公開')}</span>${ind}</div>
+    <div class="jrow__top">${logoHtml(j)}<span class="jrow__co">${(ctx.coOf && ctx.coOf(j)) ? `<a href="${esc(ctx.coPath(ctx.coOf(j)))}" style="color:inherit;text-decoration:none">${esc(j.company)}</a>` : esc(j.company || '企業非公開')}</span>${ind}</div>
     <h3 class="jrow__title"><a href="${esc(jobPath(j))}">${esc(name)}</a></h3>
     <div class="card__tags">${tags.join('')}</div>
     ${lead ? `<p class="jrow__desc">${esc(lead)}</p>` : ''}
     <dl class="jrow__meta">
-      <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span></dd>
+      <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span>${salaryNote(j)}</dd>
       ${loc ? `<dt>勤務地</dt><dd>${esc(loc)}</dd>` : ''}
       ${band ? `<dt>従業員数</dt><dd>${esc(band)}</dd>` : ''}
     </dl>
@@ -442,6 +455,7 @@ function build(root, full){
   const C = {};
   ['APPLY_PAGE','INQUIRY_FORM_URL','WAY_TEL','WAY_MAIL','CONSULT_URL','PROFILE_URL','LINE_ADD_URL','LINE_OA_ID','LINE_ICON'].forEach(k => { C[k] = readConst(tpl, k); });
   C.SHARE_ICONS = readObject(tpl, 'SHARE_ICONS');
+  C.CTA_NOTE = readFragment(tpl, 'pd-ctanote'); C.AUTHOR_BIO = readFragment(tpl, 'bio');
   const EMP_BANDS = readArray(tpl, 'EMP_BANDS');
   const empBandOf = n => (typeof n === 'number' && n > 0) ? EMP_BANDS.find(b => n <= b.max).label : '';
   const tagPath = path.join(root, 'data', 'tags.json');
@@ -500,6 +514,11 @@ function build(root, full){
   });
   pages.forEach(p => lpSet.add(p.rel));
 
+  /* 3.5 企業ページ（company/<企業ID>/・company/）。求人ページから企業ページへリンクするので先に作る。
+     中身と理由は company-pages.js の先頭にある。 */
+  const co = require('./company-pages').build(root, ctx, full, { esc, plain, fmtSalary, cardHtml, logoHtml, sortForList, writePage, syncDir, PREF_SLUG, SITE, jobPath });
+  ctx.coOf = co.coOf; ctx.coPath = co.coPath;
+
   /* 4. 求人ページ */
   const jobRoot = path.join(root, 'job');
   const removedJobs = syncDir(jobRoot, new Set(full.map(j => j.id)));
@@ -524,12 +543,14 @@ function build(root, full){
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
   const urls = [{ loc: `${SITE}/`, lastmod: today, pri: '1.0' }]
     .concat(pages.map(p => ({ loc: `${SITE}/${p.rel}/`, lastmod: today, pri: '0.8' })))
+    .concat(co.urls.map(u => ({ loc: u.loc, lastmod: u.lastmod || today, pri: u.pri })))
     .concat(full.map(j => ({ loc: SITE + jobPath(j), lastmod: j.createdAt || (j.recordCreatedAt || today).slice(0, 10), pri: '0.6' })));
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     + urls.map(u => `<url><loc>${esc(u.loc)}</loc><lastmod>${u.lastmod}</lastmod><priority>${u.pri}</priority></url>`).join('\n') + '\n</urlset>\n';
   fs.writeFileSync(path.join(root, 'sitemap.xml'), xml, 'utf8');
   /* data/（求人JSON）と assets/ は検索結果に出しても意味が無いので除外する */
-  fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /data/\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
+  /* data/list.json だけは検索画面（index.html）の描画に要るので Googlebot に許可する（2026-09-21〜） */
+  fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nAllow: /data/list.json\nDisallow: /data/\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
   console.log(`sitemap.xml を書き出しました: ${urls.length} URL`);
 }
 

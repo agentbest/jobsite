@@ -1,7 +1,7 @@
 # 求人データを毎日 Airtable から取り直して、サイトを再生成して push する。
 #
 #   毎日 06:00 JST（cron は UTC）＋ Actions タブの「Run workflow」で手動実行もできる
-#   fetch-jobs → fetch-tags → fetch-employees → fetch-1day → rebuild → 変更があれば commit & push
+#   fetch-jobs → fetch-tags → fetch-employees → fetch-companies → fetch-1day → rebuild → 変更があれば commit & push
 #   push されると GitHub Pages が数十秒で反映する（デプロイの仕組みは今までと同じ＝main ブランチをそのまま配信）
 #
 # 必要な設定（1回だけ）: リポジトリの Settings → Secrets and variables → Actions → New repository secret
@@ -51,6 +51,7 @@ jobs:
           node fetch-jobs.js
           node fetch-tags.js
           node fetch-employees.js
+          node fetch-companies.js
           # 1day選考会は開催が無い期間が長く、テーブルが無い／権限が無いことがある（2026-09-12 時点で
           # tbl1J80CGqiOTvuf7 は base に存在しない）。失敗しても求人の更新は止めない。data/1day.json は前回のまま。
           node fetch-1day.js || echo "::warning::1day選考会の取得に失敗しました（求人の更新は続けます）"
@@ -80,7 +81,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           if git diff --cached --quiet; then
-            echo "変更なし（求人・タグ・従業員数・1day選考会に動きはありませんでした）"
+            echo "変更なし（求人・タグ・従業員数・企業・1day選考会に動きはありませんでした）"
             exit 0
           fi
           git commit -m "求人データを自動更新（$(TZ=Asia/Tokyo date +%Y-%m-%d)）"

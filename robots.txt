@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /data/list.json
 Disallow: /data/
 
 Sitemap: https://jobs.agent-best.net/sitemap.xml

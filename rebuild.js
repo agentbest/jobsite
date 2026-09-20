@@ -239,7 +239,7 @@ function plainLead(src){
    タグは名前ではなく data/tags.json の並び順の番号（t）で持つ（1件あたり平均27タグ。名前だと4MB超になる）。
    template.html 側で展開する（JOBS の定義と JOBS.forEach の中）。 */
 const LIGHT_KEYS = ['id','company','position','title','employment','kubun','salaryMin','salaryMax','location',
-  'jobCategory','industry','url','listedStatus','createdAt','gradYear','t','logo','employees','employeeCount','areas','remote','lead'];
+  'jobCategory','industry','url','listedStatus','createdAt','gradYear','t','logo','employees','employeeCount','areas','remote','lead','companyId'];
 function lighten(full){
   const tagPath = path.join(dir, 'data', 'tags.json');
   const tagIdx = new Map();
@@ -276,13 +276,42 @@ function writeDetails(full){
   console.log(`data/jobs/ に求人の詳細を書き出しました: ${full.length}件${removed ? `（掲載終了 ${removed}件を削除）` : ''}`);
 }
 
+/* 年収の数値が明らかにおかしい求人を名指しで出す（2026-09-21）。
+   「想定単価2,900円」を 2,900万円、「月給27.5万円」を 2,000〜3,000万円と読んだ行が公開されていた。
+   サイト側では直さない（正は Airtable の 年収下限/上限 列）。ここで名指しして Airtable を直してもらう。 */
+function salarySanity(jobs){
+  const bad = jobs.filter(j => {
+    const mn = j.salaryMin, mx = j.salaryMax, raw = String(j.salaryRaw || '');
+    if(mn != null && mx != null && mn > mx) return true;                       /* 下限 > 上限 */
+    if(mx != null && mx < 200) return true;                                    /* 上限200万未満（桁落ち） */
+    if(mn != null && mn >= 2000 && /時給|単価|月給|円\s*[-〜~～]/.test(raw) && !/年俸|年収/.test(raw)) return true;   /* 時給・月給を年収に読んだ疑い */
+    if(mn != null && mn >= 3000 && /上限なし/.test(raw)) return true;          /* 「550〜上限なし」を3000と読んだ */
+    return false;
+  });
+  if(bad.length){
+    console.log(`⚠ 年収の数値が原文と合っていない疑いの求人 ${bad.length}件（Airtable の 年収下限/上限 を直してください。サイトにはそのまま出ます）:`);
+    bad.forEach(j => console.log(`   - ${j.id} ${j.company || ''} / ${(j.position || '').slice(0, 30)} … ${j.salaryMin}〜${j.salaryMax} ← ${String(j.salaryRaw || '').replace(/\s+/g, ' ').slice(0, 50)}`));
+  }
+  return jobs;
+}
+
 let fullJobs = [];   /* 掲載する求人の全項目（静的ページの生成に使う） */
 const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', [],
   data => {
     /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
        作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
-    const full = attachEmployees(attachLogos(applyFirstSeen(midCareerOnly(data)))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const full = salarySanity(attachEmployees(attachLogos(applyFirstSeen(midCareerOnly(data))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     writeDetails(full); fullJobs = full; return lighten(full); });
+/* 一覧用のデータは index.html に埋め込まず data/list.json に書く（template.html 冒頭の説明を参照）。
+   __LIST_VER__ は中身のハッシュ。GitHub Pages のキャッシュ（10分）を跨いでも、データが変わった回だけ取り直される。 */
+if(jobs){
+  const listJson = embed(jobs);
+  fs.writeFileSync(path.join(dir, 'data', 'list.json'), listJson, 'utf8');
+  const ver = require('crypto').createHash('sha1').update(listJson).digest('hex').slice(0, 10);
+  const indexPath = path.join(dir, 'index.html');
+  fs.writeFileSync(indexPath, fs.readFileSync(indexPath, 'utf8').replace('__LIST_VER__', ver), 'utf8');
+  console.log(`data/list.json を書き出しました: ${(listJson.length/1024/1024).toFixed(1)}MB（v=${ver}）`);
+}
 const jobRows = jobs ? jobs.r.map(r => { const o = {}; jobs.k.forEach((k, i) => { if(r[i] != null) o[k] = r[i]; }); return o; }) : [];
 if(jobs) console.log('index.html を再生成しました:', jobRows.length, '件（中途のみ・一覧用の項目だけ内蔵）');
 

@@ -395,6 +395,7 @@
   .jrow__meta dt{color:var(--ink-3); font-weight:700; white-space:nowrap}
   .jrow__meta dd{margin:0; color:var(--ink); min-width:0; overflow-wrap:anywhere}
   .jrow__sal{font-family:var(--mono); font-weight:800; font-size:15px; color:var(--ink); font-variant-numeric:tabular-nums}
+  .sal-note{display:inline-block; margin-left:6px; padding:1px 6px; border-radius:999px; border:1px solid var(--line); font-size:10.5px; font-weight:700; color:var(--ink-3); vertical-align:middle; white-space:nowrap; font-family:var(--sans,inherit)}
   .jrow__act{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center}
   .card__tags{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px}
   /* 長い職種名でも切れないよう、はみ出す時だけ折り返す */
@@ -1060,6 +1061,7 @@
     </a>
     <nav class="gnav" aria-label="メインメニュー">
       <a href="./" aria-current="page">求人を探す</a>
+      <a href="company/">企業を探す</a>
       <a href="apply.html">転職支援サービス</a>
     </nav>
     <div class="search">
@@ -1179,7 +1181,7 @@
           </select>
         </div>
       </div>
-      <div class="joblist" id="grid"></div>
+      <div class="joblist" id="grid"><p class="pd-loading" aria-live="polite">求人を読み込んでいます…</p></div>
       <div class="pager" id="pager"></div>
       <div class="empty" id="empty" hidden>
         <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -1222,6 +1224,7 @@
     </dl>
     <nav class="foot__links">
       <a href="https://www.agent-best.net/" target="_blank" rel="noopener">運営会社サイト</a>
+      <a href="company/">企業一覧</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー（人材紹介）</a>
       <a href="privacy-ad.html">プライバシーポリシー（求人広告）</a>
@@ -1277,10 +1280,27 @@
   <button class="signal__later" id="signalLater">今はしない</button>
 </aside>
 
-<script>
-/* rebuild.js は {k:[キー], r:[[値…]]} の表形式で埋める（キーの繰り返しを省くため）。ここでオブジェクトに戻す。
+<script type="module">
+/* 一覧用の求人データは index.html に埋め込まず、data/list.json を読む（2026-09-21〜）。
+   5,700件で index.html が 5.4MB になり、1万件に増やすと 10MB を超えるため。HTML（約300KB）は先に描画され、
+   データは並行して取りに行く。JSON は JS の文字列リテラルより速くパースされ、ブラウザのキャッシュも別に効く。
+   ⚠ この <script> は type="module"（トップレベル await のため）。strict mode で動く。
+   ⚠ file:// では fetch が CORS で弾かれて求人が出ない。ローカル確認は python -m http.server で開くこと（前からの決まり）。
+   ⚠ robots.txt は /data/ を拒否しているが /data/list.json だけ許可している（Googlebot がトップを描画するのに要る）。
+   rebuild.js は {k:[キー], r:[[値…]]} の表形式で書く（キーの繰り返しを省くため）。ここでオブジェクトに戻す。
    タグは番号（t）で入っていて、TAGS の定義後（下の JOBS.forEach）で名前に戻す。 */
-const JOBS = (d=>{ if(Array.isArray(d)) return d; const k=d.k||[]; return (d.r||[]).map(row=>{ const o={}; k.forEach((key,i)=>{ const v=row[i]; if(v!==null&&v!==undefined&&v!=="") o[key]=v; }); return o; }); })(__JOBS_DATA__);
+const JOBS = (d=>{ if(Array.isArray(d)) return d; const k=d.k||[]; return (d.r||[]).map(row=>{ const o={}; k.forEach((key,i)=>{ const v=row[i]; if(v!==null&&v!==undefined&&v!=="") o[key]=v; }); return o; }); })(await (async()=>{
+  try{
+    const r=await fetch("data/list.json?v=__LIST_VER__",{cache:"force-cache"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    return await r.json();
+  }catch(e){
+    console.error("求人データ（data/list.json）を読み込めませんでした",e);
+    const g=document.getElementById("grid");
+    if(g) g.innerHTML='<p class="pd-loading" role="alert">求人データを読み込めませんでした。ページを再読み込みしてください。</p>';
+    return [];
+  }
+})());
 /* 1day選考会は開催数が少ないので、専用ページをナビに置くのをやめ、
    検索結果の1位に固定のPR枠として出している（ページ1のときだけ）。
    開催がある回は日程を出し、無いときは案内を受け取る導線に切り替える。
@@ -1582,6 +1602,11 @@ function fmtSalary(j){
   if(mn!=null) return `${mn}万円〜`;
   return "応相談";
 }
+/* 「400〜4,000万円」のように上限と下限が極端に離れた求人（M&A系のインセンティブ込み上限）は、数字だけ見ると壊れて見える。
+   幅が SAL_WIDE 以上のときだけ「インセンティブ含む」の注記を添える（backlog #5）。データは直さない（上限は事実） */
+const SAL_WIDE=1500;
+function salaryWide(j){ return j.salaryMin!=null && j.salaryMax!=null && (j.salaryMax-j.salaryMin)>=SAL_WIDE; }
+function salaryNote(j){ return salaryWide(j)?`<small class="sal-note" title="上限はインセンティブ・歩合を含む想定です">インセンティブ含む</small>`:""; }
 
 /* ---------- markdown-ish renderer ---------- */
 function rich(src){
@@ -1922,8 +1947,21 @@ function sortJobs(arr){
   else if(state.sort==="salaryHigh") a.sort((x,y)=>y._skey-x._skey);
   else if(state.sort==="salaryLow") a.sort((x,y)=>(x._skey<0?1e9:x._skey)-(y._skey<0?1e9:y._skey));
   else if(state.sort==="company") a.sort((x,y)=>String(x.company||"").localeCompare(String(y.company||""),"ja"));
-  else a.sort((x,y)=>y._skey-x._skey);
+  else return interleaveByCompany(a.sort((x,y)=>y._skey-x._skey));
   return a;
+}
+/* おすすめ順だけ、同じ企業の求人が隣り合わないように配る（backlog #4）。
+   1社平均8件なので素直に年収順で並べると同じ企業が固まり、第一画面が「求人が少ないサイト」に見える。
+   年収の順序はなるべく保ち、直前と同じ企業なら後ろの別企業の求人を1つ前に持ってくるだけ。
+   ⚠ 新着順・年収順・企業名順には触らない（並び替えの意味が変わる）。 */
+function interleaveByCompany(a){
+  const out=[]; const rest=a.slice(); let last=null;
+  while(rest.length){
+    let i=0;
+    if(last!==null){ while(i<rest.length && (rest[i].company||"")===last) i++; if(i>=rest.length) i=0; }
+    const j=rest.splice(i,1)[0]; out.push(j); last=j.company||"";
+  }
+  return out;
 }
 
 /* ---------- render facets (once) ---------- */
@@ -2257,7 +2295,7 @@ function rowHtml(j){
     <div class="card__tags">${tags.join("")}</div>
     ${j._lead?`<p class="jrow__desc">${esc(j._lead)}</p>`:""}
     <dl class="jrow__meta">
-      <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span></dd>
+      <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span>${salaryNote(j)}</dd>
       ${j.locShort?`<dt>勤務地</dt><dd>${esc(j.locShort)}</dd>`:""}
       ${j.empBand?`<dt>従業員数</dt><dd>${esc(j.empBand)}</dd>`:""}
     </dl>
@@ -2406,7 +2444,7 @@ function lineBlock(j){
 /* 右レール。スクロールしても年収と応募ボタンが視界から消えないようにする */
 function sideHtml(j){
   return `<div class="dt-card">
-    <span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}</span>
+    <span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}${salaryNote(j)}</span>
     <a class="btn-apply" href="${esc(applyHref(j))}" data-apply="${esc(j.id)}">この求人に応募する</a>
     <a class="btn-detail" href="${esc(consultUrl(j))}" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
     <a class="line-btn" href="${LINE_ADD_URL}" target="_blank" rel="noopener noreferrer" data-line-cta="jobs-side">${LINE_ICON}<span>LINEで相談する</span></a>
@@ -2515,7 +2553,7 @@ function renderDetail(j, keepScroll){
 
   $("#detailBody").innerHTML=`
     <div class="dt-head">
-      <div class="dt-co-row">${logoHtml(j,"jrow__logo--lg")}<p class="dt-co">${esc(j.company||"企業非公開")}</p></div>
+      <div class="dt-co-row">${logoHtml(j,"jrow__logo--lg")}<p class="dt-co">${j.companyId?`<a href="/company/${encodeURIComponent(j.companyId)}/" style="color:inherit" title="会社概要・募集中の求人を見る">${esc(j.company||"企業非公開")}</a>`:esc(j.company||"企業非公開")}</p></div>
       <h1 class="dt-title" id="pdTitle">${esc(jobName(j))}</h1>
       <div class="pd-tags">${tags.join("")}</div>
     </div>
@@ -2640,14 +2678,17 @@ function pickValue(key,val){
   return true;
 }
 function applyFilterParams(p){
-  const cat=p.get("cat"), area=p.get("area");
-  if(!cat && !area) return false;
+  const cat=p.get("cat"), area=p.get("area"), q=(p.get("q")||"").trim();
+  if(!cat && !area && !q) return false;
   let n=0;
   if(cat){ clearFacetSilent("jobCategory"); if(pickValue("jobCategory",cat)) n++; }
   if(area){ clearFacetSilent("areas"); if(pickValue("areas",area)) n++; }
+  /* ?q=<キーワード>（backlog #14）。コーポレートの記事CTA・企業ページの「すべての求人を見る」が使う入口。
+     検索窓に流し込むだけで、絞り込みの状態は他と同じ仕組みで動く（書き戻しはしない） */
+  if(q){ $("#q").value=q; state.q=q; n++; }
   if(!n) return false;
   apply();
-  track("filter_use",{filter:"url", value:[cat,area].filter(Boolean).join(" / ")});
+  track("filter_use",{filter:"url", value:[cat,area,q].filter(Boolean).join(" / ")});
   return true;
 }
 

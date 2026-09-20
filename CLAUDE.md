@@ -20,7 +20,8 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 
 | 生成物 | テンプレ | 差し込むもの |
 |---|---|---|
-| `index.html`（約5.4MB・gzip後1.6MB） | `template.html` | `__JOBS_DATA__` ＝ 中途求人5,700件超の**一覧用の項目だけ**（表形式 `{k,r}`・タグは番号）。本文は `data/jobs/<求人ID>.json` |
+| `index.html`（約280KB・gzip後83KB） | `template.html` | 一覧用の求人データは**埋め込まない**（2026-09-21〜）。`data/list.json`（表形式 `{k,r}`・タグは番号・約5MB）を `<script type="module">` のトップレベル await で読む。`__LIST_VER__` に中身のハッシュが入る。本文は `data/jobs/<求人ID>.json` |
+| `company/<企業ID>/index.html`（1,670社）・`company/index.html` | `company-template.html` | 企業ページ・企業一覧（`company-pages.js`）。`data/companies.json`（`node fetch-companies.js`）から。**求人が0件でも消さない** |
 | `apply.html`（約1.2MB） | `apply-template.html` | `__JOBS_MINI__` ＝ ID・企業名・職種名・年収**だけ**（表形式 `[id,会社名,職種名,年収]`） |
 | `1day.html` | `1day-template.html` | `__EVENTS_DATA__` |
 | `job/<求人ID>/index.html`（5,700件・約45KB/件） | `job-template.html` | 求人1件の本文・JobPosting 構造化データ・求人ごとの title/OGP（`static-pages.js`） |
@@ -42,13 +43,14 @@ Airtable base「人材紹介事業」`appYkc36EvioYoL1A` / table「求人DB（�
 
 ```
 node fetch-jobs.js  → data/jobs.json（全件・全項目・約56MB。⚠ .gitignore。リポジトリに入れない）
-node fetch-tags.js / fetch-logos.js / fetch-employees.js
-node rebuild.js     → index.html      … 一覧・検索・絞り込みに要る項目だけ（表形式）を埋め込む
+node fetch-tags.js / fetch-logos.js / fetch-employees.js / fetch-companies.js
+node rebuild.js     → index.html      … 画面だけ（約280KB）。一覧用の項目は data/list.json に分けて書く
+                    → data/list.json  … 一覧・検索・絞り込みに要る項目だけ（表形式）。index.html が起動時に fetch する
                     → data/jobs/<求人ID>.json … 求人1件ずつの全項目（本文）。求人を開いたときに読む
                     → apply.html / 1day.html
 ```
 
-- **一覧側（`index.html` に内蔵）**: id・会社名・ポジション・雇用形態・年収・勤務地（70字まで）・職種・業界・URL・上場区分・掲載日・
+- **一覧側（`data/list.json`。2026-09-21 までは `index.html` に内蔵していた）**: id・会社名・`companyId`（企業ページへのリンク）・ポジション・雇用形態・年収・勤務地（70字まで）・職種・業界・URL・上場区分・掲載日・
   タグ（`data/tags.json` の並び順の**番号**）・ロゴ・従業員数・都道府県（`areas`）・リモート可（`remote`）・リード文（`lead` 72字）。
   `areas`/`remote`/`lead` は本文が要るので **`rebuild.js` が先に計算して埋める**（`lighten()`）。
 - **詳細側（`data/jobs/*.json`）**: 仕事内容・必須／歓迎条件・求める人物像・選考プロセス・給与原文・勤務時間・休日・福利厚生・企業情報 など全部。
@@ -57,6 +59,8 @@ node rebuild.js     → index.html      … 一覧・検索・絞り込みに要
 - **`data/jobs.json` が無い端末でも `rebuild.js` は動く**（`data/jobs/*.json` から復元する）。ただし新しい求人を載せるには `node fetch-jobs.js` が要る。
 - `data/jobs/` は掲載中の中途求人だけ。`rebuild.js` が掲載終了ぶんのファイルを消す。
 - **タグの番号は `data/tags.json` の並び順**。`fetch-tags.js` を回して順番が変わったら、必ず `rebuild.js` も回す（番号がずれる）。
+- ⚠ **`template.html` の本体スクリプトは `<script type="module">`**（`data/list.json` をトップレベル await で読むため）。strict mode で動くので、宣言なしの代入や `with` は書けない。`file://` では求人が出ない（fetch が CORS で弾かれる）。`robots.txt` は `/data/` を拒否しつつ **`/data/list.json` だけ許可**している（Googlebot がトップを描画するため）。消すとトップが「求人0件」で索引される。
+- **年収の数値がおかしい求人は `rebuild.js` の `salarySanity()` がビルド時に名指しする**（時給・月給を年収に読んだ疑い、下限>上限、上限200万未満）。サイト側では直さない。**正は Airtable の 年収下限/上限 列。** 2026-09-21 時点で7件（Novatra 2件・AlbaLink 3件・エンセイピア・エス・エム・エス）が未修正。
 
 ## 1day選考会（`1day.html` ＋ 検索結果1位のPR枠）
 
@@ -203,6 +207,16 @@ node rebuild.js     → index.html      … 一覧・検索・絞り込みに要
 
 スライドパネルをやめ、`?job=<求人ID>` を **pushState** で積む別ビューにした（`openDetail` / `goDetail` / `goList` / `route`）。
 戻るボタン・URL共有・履歴が普通のページと同じように動く。⚠ **`replaceState` に戻すと「戻る」で一覧に帰れなくなる。**
+
+### おすすめ順は同じ企業が隣り合わないように配る（backlog #4・2026-09-21）
+
+`sortJobs()` の「おすすめ順」だけ `interleaveByCompany()` を通す。年収順をなるべく保ちつつ、直前と同じ企業なら後ろの別企業の求人を1つ前に出す。
+**新着順・年収順・企業名順には触らない**（並び替えの意味が変わる）。静的ページの一覧（`sortForList`）は掲載日→年収順のままで、ここは通していない。
+
+### 年収の幅が極端に広い求人には「インセンティブ含む」（backlog #5・2026-09-21）
+
+上限−下限が `SAL_WIDE`（1,500万円）以上のときだけ、年収の横に `.sal-note` を添える（`salaryNote()`。`static-pages.js` にも同じものがある）。
+データは直さない（M&A系の「400〜4,000万円」は上限がインセンティブ込みの事実）。
 
 ### 一覧はページネーション（無限スクロールにしない）
 
@@ -573,17 +587,43 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 
 - 見た目は検索画面の求人詳細と**同じクラス名**（`.dt-grid` `.pd-sec` `.jrow` …）で組んである。`template.html` のクラス名を変えたら `static-pages.js` / `job-template.html` / `landing-template.html` も直す。
 - 応募先・Calendly・LINE・シェアのアイコン・従業員数の段は `static-pages.js` が **`template.html` の定数を正規表現で読む**（`readConst` / `readObject` / `readArray`）。定数の書き方（`const NAME = "…";`）を変えるとビルドが止まる。
-- ⚠ **CTAの注記と担当者紹介の文章は `template.html`（`ctaHtml` / `author`）と `static-pages.js` の2か所にある。片方だけ直さないこと。**
-- 一覧ページの「すべて見る」は検索画面へ `/?cat=<大分類>&area=<ブロック or 都道府県>` で入る（`template.html` の `applyFilterParams`。`?tag=` と同じく**入口専用**で書き戻さない）。
+- CTAの注記（`.pd-ctanote`）と担当者紹介（`.bio`）は **`static-pages.js` が `template.html` から `readFragment()` で読む**（2026-09-21〜）。`template.html` だけ直せばよい。ただし `<p class="…">…</p>` の中に `${…}` を入れるとビルドが止まる（静的ページでは展開できない）。`.pd-ctamail` は `${INQUIRY_FORM_URL…}` を含むので静的側に別に持っている。
+- 一覧ページの「すべて見る」は検索画面へ `/?cat=<大分類>&area=<ブロック or 都道府県>` で入る（`template.html` の `applyFilterParams`。`?tag=` と同じく**入口専用**で書き戻さない）。**`?q=<キーワード>` も同じ入口**（backlog #14・2026-09-21。コーポレートの記事CTA・企業ページが使う）。
 - ⚠ **`GROUP_SLUG` / `PREF_SLUG` / `BLOCKS` のスラッグを変えると URL が変わる**（検索エンジンの評価がリセットされる）。職種の大分類が増えたら `GROUP_SLUG` に足す（無いものはビルド時に名指しで警告し、ページを作らない）。
 - `BLOCKS` は `template.html` の `AREA_BLOCKS` と**同じ名前**にしておく（`?area=` で渡すため）。北海道はブロックと県が同名なので県だけ。
 - JobPosting の `datePosted` は `createdAt`（掲載開始日）、無ければ `recordCreatedAt`。`validThrough` は分からないので入れない。`directApply: false`（当社経由で推薦する形のため）。
 - 静的ページには★（気になる）・マイページが無い。右レールの「検索画面で開く」（`/?job=<求人ID>`）から使う。
 - リポジトリは約260MB 増えた（5,700ファイル）。1回のビルドで変わるのは中身が変わった求人のページだけ。**テンプレを変えると全ページが変わる**ので、細かい修正はまとめてから push する。
 
+## 企業ページ（`company/<企業ID>/`・`company/`）— 2026-09-21
+
+**求人と企業で SEO の役割を分ける**（松岡さんの方針）。求人ページは Airtable の鏡で毎朝入れ替わる「流動的なもの」＝検索エンジンの評価は期待しない。
+企業ページは `data/companies.json`（求人DB（企業）の**全社**・1,670社）から作り、**求人が0件になっても消さない**。URL を固定して蓄積し、
+「◯◯ 年収」「◯◯ 評判」のような社名検索（Search Console の上位クエリ）の受け皿にする。
+
+```
+node fetch-companies.js → data/companies.json（全社・1行1社・約3MB）
+node rebuild.js         → company/<企業ID>/index.html（会社概要・事業内容・基本情報・募集中の求人・同じ業界の企業・Organization 構造化データ）
+                        → company/index.html（企業一覧。社名／業界／本社／企業規模／上場で絞り込み。1,670社を1枚に静的に置き、JS で隠すだけ）
+```
+
+- URL は `/company/<Airtable のレコードID>/`。**レコードを作り直すと URL が変わる**（評価がリセットされる）。
+- **同じ社名のレコードが複数ある**（2026-09-21 時点で48社）。`fetch-companies.js` が求人リンクの多いレコードを主にして1社にまとめ、
+  他のレコードIDは `aliases` に残す（求人側の `companyId` がそちらを向いていても企業ページに辿れる）。Airtable 側で1社1レコードに整理するのが本筋。
+- 求人 → 企業の突き合わせは **`companyId`（会社リンクのレコードID）が正**。無い古いデータは社名の完全一致で引く。
+- 企業ページに求人が無いときは「現在、掲載中の公開求人はありません」＋相談CTA。**ページは残す。**
+- 会社概要・事業内容は Airtable の `会社概要` / `事業内容` 列（企業DB拡充で埋めたもの）をそのまま出す。**サイト側で要約・生成しない。**
+- ロゴは求人と同じ `data/logos.json`。本社都道府県が空でも住所が「山形県…」なら県を補う。
+- 求人詳細（検索画面・静的ページ）の社名と求人カードの社名から企業ページへリンクしている。ナビ「企業を探す」・フッター「企業一覧」も。
+- 企業ページの「すべての求人を見る」は `/?q=<社名>`（backlog #14 の `?q=` プリセット）。
+- `sitemap.xml` に企業ページ（priority 0.7・lastmod は Airtable の最終更新日時）と企業一覧（0.8）を含める。
+- ⚠ `company-template.html` のヘッダー・フッターは `job-template.html` / `landing-template.html` と同じ。ナビを変えるときは4本（`template.html` 含む）そろえる。
+- GA4: 企業一覧の絞り込みは `company_filter`。
+- 企業DBの列で**まだ使っていないもの**: `タグライン`（513社のみ）は見出し下に出している。`掲載ステータス`（28社だけ入っている）は使っていない。
+
 ## 自動更新（GitHub Actions）— 2026-09-12
 
-`.github/workflows/update-jobs.yml` が**毎朝 06:00 JST** に `fetch-jobs → fetch-tags → fetch-employees → fetch-1day → rebuild` を回し、
+`.github/workflows/update-jobs.yml` が**毎朝 06:00 JST** に `fetch-jobs → fetch-tags → fetch-employees → fetch-companies → fetch-1day → rebuild` を回し、
 変更があれば `github-actions[bot]` が commit & push する（Pages のデプロイは今までどおり main をそのまま配信）。Actions タブの「Run workflow」で手動でも回せる。
 
 - **必要な設定（1回だけ）**: Settings → Secrets and variables → Actions → `AIRTABLE_TOKEN`（Airtable の Personal access token）。
@@ -597,7 +637,7 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 
 ## GA4
 
-測定ID `G-1XXMP8Y1B4`。カスタムイベント: `job_detail_open` / `apply_click` / `apply_form_open` / `apply_step` / `apply_submit` / `apply_error` / `inquiry_click` / `consult_click` / `search` / `filter_use` / `page_change` / `perpage_change` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss` / `message_send`。
+測定ID `G-1XXMP8Y1B4`。カスタムイベント: `company_filter`（企業一覧の絞り込み）/ `job_detail_open` / `apply_click` / `apply_form_open` / `apply_step` / `apply_submit` / `apply_error` / `inquiry_click` / `consult_click` / `search` / `filter_use` / `page_change` / `perpage_change` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss` / `message_send`。
 
 **応募のファネルは `apply_click`（一覧・詳細で押した）→ `apply_form_open`（フォームに着いた）→ `apply_step`（step2〜4に進んだ）→ `apply_submit`（送信できた）** で見る。`apply_step` の落ち方で、どの設問が重いか分かる。
 

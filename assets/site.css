@@ -1,4 +1,5 @@
 /* rebuild.js が template.html の <style> から書き出したもの。直接編集しない */
+
   :root{
     --paper:#F5F7FA; --surface:#FFFFFF; --surface-2:#EEF1F6;
     --ink:#161A26; --ink-2:#4A5261; --ink-3:#6E7686;
@@ -362,6 +363,7 @@
   .jrow__meta dt{color:var(--ink-3); font-weight:700; white-space:nowrap}
   .jrow__meta dd{margin:0; color:var(--ink); min-width:0; overflow-wrap:anywhere}
   .jrow__sal{font-family:var(--mono); font-weight:800; font-size:15px; color:var(--ink); font-variant-numeric:tabular-nums}
+  .sal-note{display:inline-block; margin-left:6px; padding:1px 6px; border-radius:999px; border:1px solid var(--line); font-size:10.5px; font-weight:700; color:var(--ink-3); vertical-align:middle; white-space:nowrap; font-family:var(--sans,inherit)}
   .jrow__act{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center}
   .card__tags{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px}
   /* 長い職種名でも切れないよう、はみ出す時だけ折り返す */

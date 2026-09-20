@@ -118,6 +118,7 @@ function flat(v){
       id: r.id,
       title,
       company: (f[F.company] || []).map(id => coName.get(id)).filter(Boolean).join(' / ') || null,
+      companyId: (f[F.company] || [])[0] || null,   // 企業ページ（company/<企業ID>/）へのリンク。data/companies.json の id / aliases と突き合わせる
       position: f[F.position] ?? null,
       employment: flat(f[F.employment]),
       kubun: flat(f[F.kubun]),

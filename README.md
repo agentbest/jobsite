@@ -21,10 +21,12 @@ Claude Code で作ったもの。求職者向け・一般公開を想定。
 - `fetch-logos.js` … ロゴを取り込み直すスクリプト（実行: `node fetch-logos.js` → `node rebuild.js`）
 - `data/employees.json` … 従業員数の対応表（企業名 → `{raw:原文, n:人数}`・24社）
 - `fetch-employees.js` … 従業員数を取り込み直すスクリプト（実行: `node fetch-employees.js` → `node rebuild.js`）
+- `fetch-companies.js` … 企業DBの全社を `data/companies.json` に取り込むスクリプト（実行: `node fetch-companies.js` → `node rebuild.js`）。企業ページ `company/<企業ID>/` の元。求人が0件でも消さない（詳細は `CLAUDE.md`「企業ページ」）
   ⚠ 人数は Airtable の「従業員数（数値）」列が正。**サイト側で原文から推測しない**。空の企業は「企業規模」で絞り込めない。
 - `SUPABASE_SETUP.md` … マイページに「会員登録・ログイン」を足すときの手順書
 - `APPLY_SETUP.md` … **応募フォームの受け皿（Supabase の applications テーブル）を作る手順書**
 - `job-template.html` / `landing-template.html` / `static-pages.js` … 検索エンジン向けの静的ページ
+- `company-template.html` / `company-pages.js` … 企業ページ・企業一覧（`static-pages.js` から呼ばれる）
   （`job/<求人ID>/`・`jobs/<職種>/<勤務地>/`・`area/<勤務地>/`・`sitemap.xml`）の元。詳細は `CLAUDE.md`「静的ページ」
 - `data/first-seen.json` … 求人ごとの掲載開始日（「新着順」と NEW バッジの元）。**消さない**
 - `.github/workflows/update-jobs.yml` … 毎朝 06:00 JST に Airtable から取り直して push する（要 Secret `AIRTABLE_TOKEN`）
