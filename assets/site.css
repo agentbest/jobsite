@@ -1,5 +1,4 @@
 /* rebuild.js が template.html の <style> から書き出したもの。直接編集しない */
-
   :root{
     --paper:#F5F7FA; --surface:#FFFFFF; --surface-2:#EEF1F6;
     --ink:#161A26; --ink-2:#4A5261; --ink-3:#6E7686;
