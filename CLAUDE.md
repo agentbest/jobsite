@@ -21,7 +21,7 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 | 生成物 | テンプレ | 差し込むもの |
 |---|---|---|
 | `index.html`（約280KB・gzip後83KB） | `template.html` | 一覧用の求人データは**埋め込まない**（2026-09-21〜）。`data/list.json`（表形式 `{k,r}`・タグは番号・約5MB）を `<script type="module">` のトップレベル await で読む。`__LIST_VER__` に中身のハッシュが入る。本文は `data/jobs/<求人ID>.json` |
-| `company/<企業ID>/index.html`（1,670社）・`company/index.html` | `company-template.html` | 企業ページ・企業一覧（`company-pages.js`）。`data/companies.json`（`node fetch-companies.js`）から。**求人が0件でも消さない** |
+| `company/<企業ID>/index.html`（約2,500社）・`company/index.html`・`company/industry/<code>/` | `company-template.html` | 企業ページ・企業一覧・業界ページ（`company-pages.js`）。`data/companies.json`（`node fetch-companies.js`）から。**求人が0件でも消さない** |
 | `apply.html`（約1.2MB） | `apply-template.html` | `__JOBS_MINI__` ＝ ID・企業名・職種名・年収**だけ**（表形式 `[id,会社名,職種名,年収]`） |
 | `1day.html` | `1day-template.html` | `__EVENTS_DATA__` |
 | `job/<求人ID>/index.html`（5,700件・約45KB/件） | `job-template.html` | 求人1件の本文・JobPosting 構造化データ・求人ごとの title/OGP（`static-pages.js`） |
@@ -604,8 +604,15 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 ```
 node fetch-companies.js → data/companies.json（全社・1行1社・約3MB）
 node rebuild.js         → company/<企業ID>/index.html（会社概要・事業内容・基本情報・募集中の求人・同じ業界の企業・Organization 構造化データ）
-                        → company/index.html（企業一覧。社名／業界／本社／企業規模／上場で絞り込み。1,670社を1枚に静的に置き、JS で隠すだけ）
+                        → company/index.html（入口。業界リンク＋募集中の企業を静的に。絞り込みは data/companies-list.json を fetch して JS で）
+                        → company/industry/<中code>/（業種ごとの全社リスト・静的）／ company/industry/b<大code>/（大分類。上位300社＋業種リンク）
 ```
+
+**企業DBは1万社に増やす途中**（`company-db-10k-goal`。2026-09-22 時点で2,498社）。全社を1枚に並べる作りにしていないのはそのため。
+- **会社概要も事業内容も空で求人も無い会社は企業ページを作らない**（`company-pages.js`）。薄いページの量産を避けるため。概要が入れば次のビルドで作られる。
+- 業界ページの URL は業界マスタの `中code` / `大code`（`fetch-companies.js` が `industryCode` / `industryBigCode` / `industryMidBig` で持つ）。**コードを変えると URL が変わる。**
+- 中分類→大分類の親子は会社の並び順ではなく `industryMidBig`（マスタの対）で決める（会社が複数業界を持つと先頭の大分類に引きずられるため）。
+- `robots.txt` は `/data/companies-list.json` も許可している。
 
 - URL は `/company/<Airtable のレコードID>/`。**レコードを作り直すと URL が変わる**（評価がリセットされる）。
 - **同じ社名のレコードが複数ある**（2026-09-21 時点で48社）。`fetch-companies.js` が求人リンクの多いレコードを主にして1社にまとめ、

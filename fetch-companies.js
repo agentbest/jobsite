@@ -14,6 +14,7 @@ const fs = require('fs'), path = require('path');
 const BASE_ID  = 'appYkc36EvioYoL1A';   // base「人材紹介事業」
 const TABLE_ID = 'tblBNNH9sJjldPmZZ';   // table「求人DB（企業）」
 const IND_TABLE = 'tblfn5HIG6pPiQ2LE', IND_NAME = 'fldXKyZtMheTlkX1r', IND_BIG = 'fldElJiVIGobEOc99';   // 求人票（業界マスタ）
+const IND_CODE = 'fldgSjs3J8VpbX7j0', IND_BIG_CODE = 'fldTfGbKKiRQ1UkBq';   // 中code / 大code（企業一覧の業界ページの URL に使う。⚠ 変えると URL が変わる）
 const dir = __dirname;
 
 /* fieldId → companies.json のキー */
@@ -80,8 +81,8 @@ const str = v => (v == null ? '' : String(Array.isArray(v) ? v[0] : (typeof v ==
 
 (async () => {
   console.log('業界マスタを取得しています');
-  const inds = await listAll(IND_TABLE, [IND_NAME, IND_BIG]);
-  const indName = new Map(inds.map(r => [r.id, { mid: r.fields[IND_NAME] || '', big: r.fields[IND_BIG] || '' }]));
+  const inds = await listAll(IND_TABLE, [IND_NAME, IND_BIG, IND_CODE, IND_BIG_CODE]);
+  const indName = new Map(inds.map(r => [r.id, { mid: r.fields[IND_NAME] || '', big: r.fields[IND_BIG] || '', code: r.fields[IND_CODE], bigCode: r.fields[IND_BIG_CODE] }]));
 
   console.log('求人DB（企業）を取得しています');
   const recs = await listAll(TABLE_ID, Object.values(F));
@@ -109,6 +110,9 @@ const str = v => (v == null ? '' : String(Array.isArray(v) ? v[0] : (typeof v ==
       market: str(f[F.market]) || null,
       industry: [...new Set((f[F.industry] || []).map(id => (indName.get(id) || {}).mid).filter(Boolean))],
       industryBig: [...new Set((f[F.industry] || []).map(id => (indName.get(id) || {}).big).filter(Boolean))],
+      industryCode: [...new Set((f[F.industry] || []).map(id => (indName.get(id) || {}).code).filter(v => v != null))],
+      industryBigCode: [...new Set((f[F.industry] || []).map(id => (indName.get(id) || {}).bigCode).filter(v => v != null))],
+      industryMidBig: (f[F.industry] || []).map(id => indName.get(id)).filter(x => x && x.code != null).map(x => [x.code, x.bigCode]),   // 中code → 大code（業界ページの親子。会社の並び順に依存しないように対で持つ）
       updatedAt: String(f[F.updatedAt] || r.createdTime || '').slice(0, 10) || null,
       _jobs: (f[F.jobs] || []).length,
     };

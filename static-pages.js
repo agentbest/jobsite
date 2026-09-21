@@ -550,7 +550,7 @@ function build(root, full){
   fs.writeFileSync(path.join(root, 'sitemap.xml'), xml, 'utf8');
   /* data/（求人JSON）と assets/ は検索結果に出しても意味が無いので除外する */
   /* data/list.json だけは検索画面（index.html）の描画に要るので Googlebot に許可する（2026-09-21〜） */
-  fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nAllow: /data/list.json\nDisallow: /data/\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
+  fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nAllow: /data/list.json\nAllow: /data/companies-list.json\nDisallow: /data/\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
   console.log(`sitemap.xml を書き出しました: ${urls.length} URL`);
 }
 
