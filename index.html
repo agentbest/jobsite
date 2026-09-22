@@ -1291,7 +1291,7 @@
    タグは番号（t）で入っていて、TAGS の定義後（下の JOBS.forEach）で名前に戻す。 */
 const JOBS = (d=>{ if(Array.isArray(d)) return d; const k=d.k||[]; return (d.r||[]).map(row=>{ const o={}; k.forEach((key,i)=>{ const v=row[i]; if(v!==null&&v!==undefined&&v!=="") o[key]=v; }); return o; }); })(await (async()=>{
   try{
-    const r=await fetch("data/list.json?v=6b60baaeb8",{cache:"force-cache"});
+    const r=await fetch("data/list.json?v=57aaad7c61",{cache:"force-cache"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     return await r.json();
   }catch(e){
@@ -1575,8 +1575,9 @@ function empBand(n){ return (typeof n==="number" && n>0) ? EMP_BANDS.find(b=>n<=
 JOBS.forEach(j=>{
   if(Array.isArray(j.t)){ j.tags=j.t.map(i=>TAGS[i]&&TAGS[i].name).filter(Boolean); delete j.t; }
   const loc=(j.location||"");
-  /* areas / remote / lead は rebuild.js が本文から先に計算して埋めてある（本文は index.html に無いため）。
-     無いとき（古いデータ）だけここで計算する */
+  /* areas / remote / lead は rebuild.js が先に計算して埋めてある（本文は index.html に無いため）。
+     areas の正は Airtable の「勤務地（都道府県）」列（rebuild.js の prefsOfJob）。
+     無いとき（古いデータ）だけここで勤務地の原文から推測する */
   j.areas=(Array.isArray(j.areas)&&j.areas.length)?j.areas:areasOf(loc);
   j.locShort=locLabel(loc);
   const rtxt=loc+" "+(j.jobContent||"")+" "+(j.benefits||"");

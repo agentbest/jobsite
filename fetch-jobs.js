@@ -60,6 +60,7 @@ const F = {
   listedStatus:     'fld4KFQmkPBfCiczK',
   gradYear:         'fldPJIVJ0Tv4TQwaN', // 新卒サイトが使う。落とさないこと
   tags:             'fldYNSqarLLDERI0a', // タグ（複数選択）。タグ検索の元。落とさないこと
+  prefs:            'flddnoD5qZtuAISOO', // 勤務地（都道府県）。複数選択。エリア絞り込みの正データ（2026-09-22新設）
 };
 const CO_TABLE = 'tblBNNH9sJjldPmZZ', CO_NAME = 'fld03vEbeabi8IQDN';
 const IND_TABLE = 'tblfn5HIG6pPiQ2LE', IND_NAME = 'fldXKyZtMheTlkX1r';
@@ -147,6 +148,9 @@ function flat(v){
     /* タグ。Airtableの複数選択なので配列で返る。data/tags.json（node fetch-tags.js）と組で使う */
     const tg = (f[F.tags] || []).map(x => (typeof x === 'object' ? x.name : x)).filter(Boolean);
     if(tg.length) job.tags = tg;
+    /* 勤務地（都道府県）。⚠ サイトはこの列が入っている求人では本文からの推測をしない */
+    const pf = (f[F.prefs] || []).map(x => (typeof x === 'object' ? x.name : x)).filter(Boolean);
+    if(pf.length) job.prefs = pf;
     jobs.push(job);
   }
 
@@ -158,6 +162,9 @@ function flat(v){
   console.log('  区分:', Object.entries(by).map(([k,v]) => `${k} ${v}件`).join(' / '));
   if(skipped) console.log(`  ⚠ 求人タイトルが空／ヘッダー行のレコードを ${skipped}件 除外しました（Airtableで削除してください）`);
   console.log('  会社名リンクなし:', jobs.filter(j => !j.company).length, '件');
+  const noPref = jobs.filter(j => !(j.prefs || []).length).length;
+  console.log(`  勤務地（都道府県）あり: ${jobs.length - noPref}件 / 空 ${noPref}件`
+    + (noPref ? '（空の求人はサイトが勤務地の原文から推測します。エリアで正しく出したい求人はこの列を埋めてください）' : ''));
   const tagged = jobs.filter(j => j.tags && j.tags.length);
   console.log('  タグあり:', tagged.length, '件（1件あたり平均',
     tagged.length ? (tagged.reduce((a, j) => a + j.tags.length, 0) / tagged.length).toFixed(1) : 0, 'タグ）');

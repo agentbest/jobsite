@@ -236,6 +236,13 @@ function attachIndustry(jobs){
    求人を開いたときにブラウザが data/jobs/<求人ID>.json を読む（template.html の loadDetail）。
    ⚠ 検索の対象は一覧側の項目＋タグ＋リード文（lead）。本文の全文検索はしない。 */
 const PREFS = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
+/* 勤務地の都道府県。**Airtable の「勤務地（都道府県）」列（j.prefs）が正**（2026-09-22新設）。
+   列が空の求人だけ、勤務地の原文から推測する（areasOf）。「全国」「海外」は絞り込みの値としてそのまま使う。
+   ⚠ template.html にも同じ関数がある。片方だけ直さないこと（勤務地の絞り込みが食い違う）。 */
+function prefsOfJob(j){
+  const pf = (j.prefs || []).filter(Boolean);
+  return pf.length ? pf : areasOf(j.location || '');
+}
 /* template.html の areasOf() と同じ。**片方だけ直さないこと**（勤務地の絞り込みが食い違う） */
 /* 都道府県が書かれていない求人（「取引先構内」「大阪市北区…」「東京」など）のための手掛かり。
    ⚠ 使うのは**都道府県名が1つも見つからなかったときだけ**。見つかったらそちらが正。
@@ -301,7 +308,7 @@ function lighten(full){
     if(typeof o.createdAt === 'string') o.createdAt = o.createdAt.slice(0, 10);
     o.t = (j.tags || []).map(n => tagIdx.get(n)).filter(i => i !== undefined);
     const loc = j.location || '';
-    o.areas = areasOf(loc);
+    o.areas = prefsOfJob(j);
     o.remote = /在宅|リモート|テレワーク|フルリモート/.test(loc + ' ' + (j.jobContent || '') + ' ' + (j.benefits || ''));
     const lead = plainLead(j.jobContent || j.must || j.companyInfo || '');
     o.lead = lead.length > 72 ? lead.slice(0, 72) + '…' : lead;
@@ -476,7 +483,7 @@ function onedayMini(list){
 if(jobs){
   fullJobs.forEach(j => {
     const loc = j.location || '';
-    j.areas = areasOf(loc);
+    j.areas = prefsOfJob(j);
     j.remote = /在宅|リモート|テレワーク|フルリモート/.test(loc + ' ' + (j.jobContent || '') + ' ' + (j.benefits || ''));
   });
   require('./static-pages').build(dir, fullJobs);
