@@ -210,6 +210,26 @@ function attachEmployees(jobs){
   return jobs;
 }
 
+/* ---------- 求人の業界は企業DBの業界で上書きする（2026-09-22） ----------
+   求人票テーブルの「業界カテゴリ」リンクは、取り込んだ時点の企業の業界を写したもので、企業DB側で業界を直しても
+   追随しない（2026-09-22 の全社点検のあと 2,050件がずれていた）。サイトでは data/companies.json の業界を正として
+   求人1件ずつに差し込む。⚠ 企業DBに無い会社・企業側の業界が空の会社は、求人側の値をそのまま使う。 */
+function attachIndustry(jobs){
+  const coPath = path.join(dir, 'data', 'companies.json');
+  if(!fs.existsSync(coPath)) return jobs;
+  const byId = new Map();
+  JSON.parse(fs.readFileSync(coPath, 'utf8')).forEach(c => { byId.set(c.id, c); (c.aliases || []).forEach(a => byId.set(a, c)); });
+  let changed = 0;
+  jobs.forEach(j => {
+    const c = j.companyId && byId.get(j.companyId);
+    if(!c || !(c.industry || []).length) return;
+    const a = (j.industry || []).slice().sort().join('/'), b = c.industry.slice().sort().join('/');
+    if(a !== b){ j.industry = c.industry.slice(); changed++; }
+  });
+  if(changed) console.log(`業界: 企業DBの業界に合わせて ${changed}件の求人の業界を差し替えました（Airtable の求人票側は古いまま）`);
+  return jobs;
+}
+
 /* ---------- 一覧用の軽い項目だけを index.html に埋め、本文は data/jobs/<求人ID>.json に分ける ----------
    2026-09-06 に掲載を422件→5,700件超に広げた。全項目を埋め込むと index.html が 20MB を超えるので、
    一覧・検索・絞り込みに要る項目（下の LIGHT_KEYS）だけを埋め、仕事内容・条件・企業情報などの長文は
@@ -327,7 +347,7 @@ const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', 
   data => {
     /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
        作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
-    const full = salarySanity(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(midCareerOnly(data)))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const full = salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(midCareerOnly(data))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     writeDetails(full); fullJobs = full; return lighten(full); });
 /* 一覧用のデータは index.html に埋め込まず data/list.json に書く（template.html 冒頭の説明を参照）。
    __LIST_VER__ は中身のハッシュ。GitHub Pages のキャッシュ（10分）を跨いでも、データが変わった回だけ取り直される。 */
@@ -347,6 +367,18 @@ if(jobs) console.log('index.html を再生成しました:', jobRows.length, '�
    ⚠ 件数はここに入れない。中途だけに絞ったあとの件数はブラウザ側で数える。
    ⚠ 求人1件ずつのタグは data/jobs.json の tags 側にある。突き合わせは**タグ名の完全一致**。
      Airtableでタグ名を変えたら、求人側のタグも付け直す（node fetch-jobs.js からやり直す）。 */
+/* 業界の中分類→大分類（data/industry-master.json ＝ node fetch-companies.js が書く）。template.html の __IND_GROUP__ に埋める */
+function attachIndustryGroups(){
+  const indexPath = path.join(dir, 'index.html');
+  if(!fs.existsSync(indexPath)) return;
+  const mPath = path.join(dir, 'data', 'industry-master.json');
+  const map = {};
+  if(fs.existsSync(mPath)) JSON.parse(fs.readFileSync(mPath, 'utf8')).forEach(x => { if(x.name && x.big) map[x.name] = x.big; });
+  else console.log('data/industry-master.json が無いので、業界ツリーの大分類は「その他」になります（node fetch-companies.js）。');
+  fs.writeFileSync(indexPath, fs.readFileSync(indexPath, 'utf8').replace('__IND_GROUP__', () => embed(map)), 'utf8');
+}
+attachIndustryGroups();
+
 function attachTags(){
   const indexPath = path.join(dir, 'index.html');
   if(!fs.existsSync(indexPath)) return;

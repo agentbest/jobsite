@@ -1,0 +1,443 @@
+[
+ {
+  "code": 1,
+  "name": "戦略コンサル",
+  "big": "コンサル・シンクタンク",
+  "bigCode": 1,
+  "id": "recmXLYayZQQBQaiu"
+ },
+ {
+  "code": 2,
+  "name": "総合・ITコンサル",
+  "big": "コンサル・シンクタンク",
+  "bigCode": 1,
+  "id": "recfsTFcXl2QM9kOW"
+ },
+ {
+  "code": 3,
+  "name": "金融コンサル（財務・会計）",
+  "big": "コンサル・シンクタンク",
+  "bigCode": 1,
+  "id": "rec1sen52cLpigzYD"
+ },
+ {
+  "code": 4,
+  "name": "シンクタンク",
+  "big": "コンサル・シンクタンク",
+  "bigCode": 1,
+  "id": "recDWCgjiKPFJI7LJ"
+ },
+ {
+  "code": 5,
+  "name": "その他コンサル",
+  "big": "コンサル・シンクタンク",
+  "bigCode": 1,
+  "id": "recGWcWAwrW8n4BJ3"
+ },
+ {
+  "code": 6,
+  "name": "銀行・証券",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recXd5OsYBhjvTZji"
+ },
+ {
+  "code": 7,
+  "name": "保険（生保・損保）",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recGT2VgZ9IMsONBR"
+ },
+ {
+  "code": 8,
+  "name": "カード・リース・信販",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recZqCXh51raEJz2u"
+ },
+ {
+  "code": 9,
+  "name": "信金・労金・信組",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recJdKVmL9qMpLeQr"
+ },
+ {
+  "code": 10,
+  "name": "外資系投資銀行",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recPDHHTI2IRx1RTf"
+ },
+ {
+  "code": 11,
+  "name": "M&Aアドバイザリーファーム",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recr8Y5SydBbYjZHj"
+ },
+ {
+  "code": 12,
+  "name": "外資系金融機関",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recgwrRQipbQ7QLWI"
+ },
+ {
+  "code": 13,
+  "name": "資産運用（PE・アセマネ・ファンド）",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "receZmDkjpIbZisLo"
+ },
+ {
+  "code": 14,
+  "name": "政府系金融",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recewicspIvRW1bbS"
+ },
+ {
+  "code": 15,
+  "name": "その他金融",
+  "big": "金融",
+  "bigCode": 2,
+  "id": "recJumnyQrs8oMktH"
+ },
+ {
+  "code": 16,
+  "name": "食品・飲料",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "rec9VpRgNtgkdWTPS"
+ },
+ {
+  "code": 17,
+  "name": "消費財",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "rec3kbJotH3aMj2Mu"
+ },
+ {
+  "code": 18,
+  "name": "衣料品",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "reczMgLeB2zvzRz5E"
+ },
+ {
+  "code": 19,
+  "name": "電機",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "recBeolzVDmKeWO5x"
+ },
+ {
+  "code": 20,
+  "name": "自動車",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "recUEnxSwcpdyJCxs"
+ },
+ {
+  "code": 21,
+  "name": "精密機械",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "receAmsa8GBBdoRry"
+ },
+ {
+  "code": 22,
+  "name": "電子部品",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "recXxXE9jNNB8dv34"
+ },
+ {
+  "code": 23,
+  "name": "化学",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "rec1BC7gZYJ6LQ4FY"
+ },
+ {
+  "code": 24,
+  "name": "素材",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "recVMVMJfYt85mvLV"
+ },
+ {
+  "code": 25,
+  "name": "重工",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "recRNVPQBbak5UErb"
+ },
+ {
+  "code": 26,
+  "name": "医療機器・医薬品",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "recX6iMdBAGnwgpnd"
+ },
+ {
+  "code": 27,
+  "name": "その他メーカー",
+  "big": "メーカー",
+  "bigCode": 3,
+  "id": "rec9vhq367lvgITta"
+ },
+ {
+  "code": 28,
+  "name": "総合商社",
+  "big": "商社",
+  "bigCode": 4,
+  "id": "recKUjtHUTPAQwsZa"
+ },
+ {
+  "code": 29,
+  "name": "専門商社",
+  "big": "商社",
+  "bigCode": 4,
+  "id": "recohaZvNzID1hCU2"
+ },
+ {
+  "code": 30,
+  "name": "インターネット・Webサービス",
+  "big": "IT・通信",
+  "bigCode": 5,
+  "id": "recfucQgxzYdKgCNW"
+ },
+ {
+  "code": 31,
+  "name": "システム・ソリューション",
+  "big": "IT・通信",
+  "bigCode": 5,
+  "id": "recEsemBV22XUffVD"
+ },
+ {
+  "code": 32,
+  "name": "情報通信",
+  "big": "IT・通信",
+  "bigCode": 5,
+  "id": "recMFXs4QLEq70i3n"
+ },
+ {
+  "code": 33,
+  "name": "広告",
+  "big": "広告・マスコミ",
+  "bigCode": 6,
+  "id": "recY64OYeeOUyM3z9"
+ },
+ {
+  "code": 34,
+  "name": "テレビ・ラジオ",
+  "big": "広告・マスコミ",
+  "bigCode": 6,
+  "id": "recmzUUHKyNpTtO8v"
+ },
+ {
+  "code": 35,
+  "name": "新聞・通信社",
+  "big": "広告・マスコミ",
+  "bigCode": 6,
+  "id": "recJNwlYFItpfNSol"
+ },
+ {
+  "code": 36,
+  "name": "出版・印刷",
+  "big": "広告・マスコミ",
+  "bigCode": 6,
+  "id": "recq7kjfv0NDFERFA"
+ },
+ {
+  "code": 37,
+  "name": "芸能・エンタメ（映像・音楽他）",
+  "big": "広告・マスコミ",
+  "bigCode": 6,
+  "id": "recn3auYseF4sJfOA"
+ },
+ {
+  "code": 38,
+  "name": "人材（派遣・紹介）",
+  "big": "人材・教育",
+  "bigCode": 7,
+  "id": "rectJViiwqUlGbC2I"
+ },
+ {
+  "code": 39,
+  "name": "教育",
+  "big": "人材・教育",
+  "bigCode": 7,
+  "id": "recf66Mrt0aN9bKqc"
+ },
+ {
+  "code": 40,
+  "name": "電力・ガス・エネルギー",
+  "big": "インフラ・交通",
+  "bigCode": 8,
+  "id": "recQZJkwlV2KOPkwt"
+ },
+ {
+  "code": 41,
+  "name": "交通（鉄道・航空）",
+  "big": "インフラ・交通",
+  "bigCode": 8,
+  "id": "rec1VBj9CfEaJPBYQ"
+ },
+ {
+  "code": 42,
+  "name": "運輸・物流（陸運・海運・倉庫）",
+  "big": "インフラ・交通",
+  "bigCode": 8,
+  "id": "recuvudmEw4Omb8zG"
+ },
+ {
+  "code": 43,
+  "name": "総合不動産・デベロッパー",
+  "big": "不動産・建設",
+  "bigCode": 9,
+  "id": "recHFBsg53BfDP8FH"
+ },
+ {
+  "code": 44,
+  "name": "建設",
+  "big": "不動産・建設",
+  "bigCode": 9,
+  "id": "recNGuMLQR0EthBVY"
+ },
+ {
+  "code": 45,
+  "name": "住宅・インテリア",
+  "big": "不動産・建設",
+  "bigCode": 9,
+  "id": "recZmDTpocLEOVRA8"
+ },
+ {
+  "code": 46,
+  "name": "ホテル",
+  "big": "旅行・観光",
+  "bigCode": 10,
+  "id": "recLb0RWRF6R8PvdT"
+ },
+ {
+  "code": 47,
+  "name": "旅行会社",
+  "big": "旅行・観光",
+  "bigCode": 10,
+  "id": "recrryB5iUoaNqxga"
+ },
+ {
+  "code": 48,
+  "name": "ブライダル",
+  "big": "ブライダル・美容・くらし",
+  "bigCode": 11,
+  "id": "recuNNk45d0nPhlyK"
+ },
+ {
+  "code": 49,
+  "name": "美容（フィットネス・エステ他）",
+  "big": "ブライダル・美容・くらし",
+  "bigCode": 11,
+  "id": "recnU5Usj4wL0n94d"
+ },
+ {
+  "code": 50,
+  "name": "その他冠婚葬祭",
+  "big": "ブライダル・美容・くらし",
+  "bigCode": 11,
+  "id": "recPCwye2gMsAhXtQ"
+ },
+ {
+  "code": 51,
+  "name": "医療機関・調剤薬局",
+  "big": "医療・福祉",
+  "bigCode": 12,
+  "id": "recVgYwONXqQkuQeH"
+ },
+ {
+  "code": 52,
+  "name": "福祉",
+  "big": "医療・福祉",
+  "bigCode": 12,
+  "id": "recVLbykVLXdEGf5l"
+ },
+ {
+  "code": 53,
+  "name": "百貨店・スーパー・コンビニ",
+  "big": "小売・流通",
+  "bigCode": 13,
+  "id": "recKwYyUnWCyp5Y9v"
+ },
+ {
+  "code": 54,
+  "name": "その他卸売り",
+  "big": "小売・流通",
+  "bigCode": 13,
+  "id": "recm4Vnsq3EPp4uvK"
+ },
+ {
+  "code": 55,
+  "name": "中央省庁",
+  "big": "公務員・団体職員",
+  "bigCode": 14,
+  "id": "reckaHldJ1xhfwKJt"
+ },
+ {
+  "code": 56,
+  "name": "地方公務員 他",
+  "big": "公務員・団体職員",
+  "bigCode": 14,
+  "id": "rec7U81A1tcm8PjQz"
+ },
+ {
+  "code": 57,
+  "name": "独立行政法人",
+  "big": "公務員・団体職員",
+  "bigCode": 14,
+  "id": "recUUayoHax0QnPYM"
+ },
+ {
+  "code": 58,
+  "name": "公益/一般社団法人・NPO",
+  "big": "公務員・団体職員",
+  "bigCode": 14,
+  "id": "recSkB8P0L1HZZHHs"
+ },
+ {
+  "code": 59,
+  "name": "学校法人",
+  "big": "公務員・団体職員",
+  "bigCode": 14,
+  "id": "recViXxznVmSbJ2Pt"
+ },
+ {
+  "code": 60,
+  "name": "その他団体",
+  "big": "公務員・団体職員",
+  "bigCode": 14,
+  "id": "recuxTThV6POiMgQU"
+ },
+ {
+  "code": 61,
+  "name": "アミューズメント",
+  "big": "サービス・外食",
+  "bigCode": 15,
+  "id": "recj3gnWi3uRSbEhn"
+ },
+ {
+  "code": 62,
+  "name": "レストラン・フードサービス",
+  "big": "サービス・外食",
+  "bigCode": 15,
+  "id": "rec4se8l1tec5hMuq"
+ },
+ {
+  "code": 63,
+  "name": "専門・その他サービス",
+  "big": "サービス・外食",
+  "bigCode": 15,
+  "id": "rec8sgLVN2qolO9vF"
+ }
+]

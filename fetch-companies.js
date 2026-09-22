@@ -83,6 +83,13 @@ const str = v => (v == null ? '' : String(Array.isArray(v) ? v[0] : (typeof v ==
   console.log('業界マスタを取得しています');
   const inds = await listAll(IND_TABLE, [IND_NAME, IND_BIG, IND_CODE, IND_BIG_CODE]);
   const indName = new Map(inds.map(r => [r.id, { mid: r.fields[IND_NAME] || '', big: r.fields[IND_BIG] || '', code: r.fields[IND_CODE], bigCode: r.fields[IND_BIG_CODE] }]));
+  /* 業界マスタそのものも書き出す（data/industry-master.json）。検索画面の業界ツリー（中分類→大分類）は
+     以前 template.html に手書きの対応表（IND_GROUP）を持っていたが、マスタに中分類を足すたびに書き忘れて
+     「その他」に落ちていたので、2026-09-22 からマスタをそのまま流し込む。 */
+  const masterOut = inds.map(r => ({ code: r.fields[IND_CODE], name: r.fields[IND_NAME] || '', big: r.fields[IND_BIG] || '', bigCode: r.fields[IND_BIG_CODE], id: r.id }))
+    .filter(x => x.name).sort((a, b) => (a.code || 0) - (b.code || 0));
+  fs.writeFileSync(path.join(dir, 'data', 'industry-master.json'), JSON.stringify(masterOut, null, 1), 'utf8');
+  console.log(`data/industry-master.json を書き出しました: ${masterOut.length}件`);
 
   console.log('求人DB（企業）を取得しています');
   const recs = await listAll(TABLE_ID, Object.values(F));
