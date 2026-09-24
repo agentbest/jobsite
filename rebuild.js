@@ -349,12 +349,31 @@ function salarySanity(jobs){
   return jobs;
 }
 
+/* 求人名の頭に付いた媒体・企業の管理コードと、中途しか載せないサイトでは意味のない接頭辞を外す（2026-09-25）。
+   「H_879_」「E_371-2_」「Biz07_」「04021_」「0262 」や「【中途】」「【正社員】」「中途採用｜」が約230件そのまま出ていた。
+   Airtable は直さない（原文のまま）。何度通しても同じ結果になる＝data/jobs/*.json から作り直しても崩れない。
+   ⚠ 【東京】などの勤務地の接頭辞は情報なので残す。 */
+const NAME_CODE  = /^(?:[A-Za-z]{1,4}_?\d{2,}(?:-\d+)?|\d{3,}(?:-\d+)?)[_\s　]+(?=\S)/;
+const NAME_NOISE = /^(?:[【［\[]\s*(?:中途|中途採用|正社員|キャリア採用|経験者採用)\s*[】］\]]|(?:中途採用|キャリア採用)\s*[｜|:：])\s*/;
+const NAME_SEQ   = /^\d{1,2}[._](?=[^\d\s])/;   /* 「13.COO候補」「1_営業経験者歓迎」の連番。「3.5次元」のような数字続きは外さない */
+function cleanName(s){
+  let t = String(s || '').trim(), prev;
+  do { prev = t; t = t.replace(NAME_CODE, '').replace(NAME_NOISE, '').replace(NAME_SEQ, '').trim(); } while(t !== prev && t);
+  return t || String(s || '').trim();
+}
+function cleanNames(jobs){
+  let n = 0;
+  jobs.forEach(j => { if(!j.position) return; const c = cleanName(j.position); if(c !== j.position){ j.position = c; n++; } });
+  if(n) console.log(`求人名の管理コード・接頭辞を外しました: ${n}件`);
+  return jobs;
+}
+
 let fullJobs = [];   /* 掲載する求人の全項目（静的ページの生成に使う） */
 const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', [],
   data => {
     /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
        作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
-    const full = salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(midCareerOnly(data))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(midCareerOnly(data)))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     writeDetails(full); fullJobs = full; return lighten(full); });
 /* 一覧用のデータは index.html に埋め込まず data/list.json に書く（template.html 冒頭の説明を参照）。
    __LIST_VER__ は中身のハッシュ。GitHub Pages のキャッシュ（10分）を跨いでも、データが変わった回だけ取り直される。 */
