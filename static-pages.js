@@ -36,6 +36,35 @@ const GROUP_SLUG = {
   '経営':'executive', '交通・運輸':'transport', '半導体':'semiconductor', '士業':'professional', '食品':'food',
   '旅行・ホテル':'travel-hotel', '医療・看護・薬剤':'medical',
 };
+/* 職種の大分類 → コーポレートのキャリアメディア（www.agent-best.net/media/hub/<hub>/）。
+   求人サイトから転職ノウハウ記事への導線が0本だったので足した（2026-10-01）。
+   逆向き（記事→求人一覧）の対応表は agentbest-lp の src/lib/jobsLink.ts。片方を変えたらもう片方も見る。 */
+const MEDIA = 'https://www.agent-best.net/media/';
+const MEDIA_HUBS = {
+  'engineer': [['バックエンドエンジニア','backend-engineer'],['インフラエンジニア','infra-engineer'],['データエンジニア','data-engineer'],['テックリード','tech-lead']],
+  'project-management': [['プロジェクトマネージャー','project-manager'],['PMO','pmo'],['スクラムマスター','scrum-master']],
+  'business-planning': [['事業企画','business-planning'],['プロダクトマネージャー','product-manager'],['事業開発','bizdev']],
+  'design': [['UI/UXデザイナー','uiux-designer'],['プロダクトデザイナー','product-designer']],
+  'it-consultant': [['ITコンサルタント','it-consultant'],['DXコンサルタント','dx-consultant'],['SAPコンサルタント','sap-consultant']],
+  'consultant': [['戦略コンサルタント','strategy-consultant'],['総合コンサルタント','big4-consultant'],['M&Aアドバイザー','ma-advisor']],
+  'finance': [['投資銀行','ib-analyst'],['PEファンド','pe-investor'],['ベンチャーキャピタル','venture-capitalist']],
+  'sales': [['SaaS営業','saas-sales'],['エンタープライズ営業','enterprise-sales'],['カスタマーサクセス','customer-success']],
+  'marketing': [['Webマーケター','web-marketer'],['マーケティングマネージャー','marketing-manager'],['広報・PR','pr']],
+  'corporate-planning': [['経営企画','corporate-planning']],
+  'executive': [['CxO','cxo']],
+  'hr': [['人事・HRBP','hrbp'],['採用担当','recruiter']],
+  'corporate': [['法務','legal']],
+  'internet-service': [['SaaS業界','saas-industry'],['生成AI・AI業界','ai-industry'],['メガベンチャー','megaventure-industry']],
+};
+const mediaUtm = (medium) => `utm_source=jobs&utm_medium=${medium}`;
+/* 一覧ページ・求人ページの下に置く「転職ノウハウ」ブロック。対応が無い職種は記事トップと事例集だけ */
+function mediaBlock(gslug, label, medium){
+  const hubs = MEDIA_HUBS[gslug] || [];
+  const links = hubs.map(([nm, h]) => `<a href="${MEDIA}hub/${h}/?${mediaUtm(medium)}">${esc(nm)}の転職ガイド</a>`);
+  links.push(`<a href="https://www.agent-best.net/cases/?${mediaUtm(medium)}">「どこから、どこへ」転職事例集</a>`);
+  if(!hubs.length) links.push(`<a href="${MEDIA}?${mediaUtm(medium)}">キャリアメディア（転職ノウハウ記事）</a>`);
+  return `<nav class="lp__nav" aria-label="転職ノウハウ"><p>${esc(label)}の転職ノウハウ</p><div class="lp__pills">${links.join('')}</div></nav>`;
+}
 const PREF_SLUG = {
   '北海道':'hokkaido','青森県':'aomori','岩手県':'iwate','宮城県':'miyagi','秋田県':'akita','山形県':'yamagata','福島県':'fukushima',
   '茨城県':'ibaraki','栃木県':'tochigi','群馬県':'gunma','埼玉県':'saitama','千葉県':'chiba','東京都':'tokyo','神奈川県':'kanagawa',
@@ -266,6 +295,7 @@ function jobPage(ctx, j, related){
   const more = [];
   if(gslug && pref && PREF_SLUG[pref] && ctx.lpExists(`jobs/${gslug}/${PREF_SLUG[pref]}`)) more.push(`<a href="/jobs/${gslug}/${PREF_SLUG[pref]}/">${esc(pref)}の${esc(group)}の求人一覧</a>`);
   if(gslug) more.push(`<a href="/jobs/${gslug}/">${esc(group)}の求人一覧</a>`);
+  if(gslug && MEDIA_HUBS[gslug]) more.push(`<a href="${MEDIA}hub/${MEDIA_HUBS[gslug][0][1]}/?${mediaUtm('job')}">${esc(MEDIA_HUBS[gslug][0][0])}の転職ガイド</a>`);
   if(pref && PREF_SLUG[pref] && ctx.lpExists(`area/${PREF_SLUG[pref]}`)) more.push(`<a href="/area/${PREF_SLUG[pref]}/">${esc(pref)}の求人一覧</a>`);
   const relSec = related.length ? `<div class="pd-sec"><h3>同じ職種の他の求人</h3><ul class="rel">${related.map(r => `<li><span class="co">${esc(r.company || '企業非公開')}</span><a href="${esc(jobPath(r))}">${esc(jobName(r))}</a><div class="m"><b>${esc(fmtSalary(r))}</b>${locShort(r) ? ' ・ ' + esc(locShort(r)) : ''}</div></li>`).join('')}</ul>
       ${more.length ? `<div class="pd-more">${more.join('')}</div>` : ''}</div>` : '';
@@ -338,12 +368,12 @@ function jobPage(ctx, j, related){
     { '@type': 'ListItem', position: gslug ? 3 : 2, name, item: canon },
   ]};
 
-  const title = `${name}｜${co}（${fmtSalary(j)}） - ミドル・ハイクラス転職 求人検索`;
+  const title = `${name}｜${co}（${fmtSalary(j)}） - エージェントベストの転職求人`;
   const desc = plain(j.jobContent || j.must || j.companyInfo, 110) || `${co}の${name}の求人。`;
   const crumb = `<a href="/">ホーム</a><span class="sep">›</span>${gslug ? `<a href="/jobs/${gslug}/">${esc(group)}の求人</a><span class="sep">›</span>` : ''}<span class="cur">${esc(name)}</span>`;
   const back = gslug ? `/jobs/${gslug}/` : '/';
   return tpl
-    .replace('__TITLE__', () => esc(title.length > 70 ? `${name}｜${co} - 求人検索` : title))
+    .replace('__TITLE__', () => esc(title.length > 70 ? `${name}｜${co} - エージェントベスト` : title))
     .replace(/__OGTITLE__/g, () => esc(`${name}｜${co}（${fmtSalary(j)}）`))
     .replace(/__DESC__/g, () => esc(desc))
     .replace(/__CANON__/g, () => esc(canon))
@@ -403,6 +433,7 @@ function landingPage(ctx, p){
     <ul class="lp__stats"><li><b>${n.toLocaleString()}</b>件</li><li><b>${cos.toLocaleString()}</b>社</li><li><b>${nSal800.toLocaleString()}</b>件が年収800万円以上</li><li><b>${nRemote.toLocaleString()}</b>件がリモート可</li><li><b>${nListed.toLocaleString()}</b>件が上場企業</li></ul>
     ${p.pills && p.pills.length ? `<nav class="lp__nav" aria-label="${esc(p.pillsTitle)}"><p>${esc(p.pillsTitle)}</p><div class="lp__pills">${p.pills.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
     ${p.pills2 && p.pills2.length ? `<nav class="lp__nav" aria-label="${esc(p.pills2Title)}"><p>${esc(p.pills2Title)}</p><div class="lp__pills">${p.pills2.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
+    ${mediaBlock((p.rel.match(/^jobs\/([^/]+)/) || [])[1], p.mediaLabel || '転職', 'lp')}
     <div class="joblist">${jobs.slice(0, LP_LIST_MAX).map(j => cardHtml(ctx, j)).join('')}</div>
     <div class="lp__all"><a href="${esc(p.allHref)}">${n > LP_LIST_MAX ? `残り${(n - LP_LIST_MAX).toLocaleString()}件を含むすべての求人を絞り込んで見る` : 'この条件で絞り込んで検索する'} →</a></div>
     <div class="lp__cta"><h2>掲載していない非公開求人もあります</h2><p>重要なポジションほど公開されず、非公開で動いています。希望を送っていただければ、掲載外の求人も含めて個別にお探しします。まだ転職を決めていない段階でもかまいません。</p>
@@ -410,7 +441,7 @@ function landingPage(ctx, p){
   const crumb = [['ホーム', '/'], ...p.crumbs].map(([nm, href], i, a) => i === a.length - 1 ? `<span class="cur">${esc(nm)}</span>` : `<a href="${esc(href)}">${esc(nm)}</a><span class="sep">›</span>`).join('');
   const ld = { '@context': 'https://schema.org', '@type': 'CollectionPage', name: p.title, url: canon, description: desc };
   const html = ctx.lpTpl
-    .replace('__TITLE__', () => esc(`${p.title}（${n.toLocaleString()}件） - ミドル・ハイクラス転職 求人検索`))
+    .replace('__TITLE__', () => esc(`${p.title}（${n.toLocaleString()}件） - エージェントベストの転職求人`))
     .replace(/__OGTITLE__/g, () => esc(`${p.title}（${n.toLocaleString()}件）`))
     .replace(/__DESC__/g, () => esc(desc))
     .replace(/__CANON__/g, () => esc(canon))
@@ -493,13 +524,13 @@ function build(root, full){
   groups.forEach(([g, jobs]) => {
     const gslug = GROUP_SLUG[g];
     const combos = areaUnits.map(a => ({ a, jobs: jobs.filter(j => inArea(a, j)) })).filter(x => x.jobs.length >= LP_MIN);
-    pages.push({ rel: `jobs/${gslug}`, title: `${g}の転職・求人`, h1: `${g}の求人`, jobs, crumbs: [[`${g}の求人`, `/jobs/${gslug}/`]],
+    pages.push({ rel: `jobs/${gslug}`, mediaLabel: g, title: `${g}の転職・求人`, h1: `${g}の求人`, jobs, crumbs: [[`${g}の求人`, `/jobs/${gslug}/`]],
       pillsTitle: '勤務地で絞る', pills: combos.map(x => ({ label: x.a.name, href: `/jobs/${gslug}/${x.a.slug}/`, n: x.jobs.length })),
       pills2Title: '他の職種', pills2: groups.filter(([g2]) => g2 !== g).map(([g2, js]) => ({ label: g2, href: `/jobs/${GROUP_SLUG[g2]}/`, n: js.length })),
       allHref: `/?cat=${encodeURIComponent(g)}` });
     combos.forEach(x => {
       const others = groups.filter(([g2]) => g2 !== g).map(([g2, js]) => ({ g2, n: js.filter(j => inArea(x.a, j)).length })).filter(o => o.n >= LP_MIN);
-      pages.push({ rel: `jobs/${gslug}/${x.a.slug}`, title: `${x.a.name}の${g}の転職・求人`, h1: `${x.a.name}の${g}の求人`, jobs: x.jobs,
+      pages.push({ rel: `jobs/${gslug}/${x.a.slug}`, mediaLabel: g, title: `${x.a.name}の${g}の転職・求人`, h1: `${x.a.name}の${g}の求人`, jobs: x.jobs,
         crumbs: [[`${g}の求人`, `/jobs/${gslug}/`], [x.a.name, `/jobs/${gslug}/${x.a.slug}/`]],
         pillsTitle: `${g}の他の勤務地`, pills: combos.filter(y => y !== x).map(y => ({ label: y.a.name, href: `/jobs/${gslug}/${y.a.slug}/`, n: y.jobs.length })),
         pills2Title: `${x.a.name}の他の職種`, pills2: others.map(o => ({ label: o.g2, href: `/jobs/${GROUP_SLUG[o.g2]}/${x.a.slug}/`, n: o.n })),
