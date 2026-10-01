@@ -1,5 +1,6 @@
-// 転職メディア（www.agent-best.net/media/）の企業記事と、求人DB（企業）の企業を社名で突き合わせる。
-//   node fetch-media-companies.js  → data/media-companies.json（{ 企業レコードID: [記事slug, 記事タイトル] }）
+// 転職メディア（www.agent-best.net/media/）の記事一覧から、求人サイトがリンクに使う2つの表を作る。
+//   node fetch-media-companies.js  → data/media-companies.json（{ 企業レコードID: [記事slug, 記事タイトル] }）… 企業記事と求人DB（企業）を社名で突き合わせ
+//                                 → data/media-guides.json（{ ハブslug: [[記事slug, タイトル, 種類], …] }）… 求人ページの「応募前に読む」用
 //
 // 企業ページ・求人ページから「◯◯の評判・年収・選考対策（転職メディア）」へリンクするため（2026-10-01）。
 // 記事側の一覧はコーポレートの検索インデックス /media/search.json を読む（i: [slug, title, desc, カテゴリ番号, ハブ番号, 企業名, …]）。
@@ -41,5 +42,17 @@ function norm(s){
     cs.forEach(c => { out[c.id] = [slug, title]; });
   });
   fs.writeFileSync(OUT, JSON.stringify(out));
+  /* 職種ごとの選考対策記事。slug が {ハブ}-resume / -interview / -motivation / -salary で揃っている（media-gen の命名規則） */
+  const KIND = { resume: '職務経歴書', interview: '面接対策', motivation: '志望動機', salary: '年収相場' };
+  const guides = {};
+  idx.i.forEach(([slug, title]) => {
+    const m = slug.match(/^(.+)-(resume|interview|motivation|salary)$/);
+    if(!m) return;
+    (guides[m[1]] = guides[m[1]] || []).push([slug, title, KIND[m[2]]]);
+  });
+  const ORDER = ['職務経歴書', '志望動機', '面接対策', '年収相場'];
+  Object.values(guides).forEach(a => a.sort((x, y) => ORDER.indexOf(x[2]) - ORDER.indexOf(y[2])));
+  fs.writeFileSync(path.join(__dirname, 'data', 'media-guides.json'), JSON.stringify(guides));
+  console.log(`職種ガイド記事: ${Object.keys(guides).length}職種ぶん → data/media-guides.json`);
   console.log(`転職メディアの企業記事 ${articles.length}本 → 企業ページと一致 ${articles.length - miss}本（企業DBに無い ${miss}本）。data/media-companies.json に ${Object.keys(out).length}社`);
 })();

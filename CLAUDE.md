@@ -35,7 +35,7 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 
 ## 転職メディアの企業記事へのリンク（2026-10-01）
 
-`node fetch-media-companies.js` → `data/media-companies.json`（{ 企業レコードID: [記事slug, タイトル] }）。コーポレートの `/media/search.json` の企業記事と、`data/companies.json` の社名を正規化して突き合わせる（686本中406本が一致）。企業ページに「〇〇への転職ガイド」欄、求人ページの企業情報に記事リンクが出る。毎朝の Actions でも取得する（失敗しても前回のファイルで続行）。逆向き（記事→企業ページ）は agentbest-lp の `tools/jobsite-companies/`。
+`node fetch-media-companies.js` → `data/media-companies.json`（{ 企業レコードID: [記事slug, タイトル] }）。コーポレートの `/media/search.json` の企業記事と、`data/companies.json` の社名を正規化して突き合わせる（686本中406本が一致）。企業ページに「〇〇への転職ガイド」欄、求人ページの企業情報に記事リンクが出る。毎朝の Actions でも取得する（失敗しても前回のファイルで続行）。逆向き（記事→企業ページ）は agentbest-lp の `tools/jobsite-companies/`。 同じスクリプトが `data/media-guides.json`（職種ハブ→職務経歴書・志望動機・面接対策・年収相場の記事）も作り、求人ページの「応募前に読む」に出す。求人の職種→ハブの対応は `static-pages.js` の `JOBCAT_HUB`（求人の約7割をカバー）。
 
 ## データ元
 

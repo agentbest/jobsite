@@ -65,6 +65,27 @@ function mediaBlock(gslug, label, medium){
   if(!hubs.length) links.push(`<a href="${MEDIA}?${mediaUtm(medium)}">転職メディア（転職ノウハウ記事）</a>`);
   return `<nav class="lp__nav" aria-label="転職ノウハウ"><p>${esc(label)}の転職ノウハウ</p><div class="lp__pills">${links.join('')}</div></nav>`;
 }
+/* 求人の職種（jobCategory の「（」より前）→ 転職メディアの職種ハブ。求人ページの「応募前に読む」に使う。
+   はっきり対応する職種だけを書く（個人営業・機械設計など、メディアに該当ハブが無い職種は何も出さない）。2026-10-01 時点で求人の約7割をカバー */
+const JOBCAT_HUB = {
+  '法人営業': 'enterprise-sales', 'プロジェクトマネージャー': 'project-manager', 'SE': 'backend-engineer',
+  'インフラエンジニア': 'infra-engineer', 'デジタルマーケティング': 'digital-marketer', 'システムコンサルタント': 'it-consultant',
+  '事業企画・事業統括': 'business-planning', '経理': 'finance', '財務': 'finance', '経営企画・経営戦略': 'corporate-planning',
+  'バックエンドエンジニア': 'backend-engineer', 'フロントエンドエンジニア': 'frontend-engineer', '戦略コンサルタント': 'strategy-consultant',
+  '新規事業企画・事業開発': 'bizdev', '情報システムエンジニア': 'corporate-it', 'データサイエンティスト': 'data-scientist',
+  '採用': 'recruiter', 'インサイドセールス・内勤営業': 'inside-sales', 'QA/テスター': 'qa-engineer', '法務・コンプライアンス': 'legal',
+  '機械学習エンジニア': 'ml-engineer', 'カスタマーサクセス': 'customer-success', '広報・PR・広告宣伝': 'pr',
+  '業務プロセスコンサルタント': 'business-consultant', 'プロダクトマネージャー': 'product-manager', '組織・人事コンサルタント': 'hr-consultant',
+  '制度企画・組織開発': 'hrbp', 'プリセールスエンジニア': 'presales', 'プリセールス・技術営業': 'presales',
+  '代理店営業・アライアンス': 'partner-sales', 'M&A': 'ma-advisor', '組み込みエンジニア': 'embedded-engineer',
+  '財務・会計コンサルタント': 'fas-consultant', 'セキュリティコンサルタント': 'security-consultant', 'UI/UXデザイナー': 'uiux-designer',
+  'CTO/VPoE': 'cto-vpoe', 'パッケージ導入コンサルタント': 'erp-consultant', 'スマートフォンエンジニア': 'mobile-engineer', 'CFO': 'cxo',
+};
+function jobHubOf(cat){
+  const s = String(cat || '');
+  if(/^SE（制御・組み込み系）/.test(s)) return 'embedded-engineer';
+  return JOBCAT_HUB[s.split('（')[0].trim()] || null;
+}
 const PREF_SLUG = {
   '北海道':'hokkaido','青森県':'aomori','岩手県':'iwate','宮城県':'miyagi','秋田県':'akita','山形県':'yamagata','福島県':'fukushima',
   '茨城県':'ibaraki','栃木県':'tochigi','群馬県':'gunma','埼玉県':'saitama','千葉県':'chiba','東京都':'tokyo','神奈川県':'kanagawa',
@@ -309,6 +330,12 @@ function jobPage(ctx, j, related){
       ${C.AUTHOR_BIO}
     </div>`;
 
+  /* 応募前に読む：この職種の職務経歴書・志望動機・面接対策・年収相場（転職メディア）。data/media-guides.json は fetch-media-companies.js が作る */
+  const gHub = jobHubOf(j.jobCategory);
+  const guides = (gHub && ctx.mediaGuides && ctx.mediaGuides[gHub]) || [];
+  const guideSec = guides.length ? `<div class="pd-sec"><h3>応募前に読む</h3><div class="pd-more">${guides.map(([slug, title]) =>
+      `<a href="https://www.agent-best.net/media/${esc(slug)}/?utm_source=jobs&utm_medium=job-guide">${esc(title)}</a>`).join('')}</div></div>` : '';
+
   const main = `<div class="dt-head">
       <div class="dt-co-row">${logoHtml(j, 'jrow__logo--lg')}<p class="dt-co">${coRec ? `<a href="${esc(ctx.coPath(coRec))}" style="color:inherit">${esc(co)}</a>` : esc(co)}</p></div>
       <h1 class="dt-title">${esc(name)}</h1>
@@ -322,6 +349,7 @@ function jobPage(ctx, j, related){
     ${sec('求める人物像', j.idealPerson, true)}
     ${reqMeta ? `<div class="pd-sec"><h3>募集要項</h3><dl class="pd-meta">${reqMeta}</dl></div>` : ''}
     ${sec('選考プロセス', j.selectionProcess, true)}
+    ${guideSec}
     <div class="pd-sec"><h3>この求人に応募する</h3>${cta}</div>
     ${share}
     ${relSec}
@@ -552,6 +580,7 @@ function build(root, full){
      中身と理由は company-pages.js の先頭にある。 */
   const co = require('./company-pages').build(root, ctx, full, { esc, plain, fmtSalary, cardHtml, logoHtml, sortForList, writePage, syncDir, PREF_SLUG, SITE, jobPath });
   ctx.coOf = co.coOf; ctx.coPath = co.coPath; ctx.mediaOf = co.mediaOf; ctx.mediaHref = co.mediaHref;
+  { const g = path.join(root, 'data', 'media-guides.json'); ctx.mediaGuides = fs.existsSync(g) ? JSON.parse(fs.readFileSync(g, 'utf8')) : {}; }
 
   /* 4. 求人ページ */
   const jobRoot = path.join(root, 'job');
