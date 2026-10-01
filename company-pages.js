@@ -48,6 +48,11 @@ function build(root, ctx, full, H){
   /* ロゴは求人と同じ data/logos.json（企業名 → パス）から。無い会社は頭文字タイル */
   const logoFile = path.join(root, 'data', 'logos.json');
   const logos = fs.existsSync(logoFile) ? JSON.parse(fs.readFileSync(logoFile, 'utf8')) : {};
+  /* 転職メディアの企業記事（node fetch-media-companies.js が作る { 企業レコードID: [slug, title] }）。無ければリンクを出さないだけ */
+  const mediaFile = path.join(root, 'data', 'media-companies.json');
+  const mediaCo = fs.existsSync(mediaFile) ? JSON.parse(fs.readFileSync(mediaFile, 'utf8')) : {};
+  const mediaOf = c => (c && (mediaCo[c.id] || (c.aliases || []).map(a => mediaCo[a]).find(Boolean))) || null;
+  const mediaHref = (m, medium) => `https://www.agent-best.net/media/${encodeURIComponent(m[0])}/?utm_source=jobs&utm_medium=${medium}`;
   const PREFS = Object.keys(PREF_SLUG);
   const byId = new Map(), byName = new Map();
   allCompanies.forEach(c => {
@@ -143,6 +148,8 @@ function build(root, ctx, full, H){
       ${nearSec}
       ${rel.length ? `<div class="pd-sec"><h2>同じ業界の企業</h2><div class="lp__pills">${rel.map(x => `<a href="${esc(coPath(x))}">${esc(x.name)}<b>${x.jobs.length}</b></a>`).join('')}</div>
         <div class="pd-more">${(c.industryCode || [])[0] != null ? `<a href="${esc(indPath(c.industryCode[0]))}">${esc((c.industry || [])[0])}の企業一覧</a>` : ''}${(c.industryBigCode || [])[0] != null ? `<a href="${esc(bigPath(c.industryBigCode[0]))}">${esc((c.industryBig || [])[0])}の企業一覧</a>` : ''}</div></div>` : ''}
+      ${mediaOf(c) ? `<div class="pd-sec"><h2>${esc(c.name)}への転職ガイド</h2><p class="co-txt">評判・年収・働き方・選考対策を、公開情報をもとに整理した記事です。</p>
+        <div class="pd-more"><a href="${esc(mediaHref(mediaOf(c), 'company'))}">${esc(mediaOf(c)[1])}（転職メディア）</a></div></div>` : ''}
       <div class="lp__cta"><h2>${esc(c.name)}への転職を相談する</h2><p>この企業の求人の背景や選考の傾向など、公開情報にないところからお話しします。掲載していない非公開求人がある場合もあります。まだ転職を決めていない段階でもかまいません。ご利用は無料です。</p>
         <div class="pd-cta"><a class="btn-apply" href="/${esc(C.APPLY_PAGE)}" data-apply="">転職支援に申し込む（無料）</a><a class="btn-ghost" href="${esc(consultUrl(c))}" target="_blank" rel="noopener">まず話だけ聞いてみる</a><a class="line-btn" href="${esc(C.LINE_ADD_URL)}" target="_blank" rel="noopener noreferrer" data-line-cta="static-company">${C.LINE_ICON}<span>LINEで相談する</span></a></div></div>
       <p class="co-note">企業情報は公開情報をもとに当社が作成しています。求人は毎日更新され、募集が終了した求人は表示されなくなります。内容に誤りがある場合は<a href="https://www.agent-best.net/contact" target="_blank" rel="noopener">お問い合わせ</a>からお知らせください。</p>`;
@@ -381,7 +388,7 @@ function build(root, ctx, full, H){
     .concat([...byBigCode.keys()].map(bc => ({ loc: SITE + bigPath(bc), lastmod: null, pri: '0.7' })))
     .concat([...byMid.keys()].map(code => ({ loc: SITE + indPath(code), lastmod: null, pri: '0.7' })))
     .concat(companies.map(c => ({ loc: SITE + coPath(c), lastmod: c.updatedAt || null, pri: '0.7' })));
-  return { coOf, urls, coPath, count: companies.length };
+  return { coOf, urls, coPath, mediaOf, mediaHref, count: companies.length };
 }
 
 module.exports = { build, coPath };

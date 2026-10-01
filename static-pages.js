@@ -226,7 +226,10 @@ function jobPage(ctx, j, related){
   const coBody = j.companyInfo ? `<div class="rich">${rich(j.companyInfo)}</div>` : '';
   const coRec = ctx.coOf ? ctx.coOf(j) : null;
   const coLink = coRec ? `<div class="pd-more"><a href="${esc(ctx.coPath(coRec))}">${esc(co)}の会社概要・募集中の求人（${coRec.jobs.length}件）を見る</a></div>` : '';
-  const coSec = (coBody || coMeta || coLink) ? `<div class="pd-sec"><h3>企業情報</h3>${coBody}${coMeta ? `<dl class="pd-meta">${coMeta}</dl>` : ''}${coLink}</div>` : '';
+  /* 転職メディアにこの会社の記事があれば（評判・年収・選考対策） */
+  const coArt = coRec && ctx.mediaOf ? ctx.mediaOf(coRec) : null;
+  const coArtLink = coArt ? `<div class="pd-more"><a href="${esc(ctx.mediaHref(coArt, 'job'))}">${esc(co)}への転職ガイド：${esc(coArt[1])}（転職メディア）</a></div>` : '';
+  const coSec = (coBody || coMeta || coLink) ? `<div class="pd-sec"><h3>企業情報</h3>${coBody}${coMeta ? `<dl class="pd-meta">${coMeta}</dl>` : ''}${coLink}${coArtLink}</div>` : '';
   const reqMeta = [metaRow('給与（原文）', j.salaryRaw), metaRow('勤務地', j.location), metaRow('勤務時間', j.workHours), metaRow('休日・休暇', j.holidays), metaRow('福利厚生', j.benefits)].join('');
 
   /* この求人のタグ。押すと検索画面でそのタグに絞り込む（?tag=スラッグ） */
@@ -548,7 +551,7 @@ function build(root, full){
   /* 3.5 企業ページ（company/<企業ID>/・company/）。求人ページから企業ページへリンクするので先に作る。
      中身と理由は company-pages.js の先頭にある。 */
   const co = require('./company-pages').build(root, ctx, full, { esc, plain, fmtSalary, cardHtml, logoHtml, sortForList, writePage, syncDir, PREF_SLUG, SITE, jobPath });
-  ctx.coOf = co.coOf; ctx.coPath = co.coPath;
+  ctx.coOf = co.coOf; ctx.coPath = co.coPath; ctx.mediaOf = co.mediaOf; ctx.mediaHref = co.mediaHref;
 
   /* 4. 求人ページ */
   const jobRoot = path.join(root, 'job');
