@@ -15,7 +15,7 @@ const SRC = 'https://www.agent-best.net/media/search.json';
 function norm(s){
   return String(s || '').normalize('NFKC').toLowerCase()
     .replace(/(株式会社|有限会社|合同会社|合資会社|一般社団法人|一般財団法人|公益財団法人|\(株\)|co\.,? ?ltd\.?|inc\.?|corporation|corp\.?|k\.k\.)/g, '')
-    .replace(/[\s・.,\-‐－ー&＆'’]/g, '');
+    .replace(/[\s・.,\-‐－&＆'’]/g, '');   // ⚠ 長音「ー」は消さない（アルー/アール が同じになる）
 }
 
 (async () => {
