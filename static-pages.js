@@ -86,6 +86,8 @@ function jobHubOf(cat){
   if(/^SE（制御・組み込み系）/.test(s)) return 'embedded-engineer';
   return JOBCAT_HUB[s.split('（')[0].trim()] || null;
 }
+/* 求人の掲載期限＝ビルド日の翌月末（JST）。JobPosting.validThrough に入れる */
+const VALID_THROUGH = (() => { const d = new Date(Date.now() + 9 * 3600e3); const e = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 2, 0)); return e.toISOString().slice(0, 10) + 'T23:59:59+09:00'; })();
 const PREF_SLUG = {
   '北海道':'hokkaido','青森県':'aomori','岩手県':'iwate','宮城県':'miyagi','秋田県':'akita','山形県':'yamagata','福島県':'fukushima',
   '茨城県':'ibaraki','栃木県':'tochigi','群馬県':'gunma','埼玉県':'saitama','千葉県':'chiba','東京都':'tokyo','神奈川県':'kanagawa',
@@ -386,6 +388,10 @@ function jobPage(ctx, j, related){
     url: canon,
   };
   if(datePosted) ld.datePosted = datePosted;
+  /* 掲載期限（Google のしごと検索の推奨項目）。ビルド日の「翌月末」にする：毎日延ばすと 5,000件超のページが毎朝書き換わるので月1回の更新に抑える。
+     掲載が終わった求人はページごと消える（syncDir）ので、期限より先に消えるぶんには問題ない */
+  ld.validThrough = VALID_THROUGH;
+  if(j.logo) ld.hiringOrganization.logo = `${SITE}/${j.logo}`;
   if(j.salaryMin != null || j.salaryMax != null){
     const v = { '@type': 'QuantitativeValue', unitText: 'YEAR' };
     if(j.salaryMin != null) v.minValue = j.salaryMin * 10000;
