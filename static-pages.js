@@ -36,7 +36,7 @@ const GROUP_SLUG = {
   '経営':'executive', '交通・運輸':'transport', '半導体':'semiconductor', '士業':'professional', '食品':'food',
   '旅行・ホテル':'travel-hotel', '医療・看護・薬剤':'medical',
 };
-/* 職種の大分類 → コーポレートのキャリアメディア（www.agent-best.net/media/hub/<hub>/）。
+/* 職種の大分類 → コーポレートの転職メディア（www.agent-best.net/media/hub/<hub>/）。
    求人サイトから転職ノウハウ記事への導線が0本だったので足した（2026-10-01）。
    逆向き（記事→求人一覧）の対応表は agentbest-lp の src/lib/jobsLink.ts。片方を変えたらもう片方も見る。 */
 const MEDIA = 'https://www.agent-best.net/media/';
@@ -62,7 +62,7 @@ function mediaBlock(gslug, label, medium){
   const hubs = MEDIA_HUBS[gslug] || [];
   const links = hubs.map(([nm, h]) => `<a href="${MEDIA}hub/${h}/?${mediaUtm(medium)}">${esc(nm)}の転職ガイド</a>`);
   links.push(`<a href="https://www.agent-best.net/cases/?${mediaUtm(medium)}">「どこから、どこへ」転職事例集</a>`);
-  if(!hubs.length) links.push(`<a href="${MEDIA}?${mediaUtm(medium)}">キャリアメディア（転職ノウハウ記事）</a>`);
+  if(!hubs.length) links.push(`<a href="${MEDIA}?${mediaUtm(medium)}">転職メディア（転職ノウハウ記事）</a>`);
   return `<nav class="lp__nav" aria-label="転職ノウハウ"><p>${esc(label)}の転職ノウハウ</p><div class="lp__pills">${links.join('')}</div></nav>`;
 }
 const PREF_SLUG = {
