@@ -21,7 +21,7 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 | 生成物 | テンプレ | 差し込むもの |
 |---|---|---|
 | `index.html`（約280KB・gzip後83KB） | `template.html` | 一覧用の求人データは**埋め込まない**（2026-09-21〜）。`data/list.json`（表形式 `{k,r}`・タグは番号・約5MB）を `<script type="module">` のトップレベル await で読む。`__LIST_VER__` に中身のハッシュが入る。本文は `data/jobs/<求人ID>.json` |
-| `company/<企業ID>/index.html`（約2,500社）・`company/index.html`・`company/industry/<code>/` | `company-template.html` | 企業ページ・企業一覧・業界ページ（`company-pages.js`）。`data/companies.json`（`node fetch-companies.js`）から。**求人が0件でも消さない** |
+| `company/<企業ID>/index.html`（約4,800社。**求人0件の会社には「同じ業界で募集中の求人」8件を載せ、タイトルに（募集中0件）を出さない**＝2026-10-01）・`company/index.html`・`company/industry/<code>/` | `company-template.html` | 企業ページ・企業一覧・業界ページ（`company-pages.js`）。`data/companies.json`（`node fetch-companies.js`）から。**求人が0件でも消さない** |
 | `apply.html`（約1.2MB） | `apply-template.html` | `__JOBS_MINI__` ＝ ID・企業名・職種名・年収**だけ**（表形式 `[id,会社名,職種名,年収]`） |
 | `1day.html` | `1day-template.html` | `__EVENTS_DATA__` |
 | `job/<求人ID>/index.html`（5,700件・約45KB/件） | `job-template.html` | 求人1件の本文・JobPosting 構造化データ・求人ごとの title/OGP（`static-pages.js`） |

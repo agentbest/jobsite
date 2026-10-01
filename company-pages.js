@@ -17,6 +17,7 @@ const fs = require('fs'), path = require('path');
 
 const CO_JOBS_MAX = 30;      /* 企業ページに並べる求人の上限（残りは検索画面へ） */
 const CO_RELATED = 12;       /* 「同じ業界の企業」の件数 */
+const CO_NEAR_JOBS = 8;      /* 求人0件の企業ページに出す「同じ業界で募集中の求人」の件数 */
 const SIZE_ORDER = ['〜50名', '51〜100名', '101〜300名', '301〜1,000名', '1,001名以上'];
 
 const coPath = c => `/company/${encodeURIComponent(c.id)}/`;
@@ -107,10 +108,30 @@ function build(root, ctx, full, H){
     (c.industry || []).forEach(i => { rel = rel.concat(pick(byIndustry.get(i))); });
     if(rel.length < 4) (c.industryBig || []).forEach(i => { rel = rel.concat(pick(byBig.get(i))); });
     rel = rel.slice(0, CO_RELATED);
+    /* 求人0件の企業は「現在募集はありません」だけの薄いページになっていた（2026-10-01 時点で全体の85%）。
+       社名検索の受け皿としては残しつつ、同じ業界で募集中の求人を並べて、転職先を探しに来た人の次の一歩にする。
+       選び方：同じ業界の企業の求人（中分類 → 足りなければ大分類）→ 同じ都道府県を先に → 1社1件まで（同じ会社で埋めない） */
+    let near = [], nearSamePref = 0;
+    if(!n){
+      const pool = [];
+      const seenCo = new Set();
+      const add = cos => (cos || []).filter(x => x !== c && x.jobs.length && !seenCo.has(x)).sort(rank).forEach(x => { seenCo.add(x); pool.push(x); });
+      (c.industry || []).forEach(i => add(byIndustry.get(i)));
+      if(pool.length < CO_NEAR_JOBS) (c.industryBig || []).forEach(i => add(byBig.get(i)));
+      const top = x => sortForList(x.jobs)[0];
+      const samePref = pool.filter(x => c.pref && x.pref === c.pref), other = pool.filter(x => !(c.pref && x.pref === c.pref));
+      near = samePref.concat(other).slice(0, CO_NEAR_JOBS).map(top).filter(Boolean);
+      nearSamePref = samePref.length;
+    }
     const jobsSec = n
       ? `<div class="joblist">${jobs.slice(0, CO_JOBS_MAX).map(j => cardHtml(ctx, j)).join('')}</div>
          ${n > CO_JOBS_MAX ? `<div class="lp__all"><a href="/?q=${encodeURIComponent(c.name)}">残り${(n - CO_JOBS_MAX).toLocaleString()}件を含むすべての求人を見る →</a></div>` : ''}`
       : `<div class="co-empty"><b>現在、掲載中の公開求人はありません。</b><br>非公開で募集している場合や、今後の募集を先にご案内できる場合があります。${esc(c.name)}への転職を考えている方は、下のフォームまたはLINEからご相談ください。</div>`;
+    const nearIndustry = (c.industry || [])[0] || (c.industryBig || [])[0] || '';
+    const nearSec = near.length
+      ? `<div class="pd-sec" id="near"><h2>${nearIndustry ? esc(nearIndustry) + 'で' : '同じ業界で'}募集中の求人</h2><p class="co-txt">${esc(c.name)}と同じ業界の企業で、いま募集している求人です。${nearSamePref ? `${esc(c.pref)}の求人を先に並べています。` : ''}</p>
+         <div class="joblist">${near.map(j => cardHtml(ctx, j)).join('')}</div></div>`
+      : '';
     const main = `<div class="co-head">${logoHtml(c, 'jrow__logo--lg')}<div class="co-head__txt"><h1>${esc(c.name)}</h1>
         ${c.tagline ? `<p class="co-head__tag">${esc(c.tagline)}</p>` : ''}
         <div class="co-head__chips">${chip((c.industry || [])[0])}${chip(c.pref)}${chip(c.size)}${chip(listedLabel(c) === '非上場' ? '' : listedLabel(c), 'tag--cat')}</div></div></div>
@@ -119,6 +140,7 @@ function build(root, ctx, full, H){
       ${c.biz ? `<div class="pd-sec"><h2>事業内容</h2><p class="co-txt">${esc(c.biz)}</p></div>` : ''}
       ${meta ? `<div class="pd-sec"><h2>基本情報</h2><dl class="pd-meta">${meta}</dl></div>` : ''}
       <div class="pd-sec" id="jobs"><h2>${esc(c.name)}の求人（${n.toLocaleString()}件）</h2>${jobsSec}</div>
+      ${nearSec}
       ${rel.length ? `<div class="pd-sec"><h2>同じ業界の企業</h2><div class="lp__pills">${rel.map(x => `<a href="${esc(coPath(x))}">${esc(x.name)}<b>${x.jobs.length}</b></a>`).join('')}</div>
         <div class="pd-more">${(c.industryCode || [])[0] != null ? `<a href="${esc(indPath(c.industryCode[0]))}">${esc((c.industry || [])[0])}の企業一覧</a>` : ''}${(c.industryBigCode || [])[0] != null ? `<a href="${esc(bigPath(c.industryBigCode[0]))}">${esc((c.industryBig || [])[0])}の企業一覧</a>` : ''}</div></div>` : ''}
       <div class="lp__cta"><h2>${esc(c.name)}への転職を相談する</h2><p>この企業の求人の背景や選考の傾向など、公開情報にないところからお話しします。掲載していない非公開求人がある場合もあります。まだ転職を決めていない段階でもかまいません。ご利用は無料です。</p>
@@ -137,12 +159,15 @@ function build(root, ctx, full, H){
         { '@type': 'ListItem', position: 2, name: '企業一覧', item: SITE + '/company/' },
         { '@type': 'ListItem', position: 3, name: c.name, item: canon } ] },
     ]};
-    const title = `${c.name}の会社概要・転職/求人情報（募集中${n}件） - エージェントベストの転職求人`;
+    /* 0件の会社は「（募集中0件）」をタイトルに出さない（検索結果で見て踏む理由が無くなるため）。同業界の求人を載せていることを書く */
+    const title = n
+      ? `${c.name}の会社概要・転職/求人情報（募集中${n}件） - エージェントベストの転職求人`
+      : `${c.name}の会社概要・転職情報${near.length ? '｜同業界の求人' : ''} - エージェントベストの転職求人`;
     const descHead = plain(c.overview || c.biz, 90);
-    const desc = `${descHead ? descHead + ' ' : ''}${c.name}の会社概要（${[c.pref, listedLabel(c), c.size && `従業員${c.size}`].filter(Boolean).join('・')}）と募集中の求人${n}件${sal ? `（想定年収${sal}）` : ''}。転職支援は無料です。`;
+    const desc = `${descHead ? descHead + ' ' : ''}${c.name}の会社概要（${[c.pref, listedLabel(c), c.size && `従業員${c.size}`].filter(Boolean).join('・')}）と${n ? `募集中の求人${n}件${sal ? `（想定年収${sal}）` : ''}` : near.length ? `、同じ業界で募集中の求人${near.length}件` : '転職情報'}。転職支援は無料です。`;
     return tpl
-      .replace('__TITLE__', () => esc(title.length > 70 ? `${c.name}の会社概要・求人（${n}件） - エージェントベスト` : title))
-      .replace(/__OGTITLE__/g, () => esc(`${c.name}の会社概要・転職/求人情報（募集中${n}件）`))
+      .replace('__TITLE__', () => esc(title.length > 70 ? (n ? `${c.name}の会社概要・求人（${n}件） - エージェントベスト` : `${c.name}の会社概要・転職情報 - エージェントベスト`) : title))
+      .replace(/__OGTITLE__/g, () => esc(n ? `${c.name}の会社概要・転職/求人情報（募集中${n}件）` : `${c.name}の会社概要・転職情報`))
       .replace(/__DESC__/g, () => esc(desc))
       .replace(/__CANON__/g, () => esc(canon))
       .replace('__JSONLD__', () => JSON.stringify(ld).replace(/<\//g, '<\\/'))
