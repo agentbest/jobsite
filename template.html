@@ -232,6 +232,8 @@
   .feat__h{display:flex; align-items:baseline; gap:10px; margin:0 0 12px}
   .feat__h h2{margin:0; font-size:17px; font-weight:800; letter-spacing:.02em}
   .feat__h span{font-size:12.5px; color:var(--ink-3)}
+  .feat__grp + .feat__grp{margin-top:16px}
+  .feat__gh{margin:0 0 8px; font-size:12px; font-weight:800; letter-spacing:.1em; color:var(--ink-3)}
   .feat__list{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:0; padding:0; list-style:none}
   .feat__card{
     display:flex; flex-direction:column; gap:6px; height:100%; padding:16px 16px 14px;
@@ -1176,7 +1178,7 @@
   <!-- ===== 特集コーナー。カードは JS（FEATURES）が件数つきで描く。0件の特集は出さない ===== -->
   <section class="feat" id="feat" hidden aria-labelledby="featH">
     <div class="feat__h"><h2 id="featH">特集</h2><span>テーマから求人を探す</span></div>
-    <ul class="feat__list" id="featList"></ul>
+    <div id="featList"></div>
   </section>
 
   <div class="layout">
@@ -2835,18 +2837,34 @@ const HERO_TAGS=["フルリモート可","未経験歓迎","年間休日125日�
    ⚠ slug は ?feature=<slug> の URL になる（共有・広告から入れる）。変えると古いリンクが効かなくなる。 */
 const FEATURE_MIN=5;
 const MIKEIKEN_TAGS=["未経験歓迎","業界未経験歓迎","職種未経験歓迎","第二新卒歓迎"];
+/* group で段を分ける（FEATURE_GROUPS の順に1段ずつ）。トップに出すのは8本（4枚×2段）まで。
+   それ以上にしたくなったら入れ替えるか、特集一覧ページを別に作る（検索結果を下に押し下げすぎないため） */
+const FEATURE_GROUPS=[["career","キャリアアップ・働き方"],["change","職種の特集"]];
 const FEATURES=[
-  {slug:"consultant-mikeiken", label:"未経験OK", color:"var(--accent)",
+  /* ポストコンサル＝コンサルから事業会社へ。「コンサル出身歓迎」タグはコンサルファーム自身の求人も含むので、事業会社側の職種に絞る */
+  {slug:"post-consultant", group:"career", label:"ポストコンサル", color:"var(--accent)",
+   title:"コンサル出身者を歓迎する事業会社", desc:"コンサルで培った力を、事業会社の経営企画・事業企画・マーケティングなどで活かす求人。",
+   cats:["経営企画","事業企画","マーケティング","プロジェクト管理","人事","管理","営業"], tags:["コンサル出身歓迎"]},
+  {slug:"executive-candidate", group:"career", label:"経営幹部候補", color:"var(--gold)",
+   title:"経営幹部候補の求人", desc:"将来の役員・事業責任者を見据えて、経営に近い立場で任される求人。",
+   cats:[], tags:["幹部・経営幹部候補"]},
+  {slug:"full-remote", group:"career", label:"働き方", color:"var(--good)",
+   title:"フルリモート可の求人", desc:"出社を前提とせず、原則リモートで働ける求人。住む場所に縛られずにキャリアを選べる。",
+   cats:[], tags:["フルリモート可"]},
+  {slug:"consultant-mikeiken", group:"change", label:"未経験OK", color:"var(--accent)",
    title:"未経験からコンサル転職", desc:"業界・職種未経験から挑戦できる、コンサルタント・ITコンサルタントの求人。",
    cats:["コンサルタント","ITコンサルタント"], tags:MIKEIKEN_TAGS},
-  {slug:"engineer-mikeiken", label:"未経験OK", color:"var(--good)",
+  {slug:"engineer-mikeiken", group:"change", label:"未経験OK", color:"var(--good)",
    title:"未経験からエンジニア転職", desc:"開発・インフラ・社内SEなど、未経験から始められるエンジニアの求人。",
    cats:["エンジニア"], tags:MIKEIKEN_TAGS},
   /* 組み込みは SES・受託が多いので、自社製品を持つ会社（イー・フォースなど）に絞って特集にする */
-  {slug:"embedded-own-product", label:"自社製品", color:"var(--gold)",
+  {slug:"embedded-own-product", group:"change", label:"自社製品", color:"var(--gold)",
    title:"自社製品の組み込みエンジニア", desc:"客先常駐・受託ではなく、自社の製品を持つ会社で組み込み・制御を担う求人。",
    cats:["エンジニア","電気・電子","機械"], tags:["組込み・制御","自社サービスを持つ"]},
-  {slug:"growth-listed", label:"企業特集", color:"var(--cta)",
+  {slug:"ai-data", group:"change", label:"AI・データ", color:"var(--accent-strong)",
+   title:"AI・データサイエンティスト特集", desc:"機械学習・データ分析の専門性を活かして、事業の意思決定やプロダクトに関わる求人。",
+   cats:["データサイエンティスト（エンジニア）","機械学習エンジニア（エンジニア）"], tags:[]},
+  {slug:"growth-listed", group:"career", label:"企業特集", color:"var(--cta)",
    title:"グロース上場企業特集", desc:"上場後の成長期にある企業で、事業と組織が伸びる局面に立ち会える求人。",
    cats:[], tags:["東証グロース上場"]}
 ];
@@ -2882,13 +2900,17 @@ const FEATURE_BY_SLUG={};
   const use=FEATURES.map(f=>({f, n:featureCount(f)})).filter(x=>x.n>=FEATURE_MIN);
   use.forEach(x=>FEATURE_BY_SLUG[x.f.slug]=x.f);
   if(use.length){
-    $("#featList").innerHTML=use.map(({f,n})=>
+    const card=({f,n})=>
       `<li><a class="feat__card" href="?feature=${esc(f.slug)}" data-feature="${esc(f.slug)}" style="--fc:${f.color}">
         <span class="feat__tag">${esc(f.label)}</span>
         <span class="feat__title">${esc(f.title)}</span>
         <span class="feat__desc">${esc(f.desc)}</span>
         <span class="feat__foot"><span><b>${n.toLocaleString()}</b>件</span><span class="feat__go">求人を見る →</span></span>
-      </a></li>`).join("");
+      </a></li>`;
+    $("#featList").innerHTML=FEATURE_GROUPS.map(([g,label])=>{
+      const items=use.filter(x=>x.f.group===g);
+      return items.length?`<div class="feat__grp"><h3 class="feat__gh">${esc(label)}</h3><ul class="feat__list">${items.map(card).join("")}</ul></div>`:"";
+    }).join("");
     $("#feat").hidden=false;
     $("#featList").addEventListener("click",e=>{
       const a=e.target.closest("a[data-feature]");

@@ -196,6 +196,8 @@
   .feat__h{display:flex; align-items:baseline; gap:10px; margin:0 0 12px}
   .feat__h h2{margin:0; font-size:17px; font-weight:800; letter-spacing:.02em}
   .feat__h span{font-size:12.5px; color:var(--ink-3)}
+  .feat__grp + .feat__grp{margin-top:16px}
+  .feat__gh{margin:0 0 8px; font-size:12px; font-weight:800; letter-spacing:.1em; color:var(--ink-3)}
   .feat__list{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:0; padding:0; list-style:none}
   .feat__card{
     display:flex; flex-direction:column; gap:6px; height:100%; padding:16px 16px 14px;
