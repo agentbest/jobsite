@@ -223,6 +223,15 @@ node rebuild.js     → index.html      … 画面だけ（約280KB）。一覧�
 スライドパネルをやめ、`?job=<求人ID>` を **pushState** で積む別ビューにした（`openDetail` / `goDetail` / `goList` / `route`）。
 戻るボタン・URL共有・履歴が普通のページと同じように動く。⚠ **`replaceState` に戻すと「戻る」で一覧に帰れなくなる。**
 
+### 特集コーナー（ヒーローと検索結果の間・2026-10-06）
+
+`template.html` の `FEATURES`。特集＝**既存の絞り込み（職種の大分類 `cats` ＋ タグ `tags`）の組み合わせに名前を付けたもの**で、押すと条件をリセットしてから当てる。特集用の別ページ・別の状態は持たない。
+
+- いまの4本: 未経験からコンサル転職／未経験からエンジニア転職（タグ＝未経験歓迎・業界未経験歓迎・職種未経験歓迎・第二新卒歓迎）／自社製品の組み込みエンジニア（組込み・制御 AND 自社サービスを持つ。組み込みは SES・受託が多いので自社製品に絞った）／グロース上場企業特集（東証グロース上場）
+- **件数はデータ連動。`FEATURE_MIN`（5件）未満になった特集はカードごと消える。** 載せたい会社の求人が出ないときは Airtable のタグ（未経験歓迎 など）を付ける。サイト側で社名を足さない
+- `?feature=<slug>` で入れる（共有・広告用。入口専用で書き戻さない）。**slug を変えると古いリンクが効かなくなる**
+- GA4 は `feature_click`（`feature`＝slug）
+
 ### おすすめ順は同じ企業が隣り合わないように配る（backlog #4・2026-09-21）
 
 `sortJobs()` の「おすすめ順」だけ `interleaveByCompany()` を通す。年収順をなるべく保ちつつ、直前と同じ企業なら後ろの別企業の求人を1つ前に出す。
@@ -675,7 +684,7 @@ node rebuild.js         → company/<企業ID>/index.html（会社概要・事�
 
 ## GA4
 
-測定ID `G-1XXMP8Y1B4`。カスタムイベント: `company_filter`（企業一覧の絞り込み）/ `job_detail_open` / `apply_click` / `apply_form_open` / `apply_step` / `apply_submit` / `apply_error` / `inquiry_click` / `consult_click` / `search` / `filter_use` / `page_change` / `perpage_change` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss` / `message_send`。
+測定ID `G-1XXMP8Y1B4`。カスタムイベント: `feature_click`（特集カード・1day）/ `company_filter`（企業一覧の絞り込み）/ `job_detail_open` / `apply_click` / `apply_form_open` / `apply_step` / `apply_submit` / `apply_error` / `inquiry_click` / `consult_click` / `search` / `filter_use` / `page_change` / `perpage_change` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss` / `message_send`。
 
 **応募のファネルは `apply_click`（一覧・詳細で押した）→ `apply_form_open`（フォームに着いた）→ `apply_step`（step2〜4に進んだ）→ `apply_submit`（送信できた）** で見る。`apply_step` の落ち方で、どの設問が重いか分かる。
 

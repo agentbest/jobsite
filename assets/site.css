@@ -190,6 +190,35 @@
   .intro .note svg{flex:none; color:var(--ink-3)}
 
   /* 特集ページへの導線 */
+  /* 特集コーナー（ヒーローと検索結果の間）。中身は下のJSの FEATURES。
+     押すと既存の絞り込み（職種・タグ）をまとめて当てるだけで、特集用の別ページや別の状態は持たない */
+  .feat{margin:0 0 26px}
+  .feat__h{display:flex; align-items:baseline; gap:10px; margin:0 0 12px}
+  .feat__h h2{margin:0; font-size:17px; font-weight:800; letter-spacing:.02em}
+  .feat__h span{font-size:12.5px; color:var(--ink-3)}
+  .feat__list{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:0; padding:0; list-style:none}
+  .feat__card{
+    display:flex; flex-direction:column; gap:6px; height:100%; padding:16px 16px 14px;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--r-card);
+    border-top:3px solid var(--fc,var(--accent)); box-shadow:var(--shadow-sm);
+    color:var(--ink); text-decoration:none; transition:box-shadow .15s, transform .15s;
+  }
+  .feat__card:hover{box-shadow:var(--shadow-md); transform:translateY(-1px)}
+  .feat__card:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+  .feat__tag{font-size:11px; font-weight:800; letter-spacing:.1em; color:var(--fc,var(--accent))}
+  .feat__title{font-size:15.5px; font-weight:800; line-height:1.4}
+  .feat__desc{font-size:12.5px; color:var(--ink-2); line-height:1.6; flex:1 1 auto}
+  .feat__foot{display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:12.5px; color:var(--ink-3)}
+  .feat__foot b{font-family:var(--mono); font-size:16px; color:var(--ink); margin-right:3px}
+  .feat__go{color:var(--fc,var(--accent)); font-weight:700}
+  @media (max-width:900px){
+    .feat__list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:520px){
+    /* スマホは横スクロールのカルーセルにする。2列だと説明文が詰まって読めない */
+    .feat__list{display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:10px; margin:0 -16px; padding:0 16px 6px}
+    .feat__list > li{flex:0 0 72%; scroll-snap-align:start}
+  }
 
   .layout{display:grid; grid-template-columns:288px 1fr; gap:34px; padding-bottom:80px; align-items:start}
   /* grid/flex の子は既定で min-width:auto のため、長い社名などで横スクロールが出る。明示的に潰す */

@@ -226,6 +226,35 @@
   .intro .note svg{flex:none; color:var(--ink-3)}
 
   /* 特集ページへの導線 */
+  /* 特集コーナー（ヒーローと検索結果の間）。中身は下のJSの FEATURES。
+     押すと既存の絞り込み（職種・タグ）をまとめて当てるだけで、特集用の別ページや別の状態は持たない */
+  .feat{margin:0 0 26px}
+  .feat__h{display:flex; align-items:baseline; gap:10px; margin:0 0 12px}
+  .feat__h h2{margin:0; font-size:17px; font-weight:800; letter-spacing:.02em}
+  .feat__h span{font-size:12.5px; color:var(--ink-3)}
+  .feat__list{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:0; padding:0; list-style:none}
+  .feat__card{
+    display:flex; flex-direction:column; gap:6px; height:100%; padding:16px 16px 14px;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--r-card);
+    border-top:3px solid var(--fc,var(--accent)); box-shadow:var(--shadow-sm);
+    color:var(--ink); text-decoration:none; transition:box-shadow .15s, transform .15s;
+  }
+  .feat__card:hover{box-shadow:var(--shadow-md); transform:translateY(-1px)}
+  .feat__card:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+  .feat__tag{font-size:11px; font-weight:800; letter-spacing:.1em; color:var(--fc,var(--accent))}
+  .feat__title{font-size:15.5px; font-weight:800; line-height:1.4}
+  .feat__desc{font-size:12.5px; color:var(--ink-2); line-height:1.6; flex:1 1 auto}
+  .feat__foot{display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:12.5px; color:var(--ink-3)}
+  .feat__foot b{font-family:var(--mono); font-size:16px; color:var(--ink); margin-right:3px}
+  .feat__go{color:var(--fc,var(--accent)); font-weight:700}
+  @media (max-width:900px){
+    .feat__list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:520px){
+    /* スマホは横スクロールのカルーセルにする。2列だと説明文が詰まって読めない */
+    .feat__list{display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:10px; margin:0 -16px; padding:0 16px 6px}
+    .feat__list > li{flex:0 0 72%; scroll-snap-align:start}
+  }
 
   .layout{display:grid; grid-template-columns:288px 1fr; gap:34px; padding-bottom:80px; align-items:start}
   /* grid/flex の子は既定で min-width:auto のため、長い社名などで横スクロールが出る。明示的に潰す */
@@ -1142,6 +1171,12 @@
       <span>掲載していない<b>非公開求人</b>もあります。希望を送っていただければ個別にお探しします。</span>
       <a class="line-btn" href="https://line.me/R/ti/p/@697nxhbt?oat_content=url&ts=08302134" target="_blank" rel="noopener noreferrer" data-line-cta="jobs-intro"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>LINEで相談する</span></a>
     </div>
+  </section>
+
+  <!-- ===== 特集コーナー。カードは JS（FEATURES）が件数つきで描く。0件の特集は出さない ===== -->
+  <section class="feat" id="feat" hidden aria-labelledby="featH">
+    <div class="feat__h"><h2 id="featH">特集</h2><span>テーマから求人を探す</span></div>
+    <ul class="feat__list" id="featList"></ul>
   </section>
 
   <div class="layout">
@@ -2693,7 +2728,7 @@ function route(){
   /* ⚠ tag が無いときは何もしない（クリアしない）。求人詳細から戻ったときに
      せっかく選んだ絞り込みが消えるのを避けるため。 */
   applyTagParam(p.get("tag"));
-  routedFilter=applyFilterParams(p);
+  routedFilter=applyFilterParams(p) || applyFeatureParam(p.get("feature"));
   showListView();
 }
 function goDetail(id){
@@ -2789,6 +2824,90 @@ const HERO_TAGS=["フルリモート可","未経験歓迎","年間休日125日�
       goTag(b.dataset.hqTag);
     });
   }
+}
+
+/* ---------- 特集コーナー（ヒーローと検索結果の間） ----------
+   特集＝既存の絞り込みの組み合わせに名前を付けたもの。押すと条件を一度リセットしてから
+   職種（大分類）とタグをまとめて当てる。特集用の別ページ・別の状態は持たない（ヒーローと同じ考え方）。
+   - cats: 職種の大分類（jobCategory ツリーの親）。複数は OR
+   - tags: タグ名。同じカテゴリの中は OR、カテゴリが違えば AND（左サイドバーと同じ規則）
+   ⚠ 件数はハードコードしない。MIN 件未満になった特集はカードごと出さない。
+   ⚠ slug は ?feature=<slug> の URL になる（共有・広告から入れる）。変えると古いリンクが効かなくなる。 */
+const FEATURE_MIN=5;
+const MIKEIKEN_TAGS=["未経験歓迎","業界未経験歓迎","職種未経験歓迎","第二新卒歓迎"];
+const FEATURES=[
+  {slug:"consultant-mikeiken", label:"未経験OK", color:"var(--accent)",
+   title:"未経験からコンサル転職", desc:"業界・職種未経験から挑戦できる、コンサルタント・ITコンサルタントの求人。",
+   cats:["コンサルタント","ITコンサルタント"], tags:MIKEIKEN_TAGS},
+  {slug:"engineer-mikeiken", label:"未経験OK", color:"var(--good)",
+   title:"未経験からエンジニア転職", desc:"開発・インフラ・社内SEなど、未経験から始められるエンジニアの求人。",
+   cats:["エンジニア"], tags:MIKEIKEN_TAGS},
+  /* 組み込みは SES・受託が多いので、自社製品を持つ会社（イー・フォースなど）に絞って特集にする */
+  {slug:"embedded-own-product", label:"自社製品", color:"var(--gold)",
+   title:"自社製品の組み込みエンジニア", desc:"客先常駐・受託ではなく、自社の製品を持つ会社で組み込み・制御を担う求人。",
+   cats:["エンジニア","電気・電子","機械"], tags:["組込み・制御","自社サービスを持つ"]},
+  {slug:"growth-listed", label:"企業特集", color:"var(--cta)",
+   title:"グロース上場企業特集", desc:"上場後の成長期にある企業で、事業と組織が伸びる局面に立ち会える求人。",
+   cats:[], tags:["東証グロース上場"]}
+];
+/* 特集の条件を facet ごとにまとめる → { facetキー: [値…] } */
+function featureSel(f){
+  const sel={};
+  const add=(k,v)=>{ if(k) (sel[k]=sel[k]||[]).push(v); };
+  f.cats.filter(c=>GLOBAL_CNT.jobCategory.has(c)).forEach(c=>add("jobCategory",c));
+  f.tags.filter(t=>TAG_SLUG[t]).forEach(t=>add(tagFacetOf(t),t));
+  return sel;
+}
+function featureCount(f){
+  const sel=Object.entries(featureSel(f));
+  if(!sel.length) return 0;
+  return JOBS.filter(j=>sel.every(([k,vals])=>{ const a=j._fv[k]; return a&&vals.some(v=>a.includes(v)); })).length;
+}
+function applyFeature(f){
+  /* 条件をいったん全部外す（resetAll と同じだが apply は最後に1回だけ） */
+  state.q=""; $("#q").value=""; $("#heroQ").value=""; state.salaryMin=0; state.salaryMax=0;
+  syncSalaryUI();
+  facetDefs.forEach(d=>clearFacetSilent(d.key));
+  Object.entries(featureSel(f)).forEach(([k,vals])=>vals.forEach(v=>{
+    if(k==="jobCategory"){ pickValue(k,v); return; }
+    state.sel[k].add(v);
+    const el=document.querySelector(`[data-facet="${k}"][data-val="${CSS.escape(v)}"]`);
+    if(el) el.checked=true;
+    syncGroupState(k);
+  }));
+  apply();
+}
+const FEATURE_BY_SLUG={};
+{
+  const use=FEATURES.map(f=>({f, n:featureCount(f)})).filter(x=>x.n>=FEATURE_MIN);
+  use.forEach(x=>FEATURE_BY_SLUG[x.f.slug]=x.f);
+  if(use.length){
+    $("#featList").innerHTML=use.map(({f,n})=>
+      `<li><a class="feat__card" href="?feature=${esc(f.slug)}" data-feature="${esc(f.slug)}" style="--fc:${f.color}">
+        <span class="feat__tag">${esc(f.label)}</span>
+        <span class="feat__title">${esc(f.title)}</span>
+        <span class="feat__desc">${esc(f.desc)}</span>
+        <span class="feat__foot"><span><b>${n.toLocaleString()}</b>件</span><span class="feat__go">求人を見る →</span></span>
+      </a></li>`).join("");
+    $("#feat").hidden=false;
+    $("#featList").addEventListener("click",e=>{
+      const a=e.target.closest("a[data-feature]");
+      if(!a || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const f=FEATURE_BY_SLUG[a.dataset.feature]; if(!f) return;
+      e.preventDefault();
+      if(history.pushState) history.pushState({},"","?feature="+encodeURIComponent(f.slug));
+      applyFeature(f); scrollToResults();
+      track("feature_click",{feature:f.slug, link_text:f.title});
+    });
+  }
+}
+/* ?feature=<slug> の入口。?tag= と同じく入口専用で、絞り込みを変えてもURLには書き戻さない */
+function applyFeatureParam(v){
+  const f=v&&FEATURE_BY_SLUG[v];
+  if(!f) return false;
+  applyFeature(f);
+  track("filter_use",{filter:"feature_url", value:f.slug});
+  return true;
 }
 
 /* ---------- mobile drawer ---------- */
