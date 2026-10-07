@@ -405,12 +405,12 @@ function jobPage(ctx, j, related){
     { '@type': 'ListItem', position: gslug ? 3 : 2, name, item: canon },
   ]};
 
-  const title = `${name}｜${co}（${fmtSalary(j)}） - エージェントベストの転職求人`;
+  const title = `${name}｜${co}（${fmtSalary(j)}） - エージェントベストジョブ転職`;
   const desc = plain(j.jobContent || j.must || j.companyInfo, 110) || `${co}の${name}の求人。`;
   const crumb = `<a href="/">ホーム</a><span class="sep">›</span>${gslug ? `<a href="/jobs/${gslug}/">${esc(group)}の求人</a><span class="sep">›</span>` : ''}<span class="cur">${esc(name)}</span>`;
   const back = gslug ? `/jobs/${gslug}/` : '/';
   return tpl
-    .replace('__TITLE__', () => esc(title.length > 70 ? `${name}｜${co} - エージェントベスト` : title))
+    .replace('__TITLE__', () => esc(title.length > 70 ? `${name}｜${co} - エージェントベストジョブ転職` : title))
     .replace(/__OGTITLE__/g, () => esc(`${name}｜${co}（${fmtSalary(j)}）`))
     .replace(/__DESC__/g, () => esc(desc))
     .replace(/__CANON__/g, () => esc(canon))
@@ -478,7 +478,7 @@ function landingPage(ctx, p){
   const crumb = [['ホーム', '/'], ...p.crumbs].map(([nm, href], i, a) => i === a.length - 1 ? `<span class="cur">${esc(nm)}</span>` : `<a href="${esc(href)}">${esc(nm)}</a><span class="sep">›</span>`).join('');
   const ld = { '@context': 'https://schema.org', '@type': 'CollectionPage', name: p.title, url: canon, description: desc };
   const html = ctx.lpTpl
-    .replace('__TITLE__', () => esc(`${p.title}（${n.toLocaleString()}件） - エージェントベストの転職求人`))
+    .replace('__TITLE__', () => esc(`${p.title}（${n.toLocaleString()}件） - エージェントベストジョブ転職`))
     .replace(/__OGTITLE__/g, () => esc(`${p.title}（${n.toLocaleString()}件）`))
     .replace(/__DESC__/g, () => esc(desc))
     .replace(/__CANON__/g, () => esc(canon))
