@@ -440,27 +440,6 @@
   .pager .gap{color:var(--ink-3); padding:0 2px; font-family:var(--mono)}
   .pager__nav{font-family:var(--sans)!important; font-weight:700}
 
-  /* 検索結果の1位に固定で出す1day選考会のPR枠。
-     ナビ・特集行から1dayを外した代わりに、ここが唯一の入口になっている。 */
-  .prslot{
-    position:relative; background:color-mix(in srgb,var(--accent) 5%, var(--surface));
-    border:1px solid color-mix(in srgb,var(--accent) 28%, var(--line));
-    border-radius:var(--r-card); padding:18px 22px 16px; min-width:0;
-  }
-  .prslot__top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px}
-  .prslot__lbl{
-    flex:none; font-size:10.5px; font-weight:800; letter-spacing:.08em; line-height:1;
-    padding:4px 7px; border-radius:4px; background:var(--accent); color:#fff;
-  }
-  .prslot__cat{font-size:12.5px; font-weight:700; color:var(--accent-ink); letter-spacing:.02em}
-  .prslot__title{margin:0 0 6px; font-size:17px; line-height:1.5}
-  .prslot__title a{color:var(--ink); text-decoration:none}
-  .prslot__title a:hover{text-decoration:underline; text-underline-offset:3px}
-  .prslot__desc{margin:0; color:var(--ink-2); font-size:13.5px; line-height:1.85}
-  .prslot__meta{display:flex; flex-wrap:wrap; gap:4px 10px; margin:10px 0 0; font-size:13px}
-  .prslot__meta dt{font-weight:700; color:var(--ink-3)}
-  .prslot__meta dd{margin:0; color:var(--ink-2)}
-  .prslot__act{margin-top:14px}
   .empty{text-align:center; padding:80px 20px; color:var(--ink-3)}
   .empty svg{color:var(--line); margin-bottom:14px}
   .empty h3{margin:0 0 6px; color:var(--ink-2); font-size:17px}

@@ -71,18 +71,14 @@ node rebuild.js     → index.html      … 画面だけ（約280KB）。一覧�
 - ⚠ **`template.html` の本体スクリプトは `<script type="module">`**（`data/list.json` をトップレベル await で読むため）。strict mode で動くので、宣言なしの代入や `with` は書けない。`file://` では求人が出ない（fetch が CORS で弾かれる）。`robots.txt` は `/data/` を拒否しつつ **`/data/list.json` だけ許可**している（Googlebot がトップを描画するため）。消すとトップが「求人0件」で索引される。
 - **年収の数値がおかしい求人は `rebuild.js` の `salarySanity()` がビルド時に名指しする**（時給・月給を年収に読んだ疑い、下限>上限、上限200万未満）。サイト側では直さない。**正は Airtable の 年収下限/上限 列。** 2026-09-21 時点で7件（Novatra 2件・AlbaLink 3件・エンセイピア・エス・エム・エス）が未修正。
 
-## 1day選考会（`1day.html` ＋ 検索結果1位のPR枠）
+## 1day選考会（`1day.html`。サイトからの導線なし）
 
-⚠ **2026-09-01に導線を作り替えた。** 開催数が少ないのにナビ・特集行・フッター・専用ページと4か所を
-占めていたため、**ナビ・一覧上部の特集行・フッターからは外し、検索結果の1位に固定で出るPR枠に一本化**した。
-専用ページ `1day.html` は残っていて、PR枠のリンク先になっている（ナビからは辿れない）。
+⚠ **2026-10-07に検索結果1位のPR枠を外した**（松岡さん判断）。取得元テーブルが消えて 9/12 から開催0件のまま、
+PR枠には「開催の案内を受け取る」が出続けていたため。これで**サイト内から1dayへの導線は無い**。
 
-- PR枠は `template.html` の `prSlotHtml()`。**1ページ目のときだけ**先頭に差し込む。
-- 開催があるときは日程・参加企業を出して `1day.html` へ、無いときは「開催の案内を受け取る」で
-  `apply.html` へ送る（**常に表示する**）。
-- PR枠に出すデータは `rebuild.js` の `onedayMini()` が `__ONEDAY_MINI__` に差し込む（直近3件）。
-  **`data/1day.json` を更新したら `node rebuild.js` を回すこと。** 回さないとPR枠が古いままになる。
-
+- 経緯: 2026-09-01 にナビ・一覧上部の特集行・フッターから外して PR枠（`prSlotHtml()`）に一本化 → 2026-10-07 に PR枠も削除。
+- 専用ページ `1day.html` は `rebuild.js` が今も生成している（URL直打ちでだけ開ける）。
+- **再開するなら**導線を作り直す（PR枠を戻すなら、git の履歴にある `prSlotHtml()` と `rebuild.js` の `onedayMini()`／`__ONEDAY_MINI__` の差し込みを戻す）。トップの特集コーナー（`FEATURES`）に載せる案もある。
 
 開催情報は Airtable「1day選考会」`tbl1J80CGqiOTvuf7`。`node fetch-1day.js` → `data/1day.json` →
 `node rebuild.js` → `1day.html` の順。**求人と違い、取得は毎回 Airtable から手で回す。**
