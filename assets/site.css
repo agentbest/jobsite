@@ -345,6 +345,7 @@
     flex:none; font-size:10.5px; font-weight:800; letter-spacing:.08em; line-height:1;
     padding:4px 7px; border-radius:5px; background:var(--cta); color:var(--cta-ink);
   }
+  .dt-posted{display:flex; align-items:center; gap:8px; margin:0 0 10px; font-size:12.5px; color:var(--ink-3)}
   .jrow__co{font-size:13px; font-weight:700; color:var(--accent); min-width:0; overflow-wrap:anywhere}
   /* 企業ロゴ。画像が無い企業は社名の頭文字タイルにする。
      ⚠ 外部の favicon サービスは使わない（訪問者の閲覧履歴が第三者に渡るため）。 */

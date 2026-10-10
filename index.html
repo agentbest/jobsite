@@ -381,6 +381,7 @@
     flex:none; font-size:10.5px; font-weight:800; letter-spacing:.08em; line-height:1;
     padding:4px 7px; border-radius:5px; background:var(--cta); color:var(--cta-ink);
   }
+  .dt-posted{display:flex; align-items:center; gap:8px; margin:0 0 10px; font-size:12.5px; color:var(--ink-3)}
   .jrow__co{font-size:13px; font-weight:700; color:var(--accent); min-width:0; overflow-wrap:anywhere}
   /* 企業ロゴ。画像が無い企業は社名の頭文字タイルにする。
      ⚠ 外部の favicon サービスは使わない（訪問者の閲覧履歴が第三者に渡るため）。 */
@@ -1255,7 +1256,7 @@
       <img class="foot__logo foot__logo--light" src="assets/logo.png" alt="株式会社エージェントベスト" width="508" height="120">
       <img class="foot__logo foot__logo--dark" src="assets/logo-white.png" alt="" aria-hidden="true" width="508" height="120">
       <strong>エージェントベストジョブ転職</strong>
-      <span>人材紹介サービス「エージェントベスト」が運営しています。ご利用はすべて無料です（紹介手数料は採用企業からいただきます）。</span>
+      <span>人材紹介サービス「エージェントベスト」が運営しています。ご利用はすべて無料です。</span>
     </div>
     <dl class="foot__meta">
       <dt>運営会社</dt><dd>株式会社エージェントベスト</dd>
@@ -1331,7 +1332,7 @@
    タグは番号（t）で入っていて、TAGS の定義後（下の JOBS.forEach）で名前に戻す。 */
 const JOBS = (d=>{ if(Array.isArray(d)) return d; const k=d.k||[]; return (d.r||[]).map(row=>{ const o={}; k.forEach((key,i)=>{ const v=row[i]; if(v!==null&&v!==undefined&&v!=="") o[key]=v; }); return o; }); })(await (async()=>{
   try{
-    const r=await fetch("data/list.json?v=67bf41569f",{cache:"force-cache"});
+    const r=await fetch("data/list.json?v=20d172f2e0",{cache:"force-cache"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     return await r.json();
   }catch(e){
@@ -1586,7 +1587,7 @@ function plainLead(src){
    createdAt は「このサイトに初めて載った日」（rebuild.js の applyFirstSeen ＝ data/first-seen.json）。
    ⚠ Airtable の createdTime ではない。2026-09-02 の一括投入で全件が同じ日になり、全件に NEW が付いていたため。
       日付の無い求人（一括投入ぶん）には NEW が付かず、「新着順」でも後ろに並ぶ。件数や新しさを偽らないための仕様。 */
-const NEW_DAYS = 14;
+const NEW_DAYS = 7;   /* 2026-10-10 松岡さん指示で14→7日。ラベルも NEW→新着 */
 
 /* ---------- 従業員数 ----------
    Airtable「求人DB（企業）」に2つの列がある。
@@ -2236,7 +2237,8 @@ function renderPage(){
   const total=pageCount();
   if(page>total) page=total;
   const start=(page-1)*perPage;
-  $("#grid").innerHTML = (page === 1 ? prSlotHtml() : "") + filtered.slice(start, start+perPage).map(rowHtml).join("");
+  /* 1day選考会のPR枠（prSlotHtml）は 2026-10-10 に松岡さん指示で外した。戻すときはここに足す */
+  $("#grid").innerHTML = filtered.slice(start, start+perPage).map(rowHtml).join("");
   renderPager();
   paintFavs();
 }
@@ -2303,6 +2305,8 @@ function logoHtml(j, extra){
   if(j.logo) return `<span class="${cls} jrow__logo--img"><img src="${esc(j.logo)}" alt="" loading="lazy" decoding="async"></span>`;
   return `<span class="${cls}" aria-hidden="true">${esc(coInitial(j.company))}</span>`;
 }
+/* 掲載開始日（createdAt＝このサイトに初めて載った日）を「2026年10月10日」で出す。日付の無い求人（一括投入ぶん）には出さない */
+function fmtPosted(d){ const m=String(d||"").match(/^(\d{4})-(\d{2})-(\d{2})/); return m?`${m[1]}年${+m[2]}月${+m[3]}日`:""; }
 function rowHtml(j){
   const tags=[];
   if(j.kubun && j.kubun!=="中途") tags.push(`<span class="tag tag--kubun">${esc(j.kubun)}</span>`);
@@ -2315,7 +2319,7 @@ function rowHtml(j){
   const name = j.position||j.jobCategory||j.title||"求人";
   return `<article class="jrow" data-id="${esc(j.id)}">
     ${favBtn(j.id)}
-    <div class="jrow__top">${isNew?`<span class="jrow__new">NEW</span>`:""}${logoHtml(j)}<span class="jrow__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
+    <div class="jrow__top">${isNew?`<span class="jrow__new">新着</span>`:""}${logoHtml(j)}<span class="jrow__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
     <h3 class="jrow__title"><a href="${esc(jobHref(j))}" data-job="${esc(j.id)}">${esc(name)}</a></h3>
     <div class="card__tags">${tags.join("")}</div>
     ${j._lead?`<p class="jrow__desc">${esc(j._lead)}</p>`:""}
@@ -2323,6 +2327,7 @@ function rowHtml(j){
       <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span>${salaryNote(j)}</dd>
       ${j.locShort?`<dt>勤務地</dt><dd>${esc(j.locShort)}</dd>`:""}
       ${j.empBand?`<dt>従業員数</dt><dd>${esc(j.empBand)}</dd>`:""}
+      ${j.createdAt?`<dt>掲載開始日</dt><dd>${esc(fmtPosted(j.createdAt))}</dd>`:""}
     </dl>
     <div class="jrow__act">
       <a class="btn-detail" href="${esc(jobHref(j))}" data-job="${esc(j.id)}">詳細を見る</a>
@@ -2442,7 +2447,7 @@ function ctaHtml(j){
         メールで質問する</a>
     </div>
     ${lineBlock(j)}
-    <p class="pd-ctanote">「応募する」を押すと、<b>転職支援サービスの申し込みフォーム</b>に進みます。企業へ直接応募するのではなく、担当エージェント（株式会社エージェントベスト）が<b>企業へ推薦</b>する形で選考が進みます。<b>ご利用は無料</b>です（紹介手数料は採用企業負担）。<br>
+    <p class="pd-ctanote">「応募する」を押すと、<b>転職支援サービスの申し込みフォーム</b>に進みます。企業へ直接応募するのではなく、担当エージェント（株式会社エージェントベスト）が<b>企業へ推薦</b>する形で選考が進みます。<b>ご利用は無料</b>です。<br>
       まだ転職を決めていない段階でもかまいません。<b>経歴書のご用意は不要</b>です。この求人の背景や求められている経験など、公開情報にないところからお話しします。</p>
     <p class="pd-ctamail">「電話で軽く話を聞きたい」は<b>日程を決めずに、こちらから折り返す</b>形です。ご希望の時間帯だけ伺います。${INQUIRY_FORM_URL?"":`<br>
       メールソフトが開かないときは、<b class="pd-ctamail__addr">${esc(CONTACT_MAIL)}</b> あてに直接お送りください。`}</p>`;
@@ -2473,7 +2478,7 @@ function sideHtml(j){
     <a class="btn-apply" href="${esc(applyHref(j))}" data-apply="${esc(j.id)}">この求人に応募する</a>
     <a class="btn-detail" href="${esc(consultUrl(j))}" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
     <a class="line-btn" href="${LINE_ADD_URL}" target="_blank" rel="noopener noreferrer" data-line-cta="jobs-side">${LINE_ICON}<span>LINEで相談する</span></a>
-    <p class="dt-card__note">押した先は<b>転職支援サービスの申し込み</b>です。企業へは<b>当社から推薦する形</b>で選考が進みます。<b>ご利用は無料</b>（手数料は採用企業負担）。</p>
+    <p class="dt-card__note">押した先は<b>転職支援サービスの申し込み</b>です。企業へは<b>当社から推薦する形</b>で選考が進みます。<b>ご利用は無料</b>。</p>
     <div class="dt-fav">
       <span class="fav fav--bar" role="button" tabindex="0" data-fav="${esc(j.id)}">${STAR}</span>
       <span>あとで見返せるよう保存する</span>
@@ -2580,6 +2585,7 @@ function renderDetail(j, keepScroll){
     <div class="dt-head">
       <div class="dt-co-row">${logoHtml(j,"jrow__logo--lg")}<p class="dt-co">${j.companyId?`<a href="/company/${encodeURIComponent(j.companyId)}/" style="color:inherit" title="会社概要・募集中の求人を見る">${esc(j.company||"企業非公開")}</a>`:esc(j.company||"企業非公開")}</p></div>
       <h1 class="dt-title" id="pdTitle">${esc(jobName(j))}</h1>
+      ${j.createdAt?`<p class="dt-posted">${(j._ts&&(Date.now()-j._ts)<NEW_DAYS*864e5)?`<span class="jrow__new">新着</span>`:""}掲載開始日 ${esc(fmtPosted(j.createdAt))}</p>`:""}
       <div class="pd-tags">${tags.join("")}</div>
     </div>
     ${coSec}

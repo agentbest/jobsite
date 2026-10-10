@@ -69,20 +69,32 @@ function midCareerOnly(jobs){
    基準: 職種の大分類が LOW_GROUPS（その他／小売・飲食／交通・運輸）**かつ** 年収の上限（無ければ下限）が LOW_SALARY_CAP 万円未満、
          **または年収が未記載**（同日、松岡さんの判断で「未記載も除外」「450万円」に決めた。400万円だと405万円のフォークリフト求人が残ったため）。
    ⚠ 3分類の外（機械・営業など）に付いた製造派遣・介護系の求人はこの基準では残る。語の判定（職種名にフォークリフト等）は誤爆が出るので入れていない。
+     代わりに LOW_COMPANIES（製造派遣・介護系の会社）は職種を問わず同じ年収基準で落とす（2026-10-10・松岡さん決定）。
+     本社職（企画・エンジニア等で450万円以上）は残る。会社を足すときは会社名の部分一致で。
    ⚠ 基準を変えるときは静的ページ（job/・company/ の募集中件数）も一緒に変わる。数十件単位なら翌朝の自動更新で消える。
    ⚠ Airtable のデータは触らない（掲載を止める判断はビルド側に置く＝midCareerOnly と同じ考え方）。 */
 const LOW_GROUPS = new Set(['その他', '小売・飲食', '交通・運輸']);
 const LOW_SALARY_CAP = 450;
+const LOW_COMPANIES = /日研トータルソーシング|エス・エム・エス/;
 function jobGroupOf(v){ const m = String(v || '').match(/（([^（）]+)）\s*$/); return m ? m[1] : 'その他'; }
+/* ---------- 「※confidential※」の付いた求人を載せない（2026-10-10・松岡さん決定） ----------
+   媒体側で社外秘扱いの求人。求人名・職種名・本文のどこかに入っていれば落とす（全角・半角の※、大文字小文字を問わない）。 */
+const CONFIDENTIAL = /[※＊*]\s*confidential\s*[※＊*]/i;
+function noConfidential(jobs){
+  const hit = j => CONFIDENTIAL.test([j.title, j.position, j.jobContent, j.must, j.welcome, j.idealPerson].filter(Boolean).join(' '));
+  const dropped = jobs.filter(hit);
+  if(dropped.length) console.log(`※confidential※ の求人を除外しました: ${dropped.length}件（${dropped.map(j => j.company).slice(0, 5).join('／')}${dropped.length > 5 ? ' ほか' : ''}）`);
+  return dropped.length ? jobs.filter(j => !hit(j)) : jobs;
+}
 function hiClassOnly(jobs){
   const cap = j => (j.salaryMax != null ? j.salaryMax : j.salaryMin);
-  const low = j => LOW_GROUPS.has(jobGroupOf(j.jobCategory)) && (cap(j) == null || cap(j) < LOW_SALARY_CAP);
+  const low = j => (LOW_GROUPS.has(jobGroupOf(j.jobCategory)) || LOW_COMPANIES.test(j.company || '')) && (cap(j) == null || cap(j) < LOW_SALARY_CAP);
   const kept = jobs.filter(j => !low(j));
   const dropped = jobs.filter(low);
   if(dropped.length){
     const by = {};
     dropped.forEach(j => { by[j.company || '企業名なし'] = (by[j.company || '企業名なし'] || 0) + 1; });
-    console.log(`ハイクラス訴求に合わない求人を除外しました: ${dropped.length}件（${[...LOW_GROUPS].join('／')} かつ 年収上限 ${LOW_SALARY_CAP}万円未満または未記載）`);
+    console.log(`ハイクラス訴求に合わない求人を除外しました: ${dropped.length}件（${[...LOW_GROUPS].join('／')}／製造派遣・介護系の会社 かつ 年収上限 ${LOW_SALARY_CAP}万円未満または未記載）`);
     Object.entries(by).sort((a, b) => b[1] - a[1]).slice(0, 8).forEach(([c, n]) => console.log(`   - ${c} ${n}件`));
   }
   const unknown = dropped.filter(j => cap(j) == null).length;
@@ -130,8 +142,8 @@ function applyFirstSeen(jobs){
   /* 1行1件で書く（git の差分が「増えた求人の行」だけになる） */
   fs.writeFileSync(fsPath, '{\n' + Object.entries(seen).map(([id, d]) => `${JSON.stringify(id)}:${JSON.stringify(d)}`).join(',\n') + '\n}\n', 'utf8');
   const dated = jobs.filter(j => j.createdAt).length;
-  const fresh = jobs.filter(j => j.createdAt && (Date.now() - Date.parse(j.createdAt)) < 14 * 864e5).length;
-  console.log(`掲載開始日: 日付あり ${dated}件（今日から新たに付けた ${added}件・掲載14日以内 ${fresh}件）`);
+  const fresh = jobs.filter(j => j.createdAt && (Date.now() - Date.parse(j.createdAt)) < 7 * 864e5).length;
+  console.log(`掲載開始日: 日付あり ${dated}件（今日から新たに付けた ${added}件・新着（7日以内） ${fresh}件）`);
   return jobs;
 }
 
@@ -373,7 +385,7 @@ const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', 
   data => {
     /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
        作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
-    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(midCareerOnly(data)))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(noConfidential(midCareerOnly(data))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     writeDetails(full); fullJobs = full; return lighten(full); });
 /* 一覧用のデータは index.html に埋め込まず data/list.json に書く（template.html 冒頭の説明を参照）。
    __LIST_VER__ は中身のハッシュ。GitHub Pages のキャッシュ（10分）を跨いでも、データが変わった回だけ取り直される。 */

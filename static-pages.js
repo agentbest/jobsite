@@ -200,6 +200,14 @@ function coInitial(name){
   const m = s.match(/[A-Za-z0-9]{1,2}|[^\s]/);
   return m ? m[0].toUpperCase() : '?';
 }
+/* 掲載開始日と新着マーク（7日以内）。毎朝のビルド時点で判定する（一覧側 template.html の NEW_DAYS と同じ日数） */
+const NEW_DAYS = 7;
+function postedHtml(d){
+  const m = String(d || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(!m) return '';
+  const isNew = (Date.now() - Date.parse(`${m[1]}-${m[2]}-${m[3]}T00:00:00+09:00`)) < NEW_DAYS * 864e5;
+  return `${isNew ? '<span class="jrow__new">新着</span>' : ''}掲載開始日 ${m[1]}年${+m[2]}月${+m[3]}日`;
+}
 function logoHtml(j, extra){
   const cls = 'jrow__logo' + (extra ? ' ' + extra : '');
   if(j.logo) return `<span class="${cls} jrow__logo--img"><img src="/${esc(j.logo)}" alt="" loading="lazy" decoding="async"></span>`;
@@ -341,6 +349,7 @@ function jobPage(ctx, j, related){
   const main = `<div class="dt-head">
       <div class="dt-co-row">${logoHtml(j, 'jrow__logo--lg')}<p class="dt-co">${coRec ? `<a href="${esc(ctx.coPath(coRec))}" style="color:inherit">${esc(co)}</a>` : esc(co)}</p></div>
       <h1 class="dt-title">${esc(name)}</h1>
+      ${j.createdAt ? `<p class="dt-posted">${postedHtml(j.createdAt)}</p>` : ''}
       <div class="pd-tags">${tags.join('')}</div>
     </div>
     ${coSec}
@@ -362,7 +371,7 @@ function jobPage(ctx, j, related){
     <a class="btn-apply" href="${esc(apply)}" data-apply="${esc(j.id)}">この求人に応募する</a>
     <a class="btn-detail" href="${esc(consult)}" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
     <a class="line-btn" href="${esc(C.LINE_ADD_URL)}" target="_blank" rel="noopener noreferrer" data-line-cta="static-side">${C.LINE_ICON}<span>LINEで相談する</span></a>
-    <p class="dt-card__note">押した先は<b>転職支援サービスの申し込み</b>です。企業へは<b>当社から推薦する形</b>で選考が進みます。<b>ご利用は無料</b>（手数料は採用企業負担）。</p>
+    <p class="dt-card__note">押した先は<b>転職支援サービスの申し込み</b>です。企業へは<b>当社から推薦する形</b>で選考が進みます。<b>ご利用は無料</b>。</p>
     <span class="dt-open"><a href="/?job=${encodeURIComponent(j.id)}">検索画面で開く</a>（気になる求人に保存・条件を変えて探す）</span>
   </div>`;
   const bar = `<span class="sal"><small>想定年収</small>${esc(fmtSalary(j))}</span>
