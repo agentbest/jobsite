@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
+<title>SRE／Platform Engineer｜株式会社Medii（700〜900万円） - エージェントベストジョブ転職</title>
+<link rel="icon" href="/assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="canonical" href="https://jobs.agent-best.net/job/recvw5vgrmdlatwy9/">
+<meta name="description" content="■仕事概要 「誰も取り残さない医療を」をミッションに、希少疾患・がんなどスペシャリティ領域の医療課題に医師向けプロダクト（Medii Eコンサル、Medii Q）で取り組むMediiで、新設するSRE／Platformチ…">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="エージェントベストジョブ転職">
+<meta property="og:title" content="SRE／Platform Engineer｜株式会社Medii（700〜900万円）">
+<meta property="og:description" content="■仕事概要 「誰も取り残さない医療を」をミッションに、希少疾患・がんなどスペシャリティ領域の医療課題に医師向けプロダクト（Medii Eコンサル、Medii Q）で取り組むMediiで、新設するSRE／Platformチ…">
+<meta property="og:url" content="https://jobs.agent-best.net/job/recvw5vgrmdlatwy9/">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:image" content="https://jobs.agent-best.net/assets/ogp.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jobs.agent-best.net/assets/ogp.jpg">
+<!-- 検索画面（index.html）で選んだテーマをこのページでも使う -->
+<script>try{var t=localStorage.getItem("jobsite-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1XXMP8Y1B4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1XXMP8Y1B4');
+</script>
+<!-- 見た目は検索画面と同じ。rebuild.js が template.html の <style> を assets/site.css に書き出している -->
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  /* この静的ページだけの調整。検索窓・マイページが無いぶん、申し込みボタンを右に寄せる */
+  .topbar__inner .btn-head{margin-left:auto}
+  .detail{padding-top:14px}
+  .rel{display:flex; flex-direction:column; gap:8px; margin:0; padding:0; list-style:none}
+  .rel li{border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:12px 14px}
+  .rel a{font-weight:700; color:var(--ink); text-decoration:none; display:block; line-height:1.5}
+  .rel a:hover{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+  .rel .co{font-size:12.5px; color:var(--accent); font-weight:700}
+  .rel .m{font-size:12.5px; color:var(--ink-3); margin-top:2px}
+  .rel .m b{font-family:var(--mono); color:var(--ink); font-weight:800}
+  .pd-more{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .pd-more a{font-size:13px; color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+  .dt-open{display:block; margin-top:12px; padding-top:12px; border-top:1px solid var(--line-2); font-size:12.5px; color:var(--ink-3)}
+  .dt-open a{color:var(--accent)}
+</style>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"JobPosting","title":"SRE／Platform Engineer","description":"<h4>仕事内容<\/h4><p>■仕事概要<br>「誰も取り残さない医療を」をミッションに、希少疾患・がんなどスペシャリティ領域の医療課題に医師向けプロダクト（Medii Eコンサル、Medii Q）で取り組むMediiで、新設するSRE／Platformチームの社員1人目のSREエンジニアです。プロダクトの成長に合わせて信頼性とセキュリティを測れる形にし、本番構成のコード管理範囲を広げ、重要なユーザー操作（CUJ）をSLOで語れるようにし、医療機関からの安全管理に関する照会に根拠を示して答えられる状態を保つことがミッションです。<\/p><p>■仕事の詳細<\/p><ul><li>AWS本番環境（ECS / Aurora MySQL / ALB / CloudFront / WAF等）の設計・構築・運用<\/li><li>Terraformによる構成管理と、変更をPRとレビューで通す運用（plan差分ゼロ・drift検出）<\/li><li>監査・セキュリティ基盤（CloudTrail・GuardDuty・Security Hub・IAM・Secrets Manager）の設計・運用と、安全管理の要求と証跡の対応付け<\/li><li>Datadogによる監視・アラート・Runbook・SLOの設計と運用、重要なユーザー操作の外形監視<\/li><li>リリース基盤（CI/CD）の整備、ロールバックと復元訓練、基盤由来のIncidentの一次対応とPostmortem<\/li><\/ul><p>【入社後の流れ】<\/p><ul><li>入社後半年：既存の構成と運用にキャッチアップしながら、効果の出やすい改善から着手し、本番環境のTerraformによる構成管理への移行を担当（dev / staging環境はAWS CDKで管理済み）<\/li><li>その先：監視とSLOの設計、安全管理の説明可能性を高める取り組み、AIを組み込んだ運用の型づくりを主導<\/li><\/ul><p>【配属・体制】<\/p><ul><li>エンジニアリング部。チームはEM 1名（プロダクト開発EMと兼務）と業務委託SRE 2名で、SREとEnabling（共通基盤・AI前提の開発の型づくり）の2つの役割を担う<\/li><li>エンジニア組織全体：社員6名＋業務委託7名<\/li><\/ul><p>【使用ツール・環境】<\/p><ul><li>インフラ：AWS（ECS・Aurora MySQL・ALB・CloudFront・WAF・Amplify・Cognito・ECR・Secrets Manager・S3等）、Google Cloud、Firebase、Docker<\/li><li>IaC：AWS CDK / CloudFormation、Terraform（移行中）<\/li><li>監視：Datadog（APM・RUM・Logs・Synthetics・SLO）、CloudWatch<\/li><li>CI/CD：GitHub Actions、AWS CodePipeline / CodeBuild<\/li><li>テスト：Playwright（E2E）<\/li><li>AI：Claude Code、Cursor、CodeRabbit<\/li><li>プロダクトの技術：Go / Gin / GORM、TypeScript / React / Next.js、Python（FastAPI・LangChain / LangGraph）、Dart / Flutter<\/li><\/ul><p>【キャリアパス】<\/p><ul><li>SRE → SRE領域の技術判断を担うポジション → Platformチームのマネージャー、またはSRE／セキュリティのスペシャリスト<\/li><\/ul><h4>必須条件<\/h4><ul><li>AWS上で本番システムを設計・構築・運用した経験（ECS・RDS / Aurora・ALB・IAM等）<\/li><li>Terraform等のIaC（インフラをコードで管理する仕組み）でインフラを管理した経験<\/li><li>監視・アラート・ログの設計または運用の経験（Datadogまたは同等のツール）<\/li><\/ul><h4>歓迎条件<\/h4><p>以下いずれかのご経験・スキルがある方を歓迎します。<\/p><ul><li>AWSの監査・セキュリティ基盤（CloudTrail・GuardDuty・Security Hub・WAF・Secrets Manager）の設計・運用経験<\/li><li>既存環境をTerraformに取り込み、コードで管理する形に移した経験<\/li><li>SLO / Error Budgetの設計・運用、外形監視（Synthetics等の、外から利用者と同じ操作をして確認する監視）の経験<\/li><li>障害の一次対応から再発防止まで持っていった経験<\/li><li>医療・金融など規制のある領域で、ガイドラインの要求と証跡を紐づけた経験<\/li><li>生成AI（Claude Code等）をレビューや運用に組み込んだ経験<\/li><\/ul>","identifier":{"@type":"PropertyValue","name":"株式会社エージェントベスト","value":"recvw5vgrmdlatwy9"},"hiringOrganization":{"@type":"Organization","name":"株式会社Medii","sameAs":"https://medii.jp/","logo":"https://jobs.agent-best.net/assets/logos/medii.png"},"jobLocation":{"@type":"Place","address":{"@type":"PostalAddress","addressCountry":"JP","addressRegion":"東京都","streetAddress":"東京オフィス 東京都新宿区新宿1丁目23-1 THE PORTAL 新宿御苑 4F /新宿御苑前、新宿三丁目駅、四谷三丁目駅、曙橋駅、新宿駅 ※勤務地変更範囲：会社の定める就業場所（テレワークを行う場所を含む） 受動喫煙防止措置：屋内禁煙"}},"employmentType":["FULL_TIME"],"directApply":false,"url":"https://jobs.agent-best.net/job/recvw5vgrmdlatwy9/","datePosted":"2026-10-11","validThrough":"2026-11-30T23:59:59+09:00","baseSalary":{"@type":"MonetaryAmount","currency":"JPY","value":{"@type":"QuantitativeValue","unitText":"YEAR","minValue":7000000,"maxValue":9000000}}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://jobs.agent-best.net/"},{"@type":"ListItem","position":2,"name":"エンジニアの求人","item":"https://jobs.agent-best.net/jobs/engineer/"},{"@type":"ListItem","position":3,"name":"SRE／Platform Engineer","item":"https://jobs.agent-best.net/job/recvw5vgrmdlatwy9/"}]}]</script>
+<!-- 運営会社＝転職エージェント（有料職業紹介 13-ユ-316964）であることを検索エンジンに示す。コーポレートと同じ @id -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","EmploymentAgency"],"@id":"https://www.agent-best.net/#organization","name":"株式会社エージェントベスト","alternateName":"AGENT BEST","url":"https://www.agent-best.net/","logo":"https://www.agent-best.net/logo.png","description":"IT・スタートアップ・M&A・コンサル領域に特化した転職エージェント。20代・30代のハイクラス層の転職を支援しています。","address":{"@type":"PostalAddress","addressCountry":"JP","addressRegion":"東京都","addressLocality":"港区","streetAddress":"六本木4-8-7 嶋田ビル5階"},"hasCredential":{"@type":"EducationalOccupationalCredential","name":"有料職業紹介事業許可","credentialCategory":"厚生労働大臣許可","identifier":"13-ユ-316964","recognizedBy":{"@type":"GovernmentOrganization","name":"厚生労働省"}}}</script>
+</head>
+<body class="detail-open">
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="/" aria-label="エージェントベストジョブ転職 トップ">
+      <img class="brand__mark" src="/assets/mark.png" alt="" aria-hidden="true" width="156" height="120">
+      <span class="brand__txt">
+        <span class="brand__name">エージェントベストジョブ転職</span>
+        <span class="brand__sub">AGENT BEST JOB</span>
+      </span>
+    </a>
+    <nav class="gnav" aria-label="メインメニュー">
+      <a href="/">求人を探す</a>
+      <a href="/apply.html">転職支援サービス</a>
+    </nav>
+    <a class="btn-head" href="/apply.html?job=recvw5vgrmdlatwy9" data-apply="recvw5vgrmdlatwy9">
+      <span class="btn-head__long">転職支援に申し込む</span>
+      <span class="btn-head__short">無料で申し込む</span>
+      <span class="free">無料</span>
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="crumb" aria-label="パンくず"><a href="/">ホーム</a><span class="sep">›</span><a href="/jobs/engineer/">エンジニアの求人</a><span class="sep">›</span><span class="cur">SRE／Platform Engineer</span></nav>
+
+  <section class="detail" aria-label="求人詳細">
+    <a class="dt-back" href="/jobs/engineer/">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      求人情報一覧に戻る
+    </a>
+    <div class="dt-grid">
+      <div class="dt-main"><div class="dt-head">
+      <div class="dt-co-row"><span class="jrow__logo jrow__logo--lg jrow__logo--img"><img src="/assets/logos/medii.png" alt="" loading="lazy" decoding="async"></span><p class="dt-co"><a href="/company/recHzz6SUD1MGE0NU/" style="color:inherit">株式会社Medii</a></p></div>
+      <h1 class="dt-title">SRE／Platform Engineer</h1>
+      <p class="dt-posted"><span class="jrow__new">新着</span>掲載開始日 2026年10月11日</p>
+      <div class="pd-tags"><span class="tag tag--cat">インフラエンジニア（エンジニア）</span><span class="tag">正社員</span><span class="tag">インターネット・Webサービス</span><span class="tag tag--remote">リモート可</span></div>
+    </div>
+    <div class="pd-sec"><h3>企業情報</h3><div class="rich"><p>株式会社Mediiは、「誰も取り残さない医療を」をミッションに掲げ、希少疾患やがんなど診断や治療の技術が急速に進歩している分野を中心に医療課題の解決に取り組む医療スタートアップ。代表は山田裕揮氏。全国の主治医が抱えている難しい症例の課題を明らかにし、国内でも数が限られた専門医と共に解決へと導く仕組みを創ることで、早期診断と治療の最適化に貢献する。AIによる迅速な情報収集と専門医による実践的な知見により、多忙な医師が限られた時間の中でより良い意思決定ができるよう、必要な情報や知見にアクセスできる環境を医師に無料で提供。遠隔専門医相談システム「Medii Eコンサル」は2025年日経優秀製品・サービス賞「最優秀賞」、第5回日本サービス大賞「厚生労働大臣賞」を受賞した。日本における遠隔専門医相談システムの提供を通じてその有用性や臨床アウトカムへの貢献を検証し、遠隔専門医相談の普及と医療知見の均てん化を目指した研究活動を行い、日本遠隔医療学会・日本神経免疫学会・日本睡眠学会・日本プライマリ・ケア連合学会などで発表している。想いに賛同する多くの団体・企業とパートナーシップを組み、医療現場と製薬企業をつなぐ架け橋となる。</p></div><dl class="pd-meta"><dt>所在地</dt><dd>〒160-0022 東京都新宿区新宿1-23-1 THE PORTAL 新宿御苑 4F</dd><dt>従業員数</dt><dd>46名（2026年4月末時点）</dd><dt>上場区分</dt><dd>非上場</dd><dt>企業サイト</dt><dd><a href="https://medii.jp/" target="_blank" rel="noopener nofollow">medii.jp</a></dd></dl><div class="pd-more"><a href="/company/recHzz6SUD1MGE0NU/">株式会社Mediiの会社概要・募集中の求人（5件）を見る</a></div></div>
+    
+    <div class="pd-sec"><h3>仕事内容</h3><div class="rich"><p>■仕事概要<br>「誰も取り残さない医療を」をミッションに、希少疾患・がんなどスペシャリティ領域の医療課題に医師向けプロダクト（Medii Eコンサル、Medii Q）で取り組むMediiで、新設するSRE／Platformチームの社員1人目のSREエンジニアです。プロダクトの成長に合わせて信頼性とセキュリティを測れる形にし、本番構成のコード管理範囲を広げ、重要なユーザー操作（CUJ）をSLOで語れるようにし、医療機関からの安全管理に関する照会に根拠を示して答えられる状態を保つことがミッションです。</p><p>■仕事の詳細</p><ul><li>AWS本番環境（ECS / Aurora MySQL / ALB / CloudFront / WAF等）の設計・構築・運用</li><li>Terraformによる構成管理と、変更をPRとレビューで通す運用（plan差分ゼロ・drift検出）</li><li>監査・セキュリティ基盤（CloudTrail・GuardDuty・Security Hub・IAM・Secrets Manager）の設計・運用と、安全管理の要求と証跡の対応付け</li><li>Datadogによる監視・アラート・Runbook・SLOの設計と運用、重要なユーザー操作の外形監視</li><li>リリース基盤（CI/CD）の整備、ロールバックと復元訓練、基盤由来のIncidentの一次対応とPostmortem</li></ul><p>【入社後の流れ】</p><ul><li>入社後半年：既存の構成と運用にキャッチアップしながら、効果の出やすい改善から着手し、本番環境のTerraformによる構成管理への移行を担当（dev / staging環境はAWS CDKで管理済み）</li><li>その先：監視とSLOの設計、安全管理の説明可能性を高める取り組み、AIを組み込んだ運用の型づくりを主導</li></ul><p>【配属・体制】</p><ul><li>エンジニアリング部。チームはEM 1名（プロダクト開発EMと兼務）と業務委託SRE 2名で、SREとEnabling（共通基盤・AI前提の開発の型づくり）の2つの役割を担う</li><li>エンジニア組織全体：社員6名＋業務委託7名</li></ul><p>【使用ツール・環境】</p><ul><li>インフラ：AWS（ECS・Aurora MySQL・ALB・CloudFront・WAF・Amplify・Cognito・ECR・Secrets Manager・S3等）、Google Cloud、Firebase、Docker</li><li>IaC：AWS CDK / CloudFormation、Terraform（移行中）</li><li>監視：Datadog（APM・RUM・Logs・Synthetics・SLO）、CloudWatch</li><li>CI/CD：GitHub Actions、AWS CodePipeline / CodeBuild</li><li>テスト：Playwright（E2E）</li><li>AI：Claude Code、Cursor、CodeRabbit</li><li>プロダクトの技術：Go / Gin / GORM、TypeScript / React / Next.js、Python（FastAPI・LangChain / LangGraph）、Dart / Flutter</li></ul><p>【キャリアパス】</p><ul><li>SRE → SRE領域の技術判断を担うポジション → Platformチームのマネージャー、またはSRE／セキュリティのスペシャリスト</li></ul></div></div>
+    <div class="pd-sec"><h3>必須条件</h3><div class="rich"><ul><li>AWS上で本番システムを設計・構築・運用した経験（ECS・RDS / Aurora・ALB・IAM等）</li><li>Terraform等のIaC（インフラをコードで管理する仕組み）でインフラを管理した経験</li><li>監視・アラート・ログの設計または運用の経験（Datadogまたは同等のツール）</li></ul></div></div>
+    <div class="pd-sec"><h3>歓迎条件</h3><div class="rich"><p>以下いずれかのご経験・スキルがある方を歓迎します。</p><ul><li>AWSの監査・セキュリティ基盤（CloudTrail・GuardDuty・Security Hub・WAF・Secrets Manager）の設計・運用経験</li><li>既存環境をTerraformに取り込み、コードで管理する形に移した経験</li><li>SLO / Error Budgetの設計・運用、外形監視（Synthetics等の、外から利用者と同じ操作をして確認する監視）の経験</li><li>障害の一次対応から再発防止まで持っていった経験</li><li>医療・金融など規制のある領域で、ガイドラインの要求と証跡を紐づけた経験</li><li>生成AI（Claude Code等）をレビューや運用に組み込んだ経験</li></ul></div></div>
+    <div class="pd-sec"><h3>求める人物像</h3><div class="rich"><ul><li>ミッション「誰も取り残さない医療を」に共感し、社会課題の解決に当事者として関わりたい方</li><li>基盤を整えることで開発チーム全体が動きやすくなることに、面白さを感じる方</li><li>障害の原因を人ではなく仕組みに求め、再発防止まで進められる方</li><li>決めごとと根拠を文書に残し、非エンジニアにも平易に説明できる方</li><li>能動的に優先順位付け、仮説立て、提案・実行ができる方</li><li>過去の成功体験にとらわれずに新しい挑戦を楽しめる方</li><li>チームメンバーを尊重し、建設的に議論できる方</li></ul></div></div>
+    <div class="pd-sec"><h3>募集要項</h3><dl class="pd-meta"><dt>給与（原文）</dt><dd>700万円 〜 900万円
+
+▪️給与内訳
+月給：500,000円〜643,000円
+基本給：405,000円〜520,900円
+固定残業手当：95,000円〜122,100円（30時間相当分）
+※30時間を超える時間外労働の残業手当は追加で支給
+※賞与支給あり（一部変動制・理論年収は賞与含む）
+
+▪️その他
+ストックオプションあり</dd><dt>勤務地</dt><dd>東京オフィス
+東京都新宿区新宿1丁目23-1 THE PORTAL 新宿御苑 4F
+/新宿御苑前、新宿三丁目駅、四谷三丁目駅、曙橋駅、新宿駅
+
+※勤務地変更範囲：会社の定める就業場所（テレワークを行う場所を含む）
+
+受動喫煙防止措置：屋内禁煙</dd><dt>勤務時間</dt><dd>【勤務時間】
+フレックスタイム制（コアタイム：10時〜15時）
+・フレキシブルタイム：始業8時〜10時、終業15時〜22時
+・休憩時間：60分
+・あり（月平均20時間程度）
+※標準労働時間10:00～19:00（1日の所定労働時間8時間）
+
+【在宅勤務】
+リモート勤務可能
+※週1日程度の出社を想定（出社頻度は応相談）
+
+【休日・休暇】
+完全週休二日制（土日祝日）、年末年始休暇、その他会社が定める日、慶弔休暇、生理休暇、産前産後休暇、育児休暇、介護休暇、年次有給休暇（入社日5日、入社半年後に残り５日を付与）
+
+【その他】
+本求人は正社員としての採用を前提としています。
+なお、選考結果を踏まえ、ご本人の意向を確認の上、双方の合意により、契約社員としての採用を別途ご相談する場合があります。
+その場合の契約期間、更新基準その他の労働条件は、契約締結前に改めて書面で明示します。</dd><dt>休日・休暇</dt><dd>【休日・休暇】
+完全週休二日制（土日祝日）、年末年始休暇、その他会社が定める日、慶弔休暇、生理休暇、産前産後休暇、育児休暇、介護休暇、年次有給休暇（入社日5日、入社半年後に残り５日を付与）</dd><dt>福利厚生</dt><dd>- 交通費全額支給
+- 各種社会保険完備（健康保険／厚生年金保険／雇用保険／労災保険）
+- 昇給年2回
+- 賞与年2回
+- インフルエンザ予防接種費 全額補助
+- 新メンバー歓迎会の費用補助（上限あり）
+- 書籍購入費 全額補助
+- 患者さんや医師を招いた勉強会の定期開催（Patient/Doctor Voice）
+例：https://www.wantedly.com/companies/company_989579/post_articles/1012238
+- オンボーディングプログラム完備
+（コアバリュー・非ヘルスケア出身者向け・ビジネススキル　など）
+
+■試用期間
+6ヶ月</dd></dl></div>
+    
+    <div class="pd-sec"><h3>応募前に読む</h3><div class="pd-more"><a href="https://www.agent-best.net/media/infra-engineer-resume/?utm_source=jobs&utm_medium=job-guide">インフラエンジニアの職務経歴書の書き方｜書類通過率を上げる実例テンプレート</a><a href="https://www.agent-best.net/media/infra-engineer-motivation/?utm_source=jobs&utm_medium=job-guide">インフラエンジニアの志望動機の書き方｜評価される例文と NG パターン</a><a href="https://www.agent-best.net/media/infra-engineer-interview/?utm_source=jobs&utm_medium=job-guide">インフラエンジニアの面接対策｜頻出質問と回答の組み立て方</a><a href="https://www.agent-best.net/media/infra-engineer-salary/?utm_source=jobs&utm_medium=job-guide">インフラエンジニアの年収相場【2026年版】｜20代・30代の年収レンジと上げ方</a></div></div>
+    <div class="pd-sec"><h3>この求人に応募する</h3><div class="pd-cta">
+      <a class="btn-apply" href="/apply.html?job=recvw5vgrmdlatwy9" data-apply="recvw5vgrmdlatwy9">この求人に応募する <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn-ghost" href="https://calendly.com/r_matsuoka?a1=%E6%B1%82%E4%BA%BA%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92%E8%A6%8B%E3%81%A6%E7%9B%B8%E8%AB%87%E3%81%97%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8%EF%BC%9A%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEMedii+%2F+SRE%EF%BC%8FPlatform+Engineer" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
+      <a class="btn-ghost" href="https://airtable.com/appYkc36EvioYoL1A/shrxmcjkaIdktH1Qk?prefill_%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%96%B9%E6%B3%95=%E9%9B%BB%E8%A9%B1%E3%81%A7%E6%8A%98%E3%82%8A%E8%BF%94%E3%81%97%E3%81%A6%E3%81%BB%E3%81%97%E3%81%84&amp;prefill_%E5%AF%BE%E8%B1%A1%E6%B1%82%E4%BA%BA=SRE%EF%BC%8FPlatform+Engineer&amp;prefill_%E4%BC%81%E6%A5%AD%E5%90%8D=%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEMedii&amp;prefill_%E6%B1%82%E4%BA%BA%E3%83%AC%E3%82%B3%E3%83%BC%E3%83%89ID=recvw5vgrmdlatwy9&amp;hide_%E6%B1%82%E4%BA%BA%E3%83%AC%E3%82%B3%E3%83%BC%E3%83%89ID=true" target="_blank" rel="noopener">電話で軽く話を聞きたい</a>
+      <a class="btn-ghost" href="https://airtable.com/appYkc36EvioYoL1A/shrxmcjkaIdktH1Qk?prefill_%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%96%B9%E6%B3%95=%E3%83%A1%E3%83%BC%E3%83%AB%E3%81%A7%E5%9B%9E%E7%AD%94%E3%81%8C%E3%81%BB%E3%81%97%E3%81%84&amp;prefill_%E5%AF%BE%E8%B1%A1%E6%B1%82%E4%BA%BA=SRE%EF%BC%8FPlatform+Engineer&amp;prefill_%E4%BC%81%E6%A5%AD%E5%90%8D=%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEMedii&amp;prefill_%E6%B1%82%E4%BA%BA%E3%83%AC%E3%82%B3%E3%83%BC%E3%83%89ID=recvw5vgrmdlatwy9&amp;hide_%E6%B1%82%E4%BA%BA%E3%83%AC%E3%82%B3%E3%83%BC%E3%83%89ID=true" target="_blank" rel="noopener">メールで質問する</a>
+    </div>
+    <div class="pd-line">
+      <p class="pd-line__ttl"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>LINEで相談する・応募する</p>
+      <p class="pd-line__lead">フォーム入力も経歴書も不要です。<b>「SRE／Platform Engineer」について聞きたい</b>とLINEで送っていただければ、担当（松岡）が直接お返事します。<b>質問だけ・情報収集だけでもかまいません。</b></p>
+      <div class="pd-line__btns">
+        <a class="pd-line__btn" href="https://line.me/R/ti/p/@697nxhbt?oat_content=url&amp;ts=08302134" target="_blank" rel="noopener noreferrer" data-line-cta="static-detail-add"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>① 友だち追加する</a>
+        <a class="pd-line__btn pd-line__btn--sub" href="https://line.me/R/oaMessage/%40697nxhbt/?%E6%B1%82%E4%BA%BA%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92%E8%A6%8B%E3%81%A6%E3%81%94%E9%80%A3%E7%B5%A1%E3%81%97%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%E4%B8%8B%E8%A8%98%E3%81%AE%E6%B1%82%E4%BA%BA%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E7%9B%B8%E8%AB%87%E3%81%97%E3%81%9F%E3%81%84%E3%81%A7%E3%81%99%E3%80%82%0A%E2%96%A0%E6%B1%82%E4%BA%BA%EF%BC%9ASRE%EF%BC%8FPlatform%20Engineer%0A%E2%96%A0%E4%BC%81%E6%A5%AD%EF%BC%9A%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEMedii%0A%E2%96%A0%E3%83%9A%E3%83%BC%E3%82%B8%EF%BC%9Ahttps%3A%2F%2Fjobs.agent-best.net%2Fjob%2Frecvw5vgrmdlatwy9%2F%0A" target="_blank" rel="noopener noreferrer" data-line-cta="static-detail-msg">② この求人について送る</a>
+      </div>
+      <ol class="pd-line__steps"><li>友だち追加</li><li>この求人について送信</li><li>担当から返信</li><li>そのままLINEでやり取り</li></ol>
+      <p class="pd-line__note">すでに友だちの方は②だけでかまいません（求人名が入った状態でLINEが開きます）。うまく開かないときは、LINEで ID <b>@697nxhbt</b> を検索してください。</p>
+    </div>
+    <p class="pd-ctanote">「応募する」を押すと、<b>転職支援サービスの申し込みフォーム</b>に進みます。企業へ直接応募するのではなく、担当エージェント（株式会社エージェントベスト）が<b>企業へ推薦</b>する形で選考が進みます。<b>ご利用は無料</b>です。<br>
+      まだ転職を決めていない段階でもかまいません。<b>経歴書のご用意は不要</b>です。この求人の背景や求められている経験など、公開情報にないところからお話しします。</p>
+    <p class="pd-ctamail">「電話で軽く話を聞きたい」は<b>日程を決めずに、こちらから折り返す</b>形です。ご希望の時間帯だけ伺います。</p></div>
+    <div class="jshare"><span class="jshare__lbl">この求人をシェア</span><div class="jshare__list">
+      <a class="jshare__btn jshare__btn--x" href="https://x.com/intent/post?url=https%3A%2F%2Fjobs.agent-best.net%2Fjob%2Frecvw5vgrmdlatwy9%2F&amp;text=SRE%EF%BC%8FPlatform%20Engineer%EF%BD%9C%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEMedii" target="_blank" rel="noopener noreferrer" aria-label="Xでシェア" title="Xでシェア"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a class="jshare__btn jshare__btn--facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjobs.agent-best.net%2Fjob%2Frecvw5vgrmdlatwy9%2F" target="_blank" rel="noopener noreferrer" aria-label="Facebookでシェア" title="Facebookでシェア"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047v-2.66c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.971H15.83c-1.491 0-1.956.93-1.956 1.886v2.264h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg></a>
+      <a class="jshare__btn jshare__btn--linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjobs.agent-best.net%2Fjob%2Frecvw5vgrmdlatwy9%2F" target="_blank" rel="noopener noreferrer" aria-label="LinkedInでシェア" title="LinkedInでシェア"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+      <a class="jshare__btn jshare__btn--hatena" href="https://b.hatena.ne.jp/entry/panel/?url=https%3A%2F%2Fjobs.agent-best.net%2Fjob%2Frecvw5vgrmdlatwy9%2F&amp;btitle=SRE%EF%BC%8FPlatform%20Engineer%EF%BD%9C%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEMedii" target="_blank" rel="noopener noreferrer" aria-label="はてなブックマークに追加" title="はてなブックマークに追加"><span class="jshare__b">B!</span></a>
+    </div></div>
+    <div class="pd-sec"><h3>同じ職種の他の求人</h3><ul class="rel"><li><span class="co">PLAINER株式会社</span><a href="/job/rec1AsZfD4ZOWHmOA/">Software Engineer（フルスタック）</a><div class="m"><b>650〜2000万円</b> ・ 東京都目黒区</div></li><li><span class="co">Turing株式会社</span><a href="/job/recX8kLlzON2UOI91/">インフラエンジニア・プラットフォーム開発（ML Platform Engineering／SRE・GPUクラスタ）</a><div class="m"><b>700〜2000万円</b> ・ 東京都大田区</div></li><li><span class="co">Turing株式会社</span><a href="/job/recYkcF9R4ZKmno3j/">インフラエンジニア（GPUクラスタ）</a><div class="m"><b>1000〜2000万円</b> ・ 東京都大田区</div></li><li><span class="co">株式会社ログラス</span><a href="/job/reckAfqqMYDtoDyQd/">Platform Engineer（プロダクト基盤チーム）</a><div class="m"><b>700〜2000万円</b> ・ 東京都港区</div></li><li><span class="co">PLAINER株式会社</span><a href="/job/reclruVw9X6CkJrUz/">Sales Engineer（Biz）</a><div class="m"><b>500〜2000万円</b> ・ 東京都目黒区</div></li><li><span class="co">スパイダープラス株式会社</span><a href="/job/recYAYWtDtkBOjtfQ/">QAシニアエンジニア（Product Quality Manager）</a><div class="m"><b>900〜1656万円</b> ・ 東京都港区</div></li></ul>
+      <div class="pd-more"><a href="/jobs/engineer/tokyo/">東京都のエンジニアの求人一覧</a><a href="/jobs/engineer/">エンジニアの求人一覧</a><a href="https://www.agent-best.net/media/hub/backend-engineer/?utm_source=jobs&utm_medium=job">バックエンドエンジニアの転職ガイド</a><a href="/area/tokyo/">東京都の求人一覧</a></div></div>
+    <div class="pd-author">
+      <p class="lbl">この求人を担当するエージェント</p>
+      <p class="name"><a href="https://www.agent-best.net/profile" target="_blank" rel="noopener">松岡 良次</a></p>
+      <p class="bio">株式会社エージェントベスト代表。大手人材会社およびスタートアップ人材企業にて、IT・スタートアップ・メガベンチャー企業の採用支援に従事。独立後はIT・スタートアップ・コンサル領域に特化し、20〜30代のキャリア支援を行う。（厚生労働大臣許可 13-ユ-316964）</p>
+    </div></div>
+      <aside class="dt-side"><div class="dt-card">
+    <span class="k">想定年収</span><span class="v">700〜900万円</span>
+    <a class="btn-apply" href="/apply.html?job=recvw5vgrmdlatwy9" data-apply="recvw5vgrmdlatwy9">この求人に応募する</a>
+    <a class="btn-detail" href="https://calendly.com/r_matsuoka?a1=%E6%B1%82%E4%BA%BA%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92%E8%A6%8B%E3%81%A6%E7%9B%B8%E8%AB%87%E3%81%97%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8%EF%BC%9A%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEMedii+%2F+SRE%EF%BC%8FPlatform+Engineer" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
+    <a class="line-btn" href="https://line.me/R/ti/p/@697nxhbt?oat_content=url&amp;ts=08302134" target="_blank" rel="noopener noreferrer" data-line-cta="static-side"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>LINEで相談する</span></a>
+    <p class="dt-card__note">押した先は<b>転職支援サービスの申し込み</b>です。企業へは<b>当社から推薦する形</b>で選考が進みます。<b>ご利用は無料</b>。</p>
+    <span class="dt-open"><a href="/?job=recvw5vgrmdlatwy9">検索画面で開く</a>（気になる求人に保存・条件を変えて探す）</span>
+  </div></aside>
+    </div>
+  </section>
+</div>
+
+<footer class="site-foot">
+  <div class="foot__inner">
+    <div class="foot__brand">
+      <img class="foot__logo foot__logo--light" src="/assets/logo.png" alt="株式会社エージェントベスト" width="508" height="120">
+      <img class="foot__logo foot__logo--dark" src="/assets/logo-white.png" alt="" aria-hidden="true" width="508" height="120">
+      <strong>エージェントベストジョブ転職</strong>
+      <span>人材紹介サービス「エージェントベスト」が運営しています。ご利用はすべて無料です。</span>
+    </div>
+    <dl class="foot__meta">
+      <dt>運営会社</dt><dd>株式会社エージェントベスト</dd>
+      <dt>所在地</dt><dd>東京都港区六本木4-8-7 嶋田ビル5階</dd>
+      <dt>許可番号</dt><dd>有料職業紹介事業 13-ユ-316964</dd>
+    </dl>
+    <nav class="foot__links">
+      <a href="https://www.agent-best.net/" target="_blank" rel="noopener">運営会社サイト</a>
+      <a href="/company/">企業一覧</a>
+      <a href="/terms.html">利用規約</a>
+      <a href="/privacy.html">プライバシーポリシー（人材紹介）</a>
+      <a href="/privacy-ad.html">プライバシーポリシー（求人広告）</a>
+      <a href="https://www.agent-best.net/contact" target="_blank" rel="noopener">お問い合わせ</a>
+    </nav>
+    <nav class="foot__links foot__links--sub">
+      <span>専門ページ</span>
+      <a href="https://pm.agent-best.net/" target="_blank" rel="noopener">PMのキャリア支援</a>
+      <a href="https://eng.agent-best.net/" target="_blank" rel="noopener">エンジニアからコンサルへ</a>
+      <a href="https://shinsotsu.agent-best.net/" target="_blank" rel="noopener">新卒・インターンの求人を探す</a>
+      <a href="https://student.agent-best.net/" target="_blank" rel="noopener">学生向けキャリア支援</a>
+    </nav>
+    <p class="foot__copy">&copy; 株式会社エージェントベスト</p>
+  </div>
+</footer>
+
+<!-- スマホでは画面下部に応募ボタンを固定する（body.detail-open で表示される） -->
+<div class="applybar"><span class="sal"><small>想定年収</small>700〜900万円</span>
+    <a class="line-btn" href="https://line.me/R/ti/p/@697nxhbt?oat_content=url&amp;ts=08302134" target="_blank" rel="noopener noreferrer" data-line-cta="static-bar" aria-label="LINEで相談する"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>LINE</span></a>
+    <a class="btn-apply" href="/apply.html?job=recvw5vgrmdlatwy9" data-apply="recvw5vgrmdlatwy9">この求人に応募する</a></div>
+
+<script>
+  /* 検索画面と同じイベント名で GA4 に送る（応募ファネル apply_click → apply_form_open が静的ページからも繋がるように） */
+  document.addEventListener('click', function(e){
+    if(typeof window.gtag !== 'function') return;
+    var a = e.target && e.target.closest && e.target.closest('a[data-apply]');
+    if(a) window.gtag('event','apply_click',{job_id:a.getAttribute('data-apply'), page_path:location.pathname, source:'static'});
+    var l = e.target && e.target.closest && e.target.closest('[data-line-cta]');
+    if(l) window.gtag('event','line_add_friend',{placement:l.getAttribute('data-line-cta'), page_path:location.pathname});
+  }, true);
+</script>
+</body>
+</html>
