@@ -2305,7 +2305,7 @@ function logoHtml(j, extra){
   if(j.logo) return `<span class="${cls} jrow__logo--img"><img src="${esc(j.logo)}" alt="" loading="lazy" decoding="async"></span>`;
   return `<span class="${cls}" aria-hidden="true">${esc(coInitial(j.company))}</span>`;
 }
-/* 掲載開始日（createdAt＝このサイトに初めて載った日）を「2026年10月10日」で出す。日付の無い求人（一括投入ぶん）には出さない */
+/* 掲載開始日（createdAt＝このサイトに初めて載った日。一括投入ぶんは Airtable の作成日）を「2026年10月10日」で出す */
 function fmtPosted(d){ const m=String(d||"").match(/^(\d{4})-(\d{2})-(\d{2})/); return m?`${m[1]}年${+m[2]}月${+m[3]}日`:""; }
 function rowHtml(j){
   const tags=[];

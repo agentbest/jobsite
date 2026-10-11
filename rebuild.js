@@ -137,7 +137,11 @@ function applyFirstSeen(jobs){
   jobs.forEach(j => {
     if(!j.recordCreatedAt && j.createdAt) j.recordCreatedAt = j.createdAt;
     if(!(j.id in seen)){ seen[j.id] = today; added++; }
-    if(seen[j.id]) j.createdAt = seen[j.id]; else delete j.createdAt;
+    /* 一括投入ぶん（null）も掲載開始日は出す（2026-10-11 松岡さん指示）。日付は Airtable の作成日。
+       7日を過ぎているので新着マークは付かず、新着順でも日付ありの求人より後ろに並ぶ */
+    if(seen[j.id]) j.createdAt = seen[j.id];
+    else if(j.recordCreatedAt) j.createdAt = String(j.recordCreatedAt).slice(0, 10);
+    else delete j.createdAt;
   });
   /* 1行1件で書く（git の差分が「増えた求人の行」だけになる） */
   fs.writeFileSync(fsPath, '{\n' + Object.entries(seen).map(([id, d]) => `${JSON.stringify(id)}:${JSON.stringify(d)}`).join(',\n') + '\n}\n', 'utf8');

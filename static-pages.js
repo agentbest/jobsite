@@ -35,6 +35,8 @@ const GROUP_SLUG = {
   '広告':'advertising', '教師・講師・インストラクター':'instructor', '物流・購買・貿易':'logistics', 'デザイン':'design',
   '経営':'executive', '交通・運輸':'transport', '半導体':'semiconductor', '士業':'professional', '食品':'food',
   '旅行・ホテル':'travel-hotel', '医療・看護・薬剤':'medical',
+  /* 2026-10-11 ジョブミル・CBの合併で増えた大分類 */
+  '管理・人事・経理':'back-office', 'ゲーム':'game', '保育':'childcare', '日用品':'daily-goods',
 };
 /* 職種の大分類 → コーポレートの転職メディア（www.agent-best.net/media/hub/<hub>/）。
    求人サイトから転職ノウハウ記事への導線が0本だったので足した（2026-10-01）。
@@ -54,6 +56,7 @@ const MEDIA_HUBS = {
   'executive': [['CxO','cxo']],
   'hr': [['人事・HRBP','hrbp'],['採用担当','recruiter']],
   'corporate': [['法務','legal']],
+  'back-office': [['人事・HRBP','hrbp'],['法務','legal']],
   'internet-service': [['SaaS業界','saas-industry'],['生成AI・AI業界','ai-industry'],['メガベンチャー','megaventure-industry']],
 };
 const mediaUtm = (medium) => `utm_source=jobs&utm_medium=${medium}`;
