@@ -6,6 +6,7 @@
 //   node tools/tags/assign-tags.js --write    … タグが空の求人にだけ書き込む（合併で入った新しい求人向け）
 //   node tools/tags/assign-tags.js --write --all … 全件を上書き（⚠ 手で付けたタグは消える）
 //   node tools/tags/assign-tags.js --counts   … タグマスタの「付与件数」を書き戻す（--write と併用可）
+//   node tools/tags/assign-tags.js --write --cat=業界（中分類）,業界（大分類） … そのカテゴリのタグだけ全件で付け直す（他のタグは残す）
 //
 // 判定ルールはスクリプトに埋めていない。タグマスタの「判定キーワード」「判定対象フィールド」の2列を読む。
 //   - 判定キーワードは / 区切りの OR。先頭 ! は除外語（どれかが当たれば付けない）。2文字未満の語は無視。
@@ -23,7 +24,10 @@ const F_TAGS = 'fldYNSqarLLDERI0a';      // 求人票「タグ」（複数選択
 const F_TAG_COUNT = 'fldEKHn2eFzH6qVOR'; // タグマスタ「付与件数」
 
 const args = new Set(process.argv.slice(2));
-const WRITE = args.has('--write'), ALL = args.has('--all'), COUNTS = args.has('--counts');
+const WRITE = args.has('--write'), COUNTS = args.has('--counts');
+/* --cat=業界（中分類）,業界（大分類） … そのカテゴリのタグだけ全件で付け直す（他のタグは触らない） */
+const CATS = (process.argv.find(a => a.startsWith('--cat=')) || '').slice(6).split(',').filter(Boolean);
+const ALL = args.has('--all') || CATS.length > 0;
 
 const dir = path.join(__dirname, '..', '..');
 function findToken(){
@@ -193,7 +197,15 @@ function salaryAtLeast(j, x){ return j.cap != null ? j.cap >= x : (j.low != null
       xs.forEach(j => console.log(j.id, JSON.stringify(fields.map(n => j.text(n)).join(' | ').slice(0, 400))));
     }
   }
-  const targets = jobs.filter(j => ALL || !j.oldTags.length);
+  if(CATS.length){
+    const inCat = new Set(tags.filter(t => CATS.includes(t.cat)).map(t => t.name));
+    for(const j of jobs){
+      const keep = j.oldTags.filter(n => !inCat.has(n));
+      result.set(j.id, [...keep, ...result.get(j.id).filter(n => inCat.has(n))]);
+    }
+  }
+  const same = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+  const targets = jobs.filter(j => CATS.length ? !same(j.oldTags, result.get(j.id)) : (ALL || !j.oldTags.length));
   const avg = targets.length ? targets.reduce((s, j) => s + result.get(j.id).length, 0) / targets.length : 0;
   console.log(`\n書き込み対象 ${targets.length}件（${ALL ? '全件' : 'タグが空の求人'}）・1件あたり平均 ${avg.toFixed(1)}タグ`);
   const missing = new Set(); jobs.forEach(j => j.inds.forEach(i => { if(!tagNames.has(i.mid)) missing.add(i.mid); }));
