@@ -30,3 +30,4 @@ admin/
 #    新しい求人を取り込むときは node fetch-jobs.js を回す。
 data/jobs.json
 data/jobs.json.bak_*
+tools/close/out/
