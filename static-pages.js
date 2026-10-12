@@ -479,7 +479,7 @@ function landingPage(ctx, p){
   const nListed = jobs.filter(j => j.listedStatus === '上場').length;
   const cos = new Set(jobs.map(j => j.company).filter(Boolean)).size;
   const canon = `${SITE}/${p.rel}/`;
-  const desc = `${p.title}を${n.toLocaleString()}件掲載。年収800万円以上 ${nSal800}件・リモート可 ${nRemote}件。株式会社エージェントベストが運営する20代・30代向けハイクラス転職の求人検索。ご利用は無料です。`;
+  const desc = `${p.title}を${n.toLocaleString()}件掲載。年収800万円以上 ${nSal800}件・リモート可 ${nRemote}件。株式会社エージェントベストが運営する20代・30代の若手ハイクラス転職の求人検索。ご利用は無料です。`;
   const main = `<h1>${esc(p.h1)}<small style="font-size:.7em;color:var(--ink-3);font-weight:700;margin-left:8px">${n.toLocaleString()}件</small></h1>
     <p class="lp__lead">${esc(p.title)}を掲載しています。企業へ直接応募するのではなく、当社から推薦する形で選考が進みます。ご利用は無料です。</p>
     <ul class="lp__stats"><li><b>${n.toLocaleString()}</b>件</li><li><b>${cos.toLocaleString()}</b>社</li><li><b>${nSal800.toLocaleString()}</b>件が年収800万円以上</li><li><b>${nRemote.toLocaleString()}</b>件がリモート可</li><li><b>${nListed.toLocaleString()}</b>件が上場企業</li></ul>
