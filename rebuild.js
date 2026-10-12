@@ -104,6 +104,16 @@ function noDuplicates(jobs){
   }
   return dropped.length ? jobs.filter(j => kept.has(j)) : jobs;
 }
+/* ---------- 職種の大分類が「施工管理」の求人を載せない（2026-10-12・松岡さん決定） ----------
+   建築・内装・リフォーム・電気設備の施工管理（4職種）。職種が施工管理になっている設計・積算などの求人もまとめて外す（松岡さんの選択）。
+   Airtable は触らない。掲載を止める判断はビルド側（midCareerOnly() と同じ考え方）。 */
+const EXCLUDED_GROUPS = new Set(['施工管理']);
+function noExcludedGroups(jobs){
+  const hit = j => EXCLUDED_GROUPS.has(jobGroupOf(j.jobCategory));
+  const dropped = jobs.filter(hit);
+  if(dropped.length) console.log(`載せない職種（${[...EXCLUDED_GROUPS].join('／')}）の求人を除外しました: ${dropped.length}件`);
+  return dropped.length ? jobs.filter(j => !hit(j)) : jobs;
+}
 function hiClassOnly(jobs){
   const cap = j => (j.salaryMax != null ? j.salaryMax : j.salaryMin);
   const low = j => (LOW_GROUPS.has(jobGroupOf(j.jobCategory)) || LOW_COMPANIES.test(j.company || '')) && (cap(j) == null || cap(j) < LOW_SALARY_CAP);
@@ -407,7 +417,7 @@ const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', 
   data => {
     /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
        作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
-    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(noDuplicates(noConfidential(midCareerOnly(data)))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(noExcludedGroups(noDuplicates(noConfidential(midCareerOnly(data))))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     writeDetails(full); fullJobs = full; return lighten(full); });
 /* 一覧用のデータは index.html に埋め込まず data/list.json に書く（template.html 冒頭の説明を参照）。
    __LIST_VER__ は中身のハッシュ。GitHub Pages のキャッシュ（10分）を跨いでも、データが変わった回だけ取り直される。 */
