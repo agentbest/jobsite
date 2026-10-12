@@ -86,6 +86,24 @@ function noConfidential(jobs){
   if(dropped.length) console.log(`※confidential※ の求人を除外しました: ${dropped.length}件（${dropped.map(j => j.company).slice(0, 5).join('／')}${dropped.length > 5 ? ' ほか' : ''}）`);
   return dropped.length ? jobs.filter(j => !hit(j)) : jobs;
 }
+/* ---------- 中身がまったく同じ求人を1件にまとめる（2026-10-12） ----------
+   媒体テーブルから本体へ合併したときなど、同じ求人が2行になることがある（10/11の合併で14件）。
+   企業名・職種名・年収・勤務地・仕事内容がすべて一致したら同じ求人とみなし、先に登録された方だけ載せる。
+   Airtable の行はそのまま（消すかどうかは人が決める）。勤務地や本文が少しでも違えば別求人として残す。 */
+function noDuplicates(jobs){
+  const norm = v => String(v == null ? '' : v).replace(/\s+/g, '');
+  const key = j => [j.company, j.position, j.salaryMin, j.salaryMax, j.location, j.jobContent].map(norm).join('\u0001');
+  const older = (a, b) => String(a.createdAt || '') < String(b.createdAt || '') || (String(a.createdAt || '') === String(b.createdAt || '') && a.id < b.id);
+  const keep = new Map();
+  jobs.forEach(j => { const k = key(j), cur = keep.get(k); if(!cur || older(j, cur)) keep.set(k, j); });
+  const kept = new Set(keep.values());
+  const dropped = jobs.filter(j => !kept.has(j));
+  if(dropped.length){
+    console.log(`中身が同じ求人を1件にまとめました: ${dropped.length}件を除外（Airtable の行は残っています。不要なら募集停止に）`);
+    dropped.forEach(j => console.log(`   - ${j.id}（残したのは ${keep.get(key(j)).id}） ${j.company || ''} / ${(j.position || '').slice(0, 30)}`));
+  }
+  return dropped.length ? jobs.filter(j => kept.has(j)) : jobs;
+}
 function hiClassOnly(jobs){
   const cap = j => (j.salaryMax != null ? j.salaryMax : j.salaryMin);
   const low = j => (LOW_GROUPS.has(jobGroupOf(j.jobCategory)) || LOW_COMPANIES.test(j.company || '')) && (cap(j) == null || cap(j) < LOW_SALARY_CAP);
@@ -389,7 +407,7 @@ const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', 
   data => {
     /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
        作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
-    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(noConfidential(midCareerOnly(data))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(noDuplicates(noConfidential(midCareerOnly(data)))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     writeDetails(full); fullJobs = full; return lighten(full); });
 /* 一覧用のデータは index.html に埋め込まず data/list.json に書く（template.html 冒頭の説明を参照）。
    __LIST_VER__ は中身のハッシュ。GitHub Pages のキャッシュ（10分）を跨いでも、データが変わった回だけ取り直される。 */
