@@ -2,7 +2,7 @@
 //
 //   job/<求人ID>/index.html   … 求人1件ずつの本物のページ（JobPosting 構造化データ・求人ごとの title/OGP 付き）
 //   jobs/<職種>/index.html    … 職種の求人一覧（例 /jobs/engineer/）
-//   jobs/<職種>/<勤務地>/     … 職種×勤務地の求人一覧（例 /jobs/engineer/tokyo/。件数が LP_MIN 以上のものだけ）
+//   jobs/<職種>/<勤務地>/     … 職種×勤務地の求人一覧（例 /jobs/engineer/tokyo/。新規は LP_MIN 件以上、公開中は LP_KEEP 件以上で維持）
 //   area/<勤務地>/index.html  … 勤務地の求人一覧（例 /area/osaka/）
 //   company/<企業ID>/ ・ company/ … 企業ページ・企業一覧（company-pages.js。求人が0件でも消さない）
 //   sitemap.xml / robots.txt
@@ -21,6 +21,9 @@ const fs = require('fs'), path = require('path');
 
 const SITE = 'https://jobs.agent-best.net';
 const LP_MIN = 10;          /* 職種×勤務地ページを作る最低件数。少ないページを量産しても検索には載らない */
+const LP_KEEP = 5;          /* 一度作った一覧ページは、この件数までは残す。10件前後を行き来するたびに
+                               ページが消えたり出たりすると、Googleには404→復活が繰り返し見える（2026-10-12、
+                               /area/akita/ などがSearch Consoleの404に並んだ）。作る基準と消す基準をずらして止める */
 const LP_LIST_MAX = 50;     /* 一覧ページに並べる求人の上限（残りは「すべて見る」で検索画面へ） */
 const RELATED_MAX = 6;      /* 求人ページの「同じ職種の求人」の件数 */
 
@@ -499,6 +502,40 @@ function landingPage(ctx, p){
   return html;
 }
 
+/* ---------- 掲載終了した求人の控え（data/closed-jobs.json） ----------
+   求人ページは掲載終了と同時に消える（Googleの求人の扱いとしては404で正しい）。ただ、検索結果・共有リンク・
+   ブックマークから来た人には「何の求人だったか」が分からない素の404になる。そこで消す直前のページから
+   職種名と企業を控え、404.html が「この求人の掲載は終了しました」と企業ページへの導線を出せるようにする。
+   形式: { 求人ID: [職種名, 企業名, 企業ID, 掲載終了日] }。CLOSED_KEEP_DAYS を過ぎたものは落とす。 */
+const CLOSED_KEEP_DAYS = 180;
+function recordClosedJobs(root, jobRoot, keep){
+  const file = path.join(root, 'data', 'closed-jobs.json');
+  const closed = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
+  const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+  let added = 0;
+  if(fs.existsSync(jobRoot)) fs.readdirSync(jobRoot).forEach(id => {
+    const f = path.join(jobRoot, id, 'index.html');
+    if(keep.has(id) || !fs.existsSync(f)) return;
+    const info = closedInfoFromHtml(fs.readFileSync(f, 'utf8'));
+    if(info){ closed[id] = [...info, today]; added++; }
+  });
+  keep.forEach(id => { delete closed[id]; });   /* 募集再開した求人は控えから外す */
+  /* 企業ページが無い（概要も求人も無い会社は作らない）ときはリンク先を空にする＝404.html が検索へ回す */
+  Object.values(closed).forEach(v => { if(v[2] && !fs.existsSync(path.join(root, 'company', v[2], 'index.html'))) v[2] = ''; });
+  const limit = new Date(Date.now() + 9 * 3600e3 - CLOSED_KEEP_DAYS * 864e5).toISOString().slice(0, 10);
+  Object.keys(closed).forEach(id => { if(closed[id][3] < limit) delete closed[id]; });
+  const sorted = Object.fromEntries(Object.keys(closed).sort().map(k => [k, closed[k]]));
+  fs.writeFileSync(file, JSON.stringify(sorted), 'utf8');
+  return added;
+}
+function closedInfoFromHtml(html){
+  const unesc = t => t.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&').trim();
+  const t = html.match(/<h1 class="dt-title">([^<]*)<\/h1>/);
+  const c = html.match(/href="\/company\/([^/"]+)\/" style="color:inherit">([^<]*)/);
+  if(!t) return null;
+  return [unesc(t[1]), c ? unesc(c[2]) : '', c ? c[1] : ''];
+}
+
 /* ---------- 生成物の掃除（掲載終了の求人ページ・件数が減って消える一覧ページ） ---------- */
 function syncDir(dir, keep, label){
   fs.mkdirSync(dir, { recursive: true });
@@ -564,21 +601,23 @@ function build(root, full){
   if(unknownGroups.size) console.log(`⚠ static-pages.js の GROUP_SLUG に無い職種の大分類（一覧ページを作りません）: ${[...unknownGroups].join(', ')}`);
   const prefsOf = a => a.isBlock ? BLOCKS.find(x => x[0] === a.name)[2] : [a.name];
   const inArea = (a, j) => (j.areas || []).some(p => prefsOf(a).includes(p));
-  /* 勤務地の単位: ブロック（関東…）と都道府県。ページを作るのは LP_MIN 件以上のものだけ */
+  /* その一覧ページを出すか。新しく作るのは LP_MIN 件以上、すでに公開中なら LP_KEEP 件以上 */
+  const lpKeep = (rel, n) => n >= LP_MIN || (n >= LP_KEEP && fs.existsSync(path.join(root, rel, 'index.html')));
+  /* 勤務地の単位: ブロック（関東…）と都道府県。ページを作るかは lpKeep で決める */
   const areaUnits = [];
-  BLOCKS.forEach(([name, slug]) => { const a = { name, slug, isBlock: true }; a.jobs = full.filter(j => inArea(a, j)); if(a.jobs.length >= LP_MIN) areaUnits.push(a); });
-  Object.entries(PREF_SLUG).forEach(([name, slug]) => { const jobs = byPref.get(name) || []; if(jobs.length >= LP_MIN) areaUnits.push({ name, slug, jobs, isBlock: false }); });
+  BLOCKS.forEach(([name, slug]) => { const a = { name, slug, isBlock: true }; a.jobs = full.filter(j => inArea(a, j)); if(lpKeep(`area/${slug}`, a.jobs.length)) areaUnits.push(a); });
+  Object.entries(PREF_SLUG).forEach(([name, slug]) => { const jobs = byPref.get(name) || []; if(lpKeep(`area/${slug}`, jobs.length)) areaUnits.push({ name, slug, jobs, isBlock: false }); });
   const groups = [...byGroup.entries()].filter(([g]) => GROUP_SLUG[g]).sort((a, b) => b[1].length - a[1].length);
   const pages = [];
   groups.forEach(([g, jobs]) => {
     const gslug = GROUP_SLUG[g];
-    const combos = areaUnits.map(a => ({ a, jobs: jobs.filter(j => inArea(a, j)) })).filter(x => x.jobs.length >= LP_MIN);
+    const combos = areaUnits.map(a => ({ a, jobs: jobs.filter(j => inArea(a, j)) })).filter(x => lpKeep(`jobs/${gslug}/${x.a.slug}`, x.jobs.length));
     pages.push({ rel: `jobs/${gslug}`, mediaLabel: g, title: `${g}の転職・求人`, h1: `${g}の求人`, jobs, crumbs: [[`${g}の求人`, `/jobs/${gslug}/`]],
       pillsTitle: '勤務地で絞る', pills: combos.map(x => ({ label: x.a.name, href: `/jobs/${gslug}/${x.a.slug}/`, n: x.jobs.length })),
       pills2Title: '他の職種', pills2: groups.filter(([g2]) => g2 !== g).map(([g2, js]) => ({ label: g2, href: `/jobs/${GROUP_SLUG[g2]}/`, n: js.length })),
       allHref: `/?cat=${encodeURIComponent(g)}` });
     combos.forEach(x => {
-      const others = groups.filter(([g2]) => g2 !== g).map(([g2, js]) => ({ g2, n: js.filter(j => inArea(x.a, j)).length })).filter(o => o.n >= LP_MIN);
+      const others = groups.filter(([g2]) => g2 !== g).map(([g2, js]) => ({ g2, n: js.filter(j => inArea(x.a, j)).length })).filter(o => lpKeep(`jobs/${GROUP_SLUG[o.g2]}/${x.a.slug}`, o.n));
       pages.push({ rel: `jobs/${gslug}/${x.a.slug}`, mediaLabel: g, title: `${x.a.name}の${g}の転職・求人`, h1: `${x.a.name}の${g}の求人`, jobs: x.jobs,
         crumbs: [[`${g}の求人`, `/jobs/${gslug}/`], [x.a.name, `/jobs/${gslug}/${x.a.slug}/`]],
         pillsTitle: `${g}の他の勤務地`, pills: combos.filter(y => y !== x).map(y => ({ label: y.a.name, href: `/jobs/${gslug}/${y.a.slug}/`, n: y.jobs.length })),
@@ -588,7 +627,7 @@ function build(root, full){
   });
   areaUnits.forEach(a => {
     pages.push({ rel: `area/${a.slug}`, title: `${a.name}の転職・求人`, h1: `${a.name}の求人`, jobs: a.jobs, crumbs: [[`${a.name}の求人`, `/area/${a.slug}/`]],
-      pillsTitle: '職種で絞る', pills: groups.map(([g, js]) => ({ g, n: js.filter(j => inArea(a, j)).length })).filter(x => x.n >= LP_MIN).map(x => ({ label: x.g, href: `/jobs/${GROUP_SLUG[x.g]}/${a.slug}/`, n: x.n })),
+      pillsTitle: '職種で絞る', pills: groups.map(([g, js]) => ({ g, n: js.filter(j => inArea(a, j)).length })).filter(x => lpKeep(`jobs/${GROUP_SLUG[x.g]}/${a.slug}`, x.n)).map(x => ({ label: x.g, href: `/jobs/${GROUP_SLUG[x.g]}/${a.slug}/`, n: x.n })),
       pills2Title: '他の勤務地', pills2: areaUnits.filter(b => b !== a).map(b => ({ label: b.name, href: `/area/${b.slug}/`, n: b.jobs.length })),
       allHref: `/?area=${encodeURIComponent(a.name)}` });
   });
@@ -602,6 +641,7 @@ function build(root, full){
 
   /* 4. 求人ページ */
   const jobRoot = path.join(root, 'job');
+  const closedAdded = recordClosedJobs(root, jobRoot, new Set(full.map(j => j.id)));
   const removedJobs = syncDir(jobRoot, new Set(full.map(j => j.id)));
   full.forEach(j => {
     const g = jobGroupOf(j.jobCategory);
@@ -611,14 +651,14 @@ function build(root, full){
     if(related.length < RELATED_MAX) sortForList(pool.filter(x => !related.includes(x))).slice(0, RELATED_MAX - related.length).forEach(x => related.push(x));
     writePage(jobRoot, j.id, jobPage(ctx, j, related));
   });
-  console.log(`job/<求人ID>/index.html を書き出しました: ${full.length}件${removedJobs ? `（掲載終了 ${removedJobs}件のページを削除）` : ''}`);
+  console.log(`job/<求人ID>/index.html を書き出しました: ${full.length}件${removedJobs ? `（掲載終了 ${removedJobs}件のページを削除・控え ${closedAdded}件）` : ''}`);
 
-  /* 5. 一覧ページ（件数が減って LP_MIN を割ったページは消す） */
+  /* 5. 一覧ページ（件数が減って LP_KEEP を割ったページは消す） */
   ['jobs', 'area'].forEach(top => syncDir(path.join(root, top), new Set(pages.filter(p => p.rel.startsWith(top + '/')).map(p => p.rel.split('/')[1]))));
   groups.forEach(([g]) => syncDir(path.join(root, 'jobs', GROUP_SLUG[g]), new Set(pages.filter(p => p.rel.startsWith(`jobs/${GROUP_SLUG[g]}/`)).map(p => p.rel.split('/')[2]))));
   pages.forEach(p => writePage(root, p.rel, landingPage(ctx, p)));
   const nCombo = pages.filter(p => p.rel.split('/').length === 3).length;
-  console.log(`一覧ページを書き出しました: 職種 ${groups.length}・職種×勤務地 ${nCombo}・勤務地 ${areaUnits.length}（各 ${LP_MIN}件以上）`);
+  console.log(`一覧ページを書き出しました: 職種 ${groups.length}・職種×勤務地 ${nCombo}・勤務地 ${areaUnits.length}（新規は ${LP_MIN}件以上・公開中は ${LP_KEEP}件以上で維持）`);
 
   /* 6. sitemap.xml / robots.txt */
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);

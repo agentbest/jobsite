@@ -30,7 +30,8 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 | `apply.html`（約1.2MB） | `apply-template.html` | `__JOBS_MINI__` ＝ ID・企業名・職種名・年収**だけ**（表形式 `[id,会社名,職種名,年収]`） |
 | `1day.html` | `1day-template.html` | `__EVENTS_DATA__` |
 | `job/<求人ID>/index.html`（5,700件・約45KB/件） | `job-template.html` | 求人1件の本文・JobPosting 構造化データ・求人ごとの title/OGP（`static-pages.js`） |
-| `jobs/<職種>/`・`jobs/<職種>/<勤務地>/`・`area/<勤務地>/` | `landing-template.html` | 職種×勤務地の一覧（10件以上の組み合わせだけ） |
+| `jobs/<職種>/`・`jobs/<職種>/<勤務地>/`・`area/<勤務地>/` | `landing-template.html` | 職種×勤務地の一覧（新規は10件以上、公開中は5件以上で維持） |
+| `data/closed-jobs.json` | — | 掲載終了した求人の控え（`404.html` が読む）。`static-pages.js` の `recordClosedJobs()` |
 | `sitemap.xml` / `robots.txt` / `assets/site.css` | — | `static-pages.js` が作る。`site.css` は `template.html` の `<style>` の写し |
 
 ⚠ **`apply.html` に求人データ全部を持たせない。** 申し込みフォームが必要なのは「どの求人から来たか」の
@@ -661,7 +662,7 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 |---|---|
 | `job/<求人ID>/index.html` | 求人1件のページ。`JobPosting` ＋ `BreadcrumbList` の構造化データ（Google しごと検索の入口）、求人ごとの title / description / OGP、応募・相談CTA、同じ職種の求人6件、担当者紹介 |
 | `jobs/<職種>/` | 職種（大分類）の一覧。`jobs/engineer/` など31ページ |
-| `jobs/<職種>/<勤務地>/` | 職種×勤務地（ブロック or 都道府県）。**10件以上（`LP_MIN`）の組み合わせだけ**作る（185ページ） |
+| `jobs/<職種>/<勤務地>/` | 職種×勤務地（ブロック or 都道府県）。**新しく作るのは10件以上（`LP_MIN`）、公開中のページは5件（`LP_KEEP`）を割るまで残す**（2026-10-12〜。下の「404対策」） |
 | `area/<勤務地>/` | 勤務地の一覧（55ページ） |
 | `sitemap.xml` | 上記すべて＋トップ（約6,000 URL）。`robots.txt` から参照。**Search Console に登録すること** |
 | `assets/site.css` | `template.html` の `<style>` の写し。静的ページはこれを読む＝検索画面と同じ見た目 |
@@ -675,6 +676,19 @@ X / Facebook / LinkedIn / はてなブックマーク / リンクをコピー（
 - JobPosting の `datePosted` は `createdAt`（掲載開始日）、無ければ `recordCreatedAt`。`validThrough` は分からないので入れない。`directApply: false`（当社経由で推薦する形のため）。
 - 静的ページには★（気になる）・マイページが無い。右レールの「検索画面で開く」（`/?job=<求人ID>`）から使う。
 - リポジトリは約260MB 増えた（5,700ファイル）。1回のビルドで変わるのは中身が変わった求人のページだけ。**テンプレを変えると全ページが変わる**ので、細かい修正はまとめてから push する。
+
+## 404対策（2026-10-12）
+
+Search Console の「見つかりませんでした（404）」393件（10/12時点）の中身は、**掲載終了で消した求人ページ約340件**と、**件数が10件を割って消えた一覧ページ約35件**（`/area/akita/`・`/jobs/retail-food/osaka/` など）、旧Squarespace時代のURL少々。
+sitemap・内部リンクに404先は0件（`sitemap.xml` 13,344件と全HTMLの `href` を突き合わせて確認済み）＝Googleが過去に見たURLを再訪しているだけ。
+
+- **求人ページは今までどおり404で消す。** 掲載終了した求人は404（または noindex）がGoogleの求人の扱いとして正しい。ページを残すと終わった求人が検索に出続ける
+- その代わり **`404.html`（GitHub Pages が存在しないURLすべてに返す）** を置いた。`/job/<ID>/` で来た人には `data/closed-jobs.json` から職種名・企業名を引いて「この求人の掲載は終了しました」と**その企業の企業ページ**へのボタンを出す。ステータスは404のまま・`noindex`
+  - `closed-jobs.json` は `{ 求人ID: [職種名, 企業名, 企業ID, 掲載終了日] }`。`rebuild.js` が求人ページを消す直前にそのHTMLから拾う（`recordClosedJobs()`）。**180日（`CLOSED_KEEP_DAYS`）で落とす**。募集再開した求人は外す。企業ページが無い会社は企業IDを空にして `/?q=社名` に回す
+  - 初回は git 履歴から削除済みの391件を埋めた（2026-04以降に消えた `job/*/index.html`）
+  - ⚠ 404.html はどの階層でも開かれるので、**アセット・リンクは `/` から始まる絶対パスで書く**
+  - GA4 は `page_404`（`path`・`closed_job`＝控えに有ったか）
+- **一覧ページは作る基準と消す基準をずらした（`LP_KEEP`=5）。** 10件前後を行き来するたびにページが出たり消えたりして、Googleには404→復活が繰り返し見えていた（秋田は10/10に404、10/11の媒体合併で復活）。一覧のピル（他の勤務地・他の職種）も同じ判定 `lpKeep()` を使うので、リンク先が無いピルは出ない
 
 ## 企業ページ（`company/<企業ID>/`・`company/`）— 2026-09-21
 
@@ -725,7 +739,7 @@ node rebuild.js         → company/<企業ID>/index.html（会社概要・事�
 
 ## GA4
 
-測定ID `G-1XXMP8Y1B4`。カスタムイベント: `feature_click`（特集カード・1day）/ `company_filter`（企業一覧の絞り込み）/ `job_detail_open` / `apply_click` / `apply_form_open` / `apply_step` / `apply_submit` / `apply_error` / `inquiry_click` / `consult_click` / `search` / `filter_use` / `page_change` / `perpage_change` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss` / `message_send`。
+測定ID `G-1XXMP8Y1B4`。カスタムイベント: `page_404`（404.html）/ `feature_click`（特集カード・1day）/ `company_filter`（企業一覧の絞り込み）/ `job_detail_open` / `apply_click` / `apply_form_open` / `apply_step` / `apply_submit` / `apply_error` / `inquiry_click` / `consult_click` / `search` / `filter_use` / `page_change` / `perpage_change` / `lp_click` / `corporate_click` / `job_share` / `fav_add` / `fav_remove` / `signal_shown` / `signal_submit` / `signal_dismiss` / `message_send`。
 
 **応募のファネルは `apply_click`（一覧・詳細で押した）→ `apply_form_open`（フォームに着いた）→ `apply_step`（step2〜4に進んだ）→ `apply_submit`（送信できた）** で見る。`apply_step` の落ち方で、どの設問が重いか分かる。
 
