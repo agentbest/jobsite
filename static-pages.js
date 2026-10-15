@@ -26,6 +26,45 @@ const LP_KEEP = 5;          /* 一度作った一覧ページは、この件数�
                                /area/akita/ などがSearch Consoleの404に並んだ）。作る基準と消す基準をずらして止める */
 const LP_LIST_MAX = 50;     /* 一覧ページに並べる求人の上限（残りは「すべて見る」で検索画面へ） */
 const RELATED_MAX = 6;      /* 求人ページの「同じ職種の求人」の件数 */
+/* メインキーワード用のハブページ（feature/<slug>/・2026-10-15）。職種×勤務地の一覧は機械的に増えるが、
+   「年収1000万 求人」「スタートアップ 転職」のような主要な検索語は、少数のページに説明文・基準・よくある質問を
+   書いて集中させる。記事を量産せず、ここを育てる（松岡さんの方針：量より質）。
+   ⚠ slug は URL。変えると評価がリセットされる。フッターの「特集」リンク（4テンプレ）と揃えること。
+   allHref は検索画面の入口（?feature= / ?tag=）。件数が HUB_MIN を割ったハブは作らない。 */
+const HUB_MIN = 20;
+const hasTag = (j, names) => (j.tags || []).some(t => names.includes(t));
+const HUBS = [
+  { slug: 'salary-1000', kw: '年収1000万円以上', title: '年収1000万円以上の求人', test: j => (j.salaryMin || 0) >= 1000, allHref: '/?tag=salary-1000',
+    lead: ['提示年収の<b>下限</b>が1,000万円以上の求人だけを集めています。上限だけが1,000万円を超える求人（「600〜1,200万円」など）は含めていません。上限は経験次第・インセンティブ込みのことが多く、実際の提示が1,000万円に届かないケースが少なくないためです。',
+      '年収1,000万円以上のポジションは、コンサルティングファーム、M&A・金融、外資系、事業会社の管理職・専門職に集まります。20代・30代で届かせるには、年次よりも「何を任されてきたか」が問われます。ここに並ぶ求人の必須条件を見比べると、自分の経験がどこで評価されるかの目安になります。'],
+    faq: [['ここに載っている求人は、年収1,000万円が確約されていますか？', '確約ではありません。企業が提示している年収レンジの下限が1,000万円以上という意味で、最終的な金額は選考での評価によって決まります。'],
+      ['20代でも応募できますか？', '年齢で区切っている求人はほとんどありません。求められるのは年次ではなく経験の中身です。応募の前に、通過の見込みを担当者と確認することもできます。'],
+      ['掲載されていない求人もありますか？', 'あります。年収が高いポジションほど非公開で動くことが多く、ここに載っているのは一部です。']] },
+  { slug: 'startup', kw: 'スタートアップ・ベンチャー', title: 'スタートアップ・メガベンチャーの求人', test: j => hasTag(j, ['スタートアップ', 'メガベンチャー']), allHref: '/?tag=startup',
+    lead: ['スタートアップとメガベンチャーの求人を集めています。年収600万円以上の求人だけを載せているので、「ベンチャーに行くと年収が下がる」という前提で探す必要はありません。',
+      'スタートアップでは、1人が受け持つ範囲が広く、職種の境目もあいまいです。そのぶん、事業の立ち上げや組織づくりに早い段階から関われます。一方で、仕組みが整っていないことも多いため、求人の「仕事内容」だけでなく、会社の事業フェーズや資金調達の状況もあわせて確認することをおすすめします。'],
+    faq: [['スタートアップとメガベンチャーの違いは何ですか？', 'ここでは、創業から間もなく事業や組織をこれから伸ばす段階の会社をスタートアップ、すでに規模が大きくなったベンチャー出身の企業をメガベンチャーとしています。'],
+      ['ストックオプションのある求人はありますか？', 'あります。求人ごとのタグに「ストックオプションあり」と出ているものが該当します。条件は会社ごとに異なるため、選考の中で確認してください。'],
+      ['大企業からスタートアップへの転職は不利になりますか？', '不利とは限りません。大企業で身につけた業務の型や管理の経験を求めている会社もあります。何を持ち込めるかを整理しておくことが大切です。']] },
+  { slug: 'manager', kw: '管理職・マネージャー', title: '管理職・マネージャーの求人', test: j => hasTag(j, ['マネージャー候補', '幹部・経営幹部候補']), allHref: '/?feature=executive-candidate',
+    lead: ['チームや組織を任されるマネージャー・管理職候補の求人を集めています。現職でプレイヤーとして成果を出していて、次はマネジメントに進みたい方に向けた特集です。',
+      'マネージャー採用では、部下の人数よりも「何をどう変えたか」が問われます。リーダー経験が浅くても、プロジェクトを率いた経験や、後輩の育成に関わった経験が評価されることがあります。求人の「求める人物像」の欄に、その会社が期待するマネージャー像が書かれています。'],
+    faq: [['マネジメント経験がなくても応募できますか？', '「マネージャー候補」の求人には、入社後に経験を積んでから任せる前提のものもあります。必須条件の欄で確認してください。'],
+      ['年齢の目安はありますか？', '年齢で区切っている求人はほとんどありません。20代後半から30代で管理職候補として採用される例もあります。'],
+      ['掲載されていない求人もありますか？', 'あります。組織の要になるポジションほど非公開で募集されることが多く、ここに載っているのは一部です。']] },
+  { slug: 'english', kw: '英語を活かせる・外資系', title: '英語を活かせる・外資系企業の求人', test: j => hasTag(j, ['英語を活かせる', '外資系企業']), allHref: '/?tag=english-skill',
+    lead: ['英語を業務で使う求人と、外資系企業の求人を集めています。海外拠点とのやりとり、英文の資料作成、海外顧客の担当など、使う場面は求人によって異なります。',
+      '「英語力」として求められる水準は、TOEICの点数よりも、実務で何をしてきたかで判断されることが多くなっています。会議に出る、交渉する、文書を読むなど、自分が英語で何をできるかを具体的に言えるようにしておくと、選考で伝わりやすくなります。'],
+    faq: [['TOEICの点数はどのくらい必要ですか？', '求人によって異なります。点数の目安が書かれている求人もありますが、多くは実務での使用経験を重視しています。必須条件の欄で確認してください。'],
+      ['外資系企業の面接は英語で行われますか？', '一部の選考が英語で行われることがあります。選考の流れは求人の「選考プロセス」の欄で確認できます。'],
+      ['英語に自信がなくても応募できますか？', '「英語を活かせる」の求人には、読み書きが中心で会話はあまり使わないものもあります。どの程度使うかは担当者から確認することもできます。']] },
+  { slug: 'full-remote', kw: 'フルリモート', title: 'フルリモート可の求人', test: j => hasTag(j, ['フルリモート可']), allHref: '/?feature=full-remote',
+    lead: ['出社を前提とせず、原則リモートで働ける求人を集めています。住む場所に縛られずに仕事を選びたい方、首都圏以外から首都圏の企業に転職したい方に向けた特集です。',
+      'フルリモートと書かれていても、入社直後の研修期間や月に数回の出社日が設けられていることがあります。また、居住地に条件がある求人もあります。勤務地と勤務時間の欄をあわせて確認してください。'],
+    faq: [['完全に出社なしで働けますか？', '求人によって異なります。研修期間だけ出社する、月に数回集まる日があるなどの条件がある場合があります。'],
+      ['地方に住んだまま応募できますか？', 'できる求人が多くあります。ただし、居住地を限定している求人もあるため、勤務地の欄を確認してください。'],
+      ['リモート勤務でも評価は変わりませんか？', '評価の仕組みは会社ごとに異なります。選考の中で、成果の見られ方や上司とのやりとりの頻度を確認しておくと安心です。']] },
+];
 
 /* 職種の大分類 → URL のスラッグ。⚠ 変えると URL が変わる（検索エンジンの評価がリセットされる）。
    ここに無い大分類はページを作らず、ビルド時に名指しで警告する。 */
@@ -259,13 +298,36 @@ function jobPage(ctx, j, related){
   const metaRow = (k, v) => v ? `<dt>${esc(k)}</dt><dd>${esc(mdUnesc(v))}</dd>` : '';
   const url = (typeof j.url === 'string' && /^https?:\/\//.test(j.url)) ? j.url : null;
   const siteRow = url ? `<dt>企業サイト</dt><dd><a href="${esc(url)}" target="_blank" rel="noopener nofollow">${esc(url.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a></dd>` : '';
-  const coMeta = [metaRow('所在地', j.companyAddress), metaRow('従業員数', j.employees), metaRow('上場区分', j.listedStatus), siteRow].join('');
-  const coBody = j.companyInfo ? `<div class="rich">${rich(j.companyInfo)}</div>` : '';
   const coRec = ctx.coOf ? ctx.coOf(j) : null;
+  /* 企業情報は求人票の値を優先し、空なら企業DB（data/companies.json）で補う。設立・資本金・業界は企業DBにしか無い */
+  const cr = coRec || {};
+  const coMeta = [metaRow('本社所在地', j.companyAddress || cr.addr), metaRow('設立', cr.founded), metaRow('資本金', cr.capital), metaRow('従業員数', j.employees || cr.employees),
+    metaRow('上場区分', j.listedStatus || cr.market), metaRow('業界', (cr.industry || []).join('・')), siteRow].join('');
+  /* 会社概要は企業DBの要約を先に出し、求人票の企業紹介（他媒体と同じ原文）は折りたたむ */
+  const coBody = cr.overview
+    ? `<p style="margin:0 0 10px;line-height:1.8">${esc(cr.overview)}</p>${j.companyInfo ? `<details style="margin:0 0 10px"><summary style="cursor:pointer;font-size:13px;color:var(--accent)">求人票の企業紹介を読む</summary><div class="rich">${rich(j.companyInfo)}</div></details>` : ''}`
+    : (j.companyInfo ? `<div class="rich">${rich(j.companyInfo)}</div>` : '');
   const coLink = coRec ? `<div class="pd-more"><a href="${esc(ctx.coPath(coRec))}">${esc(co)}の会社概要・募集中の求人（${coRec.jobs.length}件）を見る</a></div>` : '';
   /* 転職メディアにこの会社の記事があれば（評判・年収・選考対策） */
   const coArt = coRec && ctx.mediaOf ? ctx.mediaOf(coRec) : null;
   const coArtLink = coArt ? `<div class="pd-more"><a href="${esc(ctx.mediaHref(coArt, 'job'))}">${esc(co)}への転職ガイド：${esc(coArt[1])}（転職メディア）</a></div>` : '';
+  /* この求人のポイント：掲載データから機械的に言えることだけを並べる（推測・誇張はしない） */
+  const pts = [];
+  const rk = ctx.salRank ? ctx.salRank(j) : null;
+  if(rk) pts.push(`提示年収の下限<b>${j.salaryMin.toLocaleString()}万円</b>は、当サイトに掲載中の${esc(rk.group)}の求人${rk.n.toLocaleString()}件のうち<b>上位${rk.pct}%</b>に入ります。`);
+  if(j.salaryMin && j.salaryMax && j.salaryMax - j.salaryMin >= 400) pts.push(`年収の幅が${j.salaryMin.toLocaleString()}〜${j.salaryMax.toLocaleString()}万円と広く、これまでの経験によって提示額が大きく変わる求人です。`);
+  const band = ctx.empBandOf(j.employeeCount || cr.employeeCount);
+  const mkt = j.listedStatus || cr.market || '';
+  if(band || mkt) pts.push(`${band ? `従業員${esc(band)}` : ''}${band && mkt ? 'の' : ''}${mkt === '上場' ? '上場企業' : mkt && mkt !== '非上場' ? esc(mkt) + '上場の企業' : mkt === '非上場' ? '非上場企業' : '企業'}です。`);
+  const has = t => (j.tags || []).includes(t);
+  if(has('フルリモート可')) pts.push('原則リモートで働ける求人です（出社日や居住地の条件は募集要項で確認してください）。');
+  else if(j.remote) pts.push('リモート勤務ができる求人です。');
+  if(has('幹部・経営幹部候補')) pts.push('経営幹部の候補としての採用です。');
+  else if(has('マネージャー候補')) pts.push('マネージャー・管理職の候補としての採用です。');
+  if(has('新規事業に携われる')) pts.push('新規事業に携われるポジションです。');
+  if(has('ストックオプションあり')) pts.push('ストックオプションの制度があります。');
+  if(coRec && coRec.jobs.length > 1) pts.push(`${esc(co)}は、この求人のほかに${(coRec.jobs.length - 1).toLocaleString()}件を募集しています。`);
+  const ptSec = pts.length >= 2 ? `<div class="pd-sec"><h3>この求人のポイント</h3><ul style="margin:0;padding-left:1.2em;line-height:1.9">${pts.map(x => `<li>${x}</li>`).join('')}</ul><p style="margin:8px 0 0;font-size:12px;color:var(--ink-3)">掲載データをもとに当社が整理したものです。選考の通りやすさや社風は、担当にお尋ねください。</p></div>` : '';
   const coSec = (coBody || coMeta || coLink) ? `<div class="pd-sec"><h3>企業情報</h3>${coBody}${coMeta ? `<dl class="pd-meta">${coMeta}</dl>` : ''}${coLink}${coArtLink}</div>` : '';
   const reqMeta = [metaRow('給与（原文）', j.salaryRaw), metaRow('勤務地', j.location), metaRow('勤務時間', j.workHours), metaRow('休日・休暇', j.holidays), metaRow('福利厚生', j.benefits)].join('');
 
@@ -336,6 +398,7 @@ function jobPage(ctx, j, related){
   if(gslug && pref && PREF_SLUG[pref] && ctx.lpExists(`jobs/${gslug}/${PREF_SLUG[pref]}`)) more.push(`<a href="/jobs/${gslug}/${PREF_SLUG[pref]}/">${esc(pref)}の${esc(group)}の求人一覧</a>`);
   if(gslug) more.push(`<a href="/jobs/${gslug}/">${esc(group)}の求人一覧</a>`);
   if(gslug && MEDIA_HUBS[gslug]) more.push(`<a href="${MEDIA}hub/${MEDIA_HUBS[gslug][0][1]}/?${mediaUtm('job')}">${esc(MEDIA_HUBS[gslug][0][0])}の転職ガイド</a>`);
+  HUBS.forEach(h => { if(ctx.lpExists(`feature/${h.slug}`) && h.test(j)) more.push(`<a href="/feature/${h.slug}/">${esc(h.title)}特集</a>`); });
   if(pref && PREF_SLUG[pref] && ctx.lpExists(`area/${PREF_SLUG[pref]}`)) more.push(`<a href="/area/${PREF_SLUG[pref]}/">${esc(pref)}の求人一覧</a>`);
   const relSec = related.length ? `<div class="pd-sec"><h3>同じ職種の他の求人</h3><ul class="rel">${related.map(r => `<li><span class="co">${esc(r.company || '企業非公開')}</span><a href="${esc(jobPath(r))}">${esc(jobName(r))}</a><div class="m"><b>${esc(fmtSalary(r))}</b>${locShort(r) ? ' ・ ' + esc(locShort(r)) : ''}</div></li>`).join('')}</ul>
       ${more.length ? `<div class="pd-more">${more.join('')}</div>` : ''}</div>` : '';
@@ -358,6 +421,7 @@ function jobPage(ctx, j, related){
       ${j.createdAt ? `<p class="dt-posted">${postedHtml(j.createdAt)}</p>` : ''}
       <div class="pd-tags">${tags.join('')}</div>
     </div>
+    ${ptSec}
     ${coSec}
     ${tagSec}
     ${sec('仕事内容', j.jobContent, true)}
@@ -479,19 +543,34 @@ function landingPage(ctx, p){
   const nListed = jobs.filter(j => j.listedStatus === '上場').length;
   const cos = new Set(jobs.map(j => j.company).filter(Boolean)).size;
   const canon = `${SITE}/${p.rel}/`;
-  const desc = `${p.title}を${n.toLocaleString()}件掲載。年収800万円以上 ${nSal800}件・リモート可 ${nRemote}件。株式会社エージェントベストが運営する20代・30代の若手ハイクラス転職の求人検索。ご利用は無料です。`;
+  const desc = p.hub
+    ? `${p.title}を${n.toLocaleString()}件（${cos.toLocaleString()}社）掲載。${plain(p.hub.lead[0].replace(/<[^>]+>/g, ''), 60)} 20代・30代の若手ハイクラス転職の求人検索。ご利用は無料です。`
+    : `${p.title}を${n.toLocaleString()}件掲載。年収800万円以上 ${nSal800}件・リモート可 ${nRemote}件。株式会社エージェントベストが運営する20代・30代の若手ハイクラス転職の求人検索。ご利用は無料です。`;
+  /* ハブページだけ：説明文・職種の内訳・よくある質問（FAQPage 構造化データ付き） */
+  const hubLead = p.hub ? p.hub.lead.map(t => `<p class="lp__lead">${t}</p>`).join('') : '';
+  const hubMix = p.hub ? (() => {
+    const c = new Map(); jobs.forEach(j => { const g = jobGroupOf(j.jobCategory); c.set(g, (c.get(g) || 0) + 1); });
+    const top = [...c.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+    return `<nav class="lp__nav" aria-label="職種の内訳"><p>職種の内訳</p><div class="lp__pills">${top.map(([g, k]) => GROUP_SLUG[g] ? `<a href="/jobs/${GROUP_SLUG[g]}/">${esc(g)}<b>${k.toLocaleString()}</b></a>` : `<span style="font-size:12.5px;padding:5px 11px;border:1px solid var(--line);border-radius:999px">${esc(g)}<b style="font-family:var(--mono);color:var(--ink-3);margin-left:4px">${k.toLocaleString()}</b></span>`).join('')}</div></nav>`;
+  })() : '';
+  const hubFaq = p.hub ? `<section class="lp__faq" style="margin:28px 0"><h2 style="font-size:18px;margin:0 0 12px">よくある質問</h2>${p.hub.faq.map(([q, a]) => `<details style="border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:12px 14px;margin:0 0 8px"><summary style="font-weight:700;cursor:pointer">${esc(q)}</summary><p style="margin:8px 0 0;color:var(--ink-2);font-size:14px">${esc(a)}</p></details>`).join('')}</section>` : '';
   const main = `<h1>${esc(p.h1)}<small style="font-size:.7em;color:var(--ink-3);font-weight:700;margin-left:8px">${n.toLocaleString()}件</small></h1>
-    <p class="lp__lead">${esc(p.title)}を掲載しています。企業へ直接応募するのではなく、当社から推薦する形で選考が進みます。ご利用は無料です。</p>
+    ${hubLead || `<p class="lp__lead">${esc(p.title)}を掲載しています。企業へ直接応募するのではなく、当社から推薦する形で選考が進みます。ご利用は無料です。</p>`}
     <ul class="lp__stats"><li><b>${n.toLocaleString()}</b>件</li><li><b>${cos.toLocaleString()}</b>社</li><li><b>${nSal800.toLocaleString()}</b>件が年収800万円以上</li><li><b>${nRemote.toLocaleString()}</b>件がリモート可</li><li><b>${nListed.toLocaleString()}</b>件が上場企業</li></ul>
+    ${hubMix}
     ${p.pills && p.pills.length ? `<nav class="lp__nav" aria-label="${esc(p.pillsTitle)}"><p>${esc(p.pillsTitle)}</p><div class="lp__pills">${p.pills.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
     ${p.pills2 && p.pills2.length ? `<nav class="lp__nav" aria-label="${esc(p.pills2Title)}"><p>${esc(p.pills2Title)}</p><div class="lp__pills">${p.pills2.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
     ${mediaBlock((p.rel.match(/^jobs\/([^/]+)/) || [])[1], p.mediaLabel || '転職', 'lp')}
     <div class="joblist">${jobs.slice(0, LP_LIST_MAX).map(j => cardHtml(ctx, j)).join('')}</div>
     <div class="lp__all"><a href="${esc(p.allHref)}">${n > LP_LIST_MAX ? `残り${(n - LP_LIST_MAX).toLocaleString()}件を含むすべての求人を絞り込んで見る` : 'この条件で絞り込んで検索する'} →</a></div>
+    ${hubFaq}
     <div class="lp__cta"><h2>掲載していない非公開求人もあります</h2><p>重要なポジションほど公開されず、非公開で動いています。希望を送っていただければ、掲載外の求人も含めて個別にお探しします。まだ転職を決めていない段階でもかまいません。</p>
       <div class="pd-cta"><a class="btn-apply" href="/${esc(ctx.C.APPLY_PAGE)}" data-apply="">転職支援に申し込む（無料）</a><a class="btn-ghost" href="${esc(ctx.C.CONSULT_URL)}" target="_blank" rel="noopener">まず話だけ聞いてみる</a><a class="line-btn" href="${esc(ctx.C.LINE_ADD_URL)}" target="_blank" rel="noopener noreferrer" data-line-cta="static-lp">${ctx.C.LINE_ICON}<span>LINEで相談する</span></a></div></div>`;
   const crumb = [['ホーム', '/'], ...p.crumbs].map(([nm, href], i, a) => i === a.length - 1 ? `<span class="cur">${esc(nm)}</span>` : `<a href="${esc(href)}">${esc(nm)}</a><span class="sep">›</span>`).join('');
-  const ld = { '@context': 'https://schema.org', '@type': 'CollectionPage', name: p.title, url: canon, description: desc };
+  const ld = p.hub
+    ? [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: p.title, url: canon, description: desc },
+       { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.hub.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]
+    : { '@context': 'https://schema.org', '@type': 'CollectionPage', name: p.title, url: canon, description: desc };
   const html = ctx.lpTpl
     .replace('__TITLE__', () => esc(`${p.title}（${n.toLocaleString()}件） - エージェントベストジョブ転職`))
     .replace(/__OGTITLE__/g, () => esc(`${p.title}（${n.toLocaleString()}件）`))
@@ -631,6 +710,14 @@ function build(root, full){
       pills2Title: '他の勤務地', pills2: areaUnits.filter(b => b !== a).map(b => ({ label: b.name, href: `/area/${b.slug}/`, n: b.jobs.length })),
       allHref: `/?area=${encodeURIComponent(a.name)}` });
   });
+  /* メインキーワード用のハブ（feature/<slug>/） */
+  const hubs = HUBS.map(h => ({ h, jobs: full.filter(h.test) })).filter(x => x.jobs.length >= HUB_MIN);
+  hubs.forEach(x => {
+    pages.push({ rel: `feature/${x.h.slug}`, hub: x.h, mediaLabel: x.h.kw, title: `${x.h.kw}の転職・求人`, h1: x.h.title, jobs: x.jobs,
+      crumbs: [[x.h.title, `/feature/${x.h.slug}/`]],
+      pillsTitle: '他の特集', pills: hubs.filter(y => y !== x).map(y => ({ label: y.h.title.replace(/の求人$/, ''), href: `/feature/${y.h.slug}/`, n: y.jobs.length })),
+      allHref: x.h.allHref });
+  });
   pages.forEach(p => lpSet.add(p.rel));
 
   /* 3.5 企業ページ（company/<企業ID>/・company/）。求人ページから企業ページへリンクするので先に作る。
@@ -638,6 +725,17 @@ function build(root, full){
   const co = require('./company-pages').build(root, ctx, full, { esc, plain, fmtSalary, cardHtml, logoHtml, sortForList, writePage, syncDir, PREF_SLUG, SITE, jobPath });
   ctx.coOf = co.coOf; ctx.coPath = co.coPath; ctx.mediaOf = co.mediaOf; ctx.mediaHref = co.mediaHref;
   { const g = path.join(root, 'data', 'media-guides.json'); ctx.mediaGuides = fs.existsSync(g) ? JSON.parse(fs.readFileSync(g, 'utf8')) : {}; }
+
+  /* 求人ページの「この求人のポイント」用：職種の大分類ごとの年収下限の分布（10件以上の大分類だけ） */
+  { const sal = new Map();
+    full.forEach(j => { if(j.salaryMin){ const g = jobGroupOf(j.jobCategory); if(!sal.has(g)) sal.set(g, []); sal.get(g).push(j.salaryMin); } });
+    ctx.salRank = j => {
+      const g = jobGroupOf(j.jobCategory), a = sal.get(g);
+      if(!j.salaryMin || !a || a.length < 10) return null;
+      const pct = Math.max(1, Math.ceil(a.filter(v => v > j.salaryMin).length / a.length * 100));
+      return pct <= 30 ? { group: g, n: a.length, pct } : null;   /* 上位30%以内のときだけ言う */
+    };
+  }
 
   /* 4. 求人ページ */
   const jobRoot = path.join(root, 'job');
@@ -654,10 +752,11 @@ function build(root, full){
   console.log(`job/<求人ID>/index.html を書き出しました: ${full.length}件${removedJobs ? `（掲載終了 ${removedJobs}件のページを削除・控え ${closedAdded}件）` : ''}`);
 
   /* 5. 一覧ページ（件数が減って LP_KEEP を割ったページは消す） */
-  ['jobs', 'area'].forEach(top => syncDir(path.join(root, top), new Set(pages.filter(p => p.rel.startsWith(top + '/')).map(p => p.rel.split('/')[1]))));
+  ['jobs', 'area', 'feature'].forEach(top => syncDir(path.join(root, top), new Set(pages.filter(p => p.rel.startsWith(top + '/')).map(p => p.rel.split('/')[1]))));
   groups.forEach(([g]) => syncDir(path.join(root, 'jobs', GROUP_SLUG[g]), new Set(pages.filter(p => p.rel.startsWith(`jobs/${GROUP_SLUG[g]}/`)).map(p => p.rel.split('/')[2]))));
   pages.forEach(p => writePage(root, p.rel, landingPage(ctx, p)));
   const nCombo = pages.filter(p => p.rel.split('/').length === 3).length;
+  console.log(`特集ハブを書き出しました: ${hubs.map(x => `${x.h.slug} ${x.jobs.length}件`).join('・')}`);
   console.log(`一覧ページを書き出しました: 職種 ${groups.length}・職種×勤務地 ${nCombo}・勤務地 ${areaUnits.length}（新規は ${LP_MIN}件以上・公開中は ${LP_KEEP}件以上で維持）`);
 
   /* 6. sitemap.xml / robots.txt */
