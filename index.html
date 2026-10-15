@@ -2846,27 +2846,22 @@ const FEATURE_MIN=5;
 const MIKEIKEN_TAGS=["未経験歓迎","業界未経験歓迎","職種未経験歓迎","第二新卒歓迎"];
 /* group で段を分ける（FEATURE_GROUPS の順に1段ずつ）。トップに出すのは8本（4枚×2段）まで。
    それ以上にしたくなったら入れ替えるか、特集一覧ページを別に作る（検索結果を下に押し下げすぎないため） */
-const FEATURE_GROUPS=[["career","キャリアアップ・働き方"],["change","職種の特集"]];
+/* 2026-10-15・松岡さん決定：「職種の特集」の段（未経験からコンサル／未経験からエンジニア／AI・データ）と
+   ポストコンサル（コンサル出身者を歓迎する事業会社）をやめ、「コンサルへキャリアアップ転職」に差し替えた。
+   未経験系の特集は skill.agent-best.net 側にある。古い ?feature=post-consultant 等は絞り込みなしの一覧が開くだけ */
+const FEATURE_GROUPS=[["career","キャリアアップ・働き方"]];
 const FEATURES=[
-  /* ポストコンサル＝コンサルから事業会社へ。「コンサル出身歓迎」タグはコンサルファーム自身の求人も含むので、事業会社側の職種に絞る */
-  {slug:"post-consultant", group:"career", label:"ポストコンサル", color:"var(--accent)",
-   title:"コンサル出身者を歓迎する事業会社", desc:"コンサルで培った力を、事業会社の経営企画・事業企画・マーケティングなどで活かす求人。",
-   cats:["経営企画","事業企画","マーケティング","プロジェクト管理","人事","管理","営業"], tags:["コンサル出身歓迎"]},
-  {slug:"executive-candidate", group:"career", label:"経営幹部候補", color:"var(--gold)",
-   title:"経営幹部候補の求人", desc:"将来の役員・事業責任者を見据えて、経営に近い立場で任される求人。",
-   cats:[], tags:["幹部・経営幹部候補"]},
+  {slug:"consultant-career-up", group:"career", label:"キャリアアップ", color:"var(--accent)",
+   title:"コンサルへキャリアアップ転職特集", desc:"事業会社やSIerで積んだ経験を武器に、戦略・IT・業務コンサルタントへ。年収と専門性を一段引き上げる求人。",
+   cats:["コンサルタント","ITコンサルタント"], tags:[]},
+  /* 2026-10-15：「経営幹部候補」→「管理職・マネージャー」に改称（松岡さん。経営幹部だと想起される層がずれるため）。
+     slug は ?feature= の URL なので executive-candidate のまま。タグは同じカテゴリなので OR */
+  {slug:"executive-candidate", group:"career", label:"管理職", color:"var(--gold)",
+   title:"管理職・マネージャー求人", desc:"チームや組織を任されるマネージャー・管理職の求人。プレイヤーから一段上のキャリアへ。",
+   cats:[], tags:["マネージャー候補","幹部・経営幹部候補"]},
   {slug:"full-remote", group:"career", label:"働き方", color:"var(--good)",
    title:"フルリモート可の求人", desc:"出社を前提とせず、原則リモートで働ける求人。住む場所に縛られずにキャリアを選べる。",
    cats:[], tags:["フルリモート可"]},
-  {slug:"consultant-mikeiken", group:"change", label:"未経験OK", color:"var(--accent)",
-   title:"未経験からコンサル転職", desc:"業界・職種未経験から挑戦できる、コンサルタント・ITコンサルタントの求人。",
-   cats:["コンサルタント","ITコンサルタント"], tags:MIKEIKEN_TAGS},
-  {slug:"engineer-mikeiken", group:"change", label:"未経験OK", color:"var(--good)",
-   title:"未経験からエンジニア転職", desc:"開発・インフラ・社内SEなど、未経験から始められるエンジニアの求人。",
-   cats:["エンジニア"], tags:MIKEIKEN_TAGS},
-  {slug:"ai-data", group:"change", label:"AI・データ", color:"var(--accent-strong)",
-   title:"AI・データサイエンティスト特集", desc:"機械学習・データ分析の専門性を活かして、事業の意思決定やプロダクトに関わる求人。",
-   cats:["データサイエンティスト（エンジニア）","機械学習エンジニア（エンジニア）"], tags:[]},
   {slug:"growth-listed", group:"career", label:"企業特集", color:"var(--cta)",
    title:"グロース上場企業特集", desc:"上場後の成長期にある企業で、事業と組織が伸びる局面に立ち会える求人。",
    cats:[], tags:["東証グロース上場"]}
