@@ -108,7 +108,48 @@ function build(root){
   });
   byCo.forEach(a => a.sort((x, y) => (y.salaryMax || 0) - (x.salaryMax || 0)));
 
-  const card = j => [j.id, j.company || '企業非公開', jobName(j), fmtSalary(j), locShort(j), j.logo || ''];
+  /* ---------- 記事タグ（Airtable「記事タグ」→ tools/media/sync-articles.js → data/media-tags.json）----------
+     記事タグが付いた記事は、タグの条件（職種キーワード OR 求人タグ）に合う求人を、タグの「出すサイト」から選ぶ（k='tag'）。
+     skill の求人は data/skill-list.json（同じく sync-articles.js が取る）。カードの7番目に 's' を付け、記事側がリンク先を skill にする */
+  const tagFile = path.join(root, 'data', 'media-tags.json');
+  const mt = fs.existsSync(tagFile) ? JSON.parse(fs.readFileSync(tagFile, 'utf8')) : { t: {}, a: {} };
+  const tagNames = JSON.parse(fs.readFileSync(path.join(root, 'data', 'tags.json'), 'utf8')).map(t => t.name);
+  jobs.forEach(j => { j._site = 'jobs'; j._tags = (j.t || []).map(i => tagNames[i]); });
+  let skillJobs = [];
+  const skillFile = path.join(root, 'data', 'skill-list.json');
+  if(fs.existsSync(skillFile)){
+    const s = JSON.parse(fs.readFileSync(skillFile, 'utf8'));
+    skillJobs = s.r.map(row => Object.fromEntries(s.k.map((key, i) => [key, row[i]])));
+    skillJobs.forEach(j => { j._site = 'skill'; j._tags = (j.t || []).map(i => s.tags[i]); });
+    skillJobs.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')) || (b.salaryMax || 0) - (a.salaryMax || 0) || a.id.localeCompare(b.id));
+  } else console.log('記事向けの求人: data/skill-list.json が無いので、記事タグの求人は jobs の求人だけから選びます（node tools/media/sync-articles.js）');
+  const tagPoolCache = new Map();
+  const tagPoolOf = id => {
+    if(tagPoolCache.has(id)) return tagPoolCache.get(id);
+    const d = mt.t[id];
+    const re = d && kwRegex(String(d.kw || '').split('/').map(s => s.trim()).filter(s => s.length >= 2));
+    const jt = new Set((d && d.jt) || []);
+    const src = !d ? [] : d.site === 'jobs' ? jobs : d.site === 'skill' ? skillJobs : jobs.concat(skillJobs);
+    /* 強い一致＝職種名・職種カテゴリにキーワード、または求人タグ。弱い一致＝求人タイトル・業界にだけキーワード
+       （「◆AI」と書いてある営業職などが AI の記事に出るのを後ろに回す）。強い一致が PER 件あれば強い一致だけを使う。
+       jobs と skill は混ぜて新しい順（同日なら年収上限の高い順） */
+    const strong = [], weak = [];
+    if(re || jt.size) src.forEach(j => {
+      if((re && re.test(`${j.position || ''} ${j.jobCategory || ''}`)) || j._tags.some(t => jt.has(t))) strong.push(j);
+      else if(re && re.test(`${j.title || ''} ${(j.industry || []).join(' ')}`)) weak.push(j);
+    });
+    const order = (a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')) || (b.salaryMax || 0) - (a.salaryMax || 0) || a.id.localeCompare(b.id);
+    strong.sort(order); weak.sort(order);
+    const pool = strong.length >= PER ? strong : strong.concat(weak);
+    tagPoolCache.set(id, pool);
+    return pool;
+  };
+  const tagSeen = new Map();   // 記事タグの組み合わせごとの通し番号（ずらし用）
+  const coAll = new Map();     // 企業記事用：jobs と skill の両方からその会社の求人
+  jobs.concat(skillJobs).forEach(j => push(coAll, norm(j.company), j));
+  coAll.forEach(a => a.sort((x, y) => (y.salaryMax || 0) - (x.salaryMax || 0)));
+
+  const card = j => [j.id, j.company || '企業非公開', jobName(j), fmtSalary(j), locShort(j), j.logo || '', j._site === 'skill' ? 's' : ''];
   /* pool の offset 番目から巡回して、まだ選んでいない求人を足す */
   const takeFrom = (pool, offset, picked) => {
     for(let i = 0; i < pool.length && picked.length < PER; i++){
@@ -135,6 +176,28 @@ function build(root){
     const n = seen.get(hub) || 0; seen.set(hub, n + 1);
     const picked = [];
     let kind = '', label = '';
+    const tagIds = (mt.a[slug] || []).filter(id => mt.t[id]);
+    if(tagIds.length){
+      if(cat === '企業' && companyName){
+        takeFrom(coAll.get(norm(companyName)) || [], 0, picked);
+        if(picked.length){ kind = 'co'; label = picked[0].company; }
+      }
+      const key = tagIds.join(',');
+      const tn = tagSeen.get(key) || 0; tagSeen.set(key, tn + 1);
+      for(const id of tagIds){
+        const pool = tagPoolOf(id);
+        if(picked.length < PER && pool.length){
+          takeFrom(pool, (tn * PER) % pool.length, picked);
+          if(!kind){ kind = 'tag'; label = mt.t[id].n; }
+        }
+      }
+      if(picked.length){
+        stat[kind] = (stat[kind] || 0) + 1;
+        fs.writeFileSync(path.join(outDir, `${slug}.json`), JSON.stringify({ k: kind, l: label, j: picked.map(card) }), 'utf8');
+        return;
+      }
+      picked.length = 0; kind = ''; label = '';   // タグに合う求人が無ければ、従来の選び方に戻す
+    }
     if(cat === '企業' && companyName){
       takeFrom(byCo.get(norm(companyName)) || [], 0, picked);
       if(picked.length){ kind = 'co'; label = picked[0].company; }
@@ -159,7 +222,7 @@ function build(root){
     stat[kind]++;
     fs.writeFileSync(path.join(outDir, `${slug}.json`), JSON.stringify({ k: kind, l: label, j: picked.map(card) }), 'utf8');
   });
-  console.log(`記事向けの求人: ${articles.length}本中 自社の求人${stat.co}・同じ職種${stat.hub}・同じ大分類${stat.group}・該当なし${stat.none} → data/media-jobs/`);
+  console.log(`記事向けの求人: ${articles.length}本中 記事タグ${stat.tag || 0}・自社の求人${stat.co}・同じ職種${stat.hub}・同じ大分類${stat.group}・該当なし${stat.none} → data/media-jobs/`);
 }
 
 module.exports = { build };

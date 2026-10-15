@@ -31,3 +31,6 @@ admin/
 data/jobs.json
 data/jobs.json.bak_*
 tools/close/out/
+
+# skill.agent-best.net の求人一覧（tools/media/sync-articles.js が毎朝取る・約3MB）
+data/skill-list.json

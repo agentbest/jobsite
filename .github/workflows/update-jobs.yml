@@ -54,6 +54,9 @@ jobs:
           node fetch-companies.js
           # 転職メディアの企業記事との突き合わせ（失敗しても前回の data/media-companies.json で続ける）
           node fetch-media-companies.js || echo "::warning::転職メディアの企業記事を取得できませんでした（前回のまま続けます）"
+          # 転職メディアの記事を Airtable「掲載記事一覧」に同期し、記事タグ（記事末尾に出す求人の条件）と skill の求人一覧を取る
+          # → rebuild.js の media-jobs.js が使う。失敗しても前回の data/media-tags.json で続ける
+          node tools/media/sync-articles.js --write || echo "::warning::記事の同期に失敗しました（前回の記事タグで続けます）"
           # 1day選考会は開催が無い期間が長く、テーブルが無い／権限が無いことがある（2026-09-12 時点で
           # tbl1J80CGqiOTvuf7 は base に存在しない）。失敗しても求人の更新は止めない。data/1day.json は前回のまま。
           node fetch-1day.js || echo "::warning::1day選考会の取得に失敗しました（求人の更新は続けます）"

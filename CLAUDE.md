@@ -39,6 +39,29 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 
 `index.html` は自己完結の静的HTML（CDN非依存）。詳細・Airtable取得元・フィールド対応は `README.md` にある。
 
+## 転職メディアの記事に出す求人（記事タグ・2026-10-15）
+
+www.agent-best.net/media の記事末尾「〇〇の転職を考えている方へ」に、募集中の求人カードを4件出す。**どの求人を出すかは Airtable で管理する**（松岡さんの方針：記事からいきなり相談ではなく、求人を挟む）。
+
+```
+Airtable「掲載記事一覧」tblrWvmu0frs5NbiA（1記事1行・2,506行）
+   記事slug / タイトル / URL / カテゴリ / ハブ / ハブ名 / 企業名 / meta description / 最終同期 … 毎朝同期（正は記事ファイル。ここで直しても戻る）
+   記事タグ（→記事タグ）/ 狙うキーワード / メモ                                         … 人が触る列
+Airtable「記事タグ」tblBxgZS5X5bAZqRR（32個）
+   職種キーワード（/区切り OR）/ 求人タグ（→求人タグマスタ・OR）/ 出すサイト（両方・jobs・skill）/ 初期ハブ
+        ↓ 毎朝 update-jobs.yml：node tools/media/sync-articles.js --write
+data/media-tags.json（タグ定義＋記事→タグ）・data/skill-list.json（skill の求人一覧・.gitignore）
+        ↓ node rebuild.js の最後：media-jobs.js
+data/media-jobs/<slug>.json = { k:'tag'|'co'|'hub'|'group', l, j:[[id, 社名, 職種名, 年収, 勤務地, ロゴ, 's'=skill]] } → 記事側 ArticleJobs.astro が閲覧時に読む
+```
+
+- **記事タグが空の記事は、同期のときに記事タグの「初期ハブ」から自動で付く**（新しい記事もこれで付く）。一度でも入っている記事は触らない＝人が直した値を上書きしない
+- 選び方：企業記事はその会社の求人（jobs＋skill）→ 足りなければ記事タグの求人。記事タグの求人は**強い一致（職種名・職種カテゴリにキーワード、または求人タグ）**を優先し、PER件に満たなければ弱い一致（求人タイトル・業界だけ）も使う。jobs と skill は混ぜて新しい順。同じタグの記事どうしで出す求人をずらす
+- タグに合う求人が0件なら、従来の選び方（ハブ→ハブ名の語→大分類）に戻る
+- **出し方を直すときは Airtable の記事タグの「職種キーワード」を直す**（翌朝反映）。例：「戦略」1語だと事業戦略・資産戦略を拾ったので「戦略コンサル/戦略ファーム…」に、「フルスタック」だとフルスタック人事を拾ったので「フルスタックエンジニア」に直した
+- 手元で試すときは `node tools/media/sync-articles.js`（Airtable に書かない）→ `node media-jobs.js`
+- 2026-10-15 初回：記事タグ2,440本・自社求人66本・カード10,024件中 skill 4,081件
+
 ## 転職メディアの企業記事へのリンク（2026-10-01）
 
 `node fetch-media-companies.js` → `data/media-companies.json`（{ 企業レコードID: [記事slug, タイトル] }）。コーポレートの `/media/search.json` の企業記事と、`data/companies.json` の社名を正規化して突き合わせる（686本中406本が一致）。企業ページに「〇〇への転職ガイド」欄、求人ページの企業情報に記事リンクが出る。毎朝の Actions でも取得する（失敗しても前回のファイルで続行）。逆向き（記事→企業ページ）は agentbest-lp の `tools/jobsite-companies/`。 同じスクリプトが `data/media-guides.json`（職種ハブ→職務経歴書・志望動機・面接対策・年収相場の記事）も作り、求人ページの「応募前に読む」に出す。求人の職種→ハブの対応は `static-pages.js` の `JOBCAT_HUB`（求人の約7割をカバー）。
