@@ -4,7 +4,7 @@ Airtableの求人を検索できる**静的な中途採用求人サイト「エ�
 
 ⚠ **サービス名は「エージェントベストジョブ転職」。** 新卒サイト shinsotsu と対になる命名で、親ブランド「エージェントベストジョブ」＋対象（転職／学生）。**「ジョブズ」「ジョブス」と濁点・半濁点を付けないこと**（2026-10-06に「ジョブ」で確定）。
 かつては `ミドル・ハイクラス求人検索`／`ミドル・ハイクラス転職 求人検索`／`エージェントベストの転職求人`／`転職求人検索` の4通りが混在していた。**増やさないこと。**
-⚠ **改名は11ファイルに散っている**: `template.html` / `apply-template.html` / `job-template.html` / `landing-template.html` / `1day-template.html` / `company-template.html` / `static-pages.js` / `company-pages.js` / `privacy.html` / `terms.html`（＋`privacy-ad.html`）。**前回 `company-template.html` と `company-pages.js` を落として企業ページ約4,900本だけ旧称のまま公開した。**
+⚠ **改名は11ファイルに散っている**: `template.html` / `apply-template.html` / `job-template.html` / `landing-template.html` / `company-template.html` / `static-pages.js` / `company-pages.js` / `privacy.html` / `terms.html`（＋`privacy-ad.html`）。**前回 `company-template.html` と `company-pages.js` を落として企業ページ約4,900本だけ旧称のまま公開した。**
 一方で、説明句としての「求人検索」（`<title>` 前半の `若手ハイクラス転職の求人検索`、meta description、フッターの「求人検索にもどる」など）は**検索キーワードとして残してある**。サービス名と一般名詞を混同して一括置換しないこと。
 掲載は**中途のみ**（2026-09-06から Airtable の中途求人を**全件**載せる。取得時点で5,773件中の中途5,732件）。
 
@@ -17,7 +17,7 @@ Airtableの求人を検索できる**静的な中途採用求人サイト「エ�
 
 ```
 template.html / apply-template.html / job-template.html / landing-template.html / data/jobs.json を編集
-  → node rebuild.js      （index.html・apply.html・1day.html・job/・jobs/・area/・sitemap.xml を再生成・件数を表示。約50秒）
+  → node rebuild.js      （index.html・apply.html・job/・jobs/・area/・sitemap.xml を再生成・件数を表示。約50秒）
   → commit & push        （数十秒で反映）
 ```
 
@@ -28,7 +28,6 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 | `index.html`（約280KB・gzip後83KB） | `template.html` | 一覧用の求人データは**埋め込まない**（2026-09-21〜）。`data/list.json`（表形式 `{k,r}`・タグは番号・約5MB）を `<script type="module">` のトップレベル await で読む。`__LIST_VER__` に中身のハッシュが入る。本文は `data/jobs/<求人ID>.json` |
 | `company/<企業ID>/index.html`（約4,800社。**求人0件の会社には「同じ業界で募集中の求人」8件を載せ、タイトルに（募集中0件）を出さない**＝2026-10-01）・`company/index.html`・`company/industry/<code>/` | `company-template.html` | 企業ページ・企業一覧・業界ページ（`company-pages.js`）。`data/companies.json`（`node fetch-companies.js`）から。**求人が0件でも消さない** |
 | `apply.html`（約1.2MB） | `apply-template.html` | `__JOBS_MINI__` ＝ ID・企業名・職種名・年収**だけ**（表形式 `[id,会社名,職種名,年収]`） |
-| `1day.html` | `1day-template.html` | `__EVENTS_DATA__` |
 | `job/<求人ID>/index.html`（5,700件・約45KB/件） | `job-template.html` | 求人1件の本文・JobPosting 構造化データ・求人ごとの title/OGP（`static-pages.js`） |
 | `jobs/<職種>/`・`jobs/<職種>/<勤務地>/`・`area/<勤務地>/` | `landing-template.html` | 職種×勤務地の一覧（新規は10件以上、公開中は5件以上で維持） |
 | `data/closed-jobs.json` | — | 掲載終了した求人の控え（`404.html` が読む）。`static-pages.js` の `recordClosedJobs()` |
@@ -90,7 +89,7 @@ node fetch-tags.js / fetch-logos.js / fetch-employees.js / fetch-companies.js
 node rebuild.js     → index.html      … 画面だけ（約280KB）。一覧用の項目は data/list.json に分けて書く
                     → data/list.json  … 一覧・検索・絞り込みに要る項目だけ（表形式）。index.html が起動時に fetch する
                     → data/jobs/<求人ID>.json … 求人1件ずつの全項目（本文）。求人を開いたときに読む
-                    → apply.html / 1day.html
+                    → apply.html
 ```
 
 - **一覧側（`data/list.json`。2026-09-21 までは `index.html` に内蔵していた）**: id・会社名・`companyId`（企業ページへのリンク）・ポジション・雇用形態・年収・勤務地（70字まで）・職種・業界・URL・上場区分・掲載日・
@@ -138,31 +137,11 @@ node tools/tags/assign-tags.js --write --all    … 全件上書き（⚠ 手で
 - 「会社情報」は企業DBの会社概要＋事業内容、業界タグは企業DBの業界（無ければ求人票の業界）で判定する。
 - タグマスタに無い業界中分類（消費財・化学など15種）にはタグが付かない（タグを作れば次回から付く）。
 
-## 1day選考会（`1day.html` ＋ 検索結果1位のPR枠）
+## 1day選考会 — 2026-10-16 に廃止（松岡さん指示）
 
-⚠ **2026-09-01に導線を作り替えた。** 開催数が少ないのにナビ・特集行・フッター・専用ページと4か所を
-占めていたため、**ナビ・一覧上部の特集行・フッターからは外し、検索結果の1位に固定で出るPR枠に一本化**した。
-専用ページ `1day.html` は残っていて、PR枠のリンク先になっている（ナビからは辿れない）。
-
-- PR枠は `template.html` の `prSlotHtml()`。**1ページ目のときだけ**先頭に差し込む。
-- 開催があるときは日程・参加企業を出して `1day.html` へ、無いときは「開催の案内を受け取る」で
-  `apply.html` へ送る（**常に表示する**）。
-- PR枠に出すデータは `rebuild.js` の `onedayMini()` が `__ONEDAY_MINI__` に差し込む（直近3件）。
-  **`data/1day.json` を更新したら `node rebuild.js` を回すこと。** 回さないとPR枠が古いままになる。
-
-
-開催情報は Airtable「1day選考会」`tbl1J80CGqiOTvuf7`。`node fetch-1day.js` → `data/1day.json` →
-`node rebuild.js` → `1day.html` の順。**求人と違い、取得は毎回 Airtable から手で回す。**
-
-- 「公開ステータス」が**非公開・未設定**の回は `fetch-1day.js` の時点で落ちる（＝サイトに出ない）。
-- ⚠ **このテーブルは shinsotsu.agent-best.net と共有している。**「区分」（2026-08-28追加・
-  `fldfhFRnZhuug3rl0`）で振り分ける。中途＝このサイト、新卒・インターン＝shinsotsu。
-  - `rebuild.js` の **`midCareerEvents()`** が中途以外を落とす。**shinsotsu 側には鏡写しの
-    `newGradOnly1day()` がある。片方だけ直すと、同じ回が両サイトに出る／どちらにも出ない。**
-  - **区分が空の回は中途扱い**（求人の `midCareerOnly()` と同じ既定）。ビルド時に回名を挙げて警告する。
-  - 記入例の行（非公開）に運用メモを入れてある。**複製したら区分を必ず見直すこと。**
-- 申し込みは Airtable フォーム `shr0K5l9MSiNMgUe6`（`applyUrl()` が回名と日付をプリフィル）。
-  ⚠ **shinsotsu 側はこのフォームを使わず、自前の `apply.html` に送っている。**
+`1day.html`・`1day-template.html`・`fetch-1day.js`・`data/1day.json`・検索結果1位のPR枠（`prSlotHtml()` / `__ONEDAY_MINI__`）を
+jobs・skill・shinsotsu の3サイトから削除した。Airtable の「1day選考会」テーブル（tbl1J80CGqiOTvuf7）は 9/12 時点で既に無い。
+戻すときは 2026-10-15 以前のコミットから復元する。求人本文に「1Day選考会」と書かれている求人は求人データなので対象外。
 
 ## サイトの位置づけ・表記
 
@@ -787,14 +766,12 @@ node rebuild.js         → company/<企業ID>/index.html（会社概要・事�
 
 ## 自動更新（GitHub Actions）— 2026-09-12
 
-`.github/workflows/update-jobs.yml` が**毎朝 06:00 JST** に `fetch-jobs → fetch-tags → fetch-employees → fetch-companies → fetch-1day → rebuild` を回し、
+`.github/workflows/update-jobs.yml` が**毎朝 06:00 JST** に `fetch-jobs → fetch-tags → fetch-employees → fetch-companies → rebuild` を回し、
 変更があれば `github-actions[bot]` が commit & push する（Pages のデプロイは今までどおり main をそのまま配信）。Actions タブの「Run workflow」で手動でも回せる。
 
 - **必要な設定（1回だけ）**: Settings → Secrets and variables → Actions → `AIRTABLE_TOKEN`（Airtable の Personal access token）。
   **これが無いと毎朝失敗する**（エラーメッセージで分かる）。Public リポジトリでも Secrets は見えない。
 - ⚠ **`fetch-logos.js` は回さない**（手でトリミングした `lts.png` / `bridgeone.png` が上書きされる）。ロゴは手元で回して確認してから push。
-- `fetch-1day.js` の失敗は警告だけで止めない。**2026-09-12 時点で「1day選考会」テーブル `tbl1J80CGqiOTvuf7` は base に存在しない**
-  （削除された模様。`data/1day.json` は0件のまま残っている）。再開するときは `fetch-1day.js` の `TABLE_ID` を新しいテーブルに直す。
 - ⚠ **掲載件数が前回より 20% 以上減ったら push しない**（Airtable 側の事故で 5,700ページが一気に消えるのを防ぐ）。本当に減らすときは手元で rebuild して push。
 - 手元と Actions の両方が同じファイルを触るので、**手元で作業する前に `git pull`** すること。
 - これで `data/first-seen.json` の掲載開始日が毎日積み上がり、掲載終了の求人ページ（`job/`・`data/jobs/`）も自動で消える。
