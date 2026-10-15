@@ -523,3 +523,8 @@ if(jobs){
   });
   require('./static-pages').build(dir, fullJobs);
 }
+
+/* ---------- 転職メディアの記事ごとの求人（data/media-jobs/<記事slug>.json） ----------
+   コーポレートの記事の転職ボックスが閲覧時に読む。中身と理由は media-jobs.js の先頭にある。
+   data/list.json（上で書いたもの）と data/media-index.json（fetch-media-companies.js）から作る。 */
+require('./media-jobs').build(dir);

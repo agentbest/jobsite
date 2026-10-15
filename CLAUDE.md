@@ -43,6 +43,12 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 
 `node fetch-media-companies.js` → `data/media-companies.json`（{ 企業レコードID: [記事slug, タイトル] }）。コーポレートの `/media/search.json` の企業記事と、`data/companies.json` の社名を正規化して突き合わせる（686本中406本が一致）。企業ページに「〇〇への転職ガイド」欄、求人ページの企業情報に記事リンクが出る。毎朝の Actions でも取得する（失敗しても前回のファイルで続行）。逆向き（記事→企業ページ）は agentbest-lp の `tools/jobsite-companies/`。 同じスクリプトが `data/media-guides.json`（職種ハブ→職務経歴書・志望動機・面接対策・年収相場の記事）も作り、求人ページの「応募前に読む」に出す。求人の職種→ハブの対応は `static-pages.js` の `JOBCAT_HUB`（求人の約7割をカバー）。
 
+## 転職メディアの記事に出す求人（`data/media-jobs/`・2026-10-15）
+
+コーポレートの記事（www.agent-best.net/media/）の転職ボックスに、記事に合った求人カード4件を出す。記事側（agentbest-lp `src/components/ArticleJobs.astro`）が閲覧時に `https://jobs.agent-best.net/data/media-jobs/<記事slug>.json` を fetch する。
+`rebuild.js` の最後で `media-jobs.js` が作る（毎朝の Actions でも自動）。入力は `data/list.json` と `data/media-index.json`（`fetch-media-companies.js` が search.json の `s`＝ハブslug から作る）。
+選び方は 企業記事ならその会社 → 同じ職種（`JOBCAT_HUB`）→ ハブ名の語（「AIエンジニア」→AI）→ 職種の大分類。⚠ `GROUP_BY_HUB` は agentbest-lp `src/lib/jobsLink.ts` の写し。ファイルが無い記事はカードが出ないだけ（文字リンクは残る）。クリックはコーポレートの GA4 `jobs_click`（placement=`media-article-jobs`）、求人ページ側は utm_medium=`article-jobs`。
+
 ## データ元
 
 Airtable base「人材紹介事業」`appYkc36EvioYoL1A` / table「求人DB（求人票）」`tblyPZZasXTM2tcrV`（**全件**。うち中途だけを載せる）。

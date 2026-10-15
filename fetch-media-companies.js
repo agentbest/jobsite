@@ -53,6 +53,12 @@ function norm(s){
   const ORDER = ['職務経歴書', '志望動機', '面接対策', '年収相場'];
   Object.values(guides).forEach(a => a.sort((x, y) => ORDER.indexOf(x[2]) - ORDER.indexOf(y[2])));
   fs.writeFileSync(path.join(__dirname, 'data', 'media-guides.json'), JSON.stringify(guides));
+  /* 記事ごとの求人（media-jobs.js）用の記事一覧 [[slug, カテゴリ, ハブslug, 企業名, ハブ名], ...]。
+     ハブslug は search.json の s（h と同じ並び）。s が無い古いインデックスでは null＝企業記事だけ求人が付く */
+  const hubSlugs = idx.s || [];
+  const mediaIndex = idx.i.map(r => [r[0], idx.c[r[3]], hubSlugs[r[4]] || null, r[5] || '', idx.h[r[4]] || '']);
+  fs.writeFileSync(path.join(__dirname, 'data', 'media-index.json'), JSON.stringify(mediaIndex));
+  console.log(`記事一覧: ${mediaIndex.length}本（ハブslugあり ${mediaIndex.filter(r => r[2]).length}本） → data/media-index.json`);
   console.log(`職種ガイド記事: ${Object.keys(guides).length}職種ぶん → data/media-guides.json`);
   console.log(`転職メディアの企業記事 ${articles.length}本 → 企業ページと一致 ${articles.length - miss}本（企業DBに無い ${miss}本）。data/media-companies.json に ${Object.keys(out).length}社`);
 })();

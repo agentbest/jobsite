@@ -675,4 +675,4 @@ function build(root, full){
   console.log(`sitemap.xml を書き出しました: ${urls.length} URL`);
 }
 
-module.exports = { build };
+module.exports = { build, jobHubOf, jobGroupOf, jobName, fmtSalary, locShort, GROUP_SLUG };
