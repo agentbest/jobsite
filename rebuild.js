@@ -63,20 +63,6 @@ function midCareerOnly(jobs){
   return kept;
 }
 
-/* ---------- ハイクラス訴求に合わない求人を落とす（2026-09-22・松岡さん決定） ----------
-   Airtable には工場のライン作業・フォークリフト・店舗スタッフなどの求人も入っている（媒体からの一括取り込みのため）。
-   「若手ハイクラス向け」の顔で検索エンジンに載せる以上、機械的な基準でサイト側で落とす。
-   基準: 職種の大分類が LOW_GROUPS（その他／小売・飲食／交通・運輸）**かつ** 年収の上限（無ければ下限）が LOW_SALARY_CAP 万円未満、
-         **または年収が未記載**（同日、松岡さんの判断で「未記載も除外」「450万円」に決めた。400万円だと405万円のフォークリフト求人が残ったため）。
-   ⚠ 3分類の外（機械・営業など）に付いた製造派遣・介護系の求人はこの基準では残る。語の判定（職種名にフォークリフト等）は誤爆が出るので入れていない。
-     代わりに LOW_COMPANIES（製造派遣・介護系の会社）は職種を問わず同じ年収基準で落とす（2026-10-10・松岡さん決定）。
-     本社職（企画・エンジニア等で450万円以上）は残る。会社を足すときは会社名の部分一致で。
-   ⚠ 基準を変えるときは静的ページ（job/・company/ の募集中件数）も一緒に変わる。数十件単位なら翌朝の自動更新で消える。
-   ⚠ Airtable のデータは触らない（掲載を止める判断はビルド側に置く＝midCareerOnly と同じ考え方）。 */
-const LOW_GROUPS = new Set(['その他', '小売・飲食', '交通・運輸']);
-const LOW_SALARY_CAP = 450;
-const LOW_COMPANIES = /日研トータルソーシング|エス・エム・エス/;
-function jobGroupOf(v){ const m = String(v || '').match(/（([^（）]+)）\s*$/); return m ? m[1] : 'その他'; }
 /* ---------- 「※confidential※」の付いた求人を載せない（2026-10-10・松岡さん決定） ----------
    媒体側で社外秘扱いの求人。求人名・職種名・本文のどこかに入っていれば落とす（全角・半角の※、大文字小文字を問わない）。 */
 const CONFIDENTIAL = /[※＊*]\s*confidential\s*[※＊*]/i;
@@ -104,29 +90,15 @@ function noDuplicates(jobs){
   }
   return dropped.length ? jobs.filter(j => kept.has(j)) : jobs;
 }
-/* ---------- 職種の大分類が「施工管理」の求人を載せない（2026-10-12・松岡さん決定） ----------
-   建築・内装・リフォーム・電気設備の施工管理（4職種）。職種が施工管理になっている設計・積算などの求人もまとめて外す（松岡さんの選択）。
-   Airtable は触らない。掲載を止める判断はビルド側（midCareerOnly() と同じ考え方）。 */
-const EXCLUDED_GROUPS = new Set(['施工管理']);
-function noExcludedGroups(jobs){
-  const hit = j => EXCLUDED_GROUPS.has(jobGroupOf(j.jobCategory));
-  const dropped = jobs.filter(hit);
-  if(dropped.length) console.log(`載せない職種（${[...EXCLUDED_GROUPS].join('／')}）の求人を除外しました: ${dropped.length}件`);
-  return dropped.length ? jobs.filter(j => !hit(j)) : jobs;
-}
-function hiClassOnly(jobs){
-  const cap = j => (j.salaryMax != null ? j.salaryMax : j.salaryMin);
-  const low = j => (LOW_GROUPS.has(jobGroupOf(j.jobCategory)) || LOW_COMPANIES.test(j.company || '')) && (cap(j) == null || cap(j) < LOW_SALARY_CAP);
-  const kept = jobs.filter(j => !low(j));
-  const dropped = jobs.filter(low);
-  if(dropped.length){
-    const by = {};
-    dropped.forEach(j => { by[j.company || '企業名なし'] = (by[j.company || '企業名なし'] || 0) + 1; });
-    console.log(`ハイクラス訴求に合わない求人を除外しました: ${dropped.length}件（${[...LOW_GROUPS].join('／')}／製造派遣・介護系の会社 かつ 年収上限 ${LOW_SALARY_CAP}万円未満または未記載）`);
-    Object.entries(by).sort((a, b) => b[1] - a[1]).slice(0, 8).forEach(([c, n]) => console.log(`   - ${c} ${n}件`));
-  }
-  const unknown = dropped.filter(j => cap(j) == null).length;
-  if(unknown) console.log(`   （うち年収未記載で除外 ${unknown}件）`);
+/* ---------- jobs／skill の振り分け（2026-10-15・松岡さん決定） ----------
+   基準は site-split.js（agentbest/jobsite と agentbest/skill で同じ中身）。このサイトは SITE の側だけを載せる。
+   旧 hiClassOnly()（その他・小売飲食・交通運輸で450万円未満）と noExcludedGroups()（施工管理）はこの振り分けに吸収した。
+   相手のサイトに出る求人のIDは data/moved.json に書き、404.html がそちらの求人ページへ転送する。 */
+const SITE = 'jobs';
+const { splitForSite } = require('./site-split');
+function splitSite(jobs){
+  const { kept, moved } = splitForSite(jobs, SITE);
+  fs.writeFileSync(path.join(dir, 'data', 'moved.json'), JSON.stringify(moved.map(j => j.id).sort()), 'utf8');
   return kept;
 }
 
@@ -417,7 +389,7 @@ const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', 
   data => {
     /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
        作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
-    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(hiClassOnly(noExcludedGroups(noDuplicates(noConfidential(midCareerOnly(data))))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(splitSite(noDuplicates(noConfidential(midCareerOnly(data)))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     writeDetails(full); fullJobs = full; return lighten(full); });
 /* 一覧用のデータは index.html に埋め込まず data/list.json に書く（template.html 冒頭の説明を参照）。
    __LIST_VER__ は中身のハッシュ。GitHub Pages のキャッシュ（10分）を跨いでも、データが変わった回だけ取り直される。 */

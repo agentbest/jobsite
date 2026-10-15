@@ -127,6 +127,18 @@
   }
   document.getElementById('h').textContent = 'この求人の掲載は終了しました';
   document.getElementById('lead').textContent = '募集が終了したか、掲載を取り下げた求人です。同じ企業・近い条件の求人をご覧ください。';
+  /* jobs／skill の振り分けで相手のサイトに移った求人は、そちらの求人ページへ転送する（data/moved.json は rebuild.js の splitSite() が書く）。
+     ⚠ 相手のサイトの 404.html では OTHER_ORIGIN が逆になる（jobs ⇔ skill）。 */
+  var OTHER_ORIGIN = 'https://skill.agent-best.net';
+  fetch('/data/moved.json', { cache: 'no-cache' }).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; }).then(function(moved){
+    if(moved.indexOf(m[1]) >= 0){
+      try{ gtag('event', 'page_404', { path: path, closed_job: 'moved' }); }catch(e){}
+      location.replace(OTHER_ORIGIN + '/job/' + m[1] + '/' + location.search);
+      return;
+    }
+    showClosed();
+  });
+  function showClosed(){
   fetch('/data/closed-jobs.json', { cache: 'no-cache' }).then(function(r){ return r.ok ? r.json() : {}; }).catch(function(){ return {}; }).then(function(closed){
     var v = closed[m[1]];
     track(!!v);
@@ -142,6 +154,7 @@
     else if(co) links.appendChild(btn('/?q=' + encodeURIComponent(co), co + 'の求人を検索する', true));
     links.appendChild(btn('/', '求人を検索する', !cid && !co));
   });
+  }
 })();
 </script>
 </body>
