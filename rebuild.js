@@ -71,6 +71,18 @@ function noConfidential(jobs){
   if(dropped.length) console.log(`※confidential※ の求人を除外しました: ${dropped.length}件（${dropped.map(j => j.company).slice(0, 5).join('／')}${dropped.length > 5 ? ' ほか' : ''}）`);
   return dropped.length ? jobs.filter(j => !hit(j)) : jobs;
 }
+/* ---------- 掲載しない企業（2026-10-16・松岡さん指示） ----------
+   企業名が一致した求人は、Airtable に残っていても載せない（新しく入った求人も含めて）。
+   振り分け（splitSite）より前で落とすので、skill 側への転送（moved.json）にも入らない。
+   企業ページ（company/）は企業DBから作るので、ここでは消えない。 */
+const EXCLUDED_COMPANIES = ['株式会社HERP'];
+function noExcludedCompanies(jobs){
+  const norm = s => String(s || '').replace(/[\s　]+/g, '');
+  const ng = new Set(EXCLUDED_COMPANIES.map(norm));
+  const dropped = jobs.filter(j => ng.has(norm(j.company)));
+  if(dropped.length) console.log(`掲載しない企業の求人を除外しました: ${dropped.length}件（${[...new Set(dropped.map(j => j.company))].join('／')}）`);
+  return dropped.length ? jobs.filter(j => !ng.has(norm(j.company))) : jobs;
+}
 /* ---------- 中身がまったく同じ求人を1件にまとめる（2026-10-12） ----------
    媒体テーブルから本体へ合併したときなど、同じ求人が2行になることがある（10/11の合併で14件）。
    企業名・職種名・年収・勤務地・仕事内容がすべて一致したら同じ求人とみなし、先に登録された方だけ載せる。
@@ -388,7 +400,7 @@ const jobs = build('jobs.json', 'template.html', 'index.html', '__JOBS_DATA__', 
   data => {
     /* ⚠ 求人IDで並べてから生成する。data/jobs.json（Airtable の並び）から作っても data/jobs/*.json（ファイル名順）から
        作っても同じ生成物になるようにするため。並びが違うと、手元と GitHub Actions で毎回 9,000ファイルが書き換わる。 */
-    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(splitSite(noDuplicates(noConfidential(midCareerOnly(data)))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const full = cleanNames(salarySanity(attachIndustry(attachEmployees(attachLogos(applyFirstSeen(splitSite(noDuplicates(noExcludedCompanies(noConfidential(midCareerOnly(data))))))))))).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     writeDetails(full); fullJobs = full; return lighten(full); });
 /* 一覧用のデータは index.html に埋め込まず data/list.json に書く（template.html 冒頭の説明を参照）。
    __LIST_VER__ は中身のハッシュ。GitHub Pages のキャッシュ（10分）を跨いでも、データが変わった回だけ取り直される。 */
