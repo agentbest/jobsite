@@ -99,10 +99,10 @@ async function batch(table, method, records){
     };
     const rec = bySlug.get(a.slug);
     const cur = rec ? rec.fields : {};
-    let tags = cur['共通タグ'] || [];
+    let tags = cur['記事タグ'] || [];
     const fields = {};
     for(const [k, v] of Object.entries(want)) if((cur[k] || '') !== (v || '')) fields[k] = v;
-    if(!tags.length && tagsByHub.has(a.hub)){ tags = tagsByHub.get(a.hub); fields['共通タグ'] = tags; }
+    if(!tags.length && tagsByHub.has(a.hub)){ tags = tagsByHub.get(a.hub); fields['記事タグ'] = tags; }
     assign[a.slug] = tags.filter(id => tagDefs[id]);
     if(!rec) creates.push({ fields: { '記事slug': a.slug, ...fields, '最終同期': today } });
     else if(Object.keys(fields).length) updates.push({ id: rec.id, fields: { ...fields, '最終同期': today } });
