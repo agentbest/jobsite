@@ -62,6 +62,7 @@ const F = {
   tags:             'fldYNSqarLLDERI0a', // タグ（複数選択）。タグ検索の元。落とさないこと
   prefs:            'flddnoD5qZtuAISOO', // 勤務地（都道府県）。複数選択。エリア絞り込みの正データ（2026-09-22新設）
   status:           'fldLFxYGKjXQPoZsd', // 募集状況（空／募集中／募集停止）。募集停止はサイトに載せない（2026-10-11新設）
+  hidden:           'fldHvKsNpzFCEEjRV', // サイトに掲載しない（チェック）。募集中のまま公開だけしない求人（2026-10-16新設）
 };
 const CO_TABLE = 'tblBNNH9sJjldPmZZ', CO_NAME = 'fld03vEbeabi8IQDN';
 const IND_TABLE = 'tblfn5HIG6pPiQ2LE', IND_NAME = 'fldXKyZtMheTlkX1r';
@@ -120,13 +121,14 @@ function flat(v){
   /* 募集停止の扱い（2026-10-11）。行は消さずに「募集状況」を募集停止にする運用。
      本文に「募集終了日時 YYYY-MM-DD」があって過ぎている求人も載せない（キャリアバンク由来の書式）。 */
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);   // JST
-  const closed = [], expired = [];
+  const closed = [], expired = [], hidden = [];
   for(const r of recs){
     const f = r.fields;
     const title = (f[F.title] || '').trim();
     // CSVのヘッダー行が混入したレコードなどは載せない
     if(!title || title === '求人タイトル' || title.replace(/^﻿/, '') === '求人タイトル'){ skipped++; continue; }
     if(flat(f[F.status]) === '募集停止'){ closed.push(r.id); continue; }
+    if(f[F.hidden] === true){ hidden.push(`${r.id} ${title.slice(0, 40)}`); continue; }
     const end = endDateOf([f[F.jobContent], f[F.title], f[F.selectionProcess]].filter(Boolean).join('\n'));
     if(end && end < today){ expired.push(`${r.id} ${end} ${title.slice(0, 40)}`); continue; }
     const job = {
@@ -169,6 +171,10 @@ function flat(v){
   }
 
   if(closed.length) console.log(`  募集停止の求人を ${closed.length}件 除外しました（Airtable の「募集状況」）`);
+  if(hidden.length){
+    console.log(`  「サイトに掲載しない」にチェックの付いた求人を ${hidden.length}件 除外しました:`);
+    hidden.forEach(x => console.log('    ' + x));
+  }
   if(expired.length){
     console.log(`  ⚠ 本文の募集終了日時を過ぎた求人を ${expired.length}件 除外しました。Airtable で「募集状況」を募集停止にしてください:`);
     expired.forEach(x => console.log('    ' + x));
