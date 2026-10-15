@@ -39,24 +39,28 @@ template.html / apply-template.html / job-template.html / landing-template.html 
 
 `index.html` は自己完結の静的HTML（CDN非依存）。詳細・Airtable取得元・フィールド対応は `README.md` にある。
 
-## 転職メディアの記事に出す求人（記事タグ・2026-10-15）
+## 転職メディアの記事に出す求人（共通タグ・2026-10-15）
 
 www.agent-best.net/media の記事末尾「〇〇の転職を考えている方へ」に、募集中の求人カードを4件出す。**どの求人を出すかは Airtable で管理する**（松岡さんの方針：記事からいきなり相談ではなく、求人を挟む）。
 
 ```
 Airtable「掲載記事一覧」tblrWvmu0frs5NbiA（1記事1行・2,506行）
    記事slug / タイトル / URL / カテゴリ / ハブ / ハブ名 / 企業名 / meta description / 最終同期 … 毎朝同期（正は記事ファイル。ここで直しても戻る）
-   記事タグ（→記事タグ）/ 狙うキーワード / メモ                                         … 人が触る列
-Airtable「記事タグ」tblBxgZS5X5bAZqRR（32個）
+   共通タグ（→共通タグ）/ 狙うキーワード / メモ                                         … 人が触る列
+Airtable「共通タグ」tblBxgZS5X5bAZqRR（32個・旧名「記事タグ」。**記事と求人で共通のタグマスター**）
    職種キーワード（/区切り OR）/ 求人タグ（→求人タグマスタ・OR）/ 出すサイト（両方・jobs・skill）/ 初期ハブ
-        ↓ 毎朝 update-jobs.yml：node tools/media/sync-articles.js --write
-data/media-tags.json（タグ定義＋記事→タグ）・data/skill-list.json（skill の求人一覧・.gitignore）
+Airtable「求人DB（求人票）」の3列：共通タグ（自動）＝毎朝付け直す／共通タグ（手動で追加）／共通タグ（外す）＝人が触る
+        ↓ 毎朝 update-jobs.yml：node tools/media/sync-articles.js --write → node tools/media/assign-common-tags.js --write
+data/media-tags.json（タグ定義＋記事→タグ）・data/common-tags-jobs.json（求人→タグ＝自動∪手動で追加−外す）・data/skill-list.json（skill の求人一覧・.gitignore）
         ↓ node rebuild.js の最後：media-jobs.js
 data/media-jobs/<slug>.json = { k:'tag'|'co'|'hub'|'group', l, j:[[id, 社名, 職種名, 年収, 勤務地, ロゴ, 's'=skill]] } → 記事側 ArticleJobs.astro が閲覧時に読む
 ```
 
 - **記事タグが空の記事は、同期のときに記事タグの「初期ハブ」から自動で付く**（新しい記事もこれで付く）。一度でも入っている記事は触らない＝人が直した値を上書きしない
-- 選び方：企業記事はその会社の求人（jobs＋skill）→ 足りなければ記事タグの求人。記事タグの求人は**強い一致（職種名・職種カテゴリにキーワード、または求人タグ）**を優先し、PER件に満たなければ弱い一致（求人タイトル・業界だけ）も使う。jobs と skill は混ぜて新しい順。同じタグの記事どうしで出す求人をずらす
+- **タグは必ず共通タグマスターの行へのリンクで付ける**（記事も求人も。文字を手で打たない＝記事と求人のタグが必ず一致する。松岡さんの方針）
+- 求人への自動付与（assign-common-tags.js）は 職種名・職種カテゴリ・業界 にキーワード、または求人タグ。**求人タイトルは見ない**（飾りの語で別職種に付くため）。初回 8,470件中 8,027件に付いた
+- ⚠ 「共通タグ（自動）」は毎朝上書き。人の判断は「手動で追加」「外す」へ
+- 選び方：**記事と同じ共通タグが付いた求人を最優先**。足りなければキーワードの一致で埋める。企業記事はその会社の求人（jobs＋skill）→ 足りなければ記事タグの求人。記事タグの求人は**強い一致（職種名・職種カテゴリにキーワード、または求人タグ）**を優先し、PER件に満たなければ弱い一致（求人タイトル・業界だけ）も使う。jobs と skill は混ぜて新しい順。同じタグの記事どうしで出す求人をずらす
 - タグに合う求人が0件なら、従来の選び方（ハブ→ハブ名の語→大分類）に戻る
 - **出し方を直すときは Airtable の記事タグの「職種キーワード」を直す**（翌朝反映）。例：「戦略」1語だと事業戦略・資産戦略を拾ったので「戦略コンサル/戦略ファーム…」に、「フルスタック」だとフルスタック人事を拾ったので「フルスタックエンジニア」に直した
 - 手元で試すときは `node tools/media/sync-articles.js`（Airtable に書かない）→ `node media-jobs.js`

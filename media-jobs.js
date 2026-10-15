@@ -123,6 +123,8 @@ function build(root){
     skillJobs.forEach(j => { j._site = 'skill'; j._tags = (j.t || []).map(i => s.tags[i]); });
     skillJobs.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')) || (b.salaryMax || 0) - (a.salaryMax || 0) || a.id.localeCompare(b.id));
   } else console.log('記事向けの求人: data/skill-list.json が無いので、記事タグの求人は jobs の求人だけから選びます（node tools/media/sync-articles.js）');
+  const ctFile = path.join(root, 'data', 'common-tags-jobs.json');
+  const commonTags = fs.existsSync(ctFile) ? JSON.parse(fs.readFileSync(ctFile, 'utf8')) : {};   // tools/media/assign-common-tags.js
   const tagPoolCache = new Map();
   const tagPoolOf = id => {
     if(tagPoolCache.has(id)) return tagPoolCache.get(id);
@@ -140,7 +142,10 @@ function build(root){
     });
     const order = (a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')) || (b.salaryMax || 0) - (a.salaryMax || 0) || a.id.localeCompare(b.id);
     strong.sort(order); weak.sort(order);
-    const pool = strong.length >= PER ? strong : strong.concat(weak);
+    /* 求人側にも同じ共通タグが付いていれば（Airtable 求人票の 自動∪手動で追加−外す ＝ data/common-tags-jobs.json）それを最優先。
+       記事のタグと求人のタグが同じマスターの行なので、キーワードの当て直しより確実。足りなければキーワードの一致で埋める */
+    const tagged = src.filter(j => (commonTags[j.id] || []).includes(id)).sort(order);
+    const pool = tagged.length >= PER ? tagged : [...new Set(tagged.concat(strong.length >= PER ? strong : strong.concat(weak)))];
     tagPoolCache.set(id, pool);
     return pool;
   };

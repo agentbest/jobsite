@@ -8,12 +8,12 @@
 //   2. Airtable「掲載記事一覧」tblrWvmu0frs5NbiA を記事slugで突き合わせ、無い記事は作る・変わった列だけ直す
 //      同期する列: タイトル / URL / カテゴリ / ハブ / ハブ名 / 企業名 / meta description / 最終同期
 //      ⚠ 正は記事ファイル（agentbest-lp の src/content/media/*.md）。Airtable でタイトルを直しても記事は変わらず、翌朝戻る
-//   3. 記事タグが空の記事に、記事タグ（tblBxgZS5X5bAZqRR）の「初期ハブ」が記事のハブと一致するタグを付ける
+//   3. 記事タグが空の記事に、共通タグ（tblBxgZS5X5bAZqRR・旧名 記事タグ）の「初期ハブ」が記事のハブと一致するタグを付ける
 //      ⚠ 一度でも記事タグが入っている記事は触らない（人が直した値を上書きしない）
 //   4. data/media-tags.json = { t: { タグID: { n: タグ名, kw: 職種キーワード, site: 'both'|'jobs'|'skill', jt: [求人タグ名] } },
 //                              a: { 記事slug: [タグID, ...] } } を書く → media-jobs.js が読む
 //
-// 人が触る列は 記事タグ / 狙うキーワード / メモ（と Airtable 既定の Status など）だけ。
+// 人が触る列は 共通タグ / 狙うキーワード / メモ（と Airtable 既定の Status など）だけ。
 // 取得に失敗したら data/media-tags.json は前回のまま（求人の更新は止めない）。
 const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
@@ -99,10 +99,10 @@ async function batch(table, method, records){
     };
     const rec = bySlug.get(a.slug);
     const cur = rec ? rec.fields : {};
-    let tags = cur['記事タグ'] || [];
+    let tags = cur['共通タグ'] || [];
     const fields = {};
     for(const [k, v] of Object.entries(want)) if((cur[k] || '') !== (v || '')) fields[k] = v;
-    if(!tags.length && tagsByHub.has(a.hub)){ tags = tagsByHub.get(a.hub); fields['記事タグ'] = tags; }
+    if(!tags.length && tagsByHub.has(a.hub)){ tags = tagsByHub.get(a.hub); fields['共通タグ'] = tags; }
     assign[a.slug] = tags.filter(id => tagDefs[id]);
     if(!rec) creates.push({ fields: { '記事slug': a.slug, ...fields, '最終同期': today } });
     else if(Object.keys(fields).length) updates.push({ id: rec.id, fields: { ...fields, '最終同期': today } });
