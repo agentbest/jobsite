@@ -1,0 +1,37 @@
+# Supabase（jobsite-tokyo・無料プラン）を一時停止させないための定期アクセス。
+#
+#   無料プランは一定期間データベースへのアクセスが無いと自動で一時停止（paused）する。
+#   止まってもサイトは普通に表示されるので気づけない。2026-10-15 に実際に止まっていて、
+#   jobs／shinsotsu／skill の申し込み・マイページ・メッセージが全部動いていなかった。
+#   毎日1回 REST API で小さな SELECT を投げてデータベースを動かす。
+#
+#   - 使う鍵はサイトに公開済みの Publishable key（template.html と同じ）。Secret は使わない
+#   - favorites は RLS で未ログインには0件しか返らないが、クエリ自体はデータベースで実行されるので停止の判定は防げる
+#   - ⚠ 応答が 200 以外なら失敗にする＝Actions の失敗メールで「止まった／つながらない」に気づける
+#   - Pro プランにしたら、このワークフローは消してよい
+name: Supabase を止めないための定期アクセス
+
+on:
+  schedule:
+    - cron: '30 22 * * *'   # 22:30 UTC = 07:30 JST（求人の自動更新 06:00 とずらす）
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: データベースに小さな問い合わせを送る
+        run: |
+          URL="https://jvdnabtpxcyfnogdulea.supabase.co"
+          KEY=$(curl -s https://jobs.agent-best.net/ | grep -o 'sb_publishable_[A-Za-z0-9_-]*' | head -1)
+          if [ -z "$KEY" ]; then echo "::error::jobs.agent-best.net から Publishable key を読めませんでした"; exit 1; fi
+          code=$(curl -s -o /tmp/res.txt -w "%{http_code}" "$URL/rest/v1/favorites?select=job_id&limit=1" -H "apikey: $KEY" -H "Authorization: Bearer $KEY")
+          echo "HTTP $code"; head -c 200 /tmp/res.txt; echo
+          if [ "$code" != "200" ]; then
+            echo "::error::Supabase が応答しません（HTTP $code）。ダッシュボードで jobsite-tokyo が paused になっていないか確認してください"
+            exit 1
+          fi
