@@ -5,6 +5,7 @@
      skill … jobs の一部。次のどれかに当たる求人だけを載せる（年収は見ない）
        1) 未経験可 … タグ UNEXPERIENCED_TAGS のどれか、または求人名・職種名に「未経験」
        2) ブルーカラー・現場系の職種 … 職種（小分類）が BLUE_COLLAR_CATEGORIES、または大分類が BLUE_COLLAR_GROUPS
+          技術職（設計・生産技術など）… 大分類が TECH_GROUPS（10/16 追加・松岡さん「設計・生産技術などの技術職もいれよう」）
        3) 職種が「その他」「オープンポジション」・空のときだけ、求人名・職種名に BLUE_COLLAR_WORDS（製造・配送・介護…）
      両サイトに同じ求人が出る（skill の求人は jobs にも必ずある）。
    旧基準（2026-10-15〜10-16）: jobs＝年収下限600万円以上かつ施工管理以外、skill＝それ以外。重複なしだった。
@@ -14,6 +15,7 @@
 const HIGH_CLASS_MIN = 600;                       /* 万円（旧基準。いまは振り分けに使っていない） */
 const UNEXPERIENCED_TAGS = new Set(['未経験歓迎', '業界未経験歓迎', '職種未経験歓迎', '未経験から年収400万円以上']);
 const BLUE_COLLAR_GROUPS = new Set(['施工管理', '小売・飲食', '交通・運輸', '旅行・ホテル', '保育', '医療・看護・薬剤']);
+const TECH_GROUPS = new Set(['機械', '電気・電子', '半導体', '建築・土木', '食品']);  /* 機械設計・回路設計・制御設計・生産技術・建築設計・電気設備設計など */
 const BLUE_COLLAR_CATEGORIES = new Set([
   '製図・CADオペレーター（建築・土木）', '積算（建築・土木）', 'その他（建築・土木）',
   '商品・在庫管理（物流・購買・貿易）', '生産管理（機械）', '品質管理（機械）'
@@ -29,6 +31,7 @@ function isUnexperienced(j){ return (j.tags || []).some(t => UNEXPERIENCED_TAGS.
 function isBlueCollar(j){
   const c = String(j.jobCategory || '').trim();
   if(BLUE_COLLAR_CATEGORIES.has(c) || BLUE_COLLAR_GROUPS.has(jobGroupOf(c))) return true;
+  if(TECH_GROUPS.has(jobGroupOf(c))) return true;
   return OTHER_CATEGORY.test(c) && BLUE_COLLAR_WORDS.test(nameOf(j));
 }
 function skillOnly(j){ return isUnexperienced(j) || isBlueCollar(j); }  /* skill の掲載基準 */
@@ -41,8 +44,8 @@ function splitForSite(jobs, site){
   const other = site === 'jobs' ? 'skill.agent-best.net' : 'jobs.agent-best.net';
   const nU = kept.concat(moved).filter(isUnexperienced).length, nB = kept.concat(moved).filter(isBlueCollar).length;
   console.log(`サイト振り分け（${site}）: 掲載 ${kept.length}件 ／ ${other} だけにある求人 ${moved.length}件`
-    + `（基準: jobs は中途全件。skill は未経験可 ${nU}件・ブルーカラー系 ${nB}件のどちらか）`);
+    + `（基準: jobs は中途全件。skill は未経験可 ${nU}件・ブルーカラー・技術職 ${nB}件のどちらか）`);
   return { kept, moved };
 }
 
-module.exports = { HIGH_CLASS_MIN, UNEXPERIENCED_TAGS, BLUE_COLLAR_GROUPS, BLUE_COLLAR_CATEGORIES, isUnexperienced, isBlueCollar, skillOnly, splitForSite, salaryFloor };
+module.exports = { HIGH_CLASS_MIN, UNEXPERIENCED_TAGS, BLUE_COLLAR_GROUPS, BLUE_COLLAR_CATEGORIES, TECH_GROUPS, isUnexperienced, isBlueCollar, skillOnly, splitForSite, salaryFloor };
