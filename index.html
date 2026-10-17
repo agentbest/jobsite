@@ -782,6 +782,32 @@
   .foot__line{display:flex; flex-direction:column; gap:8px; align-items:flex-start; margin:18px 0 4px}
   .foot__line p{margin:0; font-size:12.5px; color:var(--ink-3)}
   .empty .line-line{justify-content:center; margin-top:18px}
+
+  /* 転職支援サービスの案内（一覧の下・写真はこの1枚だけ） */
+  .support{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:stretch;
+    margin:48px 0 8px; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--r-card); overflow:hidden; box-shadow:var(--shadow-sm);
+  }
+  .support__ph{display:block; min-height:100%}
+  .support__ph img{display:block; width:100%; height:100%; object-fit:cover; object-position:40% 50%; aspect-ratio:3/2}
+  .support__body{padding:36px 40px; display:flex; flex-direction:column; justify-content:center}
+  .support__eyebrow{margin:0 0 10px; font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--ink-3)}
+  .support h2{margin:0 0 14px; font-size:24px; font-weight:800; line-height:1.45; letter-spacing:.01em}
+  .support__lead{margin:0 0 18px; color:var(--ink-2); font-size:14.5px; line-height:1.9}
+  .support__list{margin:0 0 22px; padding:0; list-style:none; display:grid; gap:8px}
+  .support__list li{position:relative; padding-left:20px; font-size:14px; font-weight:700; color:var(--ink)}
+  .support__list li::before{content:""; position:absolute; left:2px; top:.55em; width:8px; height:8px; border-radius:2px; background:var(--accent)}
+  .support__cta{display:flex; flex-wrap:wrap; align-items:center; gap:10px}
+  .support__cta .btn-apply{text-decoration:none}
+  .support__cta .line-btn{padding:12px 18px; font-size:14px}
+  .support__note{margin:14px 0 0; font-size:12.5px; color:var(--ink-3)}
+  @media (max-width:860px){
+    .support{grid-template-columns:1fr; margin-top:36px}
+    .support__ph img{aspect-ratio:16/9}
+    .support__body{padding:24px 20px 26px}
+    .support h2{font-size:20px}
+  }
   /* ---- LINEで相談する導線 ----
      LINE公式アカウントへの入口は2種類ある。
        ・友だち追加        https://line.me/R/ti/p/@697nxhbt?oat_content=url&ts=08302134
@@ -1215,6 +1241,30 @@
       </div>
     </section>
   </div>
+
+  <!-- 転職支援サービスの案内。写真は PIXTA 139175453（購入済み）。
+       ⚠ 写っている人物を「当社のアドバイザー」「利用者」と書かない（素材の規約上NG） -->
+  <section class="support" aria-labelledby="supportH">
+    <picture class="support__ph">
+      <source type="image/webp" srcset="assets/support.webp">
+      <img src="assets/support.jpg" alt="ノートパソコンを開いて打ち合わせをする2人" width="1200" height="800" loading="lazy" decoding="async">
+    </picture>
+    <div class="support__body">
+      <p class="support__eyebrow">転職支援サービス</p>
+      <h2 id="supportH">求人を選ぶ前に、キャリアの話を。</h2>
+      <p class="support__lead">掲載求人への応募も、まだ迷っている段階のご相談も、担当エージェントが一人ひとりの経歴と希望に合わせて伴走します。</p>
+      <ul class="support__list">
+        <li>非公開求人のご紹介</li>
+        <li>書類添削・面接対策</li>
+        <li>年収・入社日の条件交渉</li>
+      </ul>
+      <div class="support__cta">
+        <a class="btn-apply" href="apply.html" data-apply="support-band">転職支援に申し込む（無料）</a>
+        <a class="line-btn" href="https://line.me/R/ti/p/@697nxhbt?oat_content=url&ts=08302134" target="_blank" rel="noopener noreferrer" data-line-cta="jobs-support"><span>LINEで相談する</span></a>
+      </div>
+      <p class="support__note">ご利用は無料です（費用は採用企業が負担します）。</p>
+    </div>
+  </section>
   </div><!-- /#listView -->
 
   <section class="detail" id="detail" hidden aria-label="求人詳細">

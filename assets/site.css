@@ -1,5 +1,4 @@
 /* rebuild.js が template.html の <style> から書き出したもの。直接編集しない */
-
   :root{
     --paper:#F5F7FA; --surface:#FFFFFF; --surface-2:#EEF1F6;
     --ink:#161A26; --ink-2:#4A5261; --ink-3:#6E7686;
@@ -747,6 +746,32 @@
   .foot__line{display:flex; flex-direction:column; gap:8px; align-items:flex-start; margin:18px 0 4px}
   .foot__line p{margin:0; font-size:12.5px; color:var(--ink-3)}
   .empty .line-line{justify-content:center; margin-top:18px}
+
+  /* 転職支援サービスの案内（一覧の下・写真はこの1枚だけ） */
+  .support{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:stretch;
+    margin:48px 0 8px; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--r-card); overflow:hidden; box-shadow:var(--shadow-sm);
+  }
+  .support__ph{display:block; min-height:100%}
+  .support__ph img{display:block; width:100%; height:100%; object-fit:cover; object-position:40% 50%; aspect-ratio:3/2}
+  .support__body{padding:36px 40px; display:flex; flex-direction:column; justify-content:center}
+  .support__eyebrow{margin:0 0 10px; font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--ink-3)}
+  .support h2{margin:0 0 14px; font-size:24px; font-weight:800; line-height:1.45; letter-spacing:.01em}
+  .support__lead{margin:0 0 18px; color:var(--ink-2); font-size:14.5px; line-height:1.9}
+  .support__list{margin:0 0 22px; padding:0; list-style:none; display:grid; gap:8px}
+  .support__list li{position:relative; padding-left:20px; font-size:14px; font-weight:700; color:var(--ink)}
+  .support__list li::before{content:""; position:absolute; left:2px; top:.55em; width:8px; height:8px; border-radius:2px; background:var(--accent)}
+  .support__cta{display:flex; flex-wrap:wrap; align-items:center; gap:10px}
+  .support__cta .btn-apply{text-decoration:none}
+  .support__cta .line-btn{padding:12px 18px; font-size:14px}
+  .support__note{margin:14px 0 0; font-size:12.5px; color:var(--ink-3)}
+  @media (max-width:860px){
+    .support{grid-template-columns:1fr; margin-top:36px}
+    .support__ph img{aspect-ratio:16/9}
+    .support__body{padding:24px 20px 26px}
+    .support h2{font-size:20px}
+  }
   /* ---- LINEで相談する導線 ----
      LINE公式アカウントへの入口は2種類ある。
        ・友だち追加        https://line.me/R/ti/p/@697nxhbt?oat_content=url&ts=08302134
