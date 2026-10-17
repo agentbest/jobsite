@@ -8,7 +8,13 @@ Airtableの求人を検索できる**静的な中途採用求人サイト「エ�
 一方で、説明句としての「求人検索」（`<title>` 前半の `若手ハイクラス転職の求人検索`、meta description、フッターの「求人検索にもどる」など）は**検索キーワードとして残してある**。サービス名と一般名詞を混同して一括置換しないこと。
 掲載は**中途のみ**（2026-09-06から Airtable の中途求人を**全件**載せる。取得時点で5,773件中の中途5,732件）。
 
-- 公開URL: https://jobs.agent-best.net/ （GitHub Pages・HTTPS強制）
+- 公開URL: https://jobs.agent-best.net/
+- ⚠ **入口は Vercel（2026-10-17〜）。** jobs.agent-best.net の DNS は Vercel プロジェクト **agentbest/jobs-front**（Private・Hobby）を向いていて、パスで振り分ける：
+  `/media/`・`/cases/`・`/_astro/`・`/images/` など → コーポレート（agentbest-lp.vercel.app）、それ以外 → このリポジトリの GitHub Pages（https://agentbest.github.io/jobsite/）。
+  松岡さん「media と cases を jobs に寄せたい」。記事2,500本＋事例2,000件（約210MB）を GitHub Pages の1GB上限の中に入れられないための構成。
+  - ⚠ **このリポジトリに CNAME ファイル・Pages のカスタムドメインを戻さない。** 戻すと github.io が jobs へ転送し、Vercel 経由でループして全ページが開けなくなる。
+  - www.agent-best.net/media/・/cases/ は agentbest-lp の vercel.json で jobs へ301。記事のサイトマップは jobs.agent-best.net/media/sitemap.xml（`robots.txt` に記載、`static-pages.js` が書く）。
+  - jobs 上の /consultation/ /business/ /profile/ /contact/ は www へ転送（jobs-front の vercel.json）。jobs の /company/ は求人サイトの企業一覧のまま。
 - リポジトリ: **Public**（機密なし＝求人データ／テンプレ／rebuild.js のみと確認済み）
 
 ## ⚠ ビルドフロー（最重要）
