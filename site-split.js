@@ -46,7 +46,43 @@ function jobGroupOf(v){ const m = String(v || '').match(/（([^（）]+)）s*$/)
 function salaryFloor(j){ return j.salaryMin != null ? j.salaryMin : (j.salaryMax != null ? j.salaryMax : null); }
 function nameOf(j){ return String(j.title || '') + ' ' + String(j.position || ''); }
 
-function isUnexperienced(j){ return (j.tags || []).some(t => UNEXPERIENCED_TAGS.has(t)) || /未経験/.test(nameOf(j)); }
+/* 「未経験可」は、タグ・求人名に加えて必須条件（must）の本文でも確かめる（2026-10-18 松岡さん「未経験からエンジニアに、がっつり経験者の求人がある」）。
+   Airtable のタグは本文のどこかに「未経験」があれば付くので、「業界未経験OK（職種経験は必須）」「SQL未経験可」
+   「Java実務2年以上」の求人にも付いている。そこで次のどれかに当たる求人は未経験可とみなさない。
+     1) 必須条件に「〇〇の経験 N年以上」（社会人経験・勤続年数は除く）
+     2) 必須条件に職種の経験（開発経験・法人営業経験…）があり、職種としての「未経験OK・経験不問・スクール可」などが無い
+        ※「業界未経験OK」「SQL未経験可」「リーダー未経験OK」のように前に業界・道具・役割が付くものは職種の未経験とみなさない
+        ※「営業または販売・接客の経験」のように現場の対人経験でもよい書き方は、職種の経験要件とみなさない
+     3) 必須条件が空で、求人名に「未経験」が無い
+   ブルーカラー・技術職（isBlueCollar）はこの判定に関係なく skill に出る。
+   ⚠ 判定は Airtable に書き戻さない（タグはそのまま。掲載先の判断はビルド側に置く）。 */
+const NC_SOCIAL = /社会人|就業|勤続|正社員|職歴|勤務経験|アルバイト|社会経験|就労|社とも|1社|１社|一社|在籍/;
+const NC_PHRASE = /([^\s。、・■●（(【「『／/]{0,14})(未経験|経験不問|経験は(問いません|不問)|経験を問いません|経験は一切問いません)/g;
+const NC_PARTIAL = /業界|業種|機関|分野|領域|商材|SQL|セキュリティ|BPO|エネルギー|証券|金融|不動産|医療|法曹|リーダー|マネジメント|管理職|PM|Salesforce|SAP|クラウド|AWS|言語|フレームワーク|ツール|コンサルティング|海外|英語|語学|年数|規模|社数|3D|CAD/;
+const NC_OTHER = /スクール|独学|自己学習|ポテンシャル|ゼロから|イチから|一から|意欲を重視|人物重視|学歴・職歴(一切)?不問/;
+const NC_SERVICE_ALT = /接客|販売|サービス業|コールセンター|対人|アルバイト/;
+const NC_SKILL = /(開発|設計|構築|運用|保守|監視|プログラミング|コーディング|実装|テスト|営業|提案|コンサル|分析|マネジメント|管理職|経理|財務|会計|決算|税務|人事|採用|労務|総務|法務|監査|マーケティング|広報|セキュリティ|インフラ|ネットワーク|サーバ|クラウド|AWS|Azure|GCP|Java|PHP|Python|Ruby|C#|C\+\+|SQL|JavaScript|TypeScript|React|CAD|BIM|Revit|PLM|SAP|ERP|PMO|プロジェクト|リーダー|SV|データ|機械学習|デザイン|編集|ライティング|企画|推進|事業|M&A|金融|証券|保険|不動産|施工|経営|要件定義|研究|策定|導入)[^。\n■●・]{0,14}?(の)?(ご)?(実務)?経験/;
+const NC_YEARS = /([^。\n■●・]{0,30}?)(経験|実務|従事)[^。\n■●・]{0,14}?([0-9０-９]+|[一二三四五])\s*年以上/g;
+function newcomerPhrase(must){
+  let m; NC_PHRASE.lastIndex = 0;
+  while((m = NC_PHRASE.exec(must))){ if(!NC_PARTIAL.test(m[1])) return m[0]; }
+  const o = must.match(NC_OTHER); return o ? o[0] : '';
+}
+function newcomerOk(j){
+  const must = String(j.must || '').replace(/\s+/g, ' '), name = nameOf(j);
+  const nameNg = /経験を活か|(?<!未)経験者(募集|限定|向け)|(?<!未)経験者優遇|【経験者】|即戦力/.test(name);
+  if(!must.trim()) return /未経験/.test(name) && !nameNg;
+  let m; NC_YEARS.lastIndex = 0;
+  while((m = NC_YEARS.exec(must))){ if(!NC_SOCIAL.test(m[0])) return false; }
+  let neg = NC_SKILL.exec(must);
+  if(neg && NC_SERVICE_ALT.test(must.slice(Math.max(0, neg.index - 20), neg.index + neg[0].length + 30))) neg = null;
+  const pos = newcomerPhrase(must);
+  if(nameNg && !pos) return false;
+  return !neg || !!pos;
+}
+function isUnexperienced(j){
+  return ((j.tags || []).some(t => UNEXPERIENCED_TAGS.has(t)) || /未経験/.test(nameOf(j))) && newcomerOk(j);
+}
 function isBlueCollar(j){
   const c = String(j.jobCategory || '').trim();
   if(BLUE_COLLAR_CATEGORIES.has(c) || BLUE_COLLAR_GROUPS.has(jobGroupOf(c))) return true;
@@ -75,4 +111,4 @@ function splitForSite(jobs, site){
   return { kept, moved };
 }
 
-module.exports = { HIGH_CLASS_MIN, UNEXPERIENCED_TAGS, BLUE_COLLAR_GROUPS, BLUE_COLLAR_CATEGORIES, TECH_GROUPS, JOBS_HIDDEN_BIG, JOBS_HIDDEN_GROUPS, isUnexperienced, isBlueCollar, skillOnly, jobsShown, splitForSite, salaryFloor };
+module.exports = { HIGH_CLASS_MIN, UNEXPERIENCED_TAGS, newcomerOk, BLUE_COLLAR_GROUPS, BLUE_COLLAR_CATEGORIES, TECH_GROUPS, JOBS_HIDDEN_BIG, JOBS_HIDDEN_GROUPS, isUnexperienced, isBlueCollar, skillOnly, jobsShown, splitForSite, salaryFloor };
