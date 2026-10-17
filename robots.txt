@@ -5,3 +5,4 @@ Allow: /data/companies-list.json
 Disallow: /data/
 
 Sitemap: https://jobs.agent-best.net/sitemap.xml
+Sitemap: https://jobs.agent-best.net/media/sitemap.xml
