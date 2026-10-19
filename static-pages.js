@@ -217,6 +217,34 @@ function plain(src, max){
     .replace(/\s+/g, ' ').trim();
   return max && t.length > max ? t.slice(0, max) + '…' : t;
 }
+/* JobPosting の jobLocation。都道府県は areas（Airtable の列が正）、市区町村は勤務地の原文に「都道府県＋市区町村」と並んで書かれているものだけ拾う。
+   勤務地の原文は住所になっていないことが多い（「東京都内（詳細は面談時に）」「在宅勤務あり」など）ので streetAddress には入れない。
+   勤務地が複数なら Place を並べる（最大10）。 */
+const LOC_RE = /(北海道|東京都|大阪府|京都府|[一-龥]{2,3}県)\s*([一-龥々ぁ-んァ-ヶー]{1,8}?(?:区|町|市(?!市)|村(?!市)))/g;  /* 市・村の後ろの否定先読みは「四日市市」「羽村市」を途中で切らないため */
+const LOC_NG = new Set(['地', '全', '各', '同', '近隣', '周辺', '他', '都', '府', '県', '首都', '都心', '内', '内の']);
+function jobPlaces(j){
+  const prefs = (j.areas || []).filter(p => PREF_SLUG[p]);
+  const place = (pref, city) => ({ '@type': 'Place', address: Object.assign({ '@type': 'PostalAddress', addressCountry: 'JP' },
+    pref ? { addressRegion: pref } : {}, city ? { addressLocality: city } : {}) });
+  const seen = new Set(), out = [];
+  for(const m of plain(j.location).matchAll(LOC_RE)){
+    /* 「勤務地：静岡県静岡県袋井市」のように県名が重なると市区町村側に県名が入るので、頭の県名を外して付け替える */
+    let pref = m[1], city = m[2];
+    for(let dup; (dup = Object.keys(PREF_SLUG).find(p => city.startsWith(p))); ){ pref = dup; city = city.slice(dup.length); }
+    /* 町・村は「〇〇郡〇〇町」と書かれたものだけ（「東京都永田町」「大阪府本町」のような町名を市区町村と取り違えないため） */
+    if(/[町村]$/.test(city) && !city.includes('郡')) continue;
+    /* 東京都以外の「〇〇区」は政令市の区。市の名前が無いと所在地として不完全なので拾わない */
+    if(/区$/.test(city) && pref !== '東京都') continue;
+    if(!/^[一-龥々ぁ-んァ-ヶー]+[市区町村]$/.test(city) || /[都道府県]$/.test(city.slice(0, -1)) || /メトロ|駅|線/.test(city)) continue;
+    if(!PREF_SLUG[pref] || (prefs.length && !prefs.includes(pref)) || LOC_NG.has(city.slice(0, -1))) continue;
+    if(seen.has(pref + city)) continue;
+    seen.add(pref + city); out.push(place(pref, city));
+  }
+  /* 市区町村が拾えなかった都道府県も Place として残す */
+  prefs.forEach(p => { if(![...seen].some(k => k.startsWith(p))) out.push(place(p)); });
+  if(!out.length) out.push(place());
+  return out.slice(0, 10);
+}
 function fmtSalary(j){
   const mn = j.salaryMin, mx = j.salaryMax;
   if(mn != null && mx != null) return mn === mx ? `${mn}万円` : `${mn}〜${mx}万円`;
@@ -460,8 +488,7 @@ function jobPage(ctx, j, related){
     description: descHtml || plain(j.companyInfo, 500) || name,
     identifier: { '@type': 'PropertyValue', name: '株式会社エージェントベスト', value: j.id },
     hiringOrganization: Object.assign({ '@type': 'Organization', name: co }, url ? { sameAs: url } : {}),
-    jobLocation: { '@type': 'Place', address: Object.assign({ '@type': 'PostalAddress', addressCountry: 'JP' },
-      pref ? { addressRegion: pref } : {}, j.location ? { streetAddress: plain(j.location, 120) } : {}) },
+    jobLocation: (pl => pl.length === 1 ? pl[0] : pl)(jobPlaces(j)),
     employmentType: [...new Set(empList(j).map(e => EMP_SCHEMA[e] || 'OTHER'))],
     directApply: false,
     url: canon,
