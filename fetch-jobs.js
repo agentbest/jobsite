@@ -81,6 +81,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
    本来は Airtable 側で消すが、サイトに出る前の最後の網としてここでも落とす。落としたら件数とIDを表示するので Airtable を直すこと。 */
 const STRIP_PARA = /^[■□◆◇●【]?\s*(募集元情報|媒体情報|エージェント向け|紹介会社向け|エージェント様へ|紹介会社様へ)/;
 const STRIP_LINE = /^\s*(求人票更新日|求人票作成日|求人票№|求人票No|企業№|企業No\.?|企業番号|担当者|募集開始|募集終了|担当RA|担当CA|紹介手数料|手数料|返金規定)\s*[:：]/;
+// 取り込み時に書かれた内部メモ（出典・原文に記載なし・要確認 など）。求職者には出さない
+const STRIP_NOTE = /^[・※]?\s*(公開情報(より|から)補完|原文に(は)?[^\n]*記載|詳細は求人票ファイルを参照|以下は[^\n]*掲載しましょう|以下は[^\n]*整理したもの|[^\n]*求人票上は記載なし|エージェント向けページに|選考会の日程は[^\n]*エージェント向けページ|紹介会社向け情報|候補者にはオフレコ)/;
 const STRIP_INLINE = [
   /[（(][^）)]*(?:エージェント|紹介会社|紹介元)経由[^）)]*[）)]/g,   // （…エージェント経由で採用資料を取得し…）
   /[（(][^）)]*経由の求人票[）)]/g,                                    // （パーソルキャリア経由の求人票）
@@ -90,7 +92,7 @@ function sanitize(text, id, key){
   if(typeof text !== 'string' || !text) return text;
   const hit = [];
   let out = text.split(/\n{2,}/).filter(p => { const ng = STRIP_PARA.test(p.trim()); if(ng) hit.push(p.split('\n')[0].trim()); return !ng; }).join('\n\n');
-  out = out.split('\n').filter(l => { const ng = STRIP_LINE.test(l); if(ng) hit.push(l.trim()); return !ng; }).join('\n');
+  out = out.split('\n').filter(l => { const ng = STRIP_LINE.test(l) || STRIP_NOTE.test(l.trim()); if(ng) hit.push(l.trim()); return !ng; }).join('\n');
   for(const re of STRIP_INLINE) out = out.replace(re, m => { hit.push(m); return ''; });
   if(!hit.length) return text;   // 何も落としていなければ原文のまま（空白の整形もしない）
   out = out.replace(/[ 　]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
