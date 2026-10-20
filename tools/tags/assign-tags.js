@@ -7,11 +7,14 @@
 //   node tools/tags/assign-tags.js --write --all … 全件を上書き（⚠ 手で付けたタグは消える）
 //   node tools/tags/assign-tags.js --counts   … タグマスタの「付与件数」を書き戻す（--write と併用可）
 //   node tools/tags/assign-tags.js --write --cat=業界（中分類）,業界（大分類） … そのカテゴリのタグだけ全件で付け直す（他のタグは残す）
+//   node tools/tags/assign-tags.js --write --fix-negated … 「退職金制度：無」などの否定を拾って付いていたタグだけ全件から外す（他のタグは残す）
 //
 // 判定ルールはスクリプトに埋めていない。タグマスタの「判定キーワード」「判定対象フィールド」の2列を読む。
 //   - 判定キーワードは / 区切りの OR。先頭 ! は除外語（どれかが当たれば付けない）。2文字未満の語は無視。
 //   - 「数値判定：」「列判定：」「区分判定：」「※」で始まる行と「。」を含む行は読み飛ばす。「補助キーワード」行は後ろを読む。
 //   - 英数字だけの語は、前後が英数字でないときだけ一致（LAWS の中の AWS を拾わない）。
+//   - 「退職金制度：無」「客先常駐なし」「リモートワーク：記載なし」のように直後で否定されている一致は数えない（2026-10-20）。
+//     否定された一致しか無いタグは付けない。--fix-negated で、既存タグのうちこの理由で付いていたものだけ外せる。
 //   - 年収・年間休日・残業・従業員数・上場/市場区分・設立年・区分・業界は下の SPECIAL で数値／列から判定する。
 //
 // ★ このリポジトリは Public。トークンは airtable.local.json（.gitignore 済み）か環境変数 AIRTABLE_TOKEN から読む。
@@ -25,6 +28,8 @@ const F_TAG_COUNT = 'fldEKHn2eFzH6qVOR'; // タグマスタ「付与件数」
 
 const args = new Set(process.argv.slice(2));
 const WRITE = args.has('--write'), COUNTS = args.has('--counts');
+/* --fix-negated … 既存タグのうち「否定された一致だけで付いていたタグ」を外す。他のタグ（手で付けたものを含む）は触らない */
+const FIX_NEG = args.has('--fix-negated');
 /* --cat=業界（中分類）,業界（大分類） … そのカテゴリのタグだけ全件で付け直す（他のタグは触らない） */
 const CATS = (process.argv.find(a => a.startsWith('--cat=')) || '').slice(6).split(',').filter(Boolean);
 const ALL = args.has('--all') || CATS.length > 0;
@@ -64,6 +69,7 @@ async function all(table){
     await sleep(210);
   }while(offset);
   process.stdout.write('\n');
+  if(cf){ fs.mkdirSync(path.dirname(cf), { recursive: true }); fs.writeFileSync(cf, JSON.stringify(out), 'utf8'); }
   return out;
 }
 
@@ -94,6 +100,32 @@ function parseKeywords(src){
     (neg ? exc : inc).push(new RegExp(re));
   }
   return { inc, exc };
+}
+
+/* 一致した語の直後が否定か。「退職金制度：無」「客先常駐なし（ワンフロア開発）」「住宅手当：無／家族手当：無」
+   「リモートワーク・時短勤務・副業：求人票上は記載なし」「寮・社宅（無）」「フルリモート不可」を否定とみなす。
+   「住宅手当：有（上限2万円）」「在宅可（週2）※詳細は記載なし」は否定にしない。 */
+/* 「有無」の無・「無料」「無給」「無借金」「無償」「無形」の無・「不可欠」の不可 は否定にしない（実際に誤判定した例） */
+const NEG_TAIL = /^[^\s：:（(）)／/、,。・\n】」]{0,4}\s*(?:[:：]|[（(])?\s*(?:求人票上は|現在は|原則|基本的に)?\s*(?:制度)?(?:は|も)?(?:ほぼ|ほとんど)?(?:(?<!有)無し?(?![料給借償形期限人線理数])|なし|ナシ|不可(?![欠能分避逆思])|ありません|ではない|はない|(?<!と)もない|対象外|NG)(?![いくけ])/;
+const NEG_LINE = /記載(?:は)?(?:なし|無し|ありません|がありません)/;
+const AFFIRM = /有|可|あり|OK|○|◯|完備|支給|導入/;
+function negatedAfter(text, end){
+  const rest = text.slice(end, end + 40).split('\n')[0];
+  if(NEG_TAIL.test(rest)) return true;
+  /* 同じ行の後ろに「記載なし」があり、その手前に肯定語が無い */
+  const seg = rest.split(/[。]/)[0];
+  const m = seg.match(NEG_LINE);
+  return !!(m && !AFFIRM.test(seg.slice(0, m.index)));
+}
+/* 否定されていない一致が1つでもあれば true */
+function hitsNonNegated(re, hay){
+  const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
+  let m;
+  while((m = g.exec(hay))){
+    if(!negatedAfter(hay, m.index + m[0].length)) return true;
+    if(m[0].length === 0) g.lastIndex++;
+  }
+  return false;
 }
 
 /* ---------- 数値・列での判定 ---------- */
@@ -159,21 +191,39 @@ function salaryAtLeast(j, x){ return j.cap != null ? j.cap >= x : (j.low != null
 
   /* ---------- 判定 ---------- */
   const result = new Map();
+  /* negatedOnly: 否定された一致だけで付いていたタグ（--fix-negated で外す対象） */
+  const negatedOnly = new Map();
   for(const j of jobs){
-    const got = new Set();
+    const got = new Set(), negOnly = new Set();
     for(const t of tags){
       if(SPECIAL[t.name]){ if(SPECIAL[t.name](j)) got.add(t.name); continue; }
       if(t.cat === '業界（中分類）'){ if(j.inds.some(i => i.mid === t.name)) got.add(t.name); continue; }
       if(t.cat === '業界（大分類）'){ if(j.inds.some(i => i.big === t.name)) got.add(t.name); continue; }
       const fields = t.targets.length ? t.targets.flatMap(n => TARGET[n] || [n]) : TEXT_FIELDS;
       const hay = fields.map(n => j.text(n)).join('\n');
-      let hit = t.inc.some(re => re.test(hay)) || (EXTRA[t.name] && EXTRA[t.name](j));
+      const extra = !!(EXTRA[t.name] && EXTRA[t.name](j));
+      /* タグ名そのものが否定形（転勤なし・残業ほぼなし・コアタイムなし）なら、語の直後の「なし」は否定ではなく本体 */
+      const negAware = !/なし|無し/.test(t.name);
+      let hit = t.inc.some(re => negAware ? hitsNonNegated(re, hay) : re.test(hay)) || extra;
       if(hit && t.exc.some(re => re.test(hay))) hit = false;
       if(hit) got.add(t.name);
+      else if(!extra && t.inc.some(re => re.test(hay)) && !t.exc.some(re => re.test(hay))) negOnly.add(t.name);
     }
     /* 「未経験から年収400万円以上」は未経験歓迎タグが前提 */
     if(got.has('未経験歓迎') && j.low != null && j.low >= 400) got.add('未経験から年収400万円以上');
     result.set(j.id, [...got]);
+    negatedOnly.set(j.id, negOnly);
+  }
+  if(FIX_NEG){
+    const cnt = {}; let n = 0;
+    for(const j of jobs){
+      const neg = negatedOnly.get(j.id);
+      const keep = j.oldTags.filter(t => !neg.has(t));
+      if(keep.length !== j.oldTags.length){ n++; j.oldTags.filter(t => neg.has(t)).forEach(t => cnt[t] = (cnt[t] || 0) + 1); }
+      result.set(j.id, keep);
+    }
+    console.log(`\n否定された一致だけで付いていたタグ: ${n}件の求人で外します`);
+    Object.entries(cnt).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => console.log(`  ${k}  -${v}`));
   }
 
   /* ---------- 既存タグとの照合（作り直しが元の判定をどこまで再現しているか） ---------- */
@@ -188,6 +238,23 @@ function salaryAtLeast(j, x){ return j.cap != null ? j.cap >= x : (j.low != null
   const worst = Object.entries(per).sort((a, b) => (b[1][0] + b[1][1]) - (a[1][0] + a[1][1])).slice(0, 15);
   if(worst.length) console.log('ずれの大きいタグ（新たに付く / 外れる）:\n' + worst.map(([k, [p, n]]) => `  ${k}  +${p} / -${n}`).join('\n'));
 
+  if(process.env.DEBUG_NEG){
+    /* DEBUG_NEG=タグ名,タグ名… … 否定された一致だけで付いていた求人を、一致した語の前後と一緒に出す（否定判定の確認用）。all で全タグ */
+    const names = process.env.DEBUG_NEG === 'all' ? tags.map(t => t.name) : process.env.DEBUG_NEG.split(',');
+    for(const name of names){
+      const t = tags.find(x => x.name === name); if(!t) continue;
+      const fields = t.targets.length ? t.targets.flatMap(n => TARGET[n] || [n]) : TEXT_FIELDS;
+      const xs = jobs.filter(j => negatedOnly.get(j.id).has(name) && j.oldTags.includes(name)).slice(0, 8);
+      if(!xs.length) continue;
+      console.log(`--- ${name} 否定された一致だけ（${xs.length}件を表示）`);
+      for(const j of xs){
+        const hay = fields.map(n => j.text(n)).join('\n');
+        const ctx = [];
+        for(const re of t.inc){ const g = new RegExp(re.source, 'g'); let m; while((m = g.exec(hay))){ ctx.push(hay.slice(Math.max(0, m.index - 25), m.index + m[0].length + 25).replace(/\n/g, '⏎')); if(ctx.length >= 3) break; } }
+        console.log(j.id, '|', ctx.join(' ‖ '));
+      }
+    }
+  }
   if(process.env.DEBUG_TAG){
     const name = process.env.DEBUG_TAG, t = tags.find(x => x.name === name);
     const fields = t.targets.length ? t.targets.flatMap(n => TARGET[n] || [n]) : TEXT_FIELDS;
@@ -205,14 +272,14 @@ function salaryAtLeast(j, x){ return j.cap != null ? j.cap >= x : (j.low != null
     }
   }
   const same = (a, b) => a.length === b.length && a.every(x => b.includes(x));
-  const targets = jobs.filter(j => CATS.length ? !same(j.oldTags, result.get(j.id)) : (ALL || !j.oldTags.length));
+  const targets = jobs.filter(j => (CATS.length || FIX_NEG) ? !same(j.oldTags, result.get(j.id)) : (ALL || !j.oldTags.length));
   const avg = targets.length ? targets.reduce((s, j) => s + result.get(j.id).length, 0) / targets.length : 0;
   console.log(`\n書き込み対象 ${targets.length}件（${ALL ? '全件' : 'タグが空の求人'}）・1件あたり平均 ${avg.toFixed(1)}タグ`);
   const missing = new Set(); jobs.forEach(j => j.inds.forEach(i => { if(!tagNames.has(i.mid)) missing.add(i.mid); }));
   if(missing.size) console.log(`タグマスタに無い業界（中分類）: ${[...missing].join('、')}（付かない）`);
 
   if(WRITE){
-    const rows = targets.filter(j => ALL || result.get(j.id).length);
+    const rows = targets.filter(j => ALL || FIX_NEG || result.get(j.id).length);
     for(let i = 0; i < rows.length; i += 10){
       await api(`https://api.airtable.com/v0/${BASE}/${T_JOB}`, { method: 'PATCH',
         body: JSON.stringify({ typecast: true, records: rows.slice(i, i + 10).map(j => ({ id: j.id, fields: { [F_TAGS]: result.get(j.id) } })) }) });
@@ -226,7 +293,7 @@ function salaryAtLeast(j, x){ return j.cap != null ? j.cap >= x : (j.low != null
     /* 書き込み後の実際の付き方で数える（書き込まない求人は既存タグのまま） */
     const cnt = {};
     for(const j of jobs){
-      const now = (WRITE && (ALL || !j.oldTags.length)) ? result.get(j.id) : j.oldTags;
+      const now = (WRITE && (ALL || FIX_NEG || !j.oldTags.length)) ? result.get(j.id) : j.oldTags;
       now.forEach(n => cnt[n] = (cnt[n] || 0) + 1);
     }
     const ups = tags.filter(t => (cnt[t.name] || 0) !== t.old);

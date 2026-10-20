@@ -75,6 +75,30 @@ function endDateOf(text){
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+/* ---------- 求職者に見せない文言を落とす（2026-10-20） ----------
+   求人票には媒体・エージェント向けの控えが紛れ込むことがある（例「■募集元情報 求人票更新日：…／企業№：…（パーソルキャリア経由の求人票）」
+   「担当者：○○」「（評価制度の全体像についてはエージェント経由で採用資料を取得し、ご参照ください）」）。
+   本来は Airtable 側で消すが、サイトに出る前の最後の網としてここでも落とす。落としたら件数とIDを表示するので Airtable を直すこと。 */
+const STRIP_PARA = /^[■□◆◇●【]?\s*(募集元情報|媒体情報|エージェント向け|紹介会社向け|エージェント様へ|紹介会社様へ)/;
+const STRIP_LINE = /^\s*(求人票更新日|求人票作成日|求人票№|求人票No|企業№|企業No\.?|企業番号|担当者|募集開始|募集終了|担当RA|担当CA|紹介手数料|手数料|返金規定)\s*[:：]/;
+const STRIP_INLINE = [
+  /[（(][^）)]*(?:エージェント|紹介会社|紹介元)経由[^）)]*[）)]/g,   // （…エージェント経由で採用資料を取得し…）
+  /[（(][^）)]*経由の求人票[）)]/g,                                    // （パーソルキャリア経由の求人票）
+];
+const sanitized = [];
+function sanitize(text, id, key){
+  if(typeof text !== 'string' || !text) return text;
+  const hit = [];
+  let out = text.split(/\n{2,}/).filter(p => { const ng = STRIP_PARA.test(p.trim()); if(ng) hit.push(p.split('\n')[0].trim()); return !ng; }).join('\n\n');
+  out = out.split('\n').filter(l => { const ng = STRIP_LINE.test(l); if(ng) hit.push(l.trim()); return !ng; }).join('\n');
+  for(const re of STRIP_INLINE) out = out.replace(re, m => { hit.push(m); return ''; });
+  if(!hit.length) return text;   // 何も落としていなければ原文のまま（空白の整形もしない）
+  out = out.replace(/[ 　]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  sanitized.push(`${id} ${key}: ${hit.map(h => h.slice(0, 40)).join(' / ')}`);
+  return out || null;
+}
+const TEXT_KEYS = ['title', 'position', 'salaryRaw', 'location', 'workHours', 'holidays', 'benefits', 'jobContent', 'must', 'welcome', 'idealPerson', 'selectionProcess', 'companyInfo'];
+
 async function listAll(table, fields){
   const out = [];
   let offset;
@@ -167,7 +191,12 @@ function flat(v){
     /* 勤務地（都道府県）。⚠ サイトはこの列が入っている求人では本文からの推測をしない */
     const pf = (f[F.prefs] || []).map(x => (typeof x === 'object' ? x.name : x)).filter(Boolean);
     if(pf.length) job.prefs = pf;
+    for(const k of TEXT_KEYS) job[k] = sanitize(job[k], r.id, k);
     jobs.push(job);
+  }
+  if(sanitized.length){
+    console.log(`  ⚠ 媒体・エージェント向けの文言（募集元情報・担当者・企業№ など）を ${sanitized.length}箇所 落としました。Airtable の原文も直してください:`);
+    sanitized.forEach(x => console.log('    ' + x));
   }
 
   if(closed.length) console.log(`  募集停止の求人を ${closed.length}件 除外しました（Airtable の「募集状況」）`);
