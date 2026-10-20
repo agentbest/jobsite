@@ -118,7 +118,7 @@ node rebuild.js     → index.html      … 画面だけ（約280KB）。一覧�
 
 - **正は Airtable。** 見つけたら原文を直す（同日 7件を修正）。
 - `fetch-jobs.js` の `sanitize()` が最後の網として落とし、落とした求人IDと文言をログに名指しする（`STRIP_PARA` / `STRIP_LINE` / `STRIP_INLINE`）。ログに出たら Airtable を直すこと。
-- ⚠ skill・shinsotsu の `fetch-jobs.js` には未反映。
+- skill の `fetch-jobs.js` には同日移植済み（鏡写し）。⚠ shinsotsu には未反映。
 
 ## 募集停止した求人を閉じる（2026-10-11〜）
 
