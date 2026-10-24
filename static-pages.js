@@ -265,6 +265,37 @@ function empList(j){
 /* schema.org の employmentType。契約社員・業務委託は CONTRACTOR、派遣は TEMPORARY */
 const EMP_SCHEMA = {'正社員':'FULL_TIME','契約社員':'CONTRACTOR','業務委託':'CONTRACTOR','無期雇用派遣':'TEMPORARY','派遣社員':'TEMPORARY','アルバイト・パート':'PART_TIME','インターン':'INTERN'};
 function jobName(j){ return j.position || j.jobCategory || j.title || '求人'; }
+/* JobPosting.title 用の求人名（2026-10-25）。Google のしごと検索のガイドラインは title に「職種名だけ」を求め、
+   勤務地・給与・会社名・求人コード・過剰な記号（【東京】◆★！など）を入れないよう求めている（守らないと求人の掲載対象から外れることがある）。
+   求人票の原文は媒体向けの装飾が多いので、構造化データの title だけ機械的に整える。h1・<title> は原文のまま。
+   - 括弧の中を区切り（／・、｜）で分け、勤務地・条件だけの短い部分（PT_ATTR に当たる14文字以下）を落とす。職種名が括弧に入っている求人（【経理】など）は括弧だけ外す
+   - 「　※リモート可」のような空白の後ろの注記、先頭の求人コード（25021【…】）、飾り記号を落とす
+   - 削りすぎて2文字未満になったら原文に戻す */
+const PT_ATTR = /北海道|青森|岩手|宮城|秋田|山形|福島|茨城|栃木|群馬|埼玉|千葉|東京|神奈川|新潟|富山|石川|福井|山梨|長野|岐阜|静岡|愛知|三重|滋賀|京都|大阪|兵庫|奈良|和歌山|鳥取|島根|岡山|広島|山口|徳島|香川|愛媛|高知|福岡|佐賀|長崎|熊本|大分|宮崎|鹿児島|沖縄|札幌|仙台|横浜|川崎|名古屋|神戸|博多|渋谷|新宿|品川|丸の内|大手町|関東|関西|東海|九州|東北|中国・四国|四国|北陸|甲信越|首都圏|全国|勤務|リモート|在宅|テレワーク|上場|プライム|グロース|スタンダード|未経験|経験者|歓迎|急募|募集|中途|新卒|第二新卒|正社員|契約社員|派遣|年収|万円|土日|休日|残業|フレックス|転勤|限定|確約|シニア向け|OK|ＯＫ|可能?$/;
+function postingTitle(j){
+  const raw = String(jobName(j)).replace(/\s+/g, ' ').trim();
+  const s = raw
+    .replace(/\s※.*$/, '')
+    .replace(/^\d{3,}\s*(?=[【\[［<＜])/, '')
+    .replace(/([【\[［〔≪《<＜])([^【\[［〔≪《<＜】\]］〕≫》>＞]{0,80})([】\]］〕≫》>＞])/g, (m, a, body) => {
+      const keep = body.split(/[\/／|｜、,]/).map(x => x.trim()).filter(x => x && !(PT_ATTR.test(x) && [...x].length <= 14));
+      return keep.length ? ` ${keep.join('／')} ` : ' ';
+    })
+    .replace(/[【】\[\]［］〔〕≪≫《》＜＞]/g, ' ')
+    .replace(/[◆◇■□★☆●○◎♪♦！!※]+/g, ' ')
+    .replace(/\s*[\/／|｜_]\s*(?=[\/／|｜]|$)/g, '')
+    .replace(/^[\s\/／|｜・、,_＿-]+|[\s\/／|｜・、,_＿-]+$/g, '')
+    .replace(/\s{2,}/g, ' ').trim();
+  return [...s].length >= 2 ? s : raw;
+}
+/* meta description の頭（2026-10-25）。求人票の本文は同じ会社の求人で冒頭の会社紹介が同じことが多く、
+   本文の頭だけだと description が重複していた（jobs 2,102ページ・skill 1,044ページ）。会社名・求人名・年収・勤務地を先に置いて求人ごとに変える */
+function jobDesc(j, co){
+  const nm = postingTitle(j), loc = locShort(j);
+  const head = `${co}の求人「${[...nm].length > 40 ? [...nm].slice(0, 40).join('') + '…' : nm}」。想定年収${fmtSalary(j)}${loc ? `・勤務地${loc}` : ''}。`;
+  const body = plain(j.jobContent || j.must || j.companyInfo, Math.max(30, 120 - [...head].length));
+  return head + body;
+}
 function jobGroupOf(v){ const m = String(v || '').match(/（([^（）]+)）\s*$/); return m ? m[1] : 'その他'; }
 const CO_TRIM = /^(株式会社|有限会社|合同会社|一般社団法人|特定非営利活動法人)\s*|\s*(株式会社|有限会社|合同会社)$/g;
 function coInitial(name){
@@ -484,7 +515,7 @@ function jobPage(ctx, j, related){
   const datePosted = j.createdAt || (j.recordCreatedAt || '').slice(0, 10) || null;
   const ld = {
     '@context': 'https://schema.org', '@type': 'JobPosting',
-    title: name,
+    title: postingTitle(j),
     description: descHtml || plain(j.companyInfo, 500) || name,
     identifier: { '@type': 'PropertyValue', name: '株式会社エージェントベスト', value: j.id },
     hiringOrganization: Object.assign({ '@type': 'Organization', name: co }, url ? { sameAs: url } : {}),
@@ -497,6 +528,12 @@ function jobPage(ctx, j, related){
   /* 掲載期限（Google のしごと検索の推奨項目）。ビルド日の「翌月末」にする：毎日延ばすと 5,000件超のページが毎朝書き換わるので月1回の更新に抑える。
      掲載が終わった求人はページごと消える（syncDir）ので、期限より先に消えるぶんには問題ない */
   ld.validThrough = VALID_THROUGH;
+  /* フルリモート可の求人は Google の指定どおり jobLocationType=TELECOMMUTE と応募できる国を足す（2026-10-25）。
+     出社日・居住地の条件がある求人もあるので jobLocation（勤務地）は残す（Google は勤務地と併記してよいとしている） */
+  if((j.tags || []).includes('フルリモート可')){
+    ld.jobLocationType = 'TELECOMMUTE';
+    ld.applicantLocationRequirements = { '@type': 'Country', name: 'JP' };
+  }
   if(j.logo) ld.hiringOrganization.logo = `${SITE}/${j.logo}`;
   if(j.salaryMin != null || j.salaryMax != null){
     const v = { '@type': 'QuantitativeValue', unitText: 'YEAR' };
@@ -512,7 +549,7 @@ function jobPage(ctx, j, related){
   ]};
 
   const title = `${name}｜${co}（${fmtSalary(j)}） - エージェントベストジョブ転職`;
-  const desc = plain(j.jobContent || j.must || j.companyInfo, 110) || `${co}の${name}の求人。`;
+  const desc = jobDesc(j, co);
   const crumb = `<a href="/">ホーム</a><span class="sep">›</span>${gslug ? `<a href="/jobs/${gslug}/">${esc(group)}の求人</a><span class="sep">›</span>` : ''}<span class="cur">${esc(name)}</span>`;
   const back = gslug ? `/jobs/${gslug}/` : '/';
   return tpl
