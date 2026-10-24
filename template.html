@@ -1282,8 +1282,8 @@
 <footer class="site-foot">
   <div class="foot__inner">
     <div class="foot__brand">
-      <img class="foot__logo foot__logo--light" src="assets/logo.png" alt="株式会社エージェントベスト" width="508" height="120">
-      <img class="foot__logo foot__logo--dark" src="assets/logo-white.png" alt="" aria-hidden="true" width="508" height="120">
+      <img class="foot__logo foot__logo--light" src="assets/logo.png" alt="株式会社エージェントベスト" width="508" height="120" loading="lazy" decoding="async">
+      <img class="foot__logo foot__logo--dark" src="assets/logo-white.png" alt="" aria-hidden="true" width="508" height="120" loading="lazy" decoding="async">
       <strong>エージェントベストジョブ転職</strong>
       <span>人材紹介サービス「エージェントベスト」が運営しています。ご利用はすべて無料です。</span>
     </div>
@@ -1790,7 +1790,8 @@ TAG_CATS.forEach(cat=>{
   facetDefs.push({
     key:tagFacetKey(cat), title:cat, type:"check", searchable:true,
     collapsible:true, isTag:true, optionList:names.filter(n=>!TAG_SKIP.has(n)),
-    get:j=>jobTags(j).filter(t=>TAG_CAT[t]===cat)
+    /* j._tagsByCat は下の _fv 作成時に1回だけ作る（カテゴリ×求人ごとに全タグを舐め直すと初期表示が重いため。2026-10-25） */
+    get:j=>j._tagsByCat?(j._tagsByCat[cat]||[]):jobTags(j).filter(t=>TAG_CAT[t]===cat)
   });
 });
 
@@ -1805,6 +1806,9 @@ facetDefs.forEach(f=>state.sel[f.key]=new Set());
 const TREE_DEFS=facetDefs.filter(f=>f.type==="tree");
 JOBS.forEach(j=>{
   const fv={};
+  const byCat={};
+  jobTags(j).forEach(t=>{ const c=TAG_CAT[t]; (byCat[c]||(byCat[c]=[])).push(t); });
+  j._tagsByCat=byCat;
   facetDefs.forEach(f=>{
     let vals;
     if(f.type==="tree"){
@@ -2820,7 +2824,7 @@ $("#heroQuick").addEventListener("click",e=>{
   track("filter_use",{filter:"hero_"+k});
 });
 /* リモート可の求人が1件も無いときは、その条件を出さない */
-if(remoteCount>0) $("#hqRemote").hidden=false;
+$("#hqRemote").hidden=!(remoteCount>0);   /* rebuild.js が最初から出しておく。0件なら隠す */
 
 /* ---------- ヒーローの「タグで探す」 ----------
    タグは280個あって左サイドバーの奥にあるので、入口をトップにも置く。
@@ -2832,7 +2836,8 @@ const HERO_TAGS=["フルリモート可","未経験歓迎","年間休日125日�
   const box=$("#heroTags");
   const use=HERO_TAGS.filter(t=>TAG_SLUG[t]&&(TAG_COUNT[t]||0)>0).slice(0,6);
   if(use.length){
-    box.insertAdjacentHTML("beforeend", use.map(t=>
+    /* rebuild.js が HTML に書いてあればそのまま使う（読み込み後に差し込むとヒーローが伸びてレイアウトがずれるため） */
+    if(!box.querySelector("button[data-hq-tag]")) box.insertAdjacentHTML("beforeend", use.map(t=>
       `<button type="button" data-hq-tag="${esc(TAG_SLUG[t])}">${esc(t)} <span class="mono" style="opacity:.7;font-size:11px">${TAG_COUNT[t]}</span></button>`).join(""));
     box.hidden=false;
     box.addEventListener("click",e=>{
