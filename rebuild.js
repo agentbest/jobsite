@@ -432,6 +432,31 @@ function attachIndustryGroups(){
 }
 attachIndustryGroups();
 
+/* ヒーローの「タグで探す」と「リモート可」を HTML に最初から書いておく（2026-10-25・表示速度）。
+   以前はブラウザが求人データ（data/list.json）を読み終えてから差し込んでいたため、
+   その瞬間にヒーローが1段伸びて下の段落が押し下げられていた（CLS 0.12）。
+   中身・件数は template.html の HERO_TAGS ブロックと同じ規則で作る（JS 側は書いてあれば差し込まない）。
+   ⚠ 決め打ちのタグ名リストは template.html の HERO_TAGS が正。ここでは index.html から読み取るだけ。
+   目印の HTML が見つからなければ何もしない（従来どおり JS が差し込む）。 */
+function prerenderHeroTags(html, tags){
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const slugOf = Object.fromEntries(tags.map(t => [t.name, t.slug]));
+  const count = {};
+  jobRows.forEach(j => (j.t || []).forEach(i => { const n = tags[i] && tags[i].name; if(n) count[n] = (count[n] || 0) + 1; }));
+  /* リモート可（template.html の JOBS.forEach と同じ判定：本文の判定 or リモート系タグ） */
+  const REMOTE_TAGS = new Set(['リモート・在宅勤務可', 'フルリモート可', 'ハイブリッド勤務', 'リモート応相談']);
+  const remote = jobRows.some(j => j.remote === true || (j.t || []).some(i => tags[i] && REMOTE_TAGS.has(tags[i].name)));
+  if(remote) html = html.replace('<button type="button" data-hq="remote" id="hqRemote" hidden>', '<button type="button" data-hq="remote" id="hqRemote">');
+  const m = html.match(/const HERO_TAGS=\[([^\]]*)\]/);
+  const MARK = /(<div class="hero__quick" id="heroTags") hidden>(\s*<span class="hero__quick-lbl">タグで探す<\/span>)/;
+  if(!m || !MARK.test(html)) return html;
+  const names = (m[1].match(/"[^"]*"/g) || []).map(x => JSON.parse(x));
+  const use = names.filter(t => slugOf[t] && (count[t] || 0) > 0).slice(0, 6);
+  if(!use.length) return html;
+  const btns = use.map(t => `<button type="button" data-hq-tag="${esc(slugOf[t])}">${esc(t)} <span class="mono" style="opacity:.7;font-size:11px">${count[t]}</span></button>`).join('');
+  return html.replace(MARK, (_, open, label) => open + '>' + label + btns);
+}
+
 function attachTags(){
   const indexPath = path.join(dir, 'index.html');
   if(!fs.existsSync(indexPath)) return;
@@ -439,7 +464,8 @@ function attachTags(){
   let tags = [];
   if(fs.existsSync(tagPath)) tags = JSON.parse(fs.readFileSync(tagPath, 'utf8'));
   else console.log('data/tags.json が無いので、タグの絞り込みは出しません（node fetch-tags.js）。');
-  const html = fs.readFileSync(indexPath, 'utf8').replace('__TAGS_DATA__', () => embed(tags));
+  let html = fs.readFileSync(indexPath, 'utf8').replace('__TAGS_DATA__', () => embed(tags));
+  html = prerenderHeroTags(html, tags);
   fs.writeFileSync(indexPath, html, 'utf8');
   if(!tags.length) return;
   /* 目録にあるのに、どの求人にも付いていないタグを名指しで出す。
