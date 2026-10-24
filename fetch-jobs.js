@@ -87,12 +87,37 @@ const STRIP_INLINE = [
   /[（(][^）)]*(?:エージェント|紹介会社|紹介元)経由[^）)]*[）)]/g,   // （…エージェント経由で採用資料を取得し…）
   /[（(][^）)]*経由の求人票[）)]/g,                                    // （パーソルキャリア経由の求人票）
 ];
+// タイトルに付く媒体向けの括り（【面接確約条件あり】※面接確約※ など）。タイトル・職種名だけに当てる
+const STRIP_TITLE = [
+  /[◆■]?[【＜<][ 　]*★?面[接談]確約(?:条件)?(?:あり)?★?[ 　]*[】＞>][ 　]*/g,
+  /※[ 　]*面[接談]確約(?:条件)?(?:あり)?[ 　]*※[ 　]*/g,
+  /^面[接談]確約条件あり[ 　]*/g,
+];
+// 面談確約・面接確約の条件（媒体向け。例「＜面談確約条件＞ 年齢：35歳以下／面接確約継続条件：…5推薦以上…」backlog #35）。
+// 見出しの段落と、直後の「項目：値」だけの段落を丸ごと落とす。本文中の「面接確約」を含む行も落とす（タイトルは上の STRIP_INLINE で括りだけ外す）
+const STRIP_KAKUYAKU = /^[＜<【■◆●★※]?\s*面[接談]確約(?:条件|継続条件)?[＞>】]?\s*$/;
+const STRIP_KAKUYAKU_LINE = /面[接談]確約/;
 const sanitized = [];
 function sanitize(text, id, key){
   if(typeof text !== 'string' || !text) return text;
   const hit = [];
-  let out = text.split(/\n{2,}/).filter(p => { const ng = STRIP_PARA.test(p.trim()); if(ng) hit.push(p.split('\n')[0].trim()); return !ng; }).join('\n\n');
-  out = out.split('\n').filter(l => { const ng = STRIP_LINE.test(l) || STRIP_NOTE.test(l.trim()); if(ng) hit.push(l.trim()); return !ng; }).join('\n');
+  const oneLine = key === 'title' || key === 'position';
+  let out = text;
+  if(oneLine) for(const re of STRIP_TITLE) out = out.replace(re, m => { hit.push(m); return ''; });
+  const paras = out.split(/\n{2,}/), kept = [];
+  for(let i = 0; i < paras.length; i++){
+    const p = paras[i].trim();
+    if(STRIP_KAKUYAKU.test(p)){
+      hit.push(p);
+      const next = (paras[i + 1] || '').trim();
+      if(next && next.split('\n').every(l => /^[^：:\n]{1,12}[：:]/.test(l.trim()))){ hit.push(next.split('\n')[0]); i++; }
+      continue;
+    }
+    if(STRIP_PARA.test(p)){ hit.push(p.split('\n')[0]); continue; }
+    kept.push(paras[i]);
+  }
+  out = kept.join('\n\n');
+  out = out.split('\n').filter(l => { const ng = STRIP_LINE.test(l) || STRIP_NOTE.test(l.trim()) || (!oneLine && STRIP_KAKUYAKU_LINE.test(l)); if(ng) hit.push(l.trim()); return !ng; }).join('\n');
   for(const re of STRIP_INLINE) out = out.replace(re, m => { hit.push(m); return ''; });
   if(!hit.length) return text;   // 何も落としていなければ原文のまま（空白の整形もしない）
   out = out.replace(/[ 　]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
