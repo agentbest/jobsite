@@ -119,6 +119,7 @@ node rebuild.js     → index.html      … 画面だけ（約280KB）。一覧�
 - **正は Airtable。** 見つけたら原文を直す（同日 7件を修正）。
 - `fetch-jobs.js` の `sanitize()` が最後の網として落とし、落とした求人IDと文言をログに名指しする（`STRIP_PARA` / `STRIP_LINE` / `STRIP_INLINE`）。ログに出たら Airtable を直すこと。
 - skill の `fetch-jobs.js` には同日移植済み（鏡写し）。⚠ shinsotsu には未反映。
+- **面接確約・面談確約の条件も落とす**（2026-10-25・backlog #35）。「＜面談確約条件＞」の見出し段落＋直後の「項目：値」だけの段落（年齢・社数・〇推薦以上）、本文で「面接確約／面談確約」を含む行、タイトル・職種名の【面接確約条件あり】※面接確約※ などの括り（`STRIP_KAKUYAKU` / `STRIP_TITLE`）。Airtable の原文は未修正（19項目。ログに名指しされる）。
 
 ## 募集停止した求人を閉じる（2026-10-11〜）
 
