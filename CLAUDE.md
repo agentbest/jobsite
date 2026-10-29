@@ -556,7 +556,7 @@ SQL・管理画面・ウェブフック・Apps Script はそのまま1本で両�
 
 - ⚠ **ロゴを `data/jobs.json` に書かない。** jobs.json は Airtable から取り直すたび丸ごと入れ替わるスナップショットなので、書くと毎回消える。対応表は `data/logos.json`（企業名 → パス）に分けてある
 - ⚠ **同じ社名の別会社（シンカ・MIC・グリッドなど）は `logos.json` のキーをレコードID（`rec...`）にする**（2026-10-29）。社名のキーは1社ぶんしか持てないため。`attachLogos()` と company-pages.js はレコードIDのキーを先に見る。`fetch-logos.js` も同名レコードはレコードIDで書く。
-  thinca・mic-p・e-xtreme・gridpredict・medrt の5社は各社サイトのヘッダー/フッターのロゴを直接取り込んだ（Airtable のロゴ列は空のまま）。gridpredict.svg は白抜きの原本を `#1a1a1a` に塗り替えてある
+  thinca・mic-p・e-xtreme・gridpredict・medrt の5社は各社サイトのヘッダー/フッターのロゴを直接取り込んだ（同日 Airtable のロゴ列にも同じ画像を登録済み。fetch-logos.js を回しても同じファイル名で戻る）。gridpredict.svg は白抜きの原本を `#1a1a1a` に塗り替えてある
 - ⚠ **外部の favicon サービス（`google.com/s2/favicons` 等）は使わない。** 訪問者がどの求人を見たかが第三者に渡る。シェアボタンで外部SDKを避けているのと同じ理由
 - ⚠ **Airtable の添付URLは数時間で失効する。** 静的サイトから直接参照できないので、必ず画像をリポジトリに取り込む
 - 企業名の**完全一致**で引いている。Airtable で社名を直したら `logos.json` も直す（黙って頭文字タイルに戻る）
