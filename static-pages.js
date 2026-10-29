@@ -797,7 +797,10 @@ function build(root, full){
   fs.writeFileSync(path.join(root, 'sitemap.xml'), xml, 'utf8');
   /* data/（求人JSON）と assets/ は検索結果に出しても意味が無いので除外する */
   /* data/list.json だけは検索画面（index.html）の描画に要るので Googlebot に許可する（2026-09-21〜） */
-  fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nAllow: /data/list.json\nAllow: /data/companies-list.json\nDisallow: /data/\n\nSitemap: ${SITE}/sitemap.xml\nSitemap: ${SITE}/media/sitemap.xml\n`, 'utf8');
+  /* 応募フォーム（apply.html?job=…）と検索画面の ?job= / ?cat= 付きURLは、どれも canonical で apply.html・トップに
+     まとめられるだけのURL。求人数だけ増えてクロールを食うので巡回させない（2026-10-29、GSCの代替ページ約2,000件）。
+     「/?」はクエリ付きのトップだけに当たり、トップ自体（/）と /data/list.json は対象外 */
+  fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nAllow: /data/list.json\nAllow: /data/companies-list.json\nDisallow: /data/\nDisallow: /apply.html\nDisallow: /?\n\nSitemap: ${SITE}/sitemap.xml\nSitemap: ${SITE}/media/sitemap.xml\n`, 'utf8');
   console.log(`sitemap.xml を書き出しました: ${urls.length} URL`);
 }
 
