@@ -17,6 +17,12 @@ function norm(s){
     .replace(/(株式会社|有限会社|合同会社|合資会社|一般社団法人|一般財団法人|公益財団法人|\(株\)|co\.,? ?ltd\.?|inc\.?|corporation|corp\.?|k\.k\.)/g, '')
     .replace(/[\s・.,\-‐－&＆'’]/g, '');   // ⚠ 長音「ー」は消さない（アルー/アール が同じになる）
 }
+/* norm() から小文字化だけ外したもの。同名候補の絞り込みにだけ使う */
+function normCase(s){
+  return String(s || '').normalize('NFKC')
+    .replace(/(株式会社|有限会社|合同会社|合資会社|一般社団法人|一般財団法人|公益財団法人|\(株\)|Co\.,? ?Ltd\.?|Inc\.?|Corporation|Corp\.?|K\.K\.)/gi, '')
+    .replace(/[\s・.,\-‐－&＆'’]/g, '');
+}
 
 (async () => {
   let idx;
@@ -37,9 +43,12 @@ function norm(s){
   let miss = 0;
   const ambiguous = [];
   articles.forEach(([slug, title, , , , name]) => {
-    const cs = byNorm.get(norm(name));
+    let cs = byNorm.get(norm(name));
     if(!cs){ miss++; return; }
-    /* 社名が同じ（または正規化すると同じ）会社が複数あるときは、どの会社の記事か社名だけでは決められないので付けない。
+    /* 正規化すると同じになる会社が複数あるときは、大文字小文字まで見て1社に絞れればその会社に付ける
+       （記事「HAL」→ 株式会社HAL。株式会社Hal は別会社。2026-10-29） */
+    if(cs.length > 1){ const exact = cs.filter(c => normCase(c.name) === normCase(name)); if(exact.length === 1) cs = exact; }
+    /* それでも絞れないときは、どの会社の記事か社名だけでは決められないので付けない。
        同じ会社の二重登録は 2026-10-29 に Airtable 側で統合済み。残っているのはグリッド・シンカのような別会社 */
     if(cs.length > 1){ ambiguous.push(`${name}（${cs.length}社）`); return; }
     out[cs[0].id] = [slug, title];
