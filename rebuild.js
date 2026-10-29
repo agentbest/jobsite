@@ -162,6 +162,16 @@ function applyFirstSeen(jobs){
   return jobs;
 }
 
+/* data/companies.json を読んで { byId, isDupName } を返す。
+   ロゴ・従業員数は社名で引くが、同じ社名の別会社（グリッド・シンカ・MRT など。2026-10-29 から別ページ）は社名では決まらないので、
+   その求人だけは会社リンク（companyId）で企業レコードを引く。 */
+function loadCompanies(){
+  const coPath = path.join(dir, 'data', 'companies.json');
+  const byId = new Map(), nameCount = new Map();
+  if(fs.existsSync(coPath)) JSON.parse(fs.readFileSync(coPath, 'utf8')).forEach(c => { byId.set(c.id, c); nameCount.set(c.name, (nameCount.get(c.name) || 0) + 1); });
+  return { byId, isDupName: name => nameCount.get(name) > 1 };
+}
+
 /* 企業ロゴ。Airtable「求人DB（企業）」の ロゴ 列から取り込んだ画像を、
    data/logos.json（企業名 → リポジトリ内のパス）経由で求人1件ずつに差し込む。
    ⚠ ロゴを jobs.json 側に書かないのは、jobs.json が Airtable からの
@@ -183,12 +193,19 @@ function attachLogos(jobs){
     if(fs.existsSync(path.join(dir, rel))) usable[company] = rel;
     else console.log(`⚠ ロゴ画像が見つかりません（頭文字タイルにします）: ${company} → ${rel}`);
   }
+  /* 同名の会社では、ロゴのファイル名（fetch-logos.js が企業IDで付ける）と求人の会社の企業IDが一致するときだけ付ける */
+  const { byId, isDupName } = loadCompanies();
+  const stem = rel => path.basename(rel).replace(/\.[^.]*$/, '');
   let hit = 0;
   const missing = new Set();
   jobs.forEach(j => {
-    const rel = usable[j.company];
+    let rel = usable[j.company];
+    if(rel && isDupName(j.company)){ const c = j.companyId && byId.get(j.companyId); if(!c || stem(rel) !== (c.cid || '').toLowerCase()) rel = null; }
     if(rel){ j.logo = rel; hit++; }
-    else if(j.company) missing.add(j.company);
+    else{
+      delete j.logo;   /* data/jobs/*.json から復元したときに前回のロゴが残らないように */
+      if(j.company) missing.add(j.company);
+    }
   });
   console.log(`企業ロゴ: ${hit}件の求人に表示（${Object.keys(usable).length}社）`);
   if(missing.size){
@@ -214,11 +231,14 @@ function attachEmployees(jobs){
     return jobs;
   }
   const emp = JSON.parse(fs.readFileSync(empPath, 'utf8'));
+  const { byId, isDupName } = loadCompanies();
   let hit = 0, withNum = 0;
   const missing = new Set(), noNum = new Set();
   jobs.forEach(j => {
-    /* 値は {raw, n}。昔の「企業名 → 原文の文字列」だけの形も読めるようにしてある */
-    const v = emp[j.company];
+    /* 値は {raw, n}。昔の「企業名 → 原文の文字列」だけの形も読めるようにしてある。
+       同名の別会社は社名で引くと他社の人数になるので、会社リンクの企業レコードの値を使う */
+    const co = isDupName(j.company) && j.companyId && byId.get(j.companyId);
+    const v = isDupName(j.company) ? (co && (co.employees || co.employeeCount != null) ? { raw: co.employees, n: co.employeeCount } : null) : emp[j.company];
     if(!v){ if(j.company) missing.add(j.company); return; }
     const o = (typeof v === 'string') ? { raw: v } : v;
     if(o.raw){ j.employees = o.raw; hit++; }
@@ -245,7 +265,7 @@ function attachIndustry(jobs){
   const coPath = path.join(dir, 'data', 'companies.json');
   if(!fs.existsSync(coPath)) return jobs;
   const byId = new Map();
-  JSON.parse(fs.readFileSync(coPath, 'utf8')).forEach(c => { byId.set(c.id, c); (c.aliases || []).forEach(a => byId.set(a, c)); });
+  JSON.parse(fs.readFileSync(coPath, 'utf8')).forEach(c => byId.set(c.id, c));
   let changed = 0;
   jobs.forEach(j => {
     const c = j.companyId && byId.get(j.companyId);

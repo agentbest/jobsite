@@ -35,12 +35,16 @@ function norm(s){
   companies.forEach(c => { const k = norm(c.name); if(!byNorm.has(k)) byNorm.set(k, []); byNorm.get(k).push(c); });
   const out = {};
   let miss = 0;
+  const ambiguous = [];
   articles.forEach(([slug, title, , , , name]) => {
     const cs = byNorm.get(norm(name));
     if(!cs){ miss++; return; }
-    /* 「AI inside 株式会社」「AI inside株式会社」のような二重登録は、どれにも同じ記事を付ける */
-    cs.forEach(c => { out[c.id] = [slug, title]; });
+    /* 社名が同じ（または正規化すると同じ）会社が複数あるときは、どの会社の記事か社名だけでは決められないので付けない。
+       同じ会社の二重登録は 2026-10-29 に Airtable 側で統合済み。残っているのはグリッド・シンカのような別会社 */
+    if(cs.length > 1){ ambiguous.push(`${name}（${cs.length}社）`); return; }
+    out[cs[0].id] = [slug, title];
   });
+  if(ambiguous.length) console.log(`⚠ 同じ社名の会社が複数あるため記事を付けなかった企業記事 ${ambiguous.length}本: ${ambiguous.join(', ')}`);
   fs.writeFileSync(OUT, JSON.stringify(out));
   /* 職種ごとの選考対策記事。slug が {ハブ}-resume / -interview / -motivation / -salary で揃っている（media-gen の命名規則） */
   const KIND = { resume: '職務経歴書', interview: '面接対策', motivation: '志望動機', salary: '年収相場' };

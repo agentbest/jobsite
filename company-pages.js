@@ -11,7 +11,7 @@
 //   求人は企業ページの中の「募集中の求人」欄として付け外しされるだけ。
 //
 // ⚠ 企業ページの URL は /company/<Airtable のレコードID>/。レコードを作り直すと URL が変わる（評価がリセットされる）。
-//    同じ社名のレコードが複数あるときは fetch-companies.js が1社にまとめ、他のレコードIDは aliases に残す。
+//    1レコード＝1ページ。同じ社名の別会社は、タイトル・見出しに本社の市区町村を添えて見分ける（label）。
 // ⚠ 生成物（company/）は直接編集しない。次の rebuild で消える。
 const fs = require('fs'), path = require('path');
 
@@ -51,19 +51,40 @@ function build(root, ctx, full, H){
   /* 転職メディアの企業記事（node fetch-media-companies.js が作る { 企業レコードID: [slug, title] }）。無ければリンクを出さないだけ */
   const mediaFile = path.join(root, 'data', 'media-companies.json');
   const mediaCo = fs.existsSync(mediaFile) ? JSON.parse(fs.readFileSync(mediaFile, 'utf8')) : {};
-  const mediaOf = c => (c && (mediaCo[c.id] || (c.aliases || []).map(a => mediaCo[a]).find(Boolean))) || null;
+  const mediaOf = c => (c && mediaCo[c.id]) || null;
   const mediaHref = (m, medium) => `https://www.agent-best.net/media/${encodeURIComponent(m[0])}/?utm_source=jobs&utm_medium=${medium}`;
   const PREFS = Object.keys(PREF_SLUG);
+  /* 同じ社名の別会社（グリッド・シンカ・MRT など。fetch-companies.js はまとめない）。
+     ページのタイトル・見出し・一覧では本社の市区町村を添えて見分ける。
+     ロゴ（data/logos.json）は社名で引くので、同名の会社では「ロゴのファイル名＝企業ID」の会社にだけ付ける
+     （fetch-logos.js はロゴの入ったレコードの企業IDをファイル名にする）。 */
+  const nameCount = new Map();
+  allCompanies.forEach(c => nameCount.set(c.name, (nameCount.get(c.name) || 0) + 1));
+  const isDupName = name => nameCount.get(name) > 1;
   const byId = new Map(), byName = new Map();
   allCompanies.forEach(c => {
     c.jobs = [];
     c.company = c.name;                                   /* logoHtml / coInitial が j.company を見るため */
-    if(logos[c.name] && fs.existsSync(path.join(root, logos[c.name]))) c.logo = logos[c.name];
+    const logo = logos[c.name];
+    if(logo && fs.existsSync(path.join(root, logo)) && (!isDupName(c.name) || path.basename(logo).replace(/\.[^.]*$/, '') === (c.cid || '').toLowerCase())) c.logo = logo;
     /* 本社都道府県が空でも住所が「山形県…」なら県は分かる */
     if(!c.pref && c.addr){ const p = PREFS.find(p => c.addr.startsWith(p)); if(p) c.pref = p; }
-    byId.set(c.id, c); (c.aliases || []).forEach(a => byId.set(a, c));
-    if(!byName.has(c.name)) byName.set(c.name, c);
+    byId.set(c.id, c);
+    if(!isDupName(c.name)) byName.set(c.name, c);
   });
+  /* 「〒107-0061 東京都港区北青山3-6-7…」→「東京都港区」（town=true なら「東京都港区北青山」）。読めなければ都道府県だけ */
+  const placeOf = (c, town) => {
+    const m = String(c.addr || '').replace(/^〒?\s*\d{3}-?\d{4}\s*/, '').match(/^(東京都|北海道|(?:京都|大阪)府|.{2,3}県)(.+?[市区町村])([^\d０-９\s]*)/);
+    return m ? m[1] + m[2] + (town ? m[3] : '') : (c.pref || '');
+  };
+  /* 同名の会社どうしで市区町村まで同じ（TRUST はどちらも新宿区）なら町名まで出す */
+  const placeCount = new Map();
+  allCompanies.forEach(c => { if(isDupName(c.name)){ const k = c.name + '\t' + placeOf(c); placeCount.set(k, (placeCount.get(k) || 0) + 1); } });
+  const label = c => {
+    if(!isDupName(c.name)) return c.name;
+    const p = placeCount.get(c.name + '\t' + placeOf(c)) > 1 ? placeOf(c, true) : placeOf(c);
+    return p ? `${c.name}（${p}）` : c.name;
+  };
   /* 求人 → 企業。会社リンクのレコードID（companyId）が正。無い古いデータは社名の完全一致で引く */
   const coOf = j => (j.companyId && byId.get(j.companyId)) || (j.company && byName.get(j.company)) || null;
   const orphan = new Set();
@@ -92,6 +113,7 @@ function build(root, ctx, full, H){
   /* ---------- 企業1社のページ ---------- */
   function companyPage(c){
     const canon = SITE + coPath(c);
+    const nm = label(c);   /* タイトル用。同名の別会社なら「株式会社シンカ（東京都千代田区）」 */
     const n = c.jobs.length;
     const jobs = sortForList(c.jobs);
     const sal = salRange(c);
@@ -137,7 +159,7 @@ function build(root, ctx, full, H){
       ? `<div class="pd-sec" id="near"><h2>${nearIndustry ? esc(nearIndustry) + 'で' : '同じ業界で'}募集中の求人</h2><p class="co-txt">${esc(c.name)}と同じ業界の企業で、いま募集している求人です。${nearSamePref ? `${esc(c.pref)}の求人を先に並べています。` : ''}</p>
          <div class="joblist">${near.map(j => cardHtml(ctx, j)).join('')}</div></div>`
       : '';
-    const main = `<div class="co-head">${logoHtml(c, 'jrow__logo--lg')}<div class="co-head__txt"><h1>${esc(c.name)}</h1>
+    const main = `<div class="co-head">${logoHtml(c, 'jrow__logo--lg')}<div class="co-head__txt"><h1>${esc(label(c))}</h1>
         ${c.tagline ? `<p class="co-head__tag">${esc(c.tagline)}</p>` : ''}
         <div class="co-head__chips">${chip((c.industry || [])[0])}${chip(c.pref)}${chip(c.size)}${chip(listedLabel(c) === '非上場' ? '' : listedLabel(c), 'tag--cat')}</div></div></div>
       <ul class="lp__stats"><li><b>${n.toLocaleString()}</b>件 募集中</li>${sal ? `<li>想定年収 <b>${esc(sal)}</b></li>` : ''}${c.employeeCount ? `<li>従業員数 <b>${c.employeeCount.toLocaleString()}</b>名</li>` : ''}</ul>
@@ -146,14 +168,14 @@ function build(root, ctx, full, H){
       ${meta ? `<div class="pd-sec"><h2>基本情報</h2><dl class="pd-meta">${meta}</dl></div>` : ''}
       <div class="pd-sec" id="jobs"><h2>${esc(c.name)}の求人（${n.toLocaleString()}件）</h2>${jobsSec}</div>
       ${nearSec}
-      ${rel.length ? `<div class="pd-sec"><h2>同じ業界の企業</h2><div class="lp__pills">${rel.map(x => `<a href="${esc(coPath(x))}">${esc(x.name)}<b>${x.jobs.length}</b></a>`).join('')}</div>
+      ${rel.length ? `<div class="pd-sec"><h2>同じ業界の企業</h2><div class="lp__pills">${rel.map(x => `<a href="${esc(coPath(x))}">${esc(label(x))}<b>${x.jobs.length}</b></a>`).join('')}</div>
         <div class="pd-more">${(c.industryCode || [])[0] != null ? `<a href="${esc(indPath(c.industryCode[0]))}">${esc((c.industry || [])[0])}の企業一覧</a>` : ''}${(c.industryBigCode || [])[0] != null ? `<a href="${esc(bigPath(c.industryBigCode[0]))}">${esc((c.industryBig || [])[0])}の企業一覧</a>` : ''}</div></div>` : ''}
       ${mediaOf(c) ? `<div class="pd-sec"><h2>${esc(c.name)}への転職ガイド</h2><p class="co-txt">評判・年収・働き方・選考対策を、公開情報をもとに整理した記事です。</p>
         <div class="pd-more"><a href="${esc(mediaHref(mediaOf(c), 'company'))}">${esc(mediaOf(c)[1])}（転職メディア）</a></div></div>` : ''}
       <div class="lp__cta"><h2>${esc(c.name)}への転職を相談する</h2><p>この企業の求人の背景や選考の傾向など、公開情報にないところからお話しします。掲載していない非公開求人がある場合もあります。まだ転職を決めていない段階でもかまいません。ご利用は無料です。</p>
         <div class="pd-cta"><a class="btn-apply" href="/${esc(C.APPLY_PAGE)}" data-apply="">転職支援に申し込む（無料）</a><a class="btn-ghost" href="${esc(consultUrl(c))}" target="_blank" rel="noopener">まず話だけ聞いてみる</a><a class="line-btn" href="${esc(C.LINE_ADD_URL)}" target="_blank" rel="noopener noreferrer" data-line-cta="static-company">${C.LINE_ICON}<span>LINEで相談する</span></a></div></div>
       <p class="co-note">企業情報は公開情報をもとに当社が作成しています。求人は毎日更新され、募集が終了した求人は表示されなくなります。内容に誤りがある場合は<a href="https://www.agent-best.net/contact" target="_blank" rel="noopener">お問い合わせ</a>からお知らせください。</p>`;
-    const crumb = `<a href="/">ホーム</a><span class="sep">›</span><a href="/company/">企業一覧</a><span class="sep">›</span><span class="cur">${esc(c.name)}</span>`;
+    const crumb = `<a href="/">ホーム</a><span class="sep">›</span><a href="/company/">企業一覧</a><span class="sep">›</span><span class="cur">${esc(label(c))}</span>`;
     const org = { '@type': 'Organization', name: c.name, url: url || canon, description: plain(c.overview || c.biz, 300) || undefined };
     if(c.addr || c.pref) org.address = Object.assign({ '@type': 'PostalAddress', addressCountry: 'JP' }, c.pref ? { addressRegion: c.pref } : {}, c.addr ? { streetAddress: c.addr } : {});
     const fd = foundingDate(c.founded); if(fd) org.foundingDate = fd;
@@ -164,17 +186,17 @@ function build(root, ctx, full, H){
       { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'ホーム', item: SITE + '/' },
         { '@type': 'ListItem', position: 2, name: '企業一覧', item: SITE + '/company/' },
-        { '@type': 'ListItem', position: 3, name: c.name, item: canon } ] },
+        { '@type': 'ListItem', position: 3, name: label(c), item: canon } ] },
     ]};
     /* 0件の会社は「（募集中0件）」をタイトルに出さない（検索結果で見て踏む理由が無くなるため）。同業界の求人を載せていることを書く */
     const title = n
-      ? `${c.name}の会社概要・転職/求人情報（募集中${n}件） - エージェントベストジョブ転職`
-      : `${c.name}の会社概要・転職情報${near.length ? '｜同業界の求人' : ''} - エージェントベストジョブ転職`;
+      ? `${nm}の会社概要・転職/求人情報（募集中${n}件） - エージェントベストジョブ転職`
+      : `${nm}の会社概要・転職情報${near.length ? '｜同業界の求人' : ''} - エージェントベストジョブ転職`;
     const descHead = plain(c.overview || c.biz, 90);
     const desc = `${descHead ? descHead + ' ' : ''}${c.name}の会社概要（${[c.pref, listedLabel(c), c.size && `従業員${c.size}`].filter(Boolean).join('・')}）と${n ? `募集中の求人${n}件${sal ? `（想定年収${sal}）` : ''}` : near.length ? `、同じ業界で募集中の求人${near.length}件` : '転職情報'}。転職支援は無料です。`;
     return tpl
-      .replace('__TITLE__', () => esc(title.length > 70 ? (n ? `${c.name}の会社概要・求人（${n}件） - エージェントベスト` : `${c.name}の会社概要・転職情報 - エージェントベスト`) : title))
-      .replace(/__OGTITLE__/g, () => esc(n ? `${c.name}の会社概要・転職/求人情報（募集中${n}件）` : `${c.name}の会社概要・転職情報`))
+      .replace('__TITLE__', () => esc(title.length > 70 ? (n ? `${nm}の会社概要・求人（${n}件） - エージェントベスト` : `${nm}の会社概要・転職情報 - エージェントベスト`) : title))
+      .replace(/__OGTITLE__/g, () => esc(n ? `${nm}の会社概要・転職/求人情報（募集中${n}件）` : `${nm}の会社概要・転職情報`))
       .replace(/__DESC__/g, () => esc(desc))
       .replace(/__CANON__/g, () => esc(canon))
       .replace('__JSONLD__', () => JSON.stringify(ld).replace(/<\//g, '<\\/'))
@@ -205,7 +227,7 @@ function build(root, ctx, full, H){
   });
   const bigsSorted = [...byBigCode.entries()].sort((x, y) => y[1].list.length - x[1].list.length);
   const midsOf = bc => [...byMid.entries()].filter(([code]) => midToBig.get(code) === bc).sort((x, y) => y[1].list.length - x[1].list.length);
-  const rowHtml = c => `<li data-p="${esc(c.pref || '')}" data-s="${esc(c.size || '')}" data-l="${esc(c.listed || '')}" data-j="${c.jobs.length}"><div class="co-list__txt"><a class="co-list__name" href="${esc(coPath(c))}">${esc(c.name)}</a><div class="co-list__meta">${esc([(c.industry || [])[0], c.pref, c.size, listedLabel(c) === '非上場' ? '' : listedLabel(c)].filter(Boolean).join(' · '))}</div></div><span class="co-list__n">${c.jobs.length ? `<b>${c.jobs.length}</b>件募集中` : '募集なし'}</span></li>`;
+  const rowHtml = c => `<li data-p="${esc(c.pref || '')}" data-s="${esc(c.size || '')}" data-l="${esc(c.listed || '')}" data-j="${c.jobs.length}"><div class="co-list__txt"><a class="co-list__name" href="${esc(coPath(c))}">${esc(label(c))}</a><div class="co-list__meta">${esc([(c.industry || [])[0], c.pref, c.size, listedLabel(c) === '非上場' ? '' : listedLabel(c)].filter(Boolean).join(' · '))}</div></div><span class="co-list__n">${c.jobs.length ? `<b>${c.jobs.length}</b>件募集中` : '募集なし'}</span></li>`;
   const ctaHtml = placement => `<div class="lp__cta"><h2>気になる企業が見つからないときは</h2><p>掲載していない企業・非公開求人も含めて、希望に近いところを個別にお探しします。まだ転職を決めていない段階でもかまいません。ご利用は無料です。</p>
         <div class="pd-cta"><a class="btn-apply" href="/${esc(C.APPLY_PAGE)}" data-apply="">転職支援に申し込む（無料）</a><a class="btn-ghost" href="${esc(C.CONSULT_URL)}" target="_blank" rel="noopener">まず話だけ聞いてみる</a><a class="line-btn" href="${esc(C.LINE_ADD_URL)}" target="_blank" rel="noopener noreferrer" data-line-cta="${esc(placement)}">${C.LINE_ICON}<span>LINEで相談する</span></a></div></div>`;
   const PREFS_ALL = PREFS.concat('海外');
@@ -367,7 +389,7 @@ function build(root, ctx, full, H){
       crumbs: b ? [[b.name, bigPath(bc)], [m.name, indPath(code)]] : [[m.name, indPath(code)]], main, script: listScript });
   }
   /* 絞り込み用の軽い表 [id, 社名, 業種(中分類), 業界(大分類), 本社, 企業規模, 上場区分, 募集中件数] */
-  const listJson = JSON.stringify(companies.slice().sort(rank).map(c => [c.id, c.name, (c.industry || [])[0] || '', (c.industryBig || [])[0] || '', c.pref || '', c.size || '', c.listed || '', c.jobs.length]));
+  const listJson = JSON.stringify(companies.slice().sort(rank).map(c => [c.id, label(c), (c.industry || [])[0] || '', (c.industryBig || [])[0] || '', c.pref || '', c.size || '', c.listed || '', c.jobs.length]));
   fs.writeFileSync(path.join(root, 'data', 'companies-list.json'), listJson, 'utf8');
 
   const coRoot = path.join(root, 'company');

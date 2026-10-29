@@ -36,7 +36,6 @@ const F = {
   listed:        'flduxB9dU2zsuElsv', // 上場区分
   market:        'fldlO5BmafTWiiQqG', // 市場区分
   industry:      'fldMKCvGbSltNTdjy', // 業界カテゴリ（企業）→ 名前に解決する
-  jobs:          'fldobp7GCOtEGxdND', // 求人DB（求人票）のリンク（重複社名の主レコードを決めるのに使う）
   updatedAt:     'fldqMaa2nzZvOkD0I', // 最終更新日時（sitemap の lastmod）
 };
 
@@ -121,46 +120,28 @@ const str = v => (v == null ? '' : String(Array.isArray(v) ? v[0] : (typeof v ==
       industryBigCode: [...new Set((f[F.industry] || []).map(id => (indName.get(id) || {}).bigCode).filter(v => v != null))],
       industryMidBig: (f[F.industry] || []).map(id => indName.get(id)).filter(x => x && x.code != null).map(x => [x.code, x.bigCode]),   // 中code → 大code（業界ページの親子。会社の並び順に依存しないように対で持つ）
       updatedAt: String(f[F.updatedAt] || r.createdTime || '').slice(0, 10) || null,
-      _jobs: (f[F.jobs] || []).length,
     };
     return c;
   }).filter(c => c.name);
 
-  /* 同じ社名のレコードが複数ある（2026-09-21 時点で48社）。ページは1社1枚にしたいので、
-     求人のリンクが多いレコードを主にして、空いている項目だけ他のレコードから埋める。
-     主にならなかったレコードの ID は aliases に残す（求人側の会社リンクがそちらを向いていても企業ページに辿れるように）。 */
+  /* 1レコード＝1社。社名が同じでもまとめない（2026-10-29）。
+     以前は同じ社名のレコードを1社にまとめていたが、同じ会社の重複は Airtable 側で統合し終えた（74組）。
+     残っている同名レコードは「グリッド」「シンカ」「MRT」のような別会社なので、まとめると他社の求人・ロゴ・会社概要が混ざる。
+     同名の会社は company-pages.js が本社の市区町村を添えて見分けられるようにする。
+     ⚠ 同じ会社のレコードが新たに重複したときは、下の一覧に出るので Airtable 側で統合する（ここでまとめ直さない）。 */
   const byName = new Map();
   all.forEach(c => { if(!byName.has(c.name)) byName.set(c.name, []); byName.get(c.name).push(c); });
-  const filled = c => Object.values(c).filter(v => v != null && v !== '' && !(Array.isArray(v) && !v.length)).length;
-  const companies = [];
-  const merged = [];
-  for(const [name, group] of byName){
-    group.sort((a, b) => b._jobs - a._jobs || filled(b) - filled(a) || (a.id < b.id ? -1 : 1));
-    const main = group[0];
-    main.aliases = [];
-    for(const o of group.slice(1)){
-      main.aliases.push(o.id);
-      for(const k of Object.keys(o)){
-        if(k === 'id' || k === '_jobs' || k === 'aliases') continue;
-        const empty = main[k] == null || main[k] === '' || (Array.isArray(main[k]) && !main[k].length);
-        if(empty && o[k] != null && o[k] !== '' && !(Array.isArray(o[k]) && !o[k].length)) main[k] = o[k];
-      }
-      if(o.updatedAt && (!main.updatedAt || o.updatedAt > main.updatedAt)) main.updatedAt = o.updatedAt;
-    }
-    if(group.length > 1) merged.push(`${name}（${group.length}件 → ${main.id}）`);
-    delete main._jobs;
-    if(!main.aliases.length) delete main.aliases;
-    companies.push(main);
-  }
+  const sameName = [...byName].filter(([, g]) => g.length > 1).map(([name, g]) => `${name}（${g.map(c => `${c.id} ${c.addr || c.url || ''}`.trim()).join(' ／ ')}）`);
+  const companies = all;
   companies.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 
   const out = path.join(dir, 'data', 'companies.json');
   /* 1行1社で書く（git の差分が「変わった会社の行」だけになる） */
   fs.writeFileSync(out, '[\n' + companies.map(c => JSON.stringify(c)).join(',\n') + '\n]\n', 'utf8');
   console.log(`\ndata/companies.json を書き出しました: ${companies.length}社（レコード ${recs.length}件・${(fs.statSync(out).size/1024/1024).toFixed(1)}MB）`);
-  if(merged.length){
-    console.log(`  同じ社名のレコードをまとめました ${merged.length}社（Airtable 側で1社1レコードに整理してください）:`);
-    merged.forEach(m => console.log(`   - ${m}`));
+  if(sameName.length){
+    console.log(`  同じ社名のレコード ${sameName.length}組（別会社なら別ページのまま。同じ会社なら Airtable 側で統合してください）:`);
+    sameName.forEach(m => console.log(`   - ${m}`));
   }
   const cnt = k => companies.filter(c => c[k] != null && c[k] !== '' && !(Array.isArray(c[k]) && !c[k].length)).length;
   console.log(`  会社概要 ${cnt('overview')}・事業内容 ${cnt('biz')}・本社都道府県 ${cnt('pref')}・設立 ${cnt('founded')}・資本金 ${cnt('capital')}・従業員数 ${cnt('employees')}・上場区分 ${cnt('listed')}・業界 ${cnt('industry')}`);
