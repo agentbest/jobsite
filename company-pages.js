@@ -56,7 +56,8 @@ function build(root, ctx, full, H){
   const PREFS = Object.keys(PREF_SLUG);
   /* 同じ社名の別会社（グリッド・シンカ・MRT など。fetch-companies.js はまとめない）。
      ページのタイトル・見出し・一覧では本社の市区町村を添えて見分ける。
-     ロゴ（data/logos.json）は社名で引くので、同名の会社では「ロゴのファイル名＝企業ID」の会社にだけ付ける
+     ロゴ（data/logos.json）は、同名の会社ならレコードIDのキー（"rec..."）を先に見る。
+     社名のキーは、同名の会社では「ロゴのファイル名＝企業ID」の会社にだけ付ける
      （fetch-logos.js はロゴの入ったレコードの企業IDをファイル名にする）。 */
   const nameCount = new Map();
   allCompanies.forEach(c => nameCount.set(c.name, (nameCount.get(c.name) || 0) + 1));
@@ -65,8 +66,8 @@ function build(root, ctx, full, H){
   allCompanies.forEach(c => {
     c.jobs = [];
     c.company = c.name;                                   /* logoHtml / coInitial が j.company を見るため */
-    const logo = logos[c.name];
-    if(logo && fs.existsSync(path.join(root, logo)) && (!isDupName(c.name) || path.basename(logo).replace(/\.[^.]*$/, '') === (c.cid || '').toLowerCase())) c.logo = logo;
+    const logo = logos[c.id] || logos[c.name];
+    if(logo && fs.existsSync(path.join(root, logo)) && (logos[c.id] || !isDupName(c.name) || path.basename(logo).replace(/\.[^.]*$/, '') === (c.cid || '').toLowerCase())) c.logo = logo;
     /* 本社都道府県が空でも住所が「山形県…」なら県は分かる */
     if(!c.pref && c.addr){ const p = PREFS.find(p => c.addr.startsWith(p)); if(p) c.pref = p; }
     byId.set(c.id, c);

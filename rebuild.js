@@ -193,14 +193,15 @@ function attachLogos(jobs){
     if(fs.existsSync(path.join(dir, rel))) usable[company] = rel;
     else console.log(`⚠ ロゴ画像が見つかりません（頭文字タイルにします）: ${company} → ${rel}`);
   }
-  /* 同名の会社では、ロゴのファイル名（fetch-logos.js が企業IDで付ける）と求人の会社の企業IDが一致するときだけ付ける */
+  /* 同名の会社は、logos.json のレコードIDのキー（"rec..."）を先に見る（2026-10-29。社名のキーは1つしか持てないため）。
+     社名のキーは、ロゴのファイル名（fetch-logos.js が企業IDで付ける）と求人の会社の企業IDが一致するときだけ付ける */
   const { byId, isDupName } = loadCompanies();
   const stem = rel => path.basename(rel).replace(/\.[^.]*$/, '');
   let hit = 0;
   const missing = new Set();
   jobs.forEach(j => {
-    let rel = usable[j.company];
-    if(rel && isDupName(j.company)){ const c = j.companyId && byId.get(j.companyId); if(!c || stem(rel) !== (c.cid || '').toLowerCase()) rel = null; }
+    let rel = (j.companyId && usable[j.companyId]) || usable[j.company];
+    if(rel && isDupName(j.company) && !(j.companyId && usable[j.companyId])){ const c = j.companyId && byId.get(j.companyId); if(!c || stem(rel) !== (c.cid || '').toLowerCase()) rel = null; }
     if(rel){ j.logo = rel; hit++; }
     else{
       delete j.logo;   /* data/jobs/*.json から復元したときに前回のロゴが残らないように */

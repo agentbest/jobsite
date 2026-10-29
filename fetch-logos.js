@@ -121,6 +121,11 @@ function slugOf(rec, att){
     return wanted.has(f[F_NAME]) && Array.isArray(f[F_LOGO]) && f[F_LOGO].length;
   });
 
+  /* 同じ社名の別会社（グリッド・シンカなど）は、社名のキーだと1社ぶんしか持てないのでレコードIDをキーにする（2026-10-29） */
+  const nameCount = new Map();
+  records.forEach(r => { const n = (r.fields || {})[F_NAME]; if(n) nameCount.set(n, (nameCount.get(n) || 0) + 1); });
+  const keyOf = rec => nameCount.get(rec.fields[F_NAME]) > 1 ? rec.id : rec.fields[F_NAME];
+
   fs.mkdirSync(OUT_DIR, { recursive:true });
   const map = {};
   const used = new Set();
@@ -134,7 +139,7 @@ function slugOf(rec, att){
     }
     const buf = Buffer.from(await res.arrayBuffer());
     fs.writeFileSync(path.join(OUT_DIR, file), buf);
-    map[rec.fields[F_NAME]] = 'assets/logos/' + file;
+    map[keyOf(rec)] = 'assets/logos/' + file;
     used.add(file);
     console.log(`  ${rec.fields[F_NAME]} → assets/logos/${file}（${(buf.length/1024).toFixed(1)}KB）`);
   }
@@ -144,7 +149,7 @@ function slugOf(rec, att){
   Object.keys(map).sort((a,b) => map[a].localeCompare(map[b])).forEach(k => sorted[k] = map[k]);
   fs.writeFileSync(path.join(dir, 'data', 'logos.json'), JSON.stringify(sorted, null, 2) + '\n', 'utf8');
 
-  const noLogo = [...wanted].filter(c => !map[c]);
+  const noLogo = [...wanted].filter(c => !map[c] && !(nameCount.get(c) > 1));
   console.log(`\ndata/logos.json を書き出しました: ${Object.keys(map).length}社`);
   if(noLogo.length){
     console.log(`ロゴが未登録の企業 ${noLogo.length}社（Airtableの「ロゴ」列に画像を入れてください）:`);
