@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<!-- OGP画像 assets/ogp.jpg（1200×630）の原本。再出力は Chrome ヘッドレスで PNG に撮って JPG に変換する（手順は skill の tools/ogp と同じ） -->
+<style>
+  html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+  body{font-family:"Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;color:#fff;position:relative;
+    background:url("../../assets/hero.jpg") center/cover no-repeat}
+  .scrim{position:absolute;inset:0;background:linear-gradient(96deg,rgba(12,18,48,.96) 0%,rgba(14,22,58,.90) 38%,rgba(16,26,66,.58) 66%,rgba(18,30,72,.30) 100%)}
+  .in{position:absolute;left:80px;top:150px;right:80px}
+  .eye{font-size:21px;font-weight:700;letter-spacing:.08em;color:#F2C46D;display:flex;align-items:center;gap:14px;margin:0 0 22px}
+  .eye::before{content:"";width:36px;height:3px;background:#F2C46D;display:block}
+  h1{margin:0;font-size:70px;line-height:1.2;font-weight:800;letter-spacing:.01em}
+  h1 em{font-style:normal;color:#F2C46D}
+  .sub{margin:30px 0 0;font-size:23px;line-height:1.6;color:rgba(255,255,255,.88)}
+  .brand{position:absolute;left:80px;bottom:52px;display:flex;align-items:center;gap:16px}
+  .brand .tile{width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center}
+  .brand .tile img{width:40px;height:auto;display:block}
+  .brand b{display:block;font-size:21px}
+  .brand span{display:block;font-size:16px;color:rgba(255,255,255,.7);font-family:Consolas,monospace;letter-spacing:.03em;margin-top:2px}
+</style></head>
+<body>
+  <div class="scrim"></div>
+  <div class="in">
+    <p class="eye">20代・30代の若手ハイクラス転職</p>
+    <h1>その経験に、<em>見合う</em><br>ポジションを。</h1>
+    <p class="sub">転職はゴールではなく、キャリアの通過点。<br>5年後の選択肢が増える一社を。</p>
+  </div>
+  <div class="brand">
+    <div class="tile"><img src="../../assets/mark.png" alt=""></div>
+    <div><b>エージェントベストジョブ転職</b><span>jobs.agent-best.net</span></div>
+  </div>
+</body></html>
