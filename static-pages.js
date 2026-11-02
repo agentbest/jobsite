@@ -18,6 +18,7 @@
 //    ここには持たない。template.html 側を直せば静的ページにも反映される。
 // ⚠ 生成物（job/ jobs/ area/ sitemap.xml assets/site.css）は直接編集しない。次の rebuild で消える。
 const fs = require('fs'), path = require('path');
+const { salHintOf, NONE_TEXT: SAL_NONE_TEXT } = require('./salary-hint');   /* 年収が空の求人の表示（backlog #26） */
 
 const SITE = 'https://jobs.agent-best.net';
 const LP_MIN = 10;          /* 職種×勤務地ページを作る最低件数。少ないページを量産しても検索には載らない */
@@ -250,11 +251,19 @@ function fmtSalary(j){
   if(mn != null && mx != null) return mn === mx ? `${mn}万円` : `${mn}〜${mx}万円`;
   if(mx != null) return `〜${mx}万円`;
   if(mn != null) return `${mn}万円〜`;
-  return '応相談';
+  /* 年収が空の求人は原文の月給・時給をそのまま（換算しない）か「年収は面談時にご案内」（backlog #26）。template.html の fmtSalary と同じ */
+  return salHintOf(j) || SAL_NONE_TEXT;
 }
+/* 年収の数値が無い求人は見出しを「想定年収」ではなく「給与」にする（backlog #26） */
+const salaryHead = j => (j.salaryMin != null || j.salaryMax != null) ? '想定年収' : '給与';
+/* meta description 用の一文 */
+/* <title>・og:title の括弧。年収の数値か原文の月給・時給があるときだけ（無ければ括弧ごと省く） */
+const titleSal = j => (j.salaryMin != null || j.salaryMax != null || salHintOf(j)) ? `（${fmtSalary(j)}）` : '';
+const salaryDesc = j => (j.salaryMin != null || j.salaryMax != null) ? `想定年収${fmtSalary(j)}` : (salHintOf(j) ? `${fmtSalary(j)}（年収は面談時にご案内）` : SAL_NONE_TEXT);
 /* template.html の salaryNote() と同じ。幅が 1,500万円以上の求人だけ「インセンティブ含む」を添える（backlog #5） */
 const SAL_WIDE = 1500;
-const salaryNote = j => (j.salaryMin != null && j.salaryMax != null && (j.salaryMax - j.salaryMin) >= SAL_WIDE) ? '<small class="sal-note" title="上限はインセンティブ・歩合を含む想定です">インセンティブ含む</small>' : '';
+const salaryNote = j => (j.salaryMin != null && j.salaryMax != null && (j.salaryMax - j.salaryMin) >= SAL_WIDE) ? '<small class="sal-note" title="上限はインセンティブ・歩合を含む想定です">インセンティブ含む</small>'
+  : (j.salaryMin == null && j.salaryMax == null && salHintOf(j)) ? '<small class="sal-note" title="求人票に年額の記載が無いため、原文の給与をそのまま載せています">年収は面談時にご案内</small>' : '';   /* 月給・時給だけの求人（backlog #26） */
 const EMP_TYPES = ['正社員','契約社員','業務委託','無期雇用派遣','派遣社員','アルバイト・パート','インターン'];
 function empList(j){
   const s = (j && j.employment) ? String(j.employment).trim() : '';
@@ -292,7 +301,7 @@ function postingTitle(j){
    本文の頭だけだと description が重複していた（jobs 2,102ページ・skill 1,044ページ）。会社名・求人名・年収・勤務地を先に置いて求人ごとに変える */
 function jobDesc(j, co){
   const nm = postingTitle(j), loc = locShort(j);
-  const head = `${co}の求人「${[...nm].length > 40 ? [...nm].slice(0, 40).join('') + '…' : nm}」。想定年収${fmtSalary(j)}${loc ? `・勤務地${loc}` : ''}。`;
+  const head = `${co}の求人「${[...nm].length > 40 ? [...nm].slice(0, 40).join('') + '…' : nm}」。${salaryDesc(j)}${loc ? `・勤務地${loc}` : ''}。`;
   const body = plain(j.jobContent || j.must || j.companyInfo, Math.max(30, 120 - [...head].length));
   return head + body;
 }
@@ -496,14 +505,14 @@ function jobPage(ctx, j, related){
     ${author}`;
 
   const side = `<div class="dt-card">
-    <span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}${salaryNote(j)}</span>
+    <span class="k">${salaryHead(j)}</span><span class="v">${esc(fmtSalary(j))}${salaryNote(j)}</span>
     <a class="btn-apply" href="${esc(apply)}" data-apply="${esc(j.id)}">この求人に応募する</a>
     <a class="btn-detail" href="${esc(consult)}" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
     <a class="line-btn" href="${esc(C.LINE_ADD_URL)}" target="_blank" rel="noopener noreferrer" data-line-cta="static-side">${C.LINE_ICON}<span>LINEで相談する</span></a>
     <p class="dt-card__note">押した先は<b>転職支援サービスの申し込み</b>です。企業へは<b>当社から推薦する形</b>で選考が進みます。<b>ご利用は無料</b>。</p>
     <span class="dt-open"><a href="/?job=${encodeURIComponent(j.id)}">検索画面で開く</a>（気になる求人に保存・条件を変えて探す）</span>
   </div>`;
-  const bar = `<span class="sal"><small>想定年収</small>${esc(fmtSalary(j))}</span>
+  const bar = `<span class="sal"><small>${salaryHead(j)}</small>${esc(fmtSalary(j))}</span>
     <a class="line-btn" href="${esc(C.LINE_ADD_URL)}" target="_blank" rel="noopener noreferrer" data-line-cta="static-bar" aria-label="LINEで相談する">${C.LINE_ICON}<span>LINE</span></a>
     <a class="btn-apply" href="${esc(apply)}" data-apply="${esc(j.id)}">この求人に応募する</a>`;
 
@@ -548,13 +557,13 @@ function jobPage(ctx, j, related){
     { '@type': 'ListItem', position: gslug ? 3 : 2, name, item: canon },
   ]};
 
-  const title = `${name}｜${co}（${fmtSalary(j)}） - エージェントベストジョブ転職`;
+  const title = `${name}｜${co}${titleSal(j)} - エージェントベストジョブ転職`;
   const desc = jobDesc(j, co);
   const crumb = `<a href="/">ホーム</a><span class="sep">›</span>${gslug ? `<a href="/jobs/${gslug}/">${esc(group)}の求人</a><span class="sep">›</span>` : ''}<span class="cur">${esc(name)}</span>`;
   const back = gslug ? `/jobs/${gslug}/` : '/';
   return tpl
     .replace('__TITLE__', () => esc(title.length > 70 ? `${name}｜${co} - エージェントベストジョブ転職` : title))
-    .replace(/__OGTITLE__/g, () => esc(`${name}｜${co}（${fmtSalary(j)}）`))
+    .replace(/__OGTITLE__/g, () => esc(`${name}｜${co}${titleSal(j)}`))
     .replace(/__DESC__/g, () => esc(desc))
     .replace(/__CANON__/g, () => esc(canon))
     .replace('__JSONLD__', () => JSON.stringify([ld, crumbLd]).replace(/<\//g, '<\\/'))
@@ -584,7 +593,7 @@ function cardHtml(ctx, j){
     <div class="card__tags">${tags.join('')}</div>
     ${lead ? `<p class="jrow__desc">${esc(lead)}</p>` : ''}
     <dl class="jrow__meta">
-      <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span>${salaryNote(j)}</dd>
+      <dt>${salaryHead(j)}</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span>${salaryNote(j)}</dd>
       ${loc ? `<dt>勤務地</dt><dd>${esc(loc)}</dd>` : ''}
       ${band ? `<dt>従業員数</dt><dd>${esc(band)}</dd>` : ''}
     </dl>

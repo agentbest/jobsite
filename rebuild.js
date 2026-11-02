@@ -107,6 +107,7 @@ function noDuplicates(jobs){
    相手のサイトに出る求人のIDは data/moved.json に書き、404.html がそちらの求人ページへ転送する。 */
 const SITE = 'jobs';
 const { splitForSite } = require('./site-split');
+const { salaryHint } = require('./salary-hint');   /* 年収が空の求人の表示（backlog #26） */
 function splitSite(jobs){
   const { kept, moved } = splitForSite(jobs, SITE);
   fs.writeFileSync(path.join(dir, 'data', 'moved.json'), JSON.stringify(moved.map(j => j.id).sort()), 'utf8');
@@ -341,14 +342,17 @@ function plainLead(src){
    タグは名前ではなく data/tags.json の並び順の番号（t）で持つ（1件あたり平均27タグ。名前だと4MB超になる）。
    template.html 側で展開する（JOBS の定義と JOBS.forEach の中）。 */
 const LIGHT_KEYS = ['id','company','position','title','employment','kubun','salaryMin','salaryMax','location',
-  'jobCategory','industry','url','listedStatus','createdAt','gradYear','t','logo','employees','employeeCount','areas','remote','lead','companyId'];
+  'jobCategory','industry','url','listedStatus','createdAt','gradYear','t','logo','employees','employeeCount','areas','remote','lead','companyId','salHint'];
 function lighten(full){
   const tagPath = path.join(dir, 'data', 'tags.json');
   const tagIdx = new Map();
   if(fs.existsSync(tagPath)) JSON.parse(fs.readFileSync(tagPath, 'utf8')).forEach((t, i) => tagIdx.set(t.name, i));
+  const hint = { month: 0, hour: 0, none: 0 };
   const rows = full.map(j => {
     const o = {};
     LIGHT_KEYS.forEach(k => { if(j[k] !== undefined && j[k] !== null && j[k] !== '') o[k] = j[k]; });
+    /* 年収が空の求人だけ、原文の月給・時給を短く持つ（salHint）。換算はしない。金額が読めない求人は列を持たず「年収は面談時にご案内」になる（backlog #26） */
+    if(j.salaryMin == null && j.salaryMax == null){ const h = salaryHint(j.salaryRaw); hint[h.kind]++; if(h.kind !== 'none') o.salHint = h.text; }
     /* 求人タイトル(表示)は「会社名＋ポジション」なので、ポジションがあれば持たない（検索は会社名・ポジションで引ける） */
     if(o.position) delete o.title;
     /* 勤務地はカードでは県＋市区町村に整形されるだけなので長い原文は切る（詳細では原文が出る） */
@@ -364,6 +368,8 @@ function lighten(full){
   });
   /* 行末の null は落として短くする（展開側は足りない列を空として扱う） */
   rows.forEach(r => { while(r.length && r[r.length - 1] === null) r.pop(); });
+  const nNone = hint.month + hint.hour + hint.none;
+  if(nNone) console.log(`年収が空の求人 ${nNone}件の表示: 月給など原文のまま ${hint.month}件 ／ 時給・日給など原文のまま ${hint.hour}件 ／「年収は面談時にご案内」${hint.none}件（backlog #26）`);
   return { k: LIGHT_KEYS, r: rows };
 }
 function writeDetails(full){

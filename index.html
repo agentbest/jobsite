@@ -346,6 +346,10 @@
   .salrange select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
   .salrange select.is-set{border-color:var(--accent); color:var(--accent-ink); font-weight:700}
   .salrange__sep{flex:none; font-size:12.5px; color:var(--ink-3)}
+  .salany{display:flex; align-items:center; gap:8px; margin-top:9px; padding:2px 7px; font-size:12.5px; color:var(--ink-2); cursor:pointer; border-radius:8px}
+  .salany:hover{background:var(--surface-2)}
+  .salany input{flex:none; width:15px; height:15px; margin:0; accent-color:var(--accent); cursor:pointer}
+  .salany .cnt{margin-left:2px}
 
   /* ---------- Results ---------- */
   .resbar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:16px}
@@ -1155,12 +1159,12 @@
         <span class="hero__quick-lbl">人気の条件</span>
         <button type="button" data-hq="sal800">年収800万円以上</button>
         <button type="button" data-hq="sal1000">年収1,000万円以上</button>
-        <button type="button" data-hq="remote" id="hqRemote" hidden>リモート可</button>
+        <button type="button" data-hq="remote" id="hqRemote">リモート可</button>
         <button type="button" data-hq="filter">条件・タグから探す</button>
       </div>
       <!-- 人気のタグ。タグ検索の入口。中身は data/tags.json と実際の件数から下のJSが決める -->
-      <div class="hero__quick" id="heroTags" hidden>
-        <span class="hero__quick-lbl">タグで探す</span>
+      <div class="hero__quick" id="heroTags">
+        <span class="hero__quick-lbl">タグで探す</span><button type="button" data-hq-tag="remote-full">フルリモート可 <span class="mono" style="opacity:.7;font-size:11px">392</span></button><button type="button" data-hq-tag="inexperienced-ok">未経験歓迎 <span class="mono" style="opacity:.7;font-size:11px">474</span></button><button type="button" data-hq-tag="holidays-125">年間休日125日以上 <span class="mono" style="opacity:.7;font-size:11px">925</span></button><button type="button" data-hq-tag="listed">上場企業 <span class="mono" style="opacity:.7;font-size:11px">1486</span></button><button type="button" data-hq-tag="second-newgrad">第二新卒歓迎 <span class="mono" style="opacity:.7;font-size:11px">154</span></button><button type="button" data-hq-tag="startup">スタートアップ <span class="mono" style="opacity:.7;font-size:11px">1110</span></button>
       </div>
       <div class="hero__stats">
         <div><b id="totalCount">0</b><span>掲載中の求人</span></div>
@@ -1282,8 +1286,8 @@
 <footer class="site-foot">
   <div class="foot__inner">
     <div class="foot__brand">
-      <img class="foot__logo foot__logo--light" src="assets/logo.png" alt="株式会社エージェントベスト" width="508" height="120">
-      <img class="foot__logo foot__logo--dark" src="assets/logo-white.png" alt="" aria-hidden="true" width="508" height="120">
+      <img class="foot__logo foot__logo--light" src="assets/logo.png" alt="株式会社エージェントベスト" width="508" height="120" loading="lazy" decoding="async">
+      <img class="foot__logo foot__logo--dark" src="assets/logo-white.png" alt="" aria-hidden="true" width="508" height="120" loading="lazy" decoding="async">
       <strong>エージェントベストジョブ転職</strong>
       <span>人材紹介サービス「エージェントベスト」が運営しています。ご利用はすべて無料です。</span>
     </div>
@@ -1371,7 +1375,7 @@
    タグは番号（t）で入っていて、TAGS の定義後（下の JOBS.forEach）で名前に戻す。 */
 const JOBS = (d=>{ if(Array.isArray(d)) return d; const k=d.k||[]; return (d.r||[]).map(row=>{ const o={}; k.forEach((key,i)=>{ const v=row[i]; if(v!==null&&v!==undefined&&v!=="") o[key]=v; }); return o; }); })(await (async()=>{
   try{
-    const r=await fetch("data/list.json?v=ba2b25f56f",{cache:"force-cache"});
+    const r=await fetch("data/list.json?v=8ed6426254",{cache:"force-cache"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     return await r.json();
   }catch(e){
@@ -1652,13 +1656,24 @@ function fmtSalary(j){
   if(mn!=null&&mx!=null) return mn===mx?`${mn}万円`:`${mn}〜${mx}万円`;
   if(mx!=null) return `〜${mx}万円`;
   if(mn!=null) return `${mn}万円〜`;
-  return "応相談";
+  /* 年収が空の求人は、原文の月給・時給をそのまま（rebuild.js が list.json の salHint 列に入れる。月給×12 の換算はしない）か
+     「年収は面談時にご案内」（backlog #26・2026-11-03）。判定は salary-hint.js */
+  if(j.salHint) return j.salHint;
+  return "年収は面談時にご案内";
 }
 /* 「400〜4,000万円」のように上限と下限が極端に離れた求人（M&A系のインセンティブ込み上限）は、数字だけ見ると壊れて見える。
    幅が SAL_WIDE 以上のときだけ「インセンティブ含む」の注記を添える（backlog #5）。データは直さない（上限は事実） */
 const SAL_WIDE=1500;
 function salaryWide(j){ return j.salaryMin!=null && j.salaryMax!=null && (j.salaryMax-j.salaryMin)>=SAL_WIDE; }
-function salaryNote(j){ return salaryWide(j)?`<small class="sal-note" title="上限はインセンティブ・歩合を含む想定です">インセンティブ含む</small>`:""; }
+function salaryNote(j){
+  if(salaryWide(j)) return `<small class="sal-note" title="上限はインセンティブ・歩合を含む想定です">インセンティブ含む</small>`;
+  /* 月給・時給だけの求人（年収の数値なし）は原文の横に注記（backlog #26） */
+  if(j.salaryMin==null && j.salaryMax==null && j.salHint) return `<small class="sal-note" title="求人票に年額の記載が無いため、原文の給与をそのまま載せています">年収は面談時にご案内</small>`;
+  return "";
+}
+/* 年収の数値が無い求人は見出しを「想定年収」ではなく「給与」にする（backlog #26） */
+function salaryHead(j){ return (j.salaryMin!=null||j.salaryMax!=null)?"想定年収":"給与"; }
+const SAL_NONE_COUNT=JOBS.filter(j=>j.salaryMin==null&&j.salaryMax==null).length;
 
 /* ---------- markdown-ish renderer ---------- */
 function rich(src){
@@ -1791,11 +1806,12 @@ TAG_CATS.forEach(cat=>{
   facetDefs.push({
     key:tagFacetKey(cat), title:cat, type:"check", searchable:true,
     collapsible:true, isTag:true, optionList:names.filter(n=>!TAG_SKIP.has(n)),
-    get:j=>jobTags(j).filter(t=>TAG_CAT[t]===cat)
+    /* j._tagsByCat は下の _fv 作成時に1回だけ作る（カテゴリ×求人ごとに全タグを舐め直すと初期表示が重いため。2026-10-25） */
+    get:j=>j._tagsByCat?(j._tagsByCat[cat]||[]):jobTags(j).filter(t=>TAG_CAT[t]===cat)
   });
 });
 
-const state={ q:"", sort:"reco", salaryMin:0, salaryMax:0, remote:false, sel:{} };
+const state={ q:"", sort:"reco", salaryMin:0, salaryMax:0, salaryAny:false, remote:false, sel:{} };   /* salaryAny: 年収で絞ったとき年収未記載の求人も含める（既定オフ・backlog #26） */
 facetDefs.forEach(f=>state.sel[f.key]=new Set());
 
 /* ---------- 各求人の「絞り込みに使う値」を先に作っておく ----------
@@ -1806,6 +1822,9 @@ facetDefs.forEach(f=>state.sel[f.key]=new Set());
 const TREE_DEFS=facetDefs.filter(f=>f.type==="tree");
 JOBS.forEach(j=>{
   const fv={};
+  const byCat={};
+  jobTags(j).forEach(t=>{ const c=TAG_CAT[t]; (byCat[c]||(byCat[c]=[])).push(t); });
+  j._tagsByCat=byCat;
   facetDefs.forEach(f=>{
     let vals;
     if(f.type==="tree"){
@@ -1923,15 +1942,17 @@ const salFmt=v=>v.toLocaleString("ja-JP")+"万円";
 function salSnap(v){ v=+v||0; if(v<=0) return 0; if(v>=SAL_CAP) return SAL_CAP; return SAL_MIN_OPTS.filter(x=>x<=v).pop()||0; }
 function salLabel(){
   const lo=state.salaryMin, hi=state.salaryMax;
-  if(lo>0&&hi>0) return lo===hi?salFmt(lo):lo.toLocaleString("ja-JP")+"〜"+salFmt(hi);
-  if(lo>0) return salFmt(lo)+"以上";
-  if(hi>0) return salFmt(hi)+"以下";
-  return "";
+  let s="";
+  if(lo>0&&hi>0) s=lo===hi?salFmt(lo):lo.toLocaleString("ja-JP")+"〜"+salFmt(hi);
+  else if(lo>0) s=salFmt(lo)+"以上";
+  else if(hi>0) s=salFmt(hi)+"以下";
+  return s&&state.salaryAny?s+"（年収未記載も含む）":s;
 }
 function syncSalaryUI(){
   const a=$("#salMin"), b=$("#salMax");
   if(a){ a.value=String(state.salaryMin||0); a.classList.toggle("is-set", state.salaryMin>0); }
   if(b){ b.value=String(state.salaryMax||0); b.classList.toggle("is-set", state.salaryMax>0); }
+  const c=$("#salAny"); if(c) c.checked=!!state.salaryAny;
 }
 
 /* ---------- filtering ----------
@@ -1939,9 +1960,10 @@ function syncSalaryUI(){
 function baseMatch(j){
   if(state.q){ const toks=state.q.toLowerCase().split(/\s+/).filter(Boolean); if(!toks.every(t=>j._hay.includes(t))) return false; }
   if(state.salaryMin>0||state.salaryMax>0){
-    /* 求人の年収レンジと、指定したレンジが重なっていれば通す。年収非公開の求人は落とす（従来どおり） */
+    /* 求人の年収レンジと、指定したレンジが重なっていれば通す。年収未記載の求人は従来どおり落とすが、
+       「年収未記載の求人も含める」（state.salaryAny・既定オフ）のときだけ通す（backlog #26。黙って消えないように） */
     const lo=(j.salaryMin!=null?j.salaryMin:j.salaryMax), hi=(j.salaryMax!=null?j.salaryMax:j.salaryMin);
-    if(lo==null||hi==null) return false;
+    if(lo==null||hi==null) return state.salaryAny;
     if(state.salaryMin>0 && hi<state.salaryMin) return false;
     if(state.salaryMax>0 && lo>state.salaryMax) return false;
   }
@@ -2035,6 +2057,7 @@ function buildFilters(){
           ${SAL_MAX_OPTS.map(v=>`<option value="${v}">${salFmt(v)}</option>`).join("")}
         </select>
       </div>
+      <label class="salany" title="月給のみ・応相談など、年収の金額が書かれていない求人。年収で絞ると通常は出ません"><input type="checkbox" id="salAny"><span>年収未記載の求人も含める <span class="cnt mono">${SAL_NONE_COUNT.toLocaleString("ja-JP")}</span></span></label>
     </div>`;
   facetDefs.forEach(f=>{
     if(f.key==="remote") return;                       /* 上に手で置いてある */
@@ -2151,6 +2174,10 @@ function buildFilters(){
   };
   $("#salMin").addEventListener("change",onSal);
   $("#salMax").addEventListener("change",onSal);
+  $("#salAny").addEventListener("change",e=>{
+    state.salaryAny=e.target.checked; apply();
+    track("filter_use",{filter:"salary_any", value:state.salaryAny?"on":"off"});
+  });
 }
 /* ---------- 件数の塗り替え ----------
    「押したら0件」を無くすのがこの絞り込みの肝。0件になる選択肢は薄くして押せなくする
@@ -2203,7 +2230,7 @@ function chipHtml(k,v,label){
 $("#activeChips").addEventListener("click",e=>{
   const b=e.target.closest("[data-rm-k]");
   if(b){ const k=b.dataset.rmK,v=b.dataset.rmV;
-    if(k==="salary"){ state.salaryMin=0; state.salaryMax=0; syncSalaryUI(); }
+    if(k==="salary"){ state.salaryMin=0; state.salaryMax=0; state.salaryAny=false; syncSalaryUI(); }
     else { state.sel[k].delete(v);
       const el=document.querySelector(`[data-facet="${k}"][data-val="${CSS.escape(v)}"]`);
       if(el){ if(el.type==="checkbox") el.checked=false; else el.setAttribute("aria-pressed","false"); }
@@ -2214,7 +2241,7 @@ $("#activeChips").addEventListener("click",e=>{
   if(e.target.closest("#clearAll")) resetAll();
 });
 function resetAll(){
-  state.q=""; $("#q").value=""; state.salaryMin=0; state.salaryMax=0;
+  state.q=""; $("#q").value=""; state.salaryMin=0; state.salaryMax=0; state.salaryAny=false;
   syncSalaryUI();
   facetDefs.forEach(f=>clearFacetSilent(f.key));
   apply();
@@ -2333,7 +2360,7 @@ function rowHtml(j){
     <div class="card__tags">${tags.join("")}</div>
     ${j._lead?`<p class="jrow__desc">${esc(j._lead)}</p>`:""}
     <dl class="jrow__meta">
-      <dt>想定年収</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span>${salaryNote(j)}</dd>
+      <dt>${salaryHead(j)}</dt><dd><span class="jrow__sal">${esc(fmtSalary(j))}</span>${salaryNote(j)}</dd>
       ${j.locShort?`<dt>勤務地</dt><dd>${esc(j.locShort)}</dd>`:""}
       ${j.empBand?`<dt>従業員数</dt><dd>${esc(j.empBand)}</dd>`:""}
       ${j.createdAt?`<dt>掲載開始日</dt><dd>${esc(fmtPosted(j.createdAt))}</dd>`:""}
@@ -2483,7 +2510,7 @@ function lineBlock(j){
 /* 右レール。スクロールしても年収と応募ボタンが視界から消えないようにする */
 function sideHtml(j){
   return `<div class="dt-card">
-    <span class="k">想定年収</span><span class="v">${esc(fmtSalary(j))}${salaryNote(j)}</span>
+    <span class="k">${salaryHead(j)}</span><span class="v">${esc(fmtSalary(j))}${salaryNote(j)}</span>
     <a class="btn-apply" href="${esc(applyHref(j))}" data-apply="${esc(j.id)}">この求人に応募する</a>
     <a class="btn-detail" href="${esc(consultUrl(j))}" target="_blank" rel="noopener">まず話だけ聞いてみる</a>
     <a class="line-btn" href="${LINE_ADD_URL}" target="_blank" rel="noopener noreferrer" data-line-cta="jobs-side">${LINE_ICON}<span>LINEで相談する</span></a>
@@ -2613,7 +2640,7 @@ function renderDetail(j, keepScroll){
   `;
   $("#detailSide").innerHTML=sideHtml(j);
   const bar=$("#applybar");
-  bar.innerHTML=`<span class="sal"><small>想定年収</small>${esc(fmtSalary(j))}</span>
+  bar.innerHTML=`<span class="sal"><small>${salaryHead(j)}</small>${esc(fmtSalary(j))}</span>
     <a class="line-btn" href="${LINE_ADD_URL}" target="_blank" rel="noopener noreferrer" data-line-cta="jobs-bar" aria-label="LINEで相談する">${LINE_ICON}<span>LINE</span></a>
     <a class="btn-apply" href="${esc(applyHref(j))}" data-apply="${esc(j.id)}">この求人に応募する</a>`;
   bar.hidden=false;
@@ -2821,7 +2848,7 @@ $("#heroQuick").addEventListener("click",e=>{
   track("filter_use",{filter:"hero_"+k});
 });
 /* リモート可の求人が1件も無いときは、その条件を出さない */
-if(remoteCount>0) $("#hqRemote").hidden=false;
+$("#hqRemote").hidden=!(remoteCount>0);   /* rebuild.js が最初から出しておく。0件なら隠す */
 
 /* ---------- ヒーローの「タグで探す」 ----------
    タグは280個あって左サイドバーの奥にあるので、入口をトップにも置く。
@@ -2833,7 +2860,8 @@ const HERO_TAGS=["フルリモート可","未経験歓迎","年間休日125日�
   const box=$("#heroTags");
   const use=HERO_TAGS.filter(t=>TAG_SLUG[t]&&(TAG_COUNT[t]||0)>0).slice(0,6);
   if(use.length){
-    box.insertAdjacentHTML("beforeend", use.map(t=>
+    /* rebuild.js が HTML に書いてあればそのまま使う（読み込み後に差し込むとヒーローが伸びてレイアウトがずれるため） */
+    if(!box.querySelector("button[data-hq-tag]")) box.insertAdjacentHTML("beforeend", use.map(t=>
       `<button type="button" data-hq-tag="${esc(TAG_SLUG[t])}">${esc(t)} <span class="mono" style="opacity:.7;font-size:11px">${TAG_COUNT[t]}</span></button>`).join(""));
     box.hidden=false;
     box.addEventListener("click",e=>{
@@ -2889,7 +2917,7 @@ function featureCount(f){
 }
 function applyFeature(f){
   /* 条件をいったん全部外す（resetAll と同じだが apply は最後に1回だけ） */
-  state.q=""; $("#q").value=""; $("#heroQ").value=""; state.salaryMin=0; state.salaryMax=0;
+  state.q=""; $("#q").value=""; $("#heroQ").value=""; state.salaryMin=0; state.salaryMax=0; state.salaryAny=false;
   syncSalaryUI();
   facetDefs.forEach(d=>clearFacetSilent(d.key));
   Object.entries(featureSel(f)).forEach(([k,vals])=>vals.forEach(v=>{
