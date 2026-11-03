@@ -427,6 +427,10 @@
         <span class="f__t">いまの転職活動の状況<span class="opt">任意</span></span>
         <select id="status"></select>
       </div>
+      <div class="f" data-f="referrer">
+        <span class="f__t">当社を知ったきっかけ<span class="opt">任意</span></span>
+        <select id="referrer"></select>
+      </div>
       <div class="f" data-f="message">
         <span class="f__t">ご要望・ご質問<span class="opt">任意</span></span>
         <textarea id="message" placeholder="例）まだ転職を決めたわけではないので、まず話を聞きたいです。&#10;例）連絡は平日19時以降だと助かります。"></textarea>
@@ -559,6 +563,8 @@ const PREFS=["北海道","青森県","岩手県","宮城県","秋田県","山形
 const SALARY=["300万円未満","300〜400万円","400〜500万円","500〜600万円","600〜700万円","700〜800万円","800〜1,000万円","1,000〜1,200万円","1,200〜1,500万円","1,500万円以上","就業経験なし"];
 const TIMING=["すぐにでも","3ヶ月以内","半年以内","1年以内","良い求人があれば"];
 const STATUS=["情報収集を始めたところ","応募・面接をしている（転職活動中）","内定・オファーが出ている","まだ迷っている"];
+/* 当社を知ったきっかけ（自社サイト経由の成果を測るため・2026-11-03）。選択肢はコーポレートの相談フォームと同じ並び */
+const REFERRER=["Googleなどの検索","当社の記事（キャリアメディア）","当社の求人サイト（jobs / skill）","外資就活ドットコム","LinkedIn","note・ブログ","X・Instagram","知人・同僚の紹介","生成AI（ChatGPTなど）のおすすめ","その他・覚えていない"];
 /* ⚠ 対面は載せない（実際にやっていないため）。増やすなら実際に受けられる形だけにする。 */
 const MEETING=[
   {v:"オンライン", d:"Google Meet などのビデオ通話。全国どこからでも。"},
@@ -583,6 +589,7 @@ function fillSelect(id, opts, placeholder){
   fillSelect("salary", SALARY,   "選択してください（任意）");
   fillSelect("timing", TIMING,   "選択してください");
   fillSelect("status", STATUS,   "選択してください（任意）");
+  fillSelect("referrer", REFERRER, "選択してください（任意）");
   $("#meeting").innerHTML=MEETING.map((m,i)=>`
     <label class="choice">
       <input type="radio" name="meeting" value="${esc(m.v)}"${i===0?" checked":""}>
@@ -698,7 +705,7 @@ $("#form").addEventListener("keydown",e=>{
 });
 
 /* ---------- 入力内容の一時保存（この端末のみ） ---------- */
-const DRAFT_IDS=["name","kana","by","bm","bd","expJob","pref","salary","email","phone","timing","status","message"];
+const DRAFT_IDS=["name","kana","by","bm","bd","expJob","pref","salary","email","phone","timing","status","referrer","message"];
 function saveDraft(){
   try{
     const d={step:step};
@@ -775,7 +782,10 @@ async function submit(){
     meeting_type: (document.querySelector('input[name="meeting"]:checked')||{}).value || null,
     timing:      val("timing") || null,
     job_hunting_status: val("status") || null,
-    message:     val("message") || null,
+    /* 知ったきっかけは applications に専用列が無いので、ご要望欄の先頭に添えて送る（通知メール・Supabase の message に残る）。
+       専用列を足すなら Supabase で `alter table public.applications add column referrer text;` を流してから
+       `referrer: val("referrer") || null` に切り替える（列が無いまま送ると INSERT が 400 で落ちる） */
+    message:     [val("referrer") ? "【知ったきっかけ】" + val("referrer") : "", val("message")].filter(Boolean).join("\n\n") || null,
     consent:     true,
     user_id:     sessionUserId,
     source:      "jobsite"
