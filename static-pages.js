@@ -616,9 +616,27 @@ function landingPage(ctx, p){
   const nListed = jobs.filter(j => j.listedStatus === '上場').length;
   const cos = new Set(jobs.map(j => j.company).filter(Boolean)).size;
   const canon = `${SITE}/${p.rel}/`;
+  /* 一覧ページの冒頭の説明文は掲載データから作る（2026-11-03）。それまでは「◯◯の転職・求人を掲載しています」だけで本文が無く、
+     地域ページ（/area/niigata/ 80表示・34位 など）は求人カードの羅列として扱われていた。
+     職種が固定のページ（jobs/<職種>/…）は職種の内訳（中分類）、それ以外は職種の大分類。年収は提示額の中央値（下限・上限）。 */
+  const cnt = f => { const m = new Map(); jobs.forEach(j => (f(j) || []).forEach(v => { if(v) m.set(v, (m.get(v) || 0) + 1); })); return [...m.entries()].sort((a, b) => b[1] - a[1]); };
+  const med = arr => { const a = arr.filter(v => v != null).sort((x, y) => x - y); return a.length ? a[Math.floor(a.length / 2)] : null; };
+  const groupFixed = p.rel.startsWith('jobs/');
+  const topG = (groupFixed ? cnt(j => [String(j.jobCategory || '').replace(/（[^（）]*）\s*$/, '')]) : cnt(j => [jobGroupOf(j.jobCategory)])).filter(([g]) => g && g !== 'その他').slice(0, 3);
+  const topP = cnt(j => j.areas || []).slice(0, 3);
+  const medMin = med(jobs.map(j => j.salaryMin)), medMax = med(jobs.map(j => j.salaryMax));
+  const facts = [];
+  if(topG.length) facts.push(`多い職種は${topG.map(([g, k]) => `${g}（${k}件）`).join('・')}`);
+  if(!p.rel.startsWith('area/') && !/^jobs\/[^/]+\/[^/]+$/.test(p.rel) && topP.length) facts.push(`勤務地は${topP.map(([g, k]) => `${g}（${k}件）`).join('・')}が中心`);
+  if(medMin || medMax) facts.push(`提示年収の中央値は${medMin ? `下限${medMin.toLocaleString()}万円` : ''}${medMin && medMax ? '・' : ''}${medMax ? `上限${medMax.toLocaleString()}万円` : ''}`);
+  if(nRemote) facts.push(`リモート可が${nRemote.toLocaleString()}件`);
+  const factsText = facts.length ? facts.join('、') + '。' : '';
   const desc = p.hub
     ? `${p.title}を${n.toLocaleString()}件（${cos.toLocaleString()}社）掲載。${plain(p.hub.lead[0].replace(/<[^>]+>/g, ''), 60)} 20代・30代の若手ハイクラス転職の求人検索。ご利用は無料です。`
-    : `${p.title}を${n.toLocaleString()}件掲載。年収800万円以上 ${nSal800}件・リモート可 ${nRemote}件。株式会社エージェントベストが運営する20代・30代の若手ハイクラス転職の求人検索。ご利用は無料です。`;
+    : `${p.title}を${n.toLocaleString()}件（${cos.toLocaleString()}社）掲載。${factsText}年収800万円以上 ${nSal800}件。20代・30代の若手ハイクラス転職の求人検索。ご利用は無料です。`;
+  /* 件数が LP_MIN を割った一覧（公開中のページは LP_KEEP 件まで残す）は noindex にして sitemap から外す。
+     薄いページが索引に残ると一覧全体の評価が下がるため。件数が戻れば index に戻る（404→復活の繰り返しは避ける） */
+  const thin = !p.hub && n < LP_MIN;
   /* ハブページだけ：説明文・職種の内訳・よくある質問（FAQPage 構造化データ付き） */
   const hubLead = p.hub ? p.hub.lead.map(t => `<p class="lp__lead">${t}</p>`).join('') : '';
   const hubMix = p.hub ? (() => {
@@ -628,7 +646,7 @@ function landingPage(ctx, p){
   })() : '';
   const hubFaq = p.hub ? `<section class="lp__faq" style="margin:28px 0"><h2 style="font-size:18px;margin:0 0 12px">よくある質問</h2>${p.hub.faq.map(([q, a]) => `<details style="border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:12px 14px;margin:0 0 8px"><summary style="font-weight:700;cursor:pointer">${esc(q)}</summary><p style="margin:8px 0 0;color:var(--ink-2);font-size:14px">${esc(a)}</p></details>`).join('')}</section>` : '';
   const main = `<h1>${esc(p.h1)}<small style="font-size:.7em;color:var(--ink-3);font-weight:700;margin-left:8px">${n.toLocaleString()}件</small></h1>
-    ${hubLead || `<p class="lp__lead">${esc(p.title)}を掲載しています。企業へ直接応募するのではなく、当社から推薦する形で選考が進みます。ご利用は無料です。</p>`}
+    ${hubLead || `<p class="lp__lead">${esc(p.title)}を${n.toLocaleString()}件（${cos.toLocaleString()}社）掲載しています。${esc(factsText)}企業へ直接応募するのではなく、当社から推薦する形で選考が進みます。ご利用は無料です。</p>`}
     <ul class="lp__stats"><li><b>${n.toLocaleString()}</b>件</li><li><b>${cos.toLocaleString()}</b>社</li><li><b>${nSal800.toLocaleString()}</b>件が年収800万円以上</li><li><b>${nRemote.toLocaleString()}</b>件がリモート可</li><li><b>${nListed.toLocaleString()}</b>件が上場企業</li></ul>
     ${hubMix}
     ${p.pills && p.pills.length ? `<nav class="lp__nav" aria-label="${esc(p.pillsTitle)}"><p>${esc(p.pillsTitle)}</p><div class="lp__pills">${p.pills.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
@@ -645,6 +663,7 @@ function landingPage(ctx, p){
        { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.hub.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]
     : { '@context': 'https://schema.org', '@type': 'CollectionPage', name: p.title, url: canon, description: desc };
   const html = ctx.lpTpl
+    .replace('<meta name="robots" content="index,follow">', () => `<meta name="robots" content="${thin ? 'noindex' : 'index'},follow">`)
     .replace('__TITLE__', () => esc(`${p.title}（${n.toLocaleString()}件） - エージェントベストジョブ転職`))
     .replace(/__OGTITLE__/g, () => esc(`${p.title}（${n.toLocaleString()}件）`))
     .replace(/__DESC__/g, () => esc(desc))
@@ -795,7 +814,7 @@ function build(root, full){
 
   /* 3.5 企業ページ（company/<企業ID>/・company/）。求人ページから企業ページへリンクするので先に作る。
      中身と理由は company-pages.js の先頭にある。 */
-  const co = require('./company-pages').build(root, ctx, full, { esc, plain, fmtSalary, cardHtml, logoHtml, sortForList, writePage, syncDir, PREF_SLUG, SITE, jobPath });
+  const co = require('./company-pages').build(root, ctx, full, { esc, plain, fmtSalary, cardHtml, logoHtml, sortForList, writePage, syncDir, PREF_SLUG, SITE, jobPath, jobGroupOf });
   ctx.coOf = co.coOf; ctx.coPath = co.coPath; ctx.mediaOf = co.mediaOf; ctx.mediaHref = co.mediaHref;
   { const g = path.join(root, 'data', 'media-guides.json'); ctx.mediaGuides = fs.existsSync(g) ? JSON.parse(fs.readFileSync(g, 'utf8')) : {}; }
 
@@ -835,7 +854,7 @@ function build(root, full){
   /* 6. sitemap.xml / robots.txt */
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
   const urls = [{ loc: `${SITE}/`, lastmod: today, pri: '1.0' }]
-    .concat(pages.map(p => ({ loc: `${SITE}/${p.rel}/`, lastmod: today, pri: '0.8' })))
+    .concat(pages.filter(p => p.hub || p.jobs.length >= LP_MIN).map(p => ({ loc: `${SITE}/${p.rel}/`, lastmod: today, pri: '0.8' })))   /* LP_MIN 未満は noindex（landingPage） */
     .concat(co.urls.map(u => ({ loc: u.loc, lastmod: u.lastmod || today, pri: u.pri })))
     .concat(full.map(j => ({ loc: SITE + jobPath(j), lastmod: j.createdAt || (j.recordCreatedAt || today).slice(0, 10), pri: '0.6' })));
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
