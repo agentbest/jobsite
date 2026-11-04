@@ -1164,7 +1164,7 @@
       </div>
       <!-- 人気のタグ。タグ検索の入口。中身は data/tags.json と実際の件数から下のJSが決める -->
       <div class="hero__quick" id="heroTags">
-        <span class="hero__quick-lbl">タグで探す</span><button type="button" data-hq-tag="remote-full">フルリモート可 <span class="mono" style="opacity:.7;font-size:11px">902</span></button><button type="button" data-hq-tag="inexperienced-ok">未経験歓迎 <span class="mono" style="opacity:.7;font-size:11px">735</span></button><button type="button" data-hq-tag="holidays-125">年間休日125日以上 <span class="mono" style="opacity:.7;font-size:11px">1815</span></button><button type="button" data-hq-tag="listed">上場企業 <span class="mono" style="opacity:.7;font-size:11px">2883</span></button><button type="button" data-hq-tag="second-newgrad">第二新卒歓迎 <span class="mono" style="opacity:.7;font-size:11px">313</span></button><button type="button" data-hq-tag="startup">スタートアップ <span class="mono" style="opacity:.7;font-size:11px">2838</span></button>
+        <span class="hero__quick-lbl">タグで探す</span><button type="button" data-hq-tag="remote-full">フルリモート可 <span class="mono" style="opacity:.7;font-size:11px">842</span></button><button type="button" data-hq-tag="inexperienced-ok">未経験歓迎 <span class="mono" style="opacity:.7;font-size:11px">634</span></button><button type="button" data-hq-tag="holidays-125">年間休日125日以上 <span class="mono" style="opacity:.7;font-size:11px">1687</span></button><button type="button" data-hq-tag="listed">上場企業 <span class="mono" style="opacity:.7;font-size:11px">2534</span></button><button type="button" data-hq-tag="second-newgrad">第二新卒歓迎 <span class="mono" style="opacity:.7;font-size:11px">276</span></button><button type="button" data-hq-tag="startup">スタートアップ <span class="mono" style="opacity:.7;font-size:11px">2708</span></button>
       </div>
       <div class="hero__stats">
         <div><b id="totalCount">0</b><span>掲載中の求人</span></div>
@@ -1375,7 +1375,7 @@
    タグは番号（t）で入っていて、TAGS の定義後（下の JOBS.forEach）で名前に戻す。 */
 const JOBS = (d=>{ if(Array.isArray(d)) return d; const k=d.k||[]; return (d.r||[]).map(row=>{ const o={}; k.forEach((key,i)=>{ const v=row[i]; if(v!==null&&v!==undefined&&v!=="") o[key]=v; }); return o; }); })(await (async()=>{
   try{
-    const r=await fetch("data/list.json?v=bd2220be21",{cache:"force-cache"});
+    const r=await fetch("data/list.json?v=507e37b59c",{cache:"force-cache"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     return await r.json();
   }catch(e){
