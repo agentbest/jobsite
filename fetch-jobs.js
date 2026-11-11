@@ -97,6 +97,13 @@ const STRIP_TITLE = [
 // 見出しの段落と、直後の「項目：値」だけの段落を丸ごと落とす。本文中の「面接確約」を含む行も落とす（タイトルは上の STRIP_INLINE で括りだけ外す）
 const STRIP_KAKUYAKU = /^[＜<【■◆●★※]?\s*面[接談]確約(?:条件|継続条件)?[＞>】]?\s*$/;
 const STRIP_KAKUYAKU_LINE = /面[接談]確約/;
+// エージェントあての依頼・選考の内部基準（2026-11-11）。媒体の公開欄に出稿元が書いてしまう文。
+// 例「エージェントの皆様を担当している同社担当も…」「2026年10月1日以降入社可能な方へご紹介ください」「推薦文に下記を記載…」
+// ⚠ 「株式会社サイバーエージェント様」を落とさないよう、カタカナ直後の「エージェント様」は対象外。人材紹介職の仕事内容「推薦状作成」も対象外
+const STRIP_AGENT_LINE = /(?<![ァ-ヶー])エージェント(?:様|の皆様|の皆さま|各位)|ＡＧＴ様|AGT様|人材紹介会社様(?:宛|へ)|ご推薦(?:ください|下さい|をお願い|いただく際|頂く際|頂いて|いただいて|時)|推薦(?:先|時)に|推薦文に|推薦時回答|ご紹介(?:ください|下さい|をお願い|お待ち)|添えてのご紹介|優先的なご紹介|書類選考において以下の方は/;
+// 見出しごと落とす塊（次の【】■◆▼見出し・空行まで）：【NG要件】【推薦NG条件】◆NG条件／書類選考のポイント／エージェントへの伝達事項／直近の内定者情報 など
+const STRIP_AGENT_HEAD = /^[・■◆▼●【]?\s*(?:(?:推薦)?NG(?:要件|条件)\s*】?\s*$|書類選考のポイント|人事担当者からエージェントへの伝達事項|エージェントへの伝達事項|直近の内定者情報|ご推薦時のご依頼|推薦時回答必須の質問)/;
+const SECTION_HEAD = /^[【■◆▼]/;
 const sanitized = [];
 function sanitize(text, id, key){
   if(typeof text !== 'string' || !text) return text;
@@ -118,6 +125,19 @@ function sanitize(text, id, key){
   }
   out = kept.join('\n\n');
   out = out.split('\n').filter(l => { const ng = STRIP_LINE.test(l) || STRIP_NOTE.test(l.trim()) || (!oneLine && STRIP_KAKUYAKU_LINE.test(l)); if(ng) hit.push(l.trim()); return !ng; }).join('\n');
+  if(!oneLine){
+    let skipping = false;
+    out = out.split('\n').filter(l => {
+      const t = l.trim();
+      if(STRIP_AGENT_HEAD.test(t)){ skipping = true; hit.push(t); return false; }
+      if(skipping){
+        if(!t || SECTION_HEAD.test(t)) skipping = false;
+        else return false;
+      }
+      if(STRIP_AGENT_LINE.test(t)){ hit.push(t); return false; }
+      return true;
+    }).join('\n');
+  }
   for(const re of STRIP_INLINE) out = out.replace(re, m => { hit.push(m); return ''; });
   if(!hit.length) return text;   // 何も落としていなければ原文のまま（空白の整形もしない）
   out = out.replace(/[ 　]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
