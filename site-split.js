@@ -1,4 +1,9 @@
 /* ---------- jobs.agent-best.net と skill.agent-best.net の振り分け ----------
+   ★2026-11-11 コンセプト変更（本人指示「ブルーワーカー系はやらないほうがいい」→案A）: いまの基準はこれ。下の 10/16〜10/17 の経緯は旧基準。
+     skill … 「未経験・第二新卒から始めるキャリアチェンジ」。jobs に出る求人のうち、現場系（isBlueCollar）でなく、
+             未経験可（isUnexperienced）または「第二新卒歓迎」タグの求人だけ。サイト名は「エージェントベストジョブ キャリアチェンジ」
+     jobs  … 中途の求人。技術職（機械・電気・電子・半導体・食品）は jobs に戻した。JOBS_HIDDEN_*（施工管理・建築土木・小売飲食など）は今までどおり出さない
+     どちらにも出さない … 現場系（施工管理・販売飲食・建築土木・職種「その他」の製造/配送/介護…）。「jobs に出ない求人は必ず skill へ」はやめた
    2026-10-16 松岡さん指示で作り替え: 「skill に重要な求人が載っているので職種で分けたい。まず jobs は求人票DBにあるものは掲載」
    「未経験可能な転職や、ブルーカラー系職種を skill に掲載されるようにしたい」。
      jobs  … 中途の求人を載せる（年収では落とさない）。ただし職種が JOBS_HIDDEN_* に当たる求人は出さない（下記）
@@ -86,14 +91,16 @@ function isUnexperienced(j){
 function isBlueCollar(j){
   const c = String(j.jobCategory || '').trim();
   if(BLUE_COLLAR_CATEGORIES.has(c) || BLUE_COLLAR_GROUPS.has(jobGroupOf(c))) return true;
-  if(TECH_GROUPS.has(jobGroupOf(c))) return true;
   return OTHER_CATEGORY.test(c) && BLUE_COLLAR_WORDS.test(nameOf(j));
 }
-function skillOnly(j){ return isUnexperienced(j) || isBlueCollar(j) || !jobsShown(j); }  /* skill の掲載基準（jobs に出さない求人は必ず skill へ） */
+const SECOND_NEWGRAD_TAG = '第二新卒歓迎';
+function isSecondNewgrad(j){ return (j.tags || []).includes(SECOND_NEWGRAD_TAG); }
+/* skill の掲載基準（2026-11-11〜）: jobs に出る・現場系でない・未経験可か第二新卒歓迎 */
+function skillOnly(j){ return jobsShown(j) && !isBlueCollar(j) && (isUnexperienced(j) || isSecondNewgrad(j)); }
 /* jobs の掲載基準。⚠ jobGroupOf() は括弧が無いと「その他」を返すので使わない（オープンポジション・空を隠さないため） */
 function jobsShown(j){
   const c = String(j.jobCategory || '').trim(), m = c.match(/（([^（）]+)）s*$/);
-  return !(JOBS_HIDDEN_BIG.has(c) || (m && (JOBS_HIDDEN_GROUPS.has(m[1]) || TECH_GROUPS.has(m[1]))));
+  return !(JOBS_HIDDEN_BIG.has(c) || (m && JOBS_HIDDEN_GROUPS.has(m[1])));
 }
 function keptOn(site){ return site === 'jobs' ? jobsShown : skillOnly; }
 
@@ -104,11 +111,11 @@ function splitForSite(jobs, site){
   jobs.forEach(j => { if(mine(j)) kept.push(j); else if(theirs(j)) moved.push(j); });
   const hidden = jobs.length - kept.length - moved.length;
   const other = site === 'jobs' ? 'skill.agent-best.net' : 'jobs.agent-best.net';
-  const nU = kept.concat(moved).filter(isUnexperienced).length, nB = kept.concat(moved).filter(isBlueCollar).length;
+  const nU = kept.concat(moved).filter(isUnexperienced).length, nS = kept.concat(moved).filter(isSecondNewgrad).length;
   console.log(`サイト振り分け（${site}）: 掲載 ${kept.length}件 ／ ${other} だけにある求人 ${moved.length}件`
     + (hidden ? `・どちらにも出さない ${hidden}件` : '')
-    + `（基準: jobs は中途から一部職種・施工管理・技術職を除く。skill は jobs に出ない求人＋未経験可 ${nU}件・ブルーカラー・技術職 ${nB}件）`);
+    + `（基準: jobs は中途から現場系の職種を除く。skill は jobs のうち現場系以外の未経験可・第二新卒歓迎。両サイトの未経験可 ${nU}件・第二新卒歓迎 ${nS}件）`);
   return { kept, moved };
 }
 
-module.exports = { HIGH_CLASS_MIN, UNEXPERIENCED_TAGS, newcomerOk, BLUE_COLLAR_GROUPS, BLUE_COLLAR_CATEGORIES, TECH_GROUPS, JOBS_HIDDEN_BIG, JOBS_HIDDEN_GROUPS, isUnexperienced, isBlueCollar, skillOnly, jobsShown, splitForSite, salaryFloor };
+module.exports = { HIGH_CLASS_MIN, UNEXPERIENCED_TAGS, newcomerOk, BLUE_COLLAR_GROUPS, BLUE_COLLAR_CATEGORIES, TECH_GROUPS, JOBS_HIDDEN_BIG, JOBS_HIDDEN_GROUPS, isUnexperienced, isSecondNewgrad, isBlueCollar, skillOnly, jobsShown, splitForSite, salaryFloor };

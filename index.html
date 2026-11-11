@@ -1175,7 +1175,7 @@
       </div>
       <!-- 人気のタグ。タグ検索の入口。中身は data/tags.json と実際の件数から下のJSが決める -->
       <div class="hero__quick" id="heroTags">
-        <span class="hero__quick-lbl">タグで探す</span><button type="button" data-hq-tag="remote-full">フルリモート可 <span class="mono" style="opacity:.7;font-size:11px">839</span></button><button type="button" data-hq-tag="inexperienced-ok">未経験歓迎 <span class="mono" style="opacity:.7;font-size:11px">635</span></button><button type="button" data-hq-tag="holidays-125">年間休日125日以上 <span class="mono" style="opacity:.7;font-size:11px">1688</span></button><button type="button" data-hq-tag="listed">上場企業 <span class="mono" style="opacity:.7;font-size:11px">2529</span></button><button type="button" data-hq-tag="second-newgrad">第二新卒歓迎 <span class="mono" style="opacity:.7;font-size:11px">278</span></button><button type="button" data-hq-tag="startup">スタートアップ <span class="mono" style="opacity:.7;font-size:11px">2708</span></button>
+        <span class="hero__quick-lbl">タグで探す</span><button type="button" data-hq-tag="remote-full">フルリモート可 <span class="mono" style="opacity:.7;font-size:11px">850</span></button><button type="button" data-hq-tag="inexperienced-ok">未経験歓迎 <span class="mono" style="opacity:.7;font-size:11px">654</span></button><button type="button" data-hq-tag="holidays-125">年間休日125日以上 <span class="mono" style="opacity:.7;font-size:11px">1810</span></button><button type="button" data-hq-tag="listed">上場企業 <span class="mono" style="opacity:.7;font-size:11px">2609</span></button><button type="button" data-hq-tag="second-newgrad">第二新卒歓迎 <span class="mono" style="opacity:.7;font-size:11px">284</span></button><button type="button" data-hq-tag="startup">スタートアップ <span class="mono" style="opacity:.7;font-size:11px">2782</span></button>
       </div>
       <div class="hero__stats">
         <div><b id="totalCount">0</b><span>掲載中の求人</span></div>
@@ -1334,8 +1334,11 @@
     <nav class="foot__links foot__links--sub">
       <span>特集</span>
       <a href="/feature/salary-1000/">年収1000万円以上の求人</a>
-      <a href="/feature/startup/">スタートアップ・メガベンチャー</a>
       <a href="/feature/manager/">管理職・マネージャー</a>
+      <a href="/jobs/consultant/">コンサルへキャリアアップ</a>
+      <a href="/jobs/business-planning/">事業企画・経営企画</a>
+      <a href="/feature/startup/">スタートアップ・メガベンチャー</a>
+      <a href="/feature/generative-ai/">生成AI・LLMに携わる</a>
       <a href="/feature/english/">英語を活かせる・外資系</a>
       <a href="/feature/full-remote/">フルリモート可</a>
     </nav>
@@ -1343,7 +1346,7 @@
       <span>専門ページ</span>
       <a href="https://lp.pmtenshoku.com/" target="_blank" rel="noopener">PMのキャリア支援</a>
       <a href="https://eng.agent-best.net/" target="_blank" rel="noopener">エンジニアからコンサルへ</a>
-      <a href="https://skill.agent-best.net/" target="_blank" rel="noopener">手に職をつける求人を探す（未経験歓迎・現場系の職種）</a>
+      <a href="https://skill.agent-best.net/" target="_blank" rel="noopener">未経験・第二新卒から始める求人を探す（キャリアチェンジ）</a>
       <a href="https://freelanceanken.com/" target="_blank" rel="noopener">フリーランス案件を探す（エンジニア・コンサルの業務委託）</a>
       <a href="https://shinsotsu.agent-best.net/" target="_blank" rel="noopener">新卒・インターンの求人を探す</a>
       <a href="https://student.agent-best.net/" target="_blank" rel="noopener">学生向けキャリア支援</a>
@@ -1411,7 +1414,7 @@
    タグは番号（t）で入っていて、TAGS の定義後（下の JOBS.forEach）で名前に戻す。 */
 const JOBS = (d=>{ if(Array.isArray(d)) return d; const k=d.k||[]; return (d.r||[]).map(row=>{ const o={}; k.forEach((key,i)=>{ const v=row[i]; if(v!==null&&v!==undefined&&v!=="") o[key]=v; }); return o; }); })(await (async()=>{
   try{
-    const r=await fetch("data/list.json?v=77585e71ac",{cache:"force-cache"});
+    const r=await fetch("data/list.json?v=6cafec1db5",{cache:"force-cache"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     return await r.json();
   }catch(e){
@@ -2921,22 +2924,35 @@ const MIKEIKEN_TAGS=["未経験歓迎","業界未経験歓迎","職種未経験�
 /* 2026-10-15・松岡さん決定：「職種の特集」の段（未経験からコンサル／未経験からエンジニア／AI・データ）と
    ポストコンサル（コンサル出身者を歓迎する事業会社）をやめ、「コンサルへキャリアアップ転職」に差し替えた。
    未経験系の特集は skill.agent-best.net 側にある。古い ?feature=post-consultant 等は絞り込みなしの一覧が開くだけ */
-const FEATURE_GROUPS=[["career","キャリアアップ・働き方"]];
+/* 2026-11-11 本人決定：ページ下の「特集」リンクと同じ8本に揃えた（年収・ポジション／企業・働き方の2段）。グロース上場（growth-listed）は
+   スタートアップと重なるので外した（古い ?feature=growth-listed は絞り込みなしの一覧が開くだけ）。 */
+const FEATURE_GROUPS=[["career","年収・ポジションで選ぶ"],["company","企業・働き方で選ぶ"]];
 const FEATURES=[
+  {slug:"salary-1000", group:"career", label:"年収", color:"var(--gold)",
+   title:"年収1000万円以上の求人", desc:"コンサル・M&A・外資・事業会社の管理職や専門職など、年収1,000万円以上を提示している求人。",
+   cats:[], tags:["年収1000万円以上"]},
+  /* 2026-10-15：「経営幹部候補」→「管理職・マネージャー」に改称（slug は ?feature= の URL なので executive-candidate のまま） */
+  {slug:"executive-candidate", group:"career", label:"管理職", color:"var(--accent-strong)",
+   title:"管理職・マネージャー求人", desc:"チームや組織を任されるマネージャー・管理職の求人。プレイヤーから一段上のキャリアへ。",
+   cats:[], tags:["マネージャー候補","幹部・経営幹部候補"]},
   {slug:"consultant-career-up", group:"career", label:"キャリアアップ", color:"var(--accent)",
    title:"コンサルへキャリアアップ転職特集", desc:"事業会社やSIerで積んだ経験を武器に、戦略・IT・業務コンサルタントへ。年収と専門性を一段引き上げる求人。",
    cats:["コンサルタント","ITコンサルタント"], tags:[]},
-  /* 2026-10-15：「経営幹部候補」→「管理職・マネージャー」に改称（松岡さん。経営幹部だと想起される層がずれるため）。
-     slug は ?feature= の URL なので executive-candidate のまま。タグは同じカテゴリなので OR */
-  {slug:"executive-candidate", group:"career", label:"管理職", color:"var(--gold)",
-   title:"管理職・マネージャー求人", desc:"チームや組織を任されるマネージャー・管理職の求人。プレイヤーから一段上のキャリアへ。",
-   cats:[], tags:["マネージャー候補","幹部・経営幹部候補"]},
-  {slug:"full-remote", group:"career", label:"働き方", color:"var(--good)",
+  {slug:"business-planning", group:"career", label:"企画", color:"var(--cta)",
+   title:"事業企画・経営企画の求人", desc:"事業の戦略づくりや新規事業、経営の意思決定を支える企画職の求人。",
+   cats:["事業企画","経営企画","経営"], tags:[]},
+  {slug:"startup", group:"company", label:"企業", color:"var(--cta)",
+   title:"スタートアップ・メガベンチャー", desc:"事業の立ち上げや組織づくりに早い段階から関われる、成長企業の求人。",
+   cats:[], tags:["スタートアップ","メガベンチャー"]},
+  {slug:"generative-ai", group:"company", label:"AI", color:"var(--accent)",
+   title:"生成AI・LLMに携わる求人", desc:"生成AI・大規模言語モデルを使ったプロダクトや業務改革に関われる求人。",
+   cats:[], tags:["生成AI・LLM"]},
+  {slug:"english", group:"company", label:"英語", color:"var(--gold)",
+   title:"英語を活かせる求人", desc:"海外拠点とのやりとりや海外顧客の担当など、英語を仕事で使う求人。",
+   cats:[], tags:["英語を活かせる"]},  /* 外資系企業は別カテゴリのタグで AND になり8件まで減るので入れない */
+  {slug:"full-remote", group:"company", label:"働き方", color:"var(--good)",
    title:"フルリモート可の求人", desc:"出社を前提とせず、原則リモートで働ける求人。住む場所に縛られずにキャリアを選べる。",
-   cats:[], tags:["フルリモート可"]},
-  {slug:"growth-listed", group:"career", label:"企業特集", color:"var(--cta)",
-   title:"グロース上場企業特集", desc:"上場後の成長期にある企業で、事業と組織が伸びる局面に立ち会える求人。",
-   cats:[], tags:["東証グロース上場"]}
+   cats:[], tags:["フルリモート可"]}
 ];
 /* 特集の条件を facet ごとにまとめる → { facetキー: [値…] } */
 function featureSel(f){
