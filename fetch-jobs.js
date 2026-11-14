@@ -9,6 +9,7 @@
 //      3) ..\bes-crm\config.js（同じ端末に BES CRM がある場合）
 
 const fs = require('fs'), path = require('path');
+const { nonJobReason } = require('./nonjob.js');   // 求人ではない行（カジュアル面談の受付・説明会・セミナー・日付の過ぎた選考会）を弾く（2026-11-14）
 
 const BASE_ID   = 'appYkc36EvioYoL1A';   // base「人材紹介事業」
 const TABLE_ID  = 'tblyPZZasXTM2tcrV';   // table「求人DB（求人票）」
@@ -192,7 +193,7 @@ function flat(v){
   /* 募集停止の扱い（2026-10-11）。行は消さずに「募集状況」を募集停止にする運用。
      本文に「募集終了日時 YYYY-MM-DD」があって過ぎている求人も載せない（キャリアバンク由来の書式）。 */
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);   // JST
-  const closed = [], expired = [], hidden = [];
+  const closed = [], expired = [], hidden = [], nonjob = [];
   for(const r of recs){
     const f = r.fields;
     const title = (f[F.title] || '').trim();
@@ -200,6 +201,8 @@ function flat(v){
     if(!title || title === '求人タイトル' || title.replace(/^﻿/, '') === '求人タイトル'){ skipped++; continue; }
     if(flat(f[F.status]) === '募集停止'){ closed.push(r.id); continue; }
     if(f[F.hidden] === true){ hidden.push(`${r.id} ${title.slice(0, 40)}`); continue; }
+    const nj = nonJobReason(`${title}\n${f[F.position] || ''}`, today);
+    if(nj){ nonjob.push(`${r.id} ${nj}：${title.slice(0, 50)}`); continue; }
     const end = endDateOf([f[F.jobContent], f[F.title], f[F.selectionProcess]].filter(Boolean).join('\n'));
     if(end && end < today){ expired.push(`${r.id} ${end} ${title.slice(0, 40)}`); continue; }
     const job = {
@@ -250,6 +253,10 @@ function flat(v){
   if(hidden.length){
     console.log(`  「サイトに掲載しない」にチェックの付いた求人を ${hidden.length}件 除外しました:`);
     hidden.forEach(x => console.log('    ' + x));
+  }
+  if(nonjob.length){
+    console.log(`  ⚠ 求人ではない行（カジュアル面談の受付・説明会・セミナー・開催日の過ぎた選考会）を ${nonjob.length}件 除外しました。Airtable で「募集状況」を募集停止にしてください（判定は nonjob.js）:`);
+    nonjob.forEach(x => console.log('    ' + x));
   }
   if(expired.length){
     console.log(`  ⚠ 本文の募集終了日時を過ぎた求人を ${expired.length}件 除外しました。Airtable で「募集状況」を募集停止にしてください:`);
