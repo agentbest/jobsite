@@ -7,4 +7,3 @@ Disallow: /apply.html
 Disallow: /?
 
 Sitemap: https://jobs.agent-best.net/sitemap.xml
-Sitemap: https://jobs.agent-best.net/media/sitemap.xml

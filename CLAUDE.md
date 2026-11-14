@@ -13,7 +13,7 @@ Airtableの求人を検索できる**静的な中途採用求人サイト「エ�
   `/media/`・`/cases/`・`/_astro/`・`/images/` など → コーポレート（agentbest-lp.vercel.app）、それ以外 → このリポジトリの GitHub Pages（https://agentbest.github.io/jobsite/）。
   松岡さん「media と cases を jobs に寄せたい」。記事2,500本＋事例2,000件（約210MB）を GitHub Pages の1GB上限の中に入れられないための構成。
   - ⚠ **このリポジトリに CNAME ファイル・Pages のカスタムドメインを戻さない。** 戻すと github.io が jobs へ転送し、Vercel 経由でループして全ページが開けなくなる。
-  - www.agent-best.net/media/・/cases/ は agentbest-lp の vercel.json で jobs へ301。記事のサイトマップは jobs.agent-best.net/media/sitemap.xml（`robots.txt` に記載、`static-pages.js` が書く）。
+  - 2026-11-14 に /media・/cases は www.agent-best.net へ戻した（jobs 側が Google に登録されなかったため）。jobs-front が jobs.agent-best.net/media|cases を www へ301。記事のサイトマップは www の sitemap-index.xml に含まれる。
   - jobs 上の /consultation/ /business/ /profile/ /contact/ は www へ転送（jobs-front の vercel.json）。jobs の /company/ は求人サイトの企業一覧のまま。
 - リポジトリ: **Public**（機密なし＝求人データ／テンプレ／rebuild.js のみと確認済み）
 
