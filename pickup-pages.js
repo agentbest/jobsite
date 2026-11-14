@@ -52,7 +52,7 @@ function companyPage(d, style, why, live) {
   const canonical = `${SITE}/pickup/company/${slug}/`;
   const o = [head(d.title, d.description, canonical, style, IMG(h.img, 1200))];
   o.push(`<header class="top"><div class="wrap">
-  <a class="brand" href="/">エージェントベスト<small>厳選特集</small></a>
+  <a class="brand" href="/">エージェントベスト<small>おすすめ企業特集</small></a>
   ${cta('無料で相談する')}
 </div></header>
 <section class="hero" style="background-image:url('${IMG(h.img, 2000)}')"><div class="wrap">
@@ -200,7 +200,7 @@ function featurePage(f, items, style, why, opt = {}) {
   const aboutImg = ab.img || '1681489933902-bb3644b91d65', closeImg = f.closingImg || '1779275859289-9bcf24ee065a';
   const credits = [...new Set([h.img, aboutImg, closeImg])].map(i => PHOTOGRAPHER[i]).filter(Boolean).join('／');
   const points = ab.points || [
-    { b: '直接取引している会社だけ', p: 'エージェントベストが採用担当と直接やり取りしている会社から選んでいます。' },
+    { b: '伸びている会社を中心に', p: '業績が好調な会社や、事業を伸ばしている会社を中心に選んでいます。' },
     { b: 'テーマに合うポジションだけ', p: '各社の募集から、この特集のテーマに合うポジションだけを抜き出しています。' },
     { b: '募集中の求人だけ', p: '掲載が終わった求人は、毎朝の更新で自動的に外れます。' },
   ];
@@ -211,7 +211,7 @@ function featurePage(f, items, style, why, opt = {}) {
     <p class="fco__more"><a class="btn btn--line" href="${base}/pickup/company/${x.slug}/?utm_source=${src}&utm_medium=feature&utm_campaign=${f.slug}">${e(x.co.companyShort)}の特集ページを見る</a></p>
   </article>`).join('');
   const brand = m ? `<a class="brand" href="${esc(f.site.url)}">エージェントベスト<small>${e(f.site.name)}</small></a>`
-    : `<a class="brand" href="/">エージェントベスト<small>厳選特集</small></a>`;
+    : `<a class="brand" href="/">エージェントベスト<small>おすすめ企業特集</small></a>`;
   const related = m ? { href: f.site.url, label: `${f.site.name}のトップへ` } : (f.site ? { href: f.site.url, label: f.site.label } : null);
   const refresh = m ? `<script>
 fetch('${SITE}/pickup/${f.slug}/jobs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(!d)return;
@@ -232,7 +232,7 @@ u.innerHTML=j.length?li+more:'<li class="none"><a href="'+B+'/pickup/company/'+c
   <h1>${e(h.h1)}</h1>
   <p>${e(h.lead)}</p>
   <div class="ctas">${cta(h.cta || '無料で相談する')}<a class="btn btn--line" href="#companies">掲載企業を見る</a></div>
-  <div class="strip"><div><b>${items.length}<small>社</small></b><span>掲載企業</span></div><div><b>${nJobs}<small>件</small></b><span>テーマに合うポジション</span></div><div><b>直接</b><span>全社と直接取引</span></div><div><b>無料</b><span>ご相談</span></div></div>
+  <div class="strip"><div><b>${items.length}<small>社</small></b><span>掲載企業</span></div><div><b>${nJobs}<small>件</small></b><span>テーマに合うポジション</span></div><div><b>成長中</b><span>の会社を中心に</span></div><div><b>無料</b><span>ご相談</span></div></div>
   <p class="cap">写真はイメージです</p>
 </div></section>
 <section class="sec"><div class="wrap split">
@@ -252,7 +252,7 @@ u.innerHTML=j.length?li+more:'<li class="none"><a href="'+B+'/pickup/company/'+c
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
   <div class="chapter"><i>04</i><span>FAQ</span></div><h2>よくある質問</h2>
   ${(f.faq || []).map(q => `<details><summary>${e(q.q)}</summary><p>${e(q.a)}</p></details>`).join('')}
-  <details><summary>ここに載っていない会社も相談できますか？</summary><p>はい。この特集に載せているのは直接取引している会社の一部です。ほかの会社の求人も含めて、条件に合うものを一緒に探します。</p></details>
+  <details><summary>ここに載っていない会社も相談できますか？</summary><p>はい。この特集に載せているのは、おすすめの会社の一部です。ほかの会社の求人も含めて、条件に合うものを一緒に探します。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。</p></details>
 </div></section>
 <section class="closing" style="background-image:url('${IMG(closeImg, 2000)}')"><div class="wrap">
@@ -301,8 +301,8 @@ function readParts(root) {
 
 function indexPage(list, style, feats = []) {
   const canonical = `${SITE}/pickup/`;
-  const title = '厳選特集｜エージェントベストが直接取引する企業｜エージェントベストジョブ転職';
-  const desc = 'エージェントベストが採用担当と直接やり取りしている企業を、1社ずつ紹介します。仕事の中身・年収・選考の流れ・募集中のポジションを、公開情報をもとにまとめました。';
+  const title = 'おすすめ企業特集｜業績好調・成長中の企業を1社ずつ紹介｜エージェントベストジョブ転職';
+  const desc = '業績好調・事業成長中の企業を中心に、エージェントベストがいまおすすめする会社を1社ずつ紹介します。仕事の中身・年収・選考の流れ・募集中のポジションを、公開情報をもとにまとめました。';
   /* 一覧のカードは写真を順番に変える（各社のヒーローは東京駅が多く、並べると同じ絵が続くため） */
   const POOL = ['1758095520684-99d5a1cc2768', '1779275859289-9bcf24ee065a', '1681489933902-bb3644b91d65', '1573164574572-cb89e39749b4', '1681505531034-8d67054e07f6', '1517048676732-d65bc937f952', '1606044466411-207a9a49711f'];
   const cards = list.map((x, i) => `<li><a class="pk" href="/pickup/company/${x.slug}/">
@@ -310,13 +310,13 @@ function indexPage(list, style, feats = []) {
     <span class="pk__body"><small>${e(x.label)}</small><b>${e(x.company)}</b><span>${e(plain(x.h1))}</span><em>募集中のポジション ${x.jobs}件</em></span>
   </a></li>`).join('');
   return head(title, desc, canonical, style, IMG('1758095520684-99d5a1cc2768', 1200)) + `<header class="top"><div class="wrap">
-  <a class="brand" href="/">エージェントベスト<small>厳選特集</small></a>
+  <a class="brand" href="/">エージェントベスト<small>おすすめ企業特集</small></a>
   <a class="btn" href="https://calendly.com/r_matsuoka?utm_source=pickup&utm_campaign=index" target="_blank" rel="noopener" data-consult="pickup-index">無料で相談する</a>
 </div></header>
 <section class="hero" style="min-height:62vh;background-image:url('${IMG('1758095520684-99d5a1cc2768', 2000)}')"><div class="wrap">
   <p class="label">AGENT BEST ／ PICKUP</p>
-  <h1>採用担当と直接つながる、<br>${list.length}社の厳選特集。</h1>
-  <p>エージェントベストが直接取引している企業を、1社ずつまとめました。仕事の中身、年収の仕組み、選考の流れ、募集中のポジションまで、公開情報をもとに紹介しています。</p>
+  <h1>業績好調・成長中の、<br>${list.length}社のおすすめ企業特集。</h1>
+  <p>業績が好調な会社や、事業を伸ばしている会社を中心に、エージェントベストがいまおすすめしたい企業を1社ずつまとめました。仕事の中身、年収の仕組み、選考の流れ、募集中のポジションまで、公開情報をもとに紹介しています。</p>
   <p class="cap">写真はイメージです</p>
 </div></section>
 ${feats.length ? `<section class="sec"><div class="wrap">
