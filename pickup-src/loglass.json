@@ -17,9 +17,9 @@
     "label": "PdM・新規事業PdMの年収（公開求人）"
    },
    {
-    "v": "5",
+    "v": "7",
     "unit": "つ",
-    "label": "提供するプロダクト・サービスの数（求人票より）"
+    "label": "提供するプロダクト・サービスの数（プロダクト5・サービス2）"
    },
    {
     "v": "3",
@@ -45,7 +45,7 @@
    },
    {
     "b": "マルチプロダクトへ",
-    "p": "2023年からマルチプロダクト展開に注力し、いまは5つのプロダクト・サービスを提供しています。IR領域のAIプロダクト「Loglass AI IR」は、2025年12月に正式リリースされました。"
+    "p": "2023年からマルチプロダクト展開に注力し、いまは5つのプロダクトと2つのサービスを提供しています（同社サイト、2026年11月時点）。IR領域のAIプロダクト「Loglass AI IR」は、2025年12月に正式リリースされました。"
    },
    {
     "b": "6つのバリュー",
@@ -148,7 +148,8 @@
      {
       "title": "AIプロダクトPdM（IR領域 LLM新規プロダクト）",
       "salary": "800〜2,000万円",
-      "pick": true
+      "pick": true,
+      "href": "https://jobs.agent-best.net/job/reckOWri0ea0GdeEA/"
      },
      {
       "title": "PdM・新規事業推進担当",
@@ -158,11 +159,13 @@
      {
       "title": "AI領域PdM",
       "salary": "800〜1,800万円",
-      "pick": true
+      "pick": true,
+      "href": "https://jobs.agent-best.net/job/recyqgUvgaM0czml8/"
      },
      {
       "title": "基盤プロダクトマネージャー",
-      "salary": "1,000〜1,500万円"
+      "salary": "1,000〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recCrP1Lq3KRQRZxN/"
      },
      {
       "title": "プロダクトマネージャー（PdM）【オープンポジション】",
@@ -305,11 +308,12 @@
      {
       "title": "【新規事業】アカウントエグゼクティブ／フィールドセールス（マネージャー候補歓迎）",
       "salary": "780〜1,500万円",
-      "href": "https://jobs.agent-best.net/job/recTqX5VxpiVwl3v0/"
+      "href": "https://jobs.agent-best.net/job/rec8WNERyIeubFZzp/"
      },
      {
       "title": "【新規事業】インサイドセールス（マネジャー候補）",
-      "salary": "700〜1,500万円"
+      "salary": "700〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recsphyFN3MnJJbem/"
      },
      {
       "title": "【新規事業】カスタマーサクセス（導入・オンボーディング・活用支援）",
@@ -384,7 +388,8 @@
      },
      {
       "title": "エグゼクティブサーチ・スペシャリスト",
-      "salary": "800〜1,500万円"
+      "salary": "800〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/rec1aCnyPupiRPF9X/"
      },
      {
       "title": "Salesforce Administrator / Salesforce アドミン",
