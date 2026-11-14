@@ -814,7 +814,7 @@ _features/<theme>.json（載せる会社の slug・求人タイトルに当て�
   → pickup-pages.js の build() → pickup/<theme>/index.html（canonical＝ここ）＋ pickup/<theme>/jobs.json（掲載中の求人だけ）
   → node tools/pickup-mirror.js [theme…] → C:\Users\user\<site.repo>\pickup\index.html（特化サイトの入口。canonical は jobs、求人は jobs.json を読んで差し替え）
 ```
-- いまのテーマ：pm（lp.pmtenshoku.com）／consulting（lp.consultenshoku.com）／it-consulting（eng.agent-best.net）／ma（lp.matenshoku.com）／fde（fde.agent-best.net）／executive（consultingcareerchange50.agent-best.net）。
+- いまのテーマ：pm（lp.pmtenshoku.com）／consulting（lp.consultenshoku.com）／it-consulting（eng.agent-best.net）／ma（lp.matenshoku.com）／fde（fde.agent-best.net）／executive（consultingcareerchange50.agent-best.net）／engineer（engineertenshoku.com・11/15追加：ケイズ＋HAL）。会社ごとに prefer（先に出す求人の正規表現）、特集ごとに strip3（ヒーロー3つ目の数字欄。既定は「成長中の会社を中心に」）を書ける。
 - 求人は企業LP（`pickup-src/<slug>.json`）の求人リストから拾う＝企業LPの求人を直せば特集にも出る。掲載終了は外れ、当サイトに無い求人は文字だけ。**2社未満になった特集は作らない（ページも消える）**。
 - `_features` を変えたら（会社の追加・理由の修正）`node tools/pickup-mirror.js` を回して各特化サイトも push する。求人の入れ替わりだけなら不要（jobs.json で毎朝反映）。
 - 載せるのは直接取引の会社（企業LPがある会社）だけ。アーキテックス・ヴァンテージの「コンサル営業」（不動産・人材の営業）はコンサル特集に入れない。reason も公開情報だけで、年齢・性別・学歴を理由に書かない。M&A特集では社名と「一気通貫／分業」を結びつけない（ma-lp の方針）。

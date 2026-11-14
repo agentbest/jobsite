@@ -1,0 +1,411 @@
+{
+  "slug": "lts",
+  "company": "株式会社エル・ティー・エス",
+  "companyShort": "LTS",
+  "title": "LTSへの転職｜コンサルタントの年収・選考・求人｜エージェントベスト",
+  "description": "エル・ティー・エス（LTS）への転職を考える方へ。お客様の内側に入り込んで変革を支えるコンサルタントの仕事、年収の目安、書類と面接2〜3回の選考の流れ、募集中のポジションを、同社と直接取引するエージェントベストがまとめました。",
+  "area": "コンサル・IT・スタートアップ・M&A",
+  "hero": {
+    "img": "1758095520684-99d5a1cc2768",
+    "label": "LTS ／ CAREER GUIDE",
+    "h1": "お客様の内側に入り、<br>変革を最後まで支えるコンサルへ。",
+    "lead": "エル・ティー・エス（LTS）への転職を考えている方へ。コンサルタントの仕事、年収、選考の流れ、募集中のポジションまで、同社と直接取引をしているエージェントベストがまとめました。",
+    "strip": [
+      {
+        "v": "2002",
+        "unit": "年",
+        "label": "設立"
+      },
+      {
+        "v": "1,096",
+        "unit": "名",
+        "label": "従業員数（連結・2024年12月末）"
+      },
+      {
+        "v": "2〜3",
+        "unit": "回",
+        "label": "面接回数（適性検査あり）"
+      },
+      {
+        "v": "120",
+        "unit": "日以上",
+        "label": "年間休日（完全週休2日制）"
+      }
+    ],
+    "cap": "出典：同社の会社情報・公開求人票（2026年11月時点）／写真はイメージです"
+  },
+  "about": {
+    "img": "1681489933902-bb3644b91d65",
+    "alt": "オフィスビルの外観（イメージ）",
+    "lead": "「可能性を解き放つ」を掲げ、企業の変革を支えるプロフェッショナルサービスの会社です。2002年3月設立、本社は東京・元赤坂。東証スタンダード市場に上場しています。",
+    "points": [
+      {
+        "b": "お客様の内側に入り込む支援",
+        "p": "お客様のチームの一員として、現場の方々と一緒に変革を進めるスタイルが基本だと、同社の求人票に書かれています。"
+      },
+      {
+        "b": "3つの領域で変革を支える",
+        "p": "戦略・新規事業の「Strategy & Innovation」、業務変革・データ・AIの「Architecture & Digital」、官民連携や地方創生の「Social & Public」の3つです。"
+      },
+      {
+        "b": "製品や親会社を持たない独立系",
+        "p": "特定の製品に縛られず、中立的な立場でお客様にとって最適な製品・ベンダーを選ぶと、同社の求人票は説明しています。"
+      }
+    ],
+    "cap": "設立2002年3月／資本金 839,963,900円（2026年6月30日時点）／従業員1,096名（連結・2024年12月末）。2026年10月に東証スタンダード市場へ移行。出典：同社の会社情報・公開求人票"
+  },
+  "work": {
+    "img": "1573164574572-cb89e39749b4",
+    "alt": "チームで打ち合わせをする様子（イメージ）",
+    "h2": "LTSのコンサルタントの仕事",
+    "lead": "業務を分析して課題を見つけ、あるべき姿を設計し、実行と定着まで支えます。考えるだけで終わらず、現場の人と一緒に手を動かすのが同社の特徴です。",
+    "steps": [
+      {
+        "n": "POINT 1",
+        "b": "業務を読み解く",
+        "p": "業務の構造を分析して課題を見つける「ビジネスアナリシス」を、設立当初から磨いてきたと説明されています。"
+      },
+      {
+        "n": "POINT 2",
+        "b": "超上流から入る",
+        "p": "ERPや基幹システムの変革では、企画・構想の段階からお客様側に入って支援します。"
+      },
+      {
+        "n": "POINT 3",
+        "b": "実行と定着まで",
+        "p": "施策を提言するだけでなく、業務設計・移行計画・ユーザー教育などの定着まで関わります。"
+      },
+      {
+        "n": "POINT 4",
+        "b": "職種を変える道もある",
+        "p": "入社後に別の職種へ挑戦できる、社内キャリアチェンジの仕組みがあります。"
+      }
+    ],
+    "note": "コンサル未経験の方を歓迎する求人（IT変革支援・SAP・新規事業開発）もあります。"
+  },
+  "income": {
+    "h2": "ポジションと年収の目安",
+    "lead": "いずれも入社時の想定年収です。経験・能力を考慮して、同社の規定で決まります。",
+    "stairs": [
+      {
+        "small": "コンサル未経験歓迎の求人",
+        "b": "500〜1,100万円",
+        "span": "IT変革支援・新規事業開発など"
+      },
+      {
+        "small": "シニアコンサルタント",
+        "b": "550〜1,100万円",
+        "span": "ビジネス・DXコンサルタントなど"
+      },
+      {
+        "small": "マネージャー",
+        "b": "900〜2,400万円",
+        "span": "ビジネス・戦略コンサルタントなど"
+      }
+    ],
+    "breakdown": "月給制または年俸制で、等級によって異なります。月給制は固定残業30時間分を含み、超えた分は別途支給です。昇給は年1〜2回で、面談と自己目標の設定・評価にもとづいて決まります。",
+    "cap": "出典：同社の公開求人票（2026年11月時点）"
+  },
+  "selection": {
+    "h2": "選考は、書類と面接2〜3回。",
+    "lead": "公開求人票に書かれている選考の流れです。適性検査があります。",
+    "steps": [
+      {
+        "t": "STEP 1",
+        "b": "書類選考",
+        "p": "職務経歴をもとに、応募するポジションとの合い方を見られます。"
+      },
+      {
+        "t": "STEP 2",
+        "b": "面接（2〜3回）",
+        "p": "回数はポジションによって異なります。適性検査もあります。"
+      },
+      {
+        "t": "STEP 3",
+        "b": "内定",
+        "p": "条件のすり合わせは当社が間に入ります。"
+      }
+    ],
+    "cap": "出典：同社の公開求人票（2026年11月時点）。詳しい流れは相談時にお伝えします／写真はイメージです"
+  },
+  "jobs": {
+    "lead": "中途採用の公開求人です（2026年11月15日時点）。",
+    "groups": [
+      {
+        "label": "戦略・新規事業",
+        "items": [
+          {
+            "title": "【コンサル未経験歓迎】新規事業開発コンサルタント（事業化～グロース伴走）",
+            "salary": "550〜1,100万円",
+            "href": "https://jobs.agent-best.net/job/recdN6pPwYoWbMgml/",
+            "pick": true
+          },
+          {
+            "title": "【メンバー】スタートアップ・新規事業創出支援コンサルタント（静岡）",
+            "salary": "500〜600万円",
+            "href": "https://jobs.agent-best.net/job/rec2CNaDwmAyuHImt/"
+          },
+          {
+            "title": "フィジカルAIコンサルタント（戦略×技術／メンバー）",
+            "salary": "600〜1,200万円",
+            "href": "https://jobs.agent-best.net/job/rec47gDhy7FcXGxhi/"
+          },
+          {
+            "title": "戦略コンサルタント（財務戦略、経営支援）",
+            "salary": "850〜1,600万円",
+            "href": "https://jobs.agent-best.net/job/rec6oYvCipC6bGztx/"
+          },
+          {
+            "title": "フィジカルAIビジネスリード",
+            "salary": "900〜2,000万円",
+            "href": "https://jobs.agent-best.net/job/recI37BGkYjajw7wM/"
+          },
+          {
+            "title": "【マネージャー】スタートアップ・新規事業創出支援コンサルタント（静岡）",
+            "salary": "700〜1,500万円",
+            "href": "https://jobs.agent-best.net/job/reccqXLDt9SuspRiW/"
+          },
+          {
+            "title": "戦略コンサルタント（中長期的成長戦略、競争戦略（市場創造を含む））",
+            "salary": "850〜1,600万円",
+            "href": "https://jobs.agent-best.net/job/recgEZGyUvpcselrv/"
+          },
+          {
+            "title": "新規事業開発コンサルタント（戦略構想～現場支援）",
+            "salary": "700〜1,100万円",
+            "href": "https://jobs.agent-best.net/job/recjr3oIcoTBHSlu1/"
+          },
+          {
+            "title": "テクノロジー戦略/IT戦略コンサルタント",
+            "salary": "650〜1,500万円",
+            "href": "https://jobs.agent-best.net/job/recmTWZz4wW1TFXjx/"
+          },
+          {
+            "title": "【M＆A】コーポレートアドバイザリー（マネージャークラス）※コンサル経験者歓迎",
+            "salary": "1,000〜2,400万円",
+            "href": "https://jobs.agent-best.net/job/recpBpqAmt743CpIN/"
+          },
+          {
+            "title": "戦略コンサルタント（マネージャー）",
+            "salary": "1,200〜2,400万円",
+            "href": "https://jobs.agent-best.net/job/recz8VoovNUooB8sW/"
+          }
+        ]
+      },
+      {
+        "label": "IT・DX・データ",
+        "items": [
+          {
+            "title": "【コンサル未経験歓迎/超上流＆ERP】IT変革支援コンサルタント",
+            "salary": "500〜750万円",
+            "href": "https://jobs.agent-best.net/job/rechnRzv1SDBEHQrH/",
+            "pick": true
+          },
+          {
+            "title": "データ分析コンサルタント",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/rec0MZeAE9sUYOzR6/"
+          },
+          {
+            "title": "【ビジネス企画】プロダクトマネジメントコンサルタント",
+            "salary": "700〜2,020万円",
+            "href": "https://jobs.agent-best.net/job/rec9tXGwNOwkPKuYV/"
+          },
+          {
+            "title": "ITコンサルタント（プロダクト開発）",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recAlSTo5ZWErjQTq/"
+          },
+          {
+            "title": "クライアントのDX化を推進する開発マネージャー（フレックスタイム/リモートワーク可）",
+            "salary": "525〜1,500万円",
+            "href": "https://jobs.agent-best.net/job/recCefYN6LTCAD93x/"
+          },
+          {
+            "title": "【超上流/ERP】IT変革支援コンサルタント",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recDRo4y5Msl21jw9/"
+          },
+          {
+            "title": "経営管理DXコンサルタント（リーダー、マネージャー）",
+            "salary": "800〜1,500万円",
+            "href": "https://jobs.agent-best.net/job/recExTNij1ywjmduX/"
+          },
+          {
+            "title": "CRM/SFAコンサルタント",
+            "salary": "550〜2,020万円",
+            "href": "https://jobs.agent-best.net/job/recKK82E8oGRMG4wn/"
+          },
+          {
+            "title": "【コンサル未経験歓迎/SAP】 SAPコンサルタント",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recdZ9X1boiAmb9Ye/"
+          },
+          {
+            "title": "【ユーザーサイドで伴走】プロジェクトマネジメントコンサルタント",
+            "salary": "650〜1,400万円",
+            "href": "https://jobs.agent-best.net/job/recfSrzbCD3PVSLMs/"
+          },
+          {
+            "title": "経営管理DXコンサルタント（メンバー）",
+            "salary": "550〜1,100万円",
+            "href": "https://jobs.agent-best.net/job/recg2tkZz4kxScJrg/"
+          },
+          {
+            "title": "データ戦略/全社データ基盤コンサルタント",
+            "salary": "650〜1,500万円",
+            "href": "https://jobs.agent-best.net/job/recg9iAklDIlAp5oh/"
+          },
+          {
+            "title": "SAP会計コンサルタント（リーダー、マネージャー）",
+            "salary": "700〜1,500万円",
+            "href": "https://jobs.agent-best.net/job/recjr0abZ6my40Ihg/"
+          },
+          {
+            "title": "DXコンサルタント（シニアコンサルタント）",
+            "salary": "550〜1,100万円",
+            "href": "https://jobs.agent-best.net/job/recxljec81GSfMisj/"
+          }
+        ]
+      },
+      {
+        "label": "業務改革・組織",
+        "items": [
+          {
+            "title": "トランスフォーメーションコンサルタント（静岡）【シニアコンサルタント】",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/rec1CWQQvdNVQaopj/"
+          },
+          {
+            "title": "トランスフォーメーションコンサルタント（関西）【マネージャー】",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/rec8EL9K0wPZju6RE/"
+          },
+          {
+            "title": "ビジネスコンサルタント（シニアコンサルタント）",
+            "salary": "550〜1,100万円",
+            "href": "https://jobs.agent-best.net/job/rec8sklV7AtKndNV6/"
+          },
+          {
+            "title": "トランスフォーメーションコンサルタント（愛知）【マネージャー】",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recC6wbPKfl9AeQau/"
+          },
+          {
+            "title": "BPRコンサルタント",
+            "salary": "800〜1,800万円",
+            "href": "https://jobs.agent-best.net/job/recGXKvo0Gz40Pmz2/"
+          },
+          {
+            "title": "トランスフォーメーションコンサルタント（関西）【シニアコンサルタント】",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recI89eiNhHZ9RlnH/"
+          },
+          {
+            "title": "製造業界またはサービス業界向けコンサルタント（シニアコンサルタント）",
+            "salary": "700〜1,000万円",
+            "href": "https://jobs.agent-best.net/job/recULG5zsl8Ru7x7O/"
+          },
+          {
+            "title": "トランスフォーメーションコンサルタント（静岡）【マネージャー】",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/reccGcSiC44YU8JVu/"
+          },
+          {
+            "title": "トランスフォーメーションコンサルタント（東京）【シニアコンサルタント】",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/reccZLG1MKNlx0CjQ/"
+          },
+          {
+            "title": "ビジネスコンサルタント（マネージャー）",
+            "salary": "900〜1,500万円",
+            "href": "https://jobs.agent-best.net/job/recok2LwsPK1eWiJP/"
+          },
+          {
+            "title": "トランスフォーメーションコンサルタント（東京）【マネージャー】",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recpWivXF7dXZKYSp/"
+          },
+          {
+            "title": "人・組織変革コンサルタント",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recrxwwsmychVt7sC/"
+          },
+          {
+            "title": "製造業界またはサービス業界向けコンサルタント（マネージャー・アソシエイトマネージャー）",
+            "salary": "1,000〜1,800万円",
+            "href": "https://jobs.agent-best.net/job/recxqGsJmRaewp9Cn/"
+          }
+        ]
+      },
+      {
+        "label": "エンジニア・営業",
+        "items": [
+          {
+            "title": "【第2卒歓迎・システム担当】システム運用改善エンジニア（静岡県牧之原市）",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recCOPejOjOzHJtqB/"
+          },
+          {
+            "title": "AI/機械学習エンジニア（Python/AI × データ活用に挑戦できる）",
+            "salary": "500〜1,100万円",
+            "href": "https://jobs.agent-best.net/job/recSfETebvq4qQFqw/"
+          },
+          {
+            "title": "フリーコンサルタント紹介事業 法人営業マネージャー",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recUqBFfcfVPQpJ6z/"
+          },
+          {
+            "title": "システム運用改善エンジニア（静岡県牧之原市）",
+            "salary": "年収は面談時にご案内",
+            "href": "https://jobs.agent-best.net/job/recfhrRt2cBLJ5YJ3/"
+          }
+        ]
+      }
+    ]
+  },
+  "fit": {
+    "img": "1517048676732-d65bc937f952",
+    "alt": "会議机で資料を見る手元（イメージ）",
+    "lead": "応募条件はポジションごとに違います。合う人は、同社が求人票で示している人物像をもとにまとめました。",
+    "req": {
+      "h3": "応募条件",
+      "items": [
+        "経験者向けの求人：ポジションに応じたコンサルティング・業務改革・システム導入などの経験",
+        "コンサル未経験歓迎の求人：ERP導入や基幹システム開発への参画経験、事業会社での新規事業の推進経験など（求人ごとに異なります）",
+        "詳しい条件は、各求人のページでご確認ください"
+      ]
+    },
+    "fit": {
+      "h3": "合う人",
+      "items": [
+        "答えのない問いに、論理的に考え抜いて向き合える人",
+        "お客様の現場に入り込み、関係者と協働しながら泥臭く進められる人",
+        "最後まで粘り強く考え、品質にこだわれる人",
+        "人として信頼される振る舞いを大切にできる人"
+      ]
+    }
+  },
+  "faq": [
+    {
+      "q": "コンサル未経験でも応募できますか？",
+      "a": "コンサル未経験を歓迎する求人があります（IT変革支援・SAP・新規事業開発など）。それぞれ、ERP導入や新規事業の推進など、求人ごとに必要な経験が決まっています。いまの経歴でどれが合うかは、面談で一緒に確認します。"
+    },
+    {
+      "q": "リモートワークはできますか？",
+      "a": "同社の採用ページでは、一部の業務を除いてテレワークを導入していると書かれています。お客様先での勤務になるプロジェクトもあります。"
+    },
+    {
+      "q": "働き方はどうなっていますか？",
+      "a": "職位によって、コアタイムのないフレックスタイム制か、専門業務型裁量労働制です。完全週休2日制（土・日）で、年間休日は120日以上です。"
+    }
+  ],
+  "closingImg": "1779275859289-9bcf24ee065a",
+  "footerSource": "掲載している数字・条件は、エル・ティー・エスの会社情報と公開求人票（2026年11月時点）にもとづきます。",
+  "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Marek Okon／Dylan Gillis／Ryusei Machida",
+  "related": {
+    "href": "https://lp.consultenshoku.com/",
+    "label": "未経験からコンサル転職（特設サイト）"
+  }
+}
