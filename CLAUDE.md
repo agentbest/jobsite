@@ -804,7 +804,20 @@ pickup-src/<slug>.json（1社1ファイル）＋ _style.html（CSS）＋ _why.ht
 - 写真は Unsplash の確認済み8枚だけ（SCHEMA.md の表）。一覧カードは順番に違う写真を当てる。
 - canonical は jobs 側（特化ドメイン lp.〇〇tenshoku.com に同じ特集を置くときは jobs を正にする＝11/14 決定）。
 - ヘッダー（4テンプレ）に「厳選特集」→ `/pickup/`。
-- まだ無いもの：Airtable の「注力」チェック（出し入れ・おすすめ順の上位寄せ・カードの厳選バッジ）、職種別のまとめ特集（コンサル・PM など）。
+- まだ無いもの：Airtable の「注力」チェック（出し入れ・おすすめ順の上位寄せ・カードの厳選バッジ）。
+
+### テーマ別のおすすめ企業特集（`pickup/<theme>/`）— 2026-11-15
+
+松岡さん「おすすめ企業特集を作り、サイトに合う企業だけ掲載してほしい」。1テーマ＝1ファイル `pickup-src/_features/<theme>.json`。
+```
+_features/<theme>.json（載せる会社の slug・求人タイトルに当てる match/exclude・選んだ理由 reason・FAQ・特化サイト site）
+  → pickup-pages.js の build() → pickup/<theme>/index.html（canonical＝ここ）＋ pickup/<theme>/jobs.json（掲載中の求人だけ）
+  → node tools/pickup-mirror.js [theme…] → C:\Users\user\<site.repo>\pickup\index.html（特化サイトの入口。canonical は jobs、求人は jobs.json を読んで差し替え）
+```
+- いまのテーマ：pm（lp.pmtenshoku.com）／consulting（lp.consultenshoku.com）／it-consulting（eng.agent-best.net）／ma（lp.matenshoku.com）／fde（fde.agent-best.net）／executive（consultingcareerchange50.agent-best.net）。
+- 求人は企業LP（`pickup-src/<slug>.json`）の求人リストから拾う＝企業LPの求人を直せば特集にも出る。掲載終了は外れ、当サイトに無い求人は文字だけ。**2社未満になった特集は作らない（ページも消える）**。
+- `_features` を変えたら（会社の追加・理由の修正）`node tools/pickup-mirror.js` を回して各特化サイトも push する。求人の入れ替わりだけなら不要（jobs.json で毎朝反映）。
+- 載せるのは直接取引の会社（企業LPがある会社）だけ。アーキテックス・ヴァンテージの「コンサル営業」（不動産・人材の営業）はコンサル特集に入れない。reason も公開情報だけで、年齢・性別・学歴を理由に書かない。M&A特集では社名と「一気通貫／分業」を結びつけない（ma-lp の方針）。
 
 ## 404対策（2026-10-12）
 

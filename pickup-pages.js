@@ -134,16 +134,172 @@ document.addEventListener('click',ev=>{const a=ev.target.closest('a[data-consult
   return { html: o.join(''), jobs: groups.reduce((n, g) => n + g.items.length, 0) };
 }
 
-function footer(note, credits, related) {
+function footer(note, credits, related, base = '') {
   return `<footer><div class="wrap">
   <dl><dt>運営</dt><dd>株式会社エージェントベスト</dd><dt>許可番号</dt><dd>有料職業紹介事業 13-ユ-316964</dd><dt>所在地</dt><dd>東京都港区六本木4-8-7 嶋田ビル5階</dd></dl>
   <p>${note}</p>
   ${credits ? `<p>写真：Unsplash（${e(credits)}）</p>` : ''}
-  <p><a href="/pickup/">厳選特集の一覧</a>${related ? `｜<a href="${esc(related.href)}">${e(related.label)}</a>` : ''}｜<a href="/">求人を探す</a>｜<a href="/company/">企業を探す</a></p>
+  <p><a href="${base}/pickup/">厳選特集の一覧</a>${related ? `｜<a href="${esc(related.href)}">${e(related.label)}</a>` : ''}｜<a href="${base}/">求人を探す</a>｜<a href="${base}/company/">企業を探す</a></p>
 </div></footer>`;
 }
 
-function indexPage(list, style) {
+/* ───────── テーマ別のおすすめ企業特集（/pickup/<theme>/）— 2026-11-15 ─────────
+   松岡さん「おすすめ企業特集を作り、サイトに合う企業だけ掲載してほしい」。
+   pickup-src/_features/<theme>.json（1テーマ1ファイル）に、載せる会社（企業LPの slug）と、その会社の求人から
+   テーマに合うものを拾う正規表現（match / exclude。企業LPの求人タイトルに当てる）と、選んだ理由（reason）を書く。
+   - 求人は企業LP（pickup-src/<slug>.json）の求人リストから拾う。掲載中ならリンク、掲載終了なら外す、当サイトに無い求人は文字だけ（企業LPと同じ）。
+   - canonical はこの jobs 側。特化サイト（lp.〇〇tenshoku.com 等）には tools/pickup-mirror.js で同じ中身の入口ページを書き出す
+     （canonical は jobs を指し、求人リストは pickup/<theme>/jobs.json を読んで毎回差し替える＝掲載終了は向こうでも自動で外れる）。
+   - 1社ごとの写真は使わない（写真は8枚しかなく、同じページで同じ写真を2回使わないため）。
+   - 載せてよいのは直接取引の会社（企業LPがある会社）だけ。理由（reason）も公開情報だけで書く。年齢・性別・学歴を理由に書かない。 */
+const PHOTOGRAPHER = {
+  '1758095520684-99d5a1cc2768': 'Dmitrijs Tokyo', '1779275859289-9bcf24ee065a': 'Ryusei Machida', '1606044466411-207a9a49711f': 'Marek Okon',
+  '1681489933902-bb3644b91d65': 'Sho Shimada', '1517048676732-d65bc937f952': 'Dylan Gillis', '1573164574572-cb89e39749b4': 'Christina @ wocintechchat.com',
+  '1681505531034-8d67054e07f6': 'Amina Atar', '1634201580620-110223756709': 'Javier Haro',
+};
+const FEATURE_SHOW = 6;   // 1社あたり最初に見せる求人の数（残りは「ほか◯件」で企業LPへ）
+
+/* 特集に載せる会社と求人を決める。cos＝{slug: 企業JSON}、live＝掲載中の求人ID */
+function featureItems(f, cos, live) {
+  return f.companies.map(c => {
+    const co = cos[c.slug];
+    if (!co) { console.warn(`  特集 ${f.slug}: 企業LP ${c.slug} が無いので外しました`); return null; }
+    const re = new RegExp(c.match), ex = c.exclude ? new RegExp(c.exclude) : null;
+    const jobs = [];
+    for (const g of co.jobs.groups) for (const j of g.items) {
+      if (!re.test(j.title) || (ex && ex.test(j.title))) continue;
+      const id = (String(j.href || '').match(/\/job\/(rec[A-Za-z0-9]+)\//) || [])[1];
+      if (id && !live.has(id)) continue;                       // 掲載終了は外す
+      if (jobs.some(x => x.t === j.title)) continue;
+      jobs.push({ t: j.title, s: j.salary || '', id: id || null });
+    }
+    jobs.sort((a, b) => (b.id ? 1 : 0) - (a.id ? 1 : 0));      // リンクできる求人を先に
+    return { slug: c.slug, co, reason: c.reason, jobs };
+  }).filter(Boolean);
+}
+
+function featureJobsHtml(slug, coSlug, jobs, base) {
+  const q = `?utm_source=pickup&utm_medium=feature&utm_campaign=${slug}`;
+  const li = jobs.slice(0, FEATURE_SHOW).map(j => {
+    const inner = `<b>${e(j.t)}</b><span class="sal">${e(j.s)}</span>`;
+    return j.id ? `<li><a href="${base}/job/${j.id}/${q}">${inner}</a></li>` : `<li><div class="j">${inner}</div></li>`;
+  }).join('');
+  const more = jobs.length > FEATURE_SHOW ? `<li class="more"><a href="${base}/pickup/company/${coSlug}/#jobs">ほか${jobs.length - FEATURE_SHOW}件のポジションを見る</a></li>` : '';
+  return jobs.length ? li + more : `<li class="none"><a href="${base}/pickup/company/${coSlug}/#jobs">募集中のポジションは企業の特集ページでご覧ください</a></li>`;
+}
+
+/* opt.mirror＝特化サイトに置く入口ページとして書き出す（リンクを jobs の絶対URLにし、求人は jobs.json で差し替える） */
+function featurePage(f, items, style, why, opt = {}) {
+  const m = !!opt.mirror, base = m ? SITE : '';
+  const canonical = `${SITE}/pickup/${f.slug}/`;
+  const src = m ? `lp-${f.slug}` : 'pickup';
+  const utm = `https://calendly.com/r_matsuoka?utm_source=${src}&utm_campaign=feature-${f.slug}`;
+  const cta = (label, cls = 'btn') => `<a class="${cls}" href="${utm}" target="_blank" rel="noopener" data-consult="${src}-feature-${f.slug}">${e(label)}</a>`;
+  const h = f.hero, ab = f.about || {};
+  const nJobs = items.reduce((n, x) => n + x.jobs.length, 0);
+  const aboutImg = ab.img || '1681489933902-bb3644b91d65', closeImg = f.closingImg || '1779275859289-9bcf24ee065a';
+  const credits = [...new Set([h.img, aboutImg, closeImg])].map(i => PHOTOGRAPHER[i]).filter(Boolean).join('／');
+  const points = ab.points || [
+    { b: '直接取引している会社だけ', p: 'エージェントベストが採用担当と直接やり取りしている会社から選んでいます。' },
+    { b: 'テーマに合うポジションだけ', p: '各社の募集から、この特集のテーマに合うポジションだけを抜き出しています。' },
+    { b: '募集中の求人だけ', p: '掲載が終わった求人は、毎朝の更新で自動的に外れます。' },
+  ];
+  const cards = items.map((x, i) => `<article class="fco" id="co-${x.slug}">
+    <div class="fco__head"><span class="fco__n">${String(i + 1).padStart(2, '0')}</span><div><small>${e(x.co.hero.label)}</small><h3>${e(x.co.company)}</h3></div></div>
+    <p class="fco__reason">${e(x.reason)}</p>
+    <ul class="joblist" data-co="${x.slug}">${featureJobsHtml(f.slug, x.slug, x.jobs, base)}</ul>
+    <p class="fco__more"><a class="btn btn--line" href="${base}/pickup/company/${x.slug}/?utm_source=${src}&utm_medium=feature&utm_campaign=${f.slug}">${e(x.co.companyShort)}の特集ページを見る</a></p>
+  </article>`).join('');
+  const brand = m ? `<a class="brand" href="${esc(f.site.url)}">エージェントベスト<small>${e(f.site.name)}</small></a>`
+    : `<a class="brand" href="/">エージェントベスト<small>厳選特集</small></a>`;
+  const related = m ? { href: f.site.url, label: `${f.site.name}のトップへ` } : (f.site ? { href: f.site.url, label: f.site.label } : null);
+  const refresh = m ? `<script>
+fetch('${SITE}/pickup/${f.slug}/jobs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(!d)return;
+const E=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const B='${SITE}',Q='?utm_source=pickup&utm_medium=feature&utm_campaign=${f.slug}',N=${FEATURE_SHOW};
+document.querySelectorAll('ul.joblist[data-co]').forEach(u=>{const c=u.dataset.co,j=d.companies[c];if(!j)return;
+const li=j.slice(0,N).map(x=>{const i='<b>'+E(x.t)+'</b><span class="sal">'+E(x.s)+'</span>';return x.id?'<li><a href="'+B+'/job/'+x.id+'/'+Q+'">'+i+'</a></li>':'<li><div class="j">'+i+'</div></li>'}).join('');
+const more=j.length>N?'<li class="more"><a href="'+B+'/pickup/company/'+c+'/#jobs">ほか'+(j.length-N)+'件のポジションを見る</a></li>':'';
+u.innerHTML=j.length?li+more:'<li class="none"><a href="'+B+'/pickup/company/'+c+'/#jobs">募集中のポジションは企業の特集ページでご覧ください</a></li>';});
+}).catch(()=>{});
+</script>` : '';
+  return head(f.title, f.description, canonical, style, IMG(h.img, 1200)) + `<header class="top"><div class="wrap">
+  ${brand}
+  ${cta('無料で相談する')}
+</div></header>
+<section class="hero" style="min-height:78vh;background-image:url('${IMG(h.img, 2000)}')"><div class="wrap">
+  <p class="label">${e(h.label)}</p>
+  <h1>${e(h.h1)}</h1>
+  <p>${e(h.lead)}</p>
+  <div class="ctas">${cta(h.cta || '無料で相談する')}<a class="btn btn--line" href="#companies">掲載企業を見る</a></div>
+  <div class="strip"><div><b>${items.length}<small>社</small></b><span>掲載企業</span></div><div><b>${nJobs}<small>件</small></b><span>テーマに合うポジション</span></div><div><b>直接</b><span>全社と直接取引</span></div><div><b>無料</b><span>ご相談</span></div></div>
+  <p class="cap">写真はイメージです</p>
+</div></section>
+<section class="sec"><div class="wrap split">
+  <div class="ph"><img src="${IMG(aboutImg, 1000)}" alt="${e(ab.alt || 'イメージ')}" loading="lazy"></div>
+  <div><div class="chapter"><i>01</i><span>ABOUT</span></div><h2>${e(ab.h2 || 'この特集について')}</h2>
+  <p class="lead" style="margin-bottom:24px">${e(ab.lead || '')}</p><ul class="points">${points.map(p => `<li><b>${e(p.b)}</b><p>${e(p.p)}</p></li>`).join('')}</ul></div>
+</div></section>
+<section class="sec sec--alt" id="companies"><div class="wrap">
+  <div class="chapter"><i>02</i><span>COMPANIES</span></div><h2>${e(f.companiesH2 || '掲載している企業')}</h2>
+  <p class="lead">${e(f.companiesLead || '気になる会社があれば、どのポジションが合うかから一緒に考えます。')}</p>
+  <div class="fcos">${cards}</div>
+</div></section>
+<section class="sec"><div class="wrap">
+  <div class="chapter"><i>03</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  ${why.replace('{{AREA}}', esc(f.area || DEFAULT_AREA)).replace('{{COMPANY}}', 'ひとつの会社')}
+</div></section>
+<section class="sec sec--alt"><div class="wrap" style="max-width:860px">
+  <div class="chapter"><i>04</i><span>FAQ</span></div><h2>よくある質問</h2>
+  ${(f.faq || []).map(q => `<details><summary>${e(q.q)}</summary><p>${e(q.a)}</p></details>`).join('')}
+  <details><summary>ここに載っていない会社も相談できますか？</summary><p>はい。この特集に載せているのは直接取引している会社の一部です。ほかの会社の求人も含めて、条件に合うものを一緒に探します。</p></details>
+  <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。</p></details>
+</div></section>
+<section class="closing" style="background-image:url('${IMG(closeImg, 2000)}')"><div class="wrap">
+  <h2>まずは、話を聞いてみませんか。</h2><p>どの会社・どのポジションが合うか、今の経歴でどう見られるかからお話しします。相談は無料です。</p>
+  ${cta('無料で相談する（オンライン30分）')}
+</div></section>
+${footer('掲載している内容は、各社の公開求人票・公式サイト（2026年11月時点）にもとづきます。求人は毎朝更新し、掲載が終わったものは外しています。最新の条件はご相談時にご確認ください。写真はイメージで、各社とは関係ありません。', credits, related, base)}
+${cta('無料で相談する', 'btn float')}
+<style>
+.fcos{display:grid;gap:24px}
+.fco{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:32px 32px 28px}
+.fco__head{display:flex;gap:20px;align-items:flex-start;margin-bottom:14px}
+.fco__n{font-family:var(--serif);font-size:44px;line-height:1;color:var(--gold)}
+.fco__head small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--ink-faint)}
+.fco h3{font-family:var(--serif);font-size:clamp(20px,2.4vw,26px);line-height:1.4;margin:4px 0 0}
+.fco__reason{color:var(--ink-soft);margin:0 0 20px;max-width:820px}
+.fco .joblist li.more a,.fco .joblist li.none a{display:block;padding:14px 4px;font-size:14px;color:var(--gold);font-weight:700;text-decoration:none}
+.fco__more{margin:20px 0 0}.fco__more .btn{padding:10px 22px;font-size:14px;color:var(--ink)}
+@media (max-width:560px){.fco{padding:24px 18px 22px}.fco__n{font-size:34px}.fco__head{gap:14px}.joblist a,.joblist div.j{grid-template-columns:1fr}}
+</style>
+<script>document.addEventListener('click',ev=>{const a=ev.target.closest('a[data-consult]');if(a&&window.gtag)gtag('event','consult_click',{placement:a.dataset.consult});},true);</script>
+${refresh}
+</body>
+</html>
+`;
+}
+
+function readFeatures(root) {
+  const dir = path.join(root, 'pickup-src', '_features');
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter(f => f.endsWith('.json')).sort().map(f => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')))
+    .sort((a, b) => (a.order || 99) - (b.order || 99));
+}
+function readCompanies(root) {
+  const src = path.join(root, 'pickup-src'), cos = {};
+  for (const f of fs.readdirSync(src).filter(f => f.endsWith('.json'))) { const d = JSON.parse(fs.readFileSync(path.join(src, f), 'utf8')); cos[d.slug] = d; }
+  return cos;
+}
+function readParts(root) {
+  const src = path.join(root, 'pickup-src');
+  return {
+    style: fs.readFileSync(path.join(src, '_style.html'), 'utf8'),
+    why: fs.readFileSync(path.join(src, '_why.html'), 'utf8').split('-->').slice(1).join('-->').trim(),
+  };
+}
+
+function indexPage(list, style, feats = []) {
   const canonical = `${SITE}/pickup/`;
   const title = '厳選特集｜エージェントベストが直接取引する企業｜エージェントベストジョブ転職';
   const desc = 'エージェントベストが採用担当と直接やり取りしている企業を、1社ずつ紹介します。仕事の中身・年収・選考の流れ・募集中のポジションを、公開情報をもとにまとめました。';
@@ -163,8 +319,16 @@ function indexPage(list, style) {
   <p>エージェントベストが直接取引している企業を、1社ずつまとめました。仕事の中身、年収の仕組み、選考の流れ、募集中のポジションまで、公開情報をもとに紹介しています。</p>
   <p class="cap">写真はイメージです</p>
 </div></section>
-<section class="sec"><div class="wrap">
-  <div class="chapter"><i>01</i><span>COMPANIES</span></div><h2>企業の一覧</h2>
+${feats.length ? `<section class="sec"><div class="wrap">
+  <div class="chapter"><i>01</i><span>THEMES</span></div><h2>テーマ別のおすすめ企業特集</h2>
+  <p class="lead">職種やキャリアの方向ごとに、合う会社だけを集めました。</p>
+  <ul class="pklist">${feats.map((f, i) => `<li><a class="pk" href="/pickup/${f.slug}/">
+    <span class="pk__img" style="background-image:url('${IMG(f.hero.img, 800)}')"></span>
+    <span class="pk__body"><small>${e(f.hero.label)}</small><b>${e(f.name)}</b><span>${e(plain(f.hero.h1))}</span><em>掲載企業 ${f.count}社</em></span>
+  </a></li>`).join('')}</ul>
+</div></section>
+<section class="sec sec--alt">` : '<section class="sec">'}<div class="wrap">
+  <div class="chapter"><i>${feats.length ? '02' : '01'}</i><span>COMPANIES</span></div><h2>企業の一覧</h2>
   <p class="lead">気になる会社があれば、どのポジションが合うかから一緒に考えます。</p>
   <ul class="pklist">${cards}</ul>
 </div></section>
@@ -208,10 +372,39 @@ function build(root, live) {
   /* データを消した会社のページは消す */
   const cdir = path.join(root, 'pickup', 'company');
   for (const s of fs.readdirSync(cdir)) if (!keep.has(s)) fs.rmSync(path.join(cdir, s), { recursive: true, force: true });
-  fs.writeFileSync(path.join(root, 'pickup', 'index.html'), indexPage(list, style), 'utf8');
-  console.log(`厳選特集（pickup/）を書き出しました: 企業LP ${list.length}社（当サイト未掲載の求人 ${unlinked}件は文字だけ・掲載終了の求人は外した）`);
+  /* テーマ別のおすすめ企業特集（/pickup/<theme>/）と、特化サイトが読む jobs.json */
+  const cos = readCompanies(root), feats = [];
+  for (const f of readFeatures(root)) {
+    if (f.slug === 'company') throw new Error('特集の slug に company は使えません');
+    const items = featureItems(f, cos, live);
+    if (items.length < 2) { console.warn(`  特集 ${f.slug}: 載せる会社が2社未満なので作りません`); continue; }
+    const dir = path.join(root, 'pickup', f.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), featurePage(f, items, style, why), 'utf8');
+    fs.writeFileSync(path.join(dir, 'jobs.json'), JSON.stringify({ updated: new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), companies: Object.fromEntries(items.map(x => [x.slug, x.jobs])) }), 'utf8');
+    feats.push({ slug: f.slug, name: f.name, hero: f.hero, count: items.length, jobs: items.reduce((n, x) => n + x.jobs.length, 0) });
+  }
+  /* データを消した特集は消す（company/ は企業LP） */
+  for (const s of fs.readdirSync(path.join(root, 'pickup'))) {
+    const p = path.join(root, 'pickup', s);
+    if (s !== 'company' && fs.statSync(p).isDirectory() && !feats.some(f => f.slug === s)) fs.rmSync(p, { recursive: true, force: true });
+  }
+  fs.writeFileSync(path.join(root, 'pickup', 'index.html'), indexPage(list, style, feats), 'utf8');
+  console.log(`厳選特集（pickup/）を書き出しました: 企業LP ${list.length}社（当サイト未掲載の求人 ${unlinked}件は文字だけ・掲載終了の求人は外した）・テーマ別特集 ${feats.map(f => `${f.slug} ${f.count}社/${f.jobs}件`).join('・') || 'なし'}`);
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
-  return { urls: [{ loc: `${SITE}/pickup/`, lastmod: today, pri: '0.8' }].concat(list.map(x => ({ loc: `${SITE}/pickup/company/${x.slug}/`, lastmod: today, pri: '0.8' }))) };
+  return { urls: [{ loc: `${SITE}/pickup/`, lastmod: today, pri: '0.8' }]
+    .concat(feats.map(f => ({ loc: `${SITE}/pickup/${f.slug}/`, lastmod: today, pri: '0.8' })))
+    .concat(list.map(x => ({ loc: `${SITE}/pickup/company/${x.slug}/`, lastmod: today, pri: '0.8' }))) };
 }
 
-module.exports = { build };
+/* 特化サイトに置く入口ページを書き出す（tools/pickup-mirror.js から呼ぶ）。live＝掲載中の求人ID */
+function mirror(root, slug, live) {
+  const { style, why } = readParts(root);
+  const f = readFeatures(root).find(x => x.slug === slug);
+  if (!f) throw new Error(`特集 ${slug} がありません`);
+  if (!f.site) throw new Error(`特集 ${slug} に site がありません`);
+  const items = featureItems(f, readCompanies(root), live);
+  return { f, html: featurePage(f, items, style, why, { mirror: true }) };
+}
+
+module.exports = { build, mirror, readFeatures };
