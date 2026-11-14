@@ -1,0 +1,447 @@
+{
+ "slug": "loglass",
+ "company": "株式会社ログラス",
+ "companyShort": "ログラス",
+ "title": "ログラスへの転職｜PdM・エンジニア・セールスの年収・選考・求人｜エージェントベスト",
+ "description": "経営管理SaaS「Loglass」のログラスへの転職を考える方へ。PdM、エンジニア、セールス、事業企画などの仕事、年収の目安、面接の流れ、募集中のポジションを、同社と直接取引するエージェントベストがまとめました。",
+ "area": "SaaS・IT・スタートアップ",
+ "hero": {
+  "img": "1758095520684-99d5a1cc2768",
+  "label": "LOGLASS ／ CAREER GUIDE",
+  "h1": "「良い景気を作ろう。」を、<br>プロダクトとデータで進める。",
+  "lead": "ログラスへの転職を考えている方へ。PdM、エンジニア、セールス、事業企画などの仕事、年収、選考の流れ、募集中のポジションまで、同社と直接取引をしているエージェントベストがまとめました。",
+  "strip": [
+   {
+    "v": "800〜2,000",
+    "unit": "万円",
+    "label": "PdM・新規事業PdMの年収（公開求人）"
+   },
+   {
+    "v": "5",
+    "unit": "つ",
+    "label": "提供するプロダクト・サービスの数（求人票より）"
+   },
+   {
+    "v": "3",
+    "unit": "回前後",
+    "label": "面接の回数（選考はオンラインが基本）"
+   },
+   {
+    "v": "3",
+    "unit": "拠点",
+    "label": "東京・名古屋・大阪"
+   }
+  ],
+  "cap": "出典：同社の会社概要、採用サイトのよくある質問、公開求人票（2026年11月時点）／写真はイメージです"
+ },
+ "about": {
+  "img": "1681489933902-bb3644b91d65",
+  "alt": "オフィスビルの外観（イメージ）",
+  "lead": "「良い景気を作ろう。」をミッションに、経営管理クラウド「Loglass 経営管理」を提供する会社です。2019年5月に設立され、本社は東京・港区の三田にあります。",
+  "points": [
+   {
+    "b": "経営データを集めて、一元管理する",
+    "p": "「Loglass 経営管理」は、財務数値やKPIの予算・見込・実績といった経営データの収集・統合・一元管理を効率化し、高度な分析を可能にするクラウドシステムです。2020年に提供を始めました。"
+   },
+   {
+    "b": "マルチプロダクトへ",
+    "p": "2023年からマルチプロダクト展開に注力し、いまは5つのプロダクト・サービスを提供しています。IR領域のAIプロダクト「Loglass AI IR」は、2025年12月に正式リリースされました。"
+   },
+   {
+    "b": "6つのバリュー",
+    "p": "「Feed Forward」「But We Go」「Fail Fast」「Moon Shot」「Customer Win」「Clean Fight」を掲げ、個人と組織の成長を目指しています。"
+   }
+  ],
+  "cap": "設立2019年5月／資本金1億円／拠点は東京本社、東海（名古屋）、関西（大阪）。出典：同社の会社概要・求人票"
+ },
+ "work": {
+  "img": "1573164574572-cb89e39749b4",
+  "alt": "チームで打ち合わせをする様子（イメージ）",
+  "h2": "ログラスで働くということ",
+  "lead": "職種が幅広く、プロダクト側とビジネス側のどちらにもポジションがあります。ここでは公開求人から、代表的な3つの仕事を紹介します。",
+  "steps": [
+   {
+    "n": "POINT 1",
+    "b": "AIプロダクトのPdM",
+    "p": "IR領域の新規AIプロダクトで、戦略、顧客理解、価値設計、ロードマップ策定、開発の推進までを一貫して担います。「何を作るか」を決める仕事が中心です。"
+   },
+   {
+    "n": "POINT 2",
+    "b": "複数プロダクトを支える共通基盤",
+    "p": "認証・認可、契約管理、外部連携など、複数のプロダクトを横断する共通基盤を、ゼロから設計・構築します。"
+   },
+   {
+    "n": "POINT 3",
+    "b": "エンタープライズ向けセールス",
+    "p": "経営企画や経営管理の部門を相手に、経営数字を扱う提案をします。マネージャー候補は、現場のプレイヤーとしても動きながら組織づくりを担います。"
+   },
+   {
+    "n": "POINT 4",
+    "b": "AIを使って働き方を変える",
+    "p": "PdM自身もAIを積極的に使い、プロダクトづくりの進め方をアップデートしていくことが期待されています。"
+   }
+  ],
+  "note": "開発の技術は、Go、TypeScript、Kotlin、Rust、PostgreSQL、AWS、Kubernetesなどです（共通基盤エンジニアの求人票より）。"
+ },
+ "income": {
+  "h2": "ポジションと年収の目安",
+  "lead": "いずれも公開求人票に載っている年収の範囲です。ご本人の経験とスキルを考慮して決まります。",
+  "stairs": [
+   {
+    "small": "セールス・CS・パートナー・マーケターのメンバー",
+    "b": "500〜1,200万円",
+    "span": "BDRは600〜850万円、インサイドセールス・アカウントマネージャーは700〜1,200万円"
+   },
+   {
+    "small": "エンジニア・PdM・事業企画",
+    "b": "700〜2,000万円",
+    "span": "PdMは800〜2,000万円、エンジニアは700〜2,000万円など"
+   },
+   {
+    "small": "セールス統括責任者候補・エンタープライズセールス部長候補",
+    "b": "1,200〜2,000万円",
+    "span": "統括責任者候補は1,600〜2,000万円"
+   }
+  ],
+  "realized": [
+   {
+    "small": "昇給",
+    "b": "年2回（4月・10月）"
+   },
+   {
+    "small": "入社日の有給付与",
+    "b": "10日"
+   }
+  ],
+  "breakdown": "フレックスタイム制で、コアタイムは10時〜15時です。勤務は原則週2日以上出社のハイブリッド型です（2026年1月時点）。借り上げ社宅制度、企業型DCなどがあります。試用期間は3か月（最大6か月）です。",
+  "cap": "出典：同社公開求人票、採用サイトのよくある質問（2026年11月時点）"
+ },
+ "selection": {
+  "img": "1634201580620-110223756709",
+  "h2": "選考は、面接3回前後。",
+  "lead": "選考は、面接（3回前後）からオファーの流れです。ポジションによっては、ワークサンプルテストがあります。",
+  "steps": [
+   {
+    "t": "STEP 1",
+    "b": "面接（3回前後）",
+    "p": "基本はオンラインです。一部のポジションでは、最終面接をオフィスで行います。"
+   },
+   {
+    "t": "STEP 2",
+    "b": "ワークサンプルテスト",
+    "p": "実施するポジションとしないポジションがあります。"
+   },
+   {
+    "t": "STEP 3",
+    "b": "オファー面談",
+    "p": "オファーのときは、オフィスに来社して面談します。"
+   }
+  ],
+  "cap": "出典：同社採用サイトのよくある質問（2026年11月時点）。ポジションによって異なります／写真はイメージです"
+ },
+ "jobs": {
+  "lead": "中途採用の公開求人です（2026年11月14日時点）。カジュアル面談用の枠は除いています。",
+  "groups": [
+   {
+    "label": "PdM・AI新規事業",
+    "items": [
+     {
+      "title": "AIプロダクトPdM（IR領域 LLM新規プロダクト）",
+      "salary": "800〜2,000万円",
+      "pick": true
+     },
+     {
+      "title": "PdM・新規事業推進担当",
+      "salary": "800〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recXiC04zsilz5zXc/"
+     },
+     {
+      "title": "AI領域PdM",
+      "salary": "800〜1,800万円",
+      "pick": true
+     },
+     {
+      "title": "基盤プロダクトマネージャー",
+      "salary": "1,000〜1,500万円"
+     },
+     {
+      "title": "プロダクトマネージャー（PdM）【オープンポジション】",
+      "salary": "800〜2,000万円"
+     },
+     {
+      "title": "【新規事業】Forward Deployed Engineer（FDE）",
+      "salary": "1,000〜2,000万円"
+     }
+    ]
+   },
+   {
+    "label": "エンジニア・QA・デザイナー",
+    "items": [
+     {
+      "title": "AI基盤エンジニア",
+      "salary": "800〜1,800万円",
+      "href": "https://jobs.agent-best.net/job/recCV9AYpSfHNuvhV/"
+     },
+     {
+      "title": "AIプロダクトエンジニア（LLM新規プロダクト）",
+      "salary": "700〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recTfDfNZjJBboaZX/"
+     },
+     {
+      "title": "AIプロダクトエンジニア（営業領域 LLM新規プロダクト）",
+      "salary": "700〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recrWI6ZGo0e3CsEB/"
+     },
+     {
+      "title": "共通基盤エンジニア",
+      "salary": "700〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recDnlbVWIDL5o3td/"
+     },
+     {
+      "title": "プロダクトデータ基盤エンジニア",
+      "salary": "1,000〜1,500万円"
+     },
+     {
+      "title": "FP&Aエンジニア",
+      "salary": "700〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recsK5oAopf94hbGN/"
+     },
+     {
+      "title": "SRE",
+      "salary": "700〜2,000万円"
+     },
+     {
+      "title": "プロダクトセキュリティエンジニア",
+      "salary": "800〜1,500万円"
+     },
+     {
+      "title": "プロダクトQAエンジニア",
+      "salary": "700〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recDQnvziPTXXyZmU/"
+     },
+     {
+      "title": "プロダクトQAリード",
+      "salary": "700〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recp2A2NitL7lzqap/"
+     },
+     {
+      "title": "戦略QA",
+      "salary": "800〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recQK82G5bRbT1XYS/"
+     },
+     {
+      "title": "エンジニアリングマネージャー候補",
+      "salary": "700〜2,000万円"
+     },
+     {
+      "title": "エンジニア（オープンポジション）",
+      "salary": "700〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recPGwzWAFy5nJVto/"
+     },
+     {
+      "title": "プロダクトデザイナー（AIネイティブプロダクト）",
+      "salary": "650〜1,300万円"
+     }
+    ]
+   },
+   {
+    "label": "セールス・CS・パートナー",
+    "items": [
+     {
+      "title": "フィールドセールス（マネージャー候補）",
+      "salary": "960〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recsyfsUAnKBJC0JA/"
+     },
+     {
+      "title": "【フィールドセールス】関西拠点／マネージャー候補",
+      "salary": "960〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recIHAzlDckpHZ9RR/"
+     },
+     {
+      "title": "エンタープライズ セールス部長／マネージャー候補",
+      "salary": "1,200〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recpTuMFaubJsrd9A/"
+     },
+     {
+      "title": "セールス統括責任者候補",
+      "salary": "1,600〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recmbif2MvBZHaLdY/"
+     },
+     {
+      "title": "インサイドセールス（マネージャー候補）",
+      "salary": "700〜1,200万円",
+      "href": "https://jobs.agent-best.net/job/reccsY3bPLh6CaAsk/"
+     },
+     {
+      "title": "エンタープライズアカウントセールス（BDR）",
+      "salary": "600〜850万円",
+      "href": "https://jobs.agent-best.net/job/recEpKJGhnQVPC641/"
+     },
+     {
+      "title": "アカウントマネージャー",
+      "salary": "700〜1,200万円",
+      "href": "https://jobs.agent-best.net/job/rec87XZ48h4FJnRLd/"
+     },
+     {
+      "title": "アカウントマネージャー（関西オフィス）",
+      "salary": "700〜1,200万円",
+      "href": "https://jobs.agent-best.net/job/recWdDbxuiL89T2ik/"
+     },
+     {
+      "title": "カスタマーサクセス／プリセールス（シニアメンバー）",
+      "salary": "700〜1,200万円",
+      "href": "https://jobs.agent-best.net/job/recigKQxo7MNn3rWT/"
+     },
+     {
+      "title": "【パートナービジネス】パートナービジネスメンバー",
+      "salary": "550〜900万円",
+      "href": "https://jobs.agent-best.net/job/recyyqLWa36H63GQP/"
+     },
+     {
+      "title": "【パートナービジネス】パートナービジネスメンバー（関西オフィス）",
+      "salary": "550〜900万円",
+      "href": "https://jobs.agent-best.net/job/recMUeDBY4v6wuUZt/"
+     },
+     {
+      "title": "【新規事業】アカウントエグゼクティブ／フィールドセールス（マネージャー候補歓迎）",
+      "salary": "780〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recTqX5VxpiVwl3v0/"
+     },
+     {
+      "title": "【新規事業】インサイドセールス（マネジャー候補）",
+      "salary": "700〜1,500万円"
+     },
+     {
+      "title": "【新規事業】カスタマーサクセス（導入・オンボーディング・活用支援）",
+      "salary": "700〜1,500万円"
+     },
+     {
+      "title": "【新規事業】カスタマーサクセス（シニア／エンタープライズ・マネージャー候補）",
+      "salary": "780〜1,500万円"
+     }
+    ]
+   },
+   {
+    "label": "事業企画・マーケティング",
+    "items": [
+     {
+      "title": "経営戦略/事業開発 Strategy＆Growth",
+      "salary": "800〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recEVBSTUq3nCBp6J/"
+     },
+     {
+      "title": "事業企画",
+      "salary": "800〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recHkq2wFcYv5726z/"
+     },
+     {
+      "title": "Revenue企画責任者候補",
+      "salary": "800〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recHw5qGZoRFRZeq6/"
+     },
+     {
+      "title": "BizDevマネージャー候補",
+      "salary": "800〜1,500万円"
+     },
+     {
+      "title": "BizOps責任者候補",
+      "salary": "800〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recxHfgFeA8ETUPO1/"
+     },
+     {
+      "title": "【マーケティング】部長候補",
+      "salary": "800〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recrObobHiXCo5rcx/"
+     },
+     {
+      "title": "シニアプロダクトマーケター（イベント・コンテンツ・コミュニティ）",
+      "salary": "500〜800万円",
+      "href": "https://jobs.agent-best.net/job/recWKZvOLmsqGcYYk/"
+     },
+     {
+      "title": "【マーケティング】シニアプロダクトマーケター（ナーチャリング領域）",
+      "salary": "600〜850万円",
+      "href": "https://jobs.agent-best.net/job/recwVFwIjpwOA651p/"
+     }
+    ]
+   },
+   {
+    "label": "コーポレート",
+    "items": [
+     {
+      "title": "【コーポレート】M&A責任者候補",
+      "salary": "850〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recutK7UEmcuVWAa0/"
+     },
+     {
+      "title": "ProductHR: HRBP部長候補",
+      "salary": "800〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/reckW9cKaOKmH5vHL/"
+     },
+     {
+      "title": "HR Ops(責任者候補)",
+      "salary": "800〜1,200万円"
+     },
+     {
+      "title": "エグゼクティブサーチ・スペシャリスト",
+      "salary": "800〜1,500万円"
+     },
+     {
+      "title": "Salesforce Administrator / Salesforce アドミン",
+      "salary": "600〜1,050万円",
+      "href": "https://jobs.agent-best.net/job/recr8T7SehwsiWlpT/"
+     },
+     {
+      "title": "【コーポレート】コーポレートIT",
+      "salary": "例 年収650万円（応相談）",
+      "href": "https://jobs.agent-best.net/job/recqMhvJ6jXERyZwJ/"
+     }
+    ]
+   }
+  ]
+ },
+ "fit": {
+  "img": "1517048676732-d65bc937f952",
+  "alt": "打ち合わせの様子（イメージ）",
+  "lead": "応募条件は、代表的なポジション（AIプロダクトPdM・フィールドセールス・共通基盤エンジニア）の求人票のとおりです。合う人は、PdMの求人票が示す人物像をもとにまとめました。",
+  "req": {
+   "h3": "応募条件（代表的な3ポジション）",
+   "items": [
+    "【AIプロダクトPdM】WebサービスまたはSaaSにおけるプロダクトマネジメント経験、顧客課題をプロダクト要件に落とし込んだ経験、エンジニア・デザイナー・ビジネスとの協業経験",
+    "【フィールドセールス（マネージャー候補）】課題解決型営業の経験5年以上、年間ノルマやチームの売上目標を継続して達成した実績",
+    "【共通基盤エンジニア】サービス間通信を伴う内部システムのアーキテクチャ設計と実装の経験、バックエンドの開発・運用経験",
+    "歓迎：LLM・生成AI・AIエージェントを使ったサービス開発の経験、BtoB SaaSのPdM経験、エンタープライズ向けの営業経験"
+   ]
+  },
+  "fit": {
+   "h3": "合う人",
+   "items": [
+    "AIでプロダクトや仕事をどう変えるかを、考えることにワクワクできる人",
+    "顧客の課題を起点に、価値から逆算して考えられる人",
+    "不確実性の高い環境を楽しみ、仮説検証を素早く回せる人",
+    "職種の境界を越えて周囲を巻き込み、プロダクトを前に進められる人"
+   ]
+  }
+ },
+ "faq": [
+  {
+   "q": "経営管理や会計の知識がなくても応募できますか？",
+   "a": "ポジションによります。AIプロダクトPdMの求人票では、IR・会計・経営管理・ファイナンス領域の知見は歓迎条件で、必須ではありません。職種ごとの条件は、相談のときにご案内します。"
+  },
+  {
+   "q": "選考にはどのくらいかかりますか？",
+   "a": "同社の採用サイトでは、面接3回前後のあとオファーと案内されています。ポジションによっては、ワークサンプルテストがあります。面接は基本的にオンラインです。"
+  },
+  {
+   "q": "リモートで働けますか？",
+   "a": "一部可能です。同社の採用サイトでは、原則週2日以上出社のハイブリッド型と案内されています（2026年1月時点）。業務上必要な場合は出社できることが条件です。"
+  },
+  {
+   "q": "複数のポジションに同時に応募できますか？",
+   "a": "可能です。ただし、経歴に応じて、特定のポジションでの選考を提案されることがあると、同社の採用サイトに書かれています。"
+  }
+ ],
+ "closingImg": "1779275859289-9bcf24ee065a",
+ "footerSource": "掲載している数字・条件は、ログラスの会社概要・採用サイト・公開求人票（2026年11月時点）にもとづきます。",
+ "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Javier Haro／Dylan Gillis／Ryusei Machida"
+}

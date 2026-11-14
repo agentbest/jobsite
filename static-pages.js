@@ -858,9 +858,13 @@ function build(root, full){
   console.log(`特集ハブを書き出しました: ${hubs.map(x => `${x.h.slug} ${x.jobs.length}件`).join('・')}`);
   console.log(`一覧ページを書き出しました: 職種 ${groups.length}・職種×勤務地 ${nCombo}・勤務地 ${areaUnits.length}（新規は ${LP_MIN}件以上・公開中は ${LP_KEEP}件以上で維持）`);
 
+  /* 5b. 厳選特集（pickup/・直接取引の企業LP）。掲載中の求人にだけリンクする。中身は pickup-pages.js の先頭 */
+  const pk = require('./pickup-pages').build(root, new Set(full.map(j => j.id)));
+
   /* 6. sitemap.xml / robots.txt */
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
   const urls = [{ loc: `${SITE}/`, lastmod: today, pri: '1.0' }]
+    .concat(pk.urls)
     .concat(pages.filter(p => p.hub || p.jobs.length >= LP_MIN).map(p => ({ loc: `${SITE}/${p.rel}/`, lastmod: today, pri: '0.8' })))   /* LP_MIN 未満は noindex（landingPage） */
     .concat(co.urls.map(u => ({ loc: u.loc, lastmod: u.lastmod || today, pri: u.pri })))
     .concat(full.map(j => ({ loc: SITE + jobPath(j), lastmod: j.createdAt || (j.recordCreatedAt || today).slice(0, 10), pri: '0.6' })));
