@@ -66,6 +66,7 @@ function growthHtml(g, ch) {
   ${g.lead ? `<p class="lead">${e(g.lead)}</p>` : ''}
   ${hl.length ? `<div class="gr-hl">${hl.map(x => `<div><b>${e(x.v)}<small>${e(x.unit || '')}</small></b><span>${e(x.label)}</span></div>`).join('')}</div>` : ''}
   ${st.length ? `<div class="gr-st">${st.map((x, i) => `<div><span class="n">${String(i + 1).padStart(2, '0')}</span><b>${e(x.b)}</b><p>${e(x.p)}</p></div>`).join('')}</div>` : ''}
+  ${g.more && (g.more.items || []).length ? `<h3 class="gr-dh">${e(g.more.h3 || '業績以外の注目ポイント')}</h3><div class="gr-st gr-st--more">${g.more.items.map(x => `<div><b>${e(x.b)}</b><p>${e(x.p)}</p></div>`).join('')}</div>` : ''}
   ${mk && mk.p ? `<div class="gr-mk"><div class="gr-mk__h"><small>${e(mk.h3 || '市場と将来性')}</small>${mk.v ? `<b>${e(mk.v)}</b><span>${e(mk.label || '')}</span>` : ''}</div><p>${e(mk.p)}</p></div>` : ''}
   ${decks.length ? `<h3 class="gr-dh">会社が公開している資料</h3><div class="decks">${decks.map(deckHtml).join('')}</div>` : ''}
   ${g.cap ? `<p class="cap">${e(g.cap)}</p>` : ''}
