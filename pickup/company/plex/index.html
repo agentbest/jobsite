@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「日本を動かす仕組みをつくる」をミッションに、物流・建設・製造などの基幹産業に向けて、人材・SaaS・M&amp;A仲介の3つの事業を展開する、東京・日本橋の会社です。</p><ul class="points"><li><b>エッセンシャルワーカー産業に特化</b><p>2018年4月に創業し、同年7月にドライバーの人材紹介を始めました。物流・建設・製造・整備などの採用を支援しています。</p></li><li><b>人材紹介のほかに、SaaSとM&amp;A仲介も</b><p>2022年にSaaS事業、2023年にM&amp;A仲介事業を始めました。新しい事業が立ち上がり続けていると、求人票に書かれています。</p></li><li><b>創業以来、黒字で増収</b><p>2025年度は創業8期目で売上96億円を突破したと、同社の採用サイトで紹介されています。</p></li></ul><p class="cap">設立2018年4月／資本金500万円／本社：東京都中央区日本橋本石町。出典：同社の公開求人票・採用サイト（2026年11月時点）</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>物流・建設の人手不足に、3つの事業で挑む</h2>
+  <p class="lead">2018年にドライバーの人材紹介から始まり、2025年度の売上高は96.1億円を突破しました。8期連続の黒字増収です。求人サービス「プレックスジョブ」と建設業向けクラウド「サクミル」の利用も、短い期間で広がっています。</p>
+  <div class="gr-hl"><div><b>200<small>万人</small></b><span>「プレックスジョブ」の累計登録者数（2026年4月時点）</span></div><div><b>6<small>万事業所</small></b><span>「プレックスジョブ」の利用事業所数（2026年4月時点）</span></div><div><b>3,000<small>社</small></b><span>「サクミル」の正式利用企業数（2026年3月時点）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>求職者の基盤が厚い</b><p>「プレックスジョブ」は、2018年の開始から7年で登録者が200万人を超えました。利用事業所は6万を超えています。月に約7.5万人が新しく登録しています。</p></div><div><span class="n">02</span><b>SaaSが伸びている</b><p>建設業向けクラウド「サクミル」の正式利用企業は、2026年3月に3,000社を超えました。2,000社からわずか5か月での到達です。</p></div><div><span class="n">03</span><b>事業を次々と生む</b><p>人材・SaaS・M&amp;A仲介の3つのモデルで、20の事業を展開しています（2026年4月時点）。2026年7月には「エッセンシャルワーカー採用研究所」を立ち上げました。同社は2030年に売上500億円を目標に掲げています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>2.15倍</b><span>輸送・機械運転従事者の有効求人倍率（2025年度・職業全体は1.10倍）</span></div><p>厚生労働省の統計では、2025年度の輸送・機械運転従事者の有効求人倍率は2.15倍でした。建設・採掘従事者は5.02倍で、職業全体の1.10倍を大きく上回ります。建設業の就業者は1997年の685万人から、2025年には478万人に減りました。働き手の確保は、物流・建設で長く続く課題です。</p></div>
+  <h3 class="gr-dh">会社が公開している資料</h3><div class="decks"><div class="deck"><div class="deck__frame"><iframe src="https://speakerdeck.com/player/8d1a5537e223419d8a2441c83de19b8e" title="プレックス キャリアアドバイザー職向け会社紹介資料" loading="lazy" allowfullscreen></iframe></div><p class="deck__meta"><b>プレックス キャリアアドバイザー職向け会社紹介資料</b><span>株式会社プレックス（@plex）・2026-01</span><a href="https://speakerdeck.com/plex/puretukusu-kiyariaadobaizazhi-xiang-kehui-she-shao-jie-zi-liao" target="_blank" rel="noopener">資料を開く ↗</a></p></div><div class="deck"><div class="deck__frame"><iframe src="https://speakerdeck.com/player/1f7cb9887e024df5aa69f846cc6998bc" title="1分でわかる株式会社プレックス" loading="lazy" allowfullscreen></iframe></div><p class="deck__meta"><b>1分でわかる株式会社プレックス</b><span>株式会社プレックス（@plex）・2026-03</span><a href="https://speakerdeck.com/plex/1min" target="_blank" rel="noopener">資料を開く ↗</a></p></div></div>
+  <p class="cap">出典：同社プレスリリース（2026年3月・4月・7月）、厚生労働省「一般職業紹介状況」（2025年度・労働政策研究・研修機構の集計）、国土交通省「インフラ整備を担う建設業の担い手確保・育成について」（2026年4月22日）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1681505531034-8d67054e07f6?w=1200&q=75" alt="書類の上で握手を交わす様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>プレックスの両面キャリアアドバイザーの仕事</h2><p class="lead" style="margin:0">求職者と企業の両方を担当し、求人の提案から入社までを一貫して支えます。企業の新規開拓は別の部署が担当します。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>プレックスの両面キャリアアドバイザーの仕事</h2><p class="lead" style="margin:0">求職者と企業の両方を担当し、求人の提案から入社までを一貫して支えます。企業の新規開拓は別の部署が担当します。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">STEP 1</span><b>初回面談</b><p>求職者のキャリアプランや、現職での悩みを聞きます。</p></div><div><span class="n">STEP 2</span><b>求人提案・企業への打診</b><p>セールスが契約した企業の中から合う求人を探し、求職者に求人を、企業に求職者を提案します。</p></div><div><span class="n">STEP 3</span><b>日程調整・選考対策</b><p>面接の日程を調整し、選考に向けた対策をします。</p></div><div><span class="n">STEP 4</span><b>入社までのフォロー</b><p>内定から入社まで、求職者と企業をサポートします。</p></div></div><p class="oneperson">月間75,000名の新規求職者が登録し、入社後1〜2か月は少人数の体制でマネージャーによるオンボーディングがあると、求人票に書かれています。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>年収の目安</h2><p class="lead">求人票に載っている年収と、同社が示している実績です。目標に連動する報酬制度で、成果によって変わります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>年収の目安</h2><p class="lead">求人票に載っている年収と、同社が示している実績です。目標に連動する報酬制度で、成果によって変わります。</p>
   <div class="stairs"><div class="stair"><small>求人票の年収（入社時）</small><b>400〜600万円</b><span>面接の評価によってスタートの年収は異なります</span></div><div class="stair"><small>上位10%の平均年収</small><b>876万円</b><span>同社の採用サイトより</span></div><div class="stair"><small>最高年収</small><b>1,700万円</b><span>同社の採用サイトより</span></div></div>
   <div class="realized"><div><small>試用期間</small><b>3か月</b></div><div><small>平均残業時間</small><b>月40時間</b></div></div>
   <p class="breakdown">月給は333,334円〜500,000円です。固定残業手当（月45時間分）を含み、超過分は別に支給されます。土日祝休みで、休暇は120日と記載されています。</p><p class="cap">出典：同社の公開求人票・採用サイト（2026年11月時点）。成果の絶対評価で、他のメンバーの成績に左右されないと書かれています</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接3回。</h2><p class="lead">キャリアアドバイザーの選考の流れです。面接は、人事、現場リーダー、代表の順で進みます。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接3回。</h2><p class="lead">キャリアアドバイザーの選考の流れです。面接は、人事、現場リーダー、代表の順で進みます。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書・職務経歴書で選考します。</p></div><div><span class="t">STEP 2</span><b>一次選考</b><p>人事が面接します。</p></div><div><span class="t">STEP 3</span><b>二次選考</b><p>現場のリーダーが面接します。</p></div><div><span class="t">STEP 4</span><b>最終選考</b><p>代表が面接し、通過すると内定です。</p></div></div>
   <p class="cap">出典：同社の公開求人票の選考プロセス（2026年時点）。ポジションによって異なることがあります／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"></div><ul class="joblist" data-g="g0"><li><a href="/job/recqVnAnztGnTOaBj/?utm_source=pickup&utm_medium=company-lp&utm_campaign=plex"><b>【人材紹介事業】介護領域 両面キャリアアドバイザー（東京・日本橋）<span class="pick">厳選</span></b><span class="sal">400〜600万円</span></a></li><li><a href="/job/recdpnxsqQpKXBkyR/?utm_source=pickup&utm_medium=company-lp&utm_campaign=plex"><b>【人材紹介事業】士業領域 両面キャリアアドバイザー（東京・日本橋）</b><span class="sal">400〜600万円</span></a></li><li><a href="/job/recJzVfjdUHeKCOnL/?utm_source=pickup&utm_medium=company-lp&utm_campaign=plex"><b>【人材紹介事業】両面キャリアアドバイザー（名古屋拠点）</b><span class="sal">400〜600万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、両面キャリアアドバイザーの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、両面キャリアアドバイザーの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件</h3><ul><li>介護領域・士業領域：個人・法人を問わず、営業経験2年以上</li><li>名古屋拠点：個人・法人を問わず、販売接客または営業の経験</li><li>名古屋拠点：目標の数字に向けて努力した経験</li><li>いずれも、同社のミッション・バリューに共感できること</li></ul></div><div><h3>合う人</h3><ul><li>日本一のエッセンシャルワーカー採用プラットフォームを、本気でつくっていきたい人</li><li>高い成果を追い求められる人</li><li>変化を楽しめる人</li><li>成果が報酬に反映される環境で、プレイヤーとして力を伸ばしたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、人材紹介・エッセンシャルワーカー領域に特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>人材紹介の経験がなくても応募できますか？</summary><p>応募条件は、販売接客または営業の経験と、目標を達成するために努力した経験です。</p></details><details><summary>新規開拓の営業はありますか？</summary><p>求人票では、新規開拓の法人営業は別の部署が担当し、キャリアアドバイザーはマッチング業務に集中できると紹介されています。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>書類選考のあと、人事、現場リーダー、代表の3回の面接です。入社時期は相談できると書かれています。</p></details><details><summary>キャリアアドバイザーのあとのキャリアは？</summary><p>まずプレイヤーとして成果を出し、そのあとプレイングリーダー、エリアマネージャー、新規事業の立ち上げ、他の事業部への異動などの道があると、求人票に書かれています。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。プレックス以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

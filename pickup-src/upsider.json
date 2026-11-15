@@ -219,5 +219,65 @@
  ],
  "closingImg": "1606044466411-207a9a49711f",
  "footerSource": "掲載している数字・条件は、UPSIDERの公開求人票（2026年11月時点）にもとづきます。",
- "credits": "Ryusei Machida／Sho Shimada／Christina @ wocintechchat.com／Javier Haro／Dylan Gillis／Marek Okon"
+ "credits": "Ryusei Machida／Sho Shimada／Christina @ wocintechchat.com／Javier Haro／Dylan Gillis／Marek Okon",
+ "growth": {
+  "h2": "中小企業の資金とお金の流れを、AIで変える",
+  "lead": "法人カードから始まり、請求書払い、成長資金の融資へと事業を広げてきた会社です。売上規模は約100億円で、年50%以上の成長を続けていると発表しています。AIによる与信の速さが、中小企業やスタートアップに選ばれる理由です。",
+  "highlights": [
+   {
+    "v": "約100",
+    "unit": "億円",
+    "label": "売上規模（2025年7月の事業戦略発表会資料）"
+   },
+   {
+    "v": "50",
+    "unit": "%以上",
+    "label": "年間成長率（同資料。継続していると記載）"
+   },
+   {
+    "v": "5",
+    "unit": "兆円以上",
+    "label": "法人カード「UPSIDER」の累計与信枠（2025年11月時点）"
+   }
+  ],
+  "strengths": [
+   {
+    "b": "AIで与信を速く大きく",
+    "p": "独自のAI与信モデルで、審査は最短数秒です。与信枠は最大10億円まで用意しています。累計の与信枠は5兆円を超えました。"
+   },
+   {
+    "b": "中小企業へ一気に拡大",
+    "p": "スタートアップ向けから始まり、中小企業全体へ利用が広がりました。ユーザー数は2022年の5,000社から、2025年に80,000社になったと発表しています。"
+   },
+   {
+    "b": "成長資金まで供給する",
+    "p": "みずほとの合弁で、成長企業向けのデットファンド「UPSIDER BLUE DREAM Fund」を運営しています。累計の貸付は150億円を超えました（2026年2月末時点）。"
+   }
+  ],
+  "market": {
+   "h3": "市場と将来性",
+   "v": "1,263万枚",
+   "label": "国内の法人カード発行枚数（2026年3月末・前年比4.0%増）",
+   "p": "日本クレジット協会の調査では、2026年3月末の法人カードは1,263万枚でした。前年から4.0%増えています。カード全体の伸び3.0%を上回るペースです。経費の支払いをカードや請求書払いにまとめる動きは、中小企業にも広がっています。"
+  },
+  "cap": "出典：同社プレスリリース（2026年8月）、同社「事業戦略発表会資料」（2025年7月）、日本クレジット協会「クレジットカード発行枚数調査結果」（2026年11月13日公表）",
+  "decks": [
+   {
+    "title": "UPSIDER Company Deck",
+    "provider": "speakerdeck",
+    "url": "https://speakerdeck.com/upsider_official/upsider-culture",
+    "embed": "https://speakerdeck.com/player/b443d3bbab294718a7f9365070ec1001",
+    "date": "2026-03",
+    "owner": "UPSIDER, Inc.（@upsider_official）"
+   },
+   {
+    "title": "UPSIDER Engineering Deck",
+    "provider": "speakerdeck",
+    "url": "https://speakerdeck.com/upsider_official/upsider-engineering-deck",
+    "embed": "https://speakerdeck.com/player/def0cbf8c6c843ee9705d8f1fcf1f529",
+    "date": "2026-03",
+    "owner": "UPSIDER, Inc.（@upsider_official）"
+   }
+  ]
+ }
 }

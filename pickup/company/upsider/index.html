@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「挑戦者を支える世界的な金融プラットフォームを創る」をミッションに、法人カード「UPSIDER」などの法人向け金融サービスを展開する、東京・目黒の会社です。2018年に創業しました。</p><ul class="points"><li><b>法人カードの基盤を、外部にも提供</b><p>AI与信モデルやカード発行、債権管理・回収の仕組みをパッケージ化し、2025年7月に法人カード基盤の外部提供を新規事業として始めると発表しました。</p></li><li><b>みずほフィナンシャルグループとの連携</b><p>2025年7月に、みずほ銀行が同社株式の約70%を取得すると発表されました。2026年6月には、みずほ銀行が「UPSIDER BANK by MIZUHO」の提供を始めています。</p></li><li><b>開発チームが主体で進める</b><p>設計・開発・テスト・運用まで、開発チームが主体になって進めます。毎週のリリースを軸に、小さな変更を積み重ねる開発です。</p></li></ul><p class="cap">設立2018年5月／従業員 170名（求人票の表記）。出典：同社の公開求人票（2026年11月時点）</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>中小企業の資金とお金の流れを、AIで変える</h2>
+  <p class="lead">法人カードから始まり、請求書払い、成長資金の融資へと事業を広げてきた会社です。売上規模は約100億円で、年50%以上の成長を続けていると発表しています。AIによる与信の速さが、中小企業やスタートアップに選ばれる理由です。</p>
+  <div class="gr-hl"><div><b>約100<small>億円</small></b><span>売上規模（2025年7月の事業戦略発表会資料）</span></div><div><b>50<small>%以上</small></b><span>年間成長率（同資料。継続していると記載）</span></div><div><b>5<small>兆円以上</small></b><span>法人カード「UPSIDER」の累計与信枠（2025年11月時点）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>AIで与信を速く大きく</b><p>独自のAI与信モデルで、審査は最短数秒です。与信枠は最大10億円まで用意しています。累計の与信枠は5兆円を超えました。</p></div><div><span class="n">02</span><b>中小企業へ一気に拡大</b><p>スタートアップ向けから始まり、中小企業全体へ利用が広がりました。ユーザー数は2022年の5,000社から、2025年に80,000社になったと発表しています。</p></div><div><span class="n">03</span><b>成長資金まで供給する</b><p>みずほとの合弁で、成長企業向けのデットファンド「UPSIDER BLUE DREAM Fund」を運営しています。累計の貸付は150億円を超えました（2026年2月末時点）。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>1,263万枚</b><span>国内の法人カード発行枚数（2026年3月末・前年比4.0%増）</span></div><p>日本クレジット協会の調査では、2026年3月末の法人カードは1,263万枚でした。前年から4.0%増えています。カード全体の伸び3.0%を上回るペースです。経費の支払いをカードや請求書払いにまとめる動きは、中小企業にも広がっています。</p></div>
+  <h3 class="gr-dh">会社が公開している資料</h3><div class="decks"><div class="deck"><div class="deck__frame"><iframe src="https://speakerdeck.com/player/b443d3bbab294718a7f9365070ec1001" title="UPSIDER Company Deck" loading="lazy" allowfullscreen></iframe></div><p class="deck__meta"><b>UPSIDER Company Deck</b><span>UPSIDER, Inc.（@upsider_official）・2026-03</span><a href="https://speakerdeck.com/upsider_official/upsider-culture" target="_blank" rel="noopener">資料を開く ↗</a></p></div><div class="deck"><div class="deck__frame"><iframe src="https://speakerdeck.com/player/def0cbf8c6c843ee9705d8f1fcf1f529" title="UPSIDER Engineering Deck" loading="lazy" allowfullscreen></iframe></div><p class="deck__meta"><b>UPSIDER Engineering Deck</b><span>UPSIDER, Inc.（@upsider_official）・2026-03</span><a href="https://speakerdeck.com/upsider_official/upsider-engineering-deck" target="_blank" rel="noopener">資料を開く ↗</a></p></div></div>
+  <p class="cap">出典：同社プレスリリース（2026年8月）、同社「事業戦略発表会資料」（2025年7月）、日本クレジット協会「クレジットカード発行枚数調査結果」（2026年11月13日公表）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>UPSIDERのエンジニアの仕事</h2><p class="lead" style="margin:0">募集しているのは、カード管理基盤、請求基盤、法人審査基盤、お客様向け管理画面の4つの領域です。どれも、設計から運用まで一貫して担います。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>UPSIDERのエンジニアの仕事</h2><p class="lead" style="margin:0">募集しているのは、カード管理基盤、請求基盤、法人審査基盤、お客様向け管理画面の4つの領域です。どれも、設計から運用まで一貫して担います。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>カード管理基盤（Go）</b><p>パートナー企業が法人カード事業を始めるための共通基盤を、公開APIやマルチテナントも考えながら設計・開発します。</p></div><div><span class="n">POINT 2</span><b>請求基盤（Go）</b><p>請求、入金、債権消込のワークフローをTemporalとGoで設計・実装します。正確さが強く求められる領域です。</p></div><div><span class="n">POINT 3</span><b>法人審査基盤（TypeScript）</b><p>お客様向けの審査情報の入力画面、社内の審査チーム向けの管理画面、他サービスとつなぐ共通APIを、4名のチームで開発します。</p></div><div><span class="n">POINT 4</span><b>お客様向け管理画面（TypeScript）</b><p>提携先が独自ブランドで法人カードを展開するための管理画面を、フロントエンドとバックエンドの両方で開発します。</p></div></div><p class="oneperson">いずれのポジションも、Claude CodeやCodex、Devinなどを使ったAIエージェント型のコーディングの実務経験が必須条件に書かれています（同社求人票より）。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>年収の目安</h2><p class="lead">4つのポジションとも、求人票の年収は同じです。選考での評価によって前後します。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>年収の目安</h2><p class="lead">4つのポジションとも、求人票の年収は同じです。選考での評価によって前後します。</p>
   <div class="stairs"><div class="stair"><small>年収の下限</small><b>810万円</b><span>Backend／FullStack Engineer 共通</span></div><div class="stair"><small>年収の上限</small><b>1,200万円</b><span>選考評価によって前後します</span></div></div>
   <div class="realized"><div><small>賞与</small><b>半期に一回</b></div><div><small>働き方</small><b>フルリモート・フルフレックス</b></div></div>
   <p class="breakdown">賞与は、グレードや実績によって支給されます。コアタイムのないフルフレックス制で、勤務地はリモートワークです。出社する場合は東京の目黒オフィスです。試用期間は6か月です。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、面談・書類・面接2〜3回。</h2><p class="lead">エンジニア職の選考の流れです。面接では技術課題の提出もあります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、面談・書類・面接2〜3回。</h2><p class="lead">エンジニア職の選考の流れです。面接では技術課題の提出もあります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>エントリー・カジュアル面談</b><p>応募のあと、まずカジュアル面談があります。</p></div><div><span class="t">STEP 2</span><b>書類選考</b><p>履歴書・職務経歴書で選考します。</p></div><div><span class="t">STEP 3</span><b>面接（2〜3回）</b><p>技術課題の提出を含みます。</p></div><div><span class="t">STEP 4</span><b>オファー</b><p>選考を通過すると、オファーです。</p></div></div>
   <p class="cap">出典：同社の公開求人票の選考フロー（2026年11月時点）。書類選考やカジュアル面談の結果によっては、面談や面接を見送ることがあると書かれています／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">バックエンド（Go）</button><button role="tab" aria-selected="false" data-g="g1">フルスタック（TypeScript）</button></div><ul class="joblist" data-g="g0"><li><a href="/job/recCKPsEOX3kpAcnI/?utm_source=pickup&utm_medium=company-lp&utm_campaign=upsider"><b>Backend Engineer｜カード管理基盤<span class="pick">厳選</span></b><span class="sal">810〜1,200万円</span></a></li><li><a href="/job/recyPi0H833l1Y05w/?utm_source=pickup&utm_medium=company-lp&utm_campaign=upsider"><b>Backend Engineer｜請求基盤（Credit Collections）</b><span class="sal">810〜1,200万円</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/rec3f3QeiEUNJ9QSK/?utm_source=pickup&utm_medium=company-lp&utm_campaign=upsider"><b>FullStack Engineer｜法人審査基盤（Credit Onboarding）<span class="pick">厳選</span></b><span class="sal">810〜1,200万円</span></a></li><li><a href="/job/recvK9Ni3RoiwmXCg/?utm_source=pickup&utm_medium=company-lp&utm_campaign=upsider"><b>FullStack Engineer｜お客様向け管理画面</b><span class="sal">810〜1,200万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、各ポジションの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、各ポジションの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（4ポジション共通の主なもの）</h3><ul><li>WebアプリケーションまたはAPIの設計・開発・運用の経験（Backend Engineerは目安3年以上）</li><li>仕様策定や要件定義、設計の経験、レビューの実務経験</li><li>Claude CodeやCodex／Devinなどを使ったAIエージェント型のコーディングの実務経験</li><li>ポジションにより：gRPC／REST APIとRDBでの開発経験、分散システムの設計・実装経験（請求基盤）、静的型付け言語でのバックエンド開発とReactまたはNext.jsの経験（法人審査基盤）</li></ul></div><div><h3>合う人</h3><ul><li>決済・与信・請求といった金融の中核の仕組みを、設計から運用まで担いたい人</li><li>不確実な環境でも、楽しみながら仕事を進められる人</li><li>仕様の変更や設計の改善を、自分から提案できる人</li><li>部署やチームを超えて、PdMやビジネス側と協力して進めたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、IT・フィンテック・スタートアップに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>金融系の開発経験がなくても応募できますか？</summary><p>決済・カード発行・金融系システムの経験は、求人票では歓迎条件です。必須条件はWebアプリケーションやAPIの開発経験などです。</p></details><details><summary>完全にリモートで働けますか？</summary><p>勤務地はリモートワークで、コアタイムのないフルフレックス制です。出社する場合は東京の目黒オフィスです。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>エントリー、カジュアル面談、書類選考のあと、面接が2〜3回です。面接では技術課題の提出も含まれます。</p></details><details><summary>使う技術は何ですか？</summary><p>バックエンドのポジションはGo、フルスタックのポジションはTypeScriptが中心です。ポジションごとの詳しい技術スタックは、相談のときにお伝えします。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。UPSIDER以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

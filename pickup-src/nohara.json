@@ -376,5 +376,57 @@
  ],
  "closingImg": "1779275859289-9bcf24ee065a",
  "footerSource": "掲載している数字・条件は、野原グループの公開求人票（2026年11月時点）にもとづきます。",
- "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Dylan Gillis／Marek Okon／Ryusei Machida"
+ "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Dylan Gillis／Marek Okon／Ryusei Machida",
+ "growth": {
+  "h2": "建材流通の老舗が、BIMで建設業界を変えにいく",
+  "lead": "野原グループは、建材の流通と施工を長く担ってきた会社です。2023年に、BIMで設計から製造・施工までをつなぐ「BuildApp」を始めました。人手不足が進む建設業界で、国も省人化を目標に掲げており、同社はその課題に正面から取り組んでいます。",
+  "highlights": [
+   {
+    "v": "約5,000",
+    "unit": "社",
+    "label": "建材商社として築いてきたネットワーク（BuildApp公式サイトの会社説明・2026年11月時点）"
+   },
+   {
+    "v": "357",
+    "unit": "点",
+    "label": "BIMobjectで公開したYKK APのビル用商品のBIMオブジェクト（2026年6月発表）"
+   },
+   {
+    "v": "5",
+    "unit": "年分",
+    "label": "2021〜2025年の調査を再分析した「建設DX実態調査レポート2026」（2026年6月発表）"
+   }
+  ],
+  "strengths": [
+   {
+    "b": "BIMで工程をつなぐ",
+    "p": "BuildAppは、設計事務所やゼネコンが作ったBIM設計データを、各工程で使えるデータに置き換えるクラウドサービスです。設計積算から生産・流通・施工管理・維持管理までをBIMでつなぎます。2026年2月には、鋼製建具工事向けの新サービスの商用提供も始めました。"
+   },
+   {
+    "b": "メーカーのデータが集まる",
+    "p": "2017年に設立したBIMobject Japanが、建材や設備のBIMデータを公開しています。2026年6月にはYKK APのビル用商品357点を公開しました。2026年10月にはパナソニックのプロジェクターなどのBIMデータも公開しています。"
+   },
+   {
+    "b": "業界の課題を調べ発信",
+    "p": "2024年12月にBuildApp総合研究所を立ち上げました。2021〜2025年に続けてきた調査をまとめ、2026年7月に「建設DX実態調査レポート2026」を公開しました。2026年3月には「健康経営優良法人2026（大規模法人部門）」に初めて認定されています。"
+   }
+  ],
+  "market": {
+   "h3": "市場と将来性",
+   "v": "3割",
+   "label": "国が目指す建設現場の省人化（2040年度まで・国土交通省「i-Construction 2.0」2024年4月策定）",
+   "p": "国土交通省は2024年4月に「i-Construction 2.0」をまとめました。2040年度までに建設現場の省人化を少なくとも3割、つまり生産性を1.5倍にすることを目指しています。柱の一つが「データ連携のオートメーション化」です。設計から施工までデータでつなぐBuildAppは、この方向と重なる事業です。"
+  },
+  "cap": "出典：同社コーポレートサイト・同社プレスリリース・BuildApp公式サイト（2026年11月時点）、国土交通省『i-Construction 2.0』（2024年4月16日発表）",
+  "decks": [
+   {
+    "title": "野原グループ会社紹介資料",
+    "provider": "speakerdeck",
+    "url": "https://speakerdeck.com/nohara_saiyo/nohara-gurupu-kaisha-shoukai-shiryou",
+    "embed": "https://speakerdeck.com/player/7547370b8c1440a9ae3f9c787059bd3f",
+    "date": "2026-07",
+    "owner": "野原グループ（@nohara_saiyo）"
+   }
+  ]
+ }
 }

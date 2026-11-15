@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">2005年に設立されたM&amp;A仲介会社で、東証プライムに上場しています。本社は東京駅直結の東京ミッドタウン八重洲です。</p><ul class="points"><li><b>成長戦略と事業承継の両方を扱う</b><p>上場企業・大手企業の成長戦略としてのM&amp;Aと、中堅・中小企業の事業承継のどちらも手がけます。</p></li><li><b>グループに専門会社がそろう</b><p>独立系M&amp;Aファームの草分けのレコフ、M&amp;Aデータベースのレコフデータ、企業再生型M&amp;Aのみらい共創アドバイザリーがグループにあります。</p></li><li><b>士業が案件を支える</b><p>公認会計士・弁護士・税理士・司法書士が社内にいて、ディールの論点やデューデリジェンスを担います。</p></li></ul><p class="cap">設立2005年10月／資本金29億円／従業員 連結364名（2025年9月30日現在）。出典：同社求人票の会社情報</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>成約件数も売上も、通期で過去最高を更新中</h2>
+  <p class="lead">2026年9月期は、連結の売上高と成約件数がともに通期で過去最高を更新しました。先の仕事を示すコンサルタント数と受託案件数も過去最高です。後継者が決まっていない企業が多く、事業承継のM&amp;Aの相談が続いています。</p>
+  <div class="gr-hl"><div><b>28,292<small>百万円</small></b><span>連結の売上高（2026年9月期・前年比＋26.0％）</span></div><div><b>291<small>件</small></b><span>連結の成約件数（2026年9月期・通期で過去最高）</span></div><div><b>302<small>名</small></b><span>連結のコンサルタント数（2026年9月期・前年比＋44名）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>大型案件が多い</b><p>2026年9月期の連結の成約291件のうち、63件が手数料1億円以上の大型案件でした。単体の成約案件の平均譲渡価格は約15.6億円です。</p></div><div><span class="n">02</span><b>次の仕事も積み上がる</b><p>単体の受託案件数は843件で、過去最高です。前年より27.3％増えました。契約負債も2,189百万円と過去最高で、前年より59.0％増えています。</p></div><div><span class="n">03</span><b>仲間が増え続けている</b><p>連結のコンサルタント数は302名で、過去最高です。同社は次の期に単体で25％増員する計画を示しています。成約件数も、さらに約2割増やす見込みです。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>3,883件</b><span>日本企業のM&amp;A件数（2026年1〜9月・レコフデータ調べ）</span></div><p>レコフデータによると、2026年1〜9月の日本企業のM&amp;A件数は3,883件でした。前年同期より5.0％増え、3年連続で最多を更新しています。帝国データバンクの2025年の調査では、後継者不在率は50.1％です。7年連続で改善していますが、およそ2社に1社は後継者が決まっていません。</p></div>
+  <h3 class="gr-dh">会社が公開している資料</h3><div class="decks"><div class="deck deck--link"><p class="deck__meta"><b>M&amp;Aキャピタルパートナーズ FACTBOOK 2026</b><span>M&amp;Aキャピタルパートナーズ株式会社（公式サイト）・2026-03</span><a href="https://www.ma-cp.com/pdf_files/FACTBOOK202603.pdf" target="_blank" rel="noopener">資料を開く ↗</a></p></div></div>
+  <p class="cap">出典：同社「2026年9月期 決算説明資料」（2026年11月10日）、レコフデータ「MARR Online」（2026年10月2日）、帝国データバンク「全国『後継者不在率』動向調査（2025年）」（2025年11月21日）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1681505531034-8d67054e07f6?w=1200&q=75" alt="書類を前に握手する様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>M&amp;Aアドバイザーの仕事</h2><p class="lead" style="margin:0">譲渡を考える会社を自分で見つけ、相手を探し、条件をまとめ、成約まで導きます。売り手と買い手の両方を自分で開拓するので、提案の組み立て方はアドバイザー次第です。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>M&amp;Aアドバイザーの仕事</h2><p class="lead" style="margin:0">譲渡を考える会社を自分で見つけ、相手を探し、条件をまとめ、成約まで導きます。売り手と買い手の両方を自分で開拓するので、提案の組み立て方はアドバイザー次第です。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">STEP 1</span><b>ソーシング</b><p>アウトバウンド営業で、譲渡を考える会社と出会います。</p></div><div><span class="n">STEP 2</span><b>マッチング</b><p>成長のために会社を買いたい企業を探し、組み合わせを提案します。</p></div><div><span class="n">STEP 3</span><b>エグゼキューション</b><p>企業評価、デューデリジェンス、条件交渉を進めます。</p></div><div><span class="n">STEP 4</span><b>クロージング</b><p>最終契約と引き渡しまでを見届けます。</p></div></div><p class="oneperson">この4つを、1人のアドバイザーが通して担当します（同社求人票より）。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>年収の階段</h2><p class="lead">初年度は最低保証600万円に、KPIインセンティブ・成約インセンティブ・決算賞与が上乗せされます。役職で入る場合は、初年度から水準が変わります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>年収の階段</h2><p class="lead">初年度は最低保証600万円に、KPIインセンティブ・成約インセンティブ・決算賞与が上乗せされます。役職で入る場合は、初年度から水準が変わります。</p>
   <div class="stairs"><div class="stair"><small>メンバー（初年度の想定）</small><b>約728万円〜</b><span>保証600万＋KPI平均128万</span></div><div class="stair"><small>課長採用（初年度の想定）</small><b>1,128万円〜</b><span>＋成約インセンティブ・決算賞与</span></div><div class="stair"><small>部長採用（初年度の想定）</small><b>1,328万円〜</b><span>＋成約インセンティブ・決算賞与</span></div></div>
   <div class="realized"><div><small>在籍1年超アドバイザーの平均（2026年9月期）</small><b>3,107万円</b></div><div><small>同・中央値（2026年9月期）</small><b>2,137万円</b></div></div>
   <p class="breakdown">初年度の最低保証600万円は、月給40万円〜×12か月と、賞与の前倒し支給（入社後2年間は年120万円、3年目は年60万円）です。月給には業務手当15万円〜（73時間分の残業代を含む）が入っています。KPI・成約インセンティブと決算賞与は保証額ではありません。平均と中央値の差が大きいのは、上位の方が平均を押し上げているためです。</p><p class="cap">出典：同社求人票（2026年11月時点）。有価証券報告書の平均年間給与（全従業員）は2,266万円（2025年9月期）。</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1606044466411-207a9a49711f?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は3回。内定まで約1か月。</h2><p class="lead">面接の回数は変わることがあります。エージェントベストとの面談で、どのポジションで受けるかを決めてから応募します。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は3回。内定まで約1か月。</h2><p class="lead">面接の回数は変わることがあります。エージェントベストとの面談で、どのポジションで受けるかを決めてから応募します。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">1ST</span><b>部長面接</b><p>営業での実績と、なぜM&amp;Aアドバイザーなのかを伝える場です。</p></div><div><span class="t">2ND</span><b>社長面接</b><p>2回目は社長との面接です。</p></div><div><span class="t">FINAL</span><b>会食面接</b><p>最終面接は会食の形で行われます。</p></div></div>
   <p class="cap">出典：同社求人票「選考内容」（2026年11月時点）／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">M&amp;Aアドバイザー</button><button role="tab" aria-selected="false" data-g="g1">IB・企業再生</button><button role="tab" aria-selected="false" data-g="g2">レコフ</button><button role="tab" aria-selected="false" data-g="g3">士業</button><button role="tab" aria-selected="false" data-g="g4">コーポレート</button></div><ul class="joblist" data-g="g0"><li><a href="/job/recry5ZQKna2i9PkG/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>M&amp;Aアドバイザー（企業情報部）<span class="pick">厳選</span></b><span class="sal">約728万円〜</span></a></li><li><a href="/job/recnicWeSGe1URhMn/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>経験者採用 M&amp;Aアドバイザー（企業情報部）</b><span class="sal">660万円〜</span></a></li><li><div class="j"><b>課長〜部長採用 M&amp;Aアドバイザー（企業情報部）</b><span class="sal">1,128万円〜</span></div></li><li><a href="/job/recamgFIA4ZS4eqf3/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>提携先開拓×一気通貫のM&amp;Aアドバイザー</b><span class="sal">600万円〜</span></a></li><li><a href="/job/recIGSxzMBdjoIHUY/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>買収戦略アドバイザー（提携支援部）</b><span class="sal">600万円〜</span></a></li><li><a href="/job/recrKTX3M9XB258rO/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>M&amp;Aディールサポート（企業情報部）</b><span class="sal">600万円〜</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recyHasTOEhHmXEKR/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>M&amp;Aバンカー（IB部門）大企業・上場企業向けFA</b><span class="sal">740万円〜</span></a></li><li><a href="/job/reczKg2d46ywl5RJD/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>企業再生M&amp;Aアドバイザー（みらい共創アドバイザリー）</b><span class="sal">420万円〜</span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><a href="/job/recnLwd0AwqTUXyQI/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>【未経験歓迎】M&amp;Aコンサルタント</b><span class="sal">東京・丸の内</span></a></li><li><a href="/job/recYNT9HqTGZoZUkM/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>【経験者】M&amp;Aコンサルタント</b><span class="sal">東京・丸の内</span></a></li></ul><ul class="joblist" data-g="g3" hidden><li><a href="/job/reckGtesfBH4J6aHr/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>コーポレートアドバイザー（公認会計士）</b><span class="sal">1,240万円〜</span></a></li><li><a href="/job/recl0HghzKd1KLXCm/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>コーポレートアドバイザー（弁護士）</b><span class="sal">1,350万円〜</span></a></li><li><a href="/job/recziymf4bgxSXB6d/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>コーポレートアドバイザー（税理士）</b><span class="sal">1,350万円〜</span></a></li><li><a href="/job/recR8uJrBJp2CxxQN/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>コーポレートアドバイザー（司法書士）</b><span class="sal">1,350万円〜</span></a></li></ul><ul class="joblist" data-g="g4" hidden><li><a href="/job/recYg8LzO0d1an5Rj/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>経営企画・戦略企画・IR担当</b><span class="sal">786万円〜</span></a></li><li><a href="/job/recnQeOEbyHsG2RAo/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>広報担当（メディアリレーションズ）</b><span class="sal">688〜853万円</span></a></li><li><a href="/job/recrUXOPlYzonSsgu/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>ドキュメントプランナー</b><span class="sal">588〜816万円</span></a></li><li><a href="/job/recGce0TALpQlqVZ5/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>採用担当（HRBP）</b><span class="sal">相談</span></a></li><li><a href="/job/recnSD5RShDFlxsXD/?utm_source=pickup&utm_medium=company-lp&utm_campaign=macp"><b>営業アシスタント</b><span class="sal">400〜600万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は求人票のとおりです。合う人・合わない人は、仕事の進め方と給与の仕組みからエージェントベストがまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は求人票のとおりです。合う人・合わない人は、仕事の進め方と給与の仕組みからエージェントベストがまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（M&amp;Aアドバイザー）</h3><ul><li>大卒以上</li><li>金融業界（銀行・証券・保険など）の営業経験</li><li>または、公認会計士・弁護士で営業志向のある方</li><li>または、メーカー・商社・保険・医薬品・デベロッパー・SaaS・コンサル・投資用不動産などでのトップセールス経験</li></ul></div><div><h3>合う人・合わない人</h3><ul><li>自分で案件を見つけて、最後まで自分で動かしたい人</li><li>成果がそのまま年収に返ってくる環境を望む人</li><li>朝8時始業で、成約まで粘り強く向き合える人</li><li>固定給の安定を何より重視する人には、合わないかもしれません</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、IT・スタートアップ・M&amp;A・コンサルに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>M&amp;Aの経験がなくても応募できますか？</summary><p>M&amp;Aアドバイザー（企業情報部）は、M&amp;Aの経験ではなく、金融の営業経験や各業界でのトップセールス経験が条件です。グループのレコフには「未経験歓迎」の求人もあります。</p></details><details><summary>初年度の年収はいくらくらいですか？</summary><p>M&amp;Aアドバイザーの場合、最低保証600万円にKPIインセンティブ（初年度平均128万円）を足した約728万円が想定で、成約インセンティブと決算賞与が上乗せされます（同社求人票・2026年11月時点）。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>面接は3回（部長・社長・会食）で、応募から内定まで1か月程度が目安です。</p></details><details><summary>勤務時間や休日は？</summary><p>定時は8時〜17時、完全週休2日制（土日）・祝日休みで、年間休日は125日（2025年9月期）です。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。M&amp;Aキャピタルパートナーズ以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

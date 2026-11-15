@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「エンジニアのために」を理念とする、システム開発・インフラ構築のエンジニア派遣・受託会社です。2003年8月設立、本社は東京・丸の内です。</p><ul class="points"><li><b>案件はエンジニアが選ぶ</b><p>求人票では、希望条件を聞いたうえで案件を紹介し、会社の都合で押し付けることはないと説明されています。</p></li><li><b>給与の内訳が分かる</b><p>担当プロジェクトの単価から給与や賞与の額が予測できると説明され、報酬還元率は80%と記載されています。</p></li><li><b>全国に拠点がある</b><p>東京・大阪・愛知・広島・福岡・北海道・宮城・石川に拠点があります。会社都合の転勤はないと記載されています。</p></li></ul><p class="cap">設立2003年8月／本社：東京都千代田区丸の内。出典：同社の公開求人票</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>売上を毎年伸ばす、全国8拠点のエンジニア集団</h2>
+  <p class="lead">HALは、システム開発やインフラ構築を担うエンジニアの会社です。売上は2020年度の28.46億円から2025年度に95.7億円まで伸びました。全国8拠点で、大手SIerを中心とする取引先の開発を支えています。</p>
+  <div class="gr-hl"><div><b>95.7<small>億円</small></b><span>売上（2025年度）。2020年度は28.46億円</span></div><div><b>1,541<small>名</small></b><span>従業員数（2026年3月末時点）</span></div><div><b>8<small>拠点</small></b><span>東京・関西・中部・九州・北海道・東北・広島・北陸（2026年11月時点）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>毎年売上が伸びている</b><p>売上は2020年度28.46億円、2021年度35.07億円、2022年度41.69億円でした。2023年度は54.54億円、2024年度は77.0億円、2025年度は95.7億円です。</p></div><div><span class="n">02</span><b>大手と幅広く取引</b><p>主要取引先には、NECソリューションイノベータ、伊藤忠テクノソリューションズ、SCSK、キヤノンITソリューションズなどの大手SIerが並びます。住友生命保険、出光興産、MonotaRO などの事業会社もあります。</p></div><div><span class="n">03</span><b>拠点を広げてきた</b><p>2003年に設立し、2011年の関西支社から地方拠点を開いてきました。2020年に広島、2023年に北陸の支社を開きました。2024年に東京本社、2026年に北海道支社を移転しています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>8割超</b><span>DXを推進する人材の「量」が不足していると答えた日本企業の割合（IPA『DX動向2025』2025年6月公表）</span></div><p>情報処理推進機構（IPA）の「DX動向2025」では、日本企業の8割超がDXを推進する人材の量が足りないと答えています。システム開発やインフラ構築を担うエンジニアへの需要は続いています。同社は開発・インフラ・組込み・テストまで幅広い分野を扱っており、この需要を受け止められる体制です。</p></div>
+  
+  <p class="cap">出典：同社コーポレートサイト（企業情報、2026年11月時点）、情報処理推進機構『DX動向2025』（2025年6月26日公表）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>HALのITエンジニアの仕事</h2><p class="lead" style="margin:0">開発やインフラの案件に参画します。求人票では、大手SIer経由の案件が約80%、エンドユーザー直の案件が約20%と紹介されています。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>HALのITエンジニアの仕事</h2><p class="lead" style="margin:0">開発やインフラの案件に参画します。求人票では、大手SIer経由の案件が約80%、エンドユーザー直の案件が約20%と紹介されています。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>開発もインフラも</b><p>通信・銀行・製薬・物流などの開発案件や、サーバー構築・AWS環境構築などのインフラ案件が例に挙がっています。</p></div><div><span class="n">POINT 2</span><b>上流工程にも挑戦できる</b><p>これまで下流工程が中心だった人も、上流工程にチャレンジできると記載されています。</p></div><div><span class="n">POINT 3</span><b>リモートの案件がある</b><p>保有案件の約7割が、リモート勤務できる案件と記載されています。</p></div><div><span class="n">POINT 4</span><b>研修が用意されている</b><p>豊富な研修制度があり、資格取得の支援（受講料の支給、上限5万円）もあります。</p></div></div><p class="oneperson">勤務地は、本社・各支社・オフィス、またはプロジェクト先です。本人の希望と居住地を考慮して案件を案内すると記載されています。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>給与の仕組み</h2><p class="lead">ITエンジニアの想定年収は350〜850万円（広島は450〜850万円）と求人票に記載されています。IT営業は応相談です。ここでは給与の決め方を紹介します。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>給与の仕組み</h2><p class="lead">ITエンジニアの想定年収は350〜850万円（広島は450〜850万円）と求人票に記載されています。IT営業は応相談です。ここでは給与の決め方を紹介します。</p>
   <div class="stairs"><div class="stair"><small>給与の決め方</small><b>前職を考慮して決定</b><span>経験・スキルに応じて決まります</span></div><div class="stair"><small>昇給</small><b>エンジニア職は随時</b><span>単価アップ交渉の機会があります</span></div><div class="stair"><small>賞与</small><b>年2回</b><span>営業・事務職は昇給が年1回</span></div></div>
   
   <p class="breakdown">固定残業手当を含みます。超過した時間外労働の残業手当は追加で支給されます。月の残業は平均10〜20時間程度と記載されています。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1606044466411-207a9a49711f?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">公開求人票に記載された流れです。エンジニア職の場合です。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">公開求人票に記載された流れです。エンジニア職の場合です。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>職務経歴をもとに選考します。</p></div><div><span class="t">STEP 2</span><b>面接（1〜2回）</b><p>オンラインまたは来社で行います。</p></div><div><span class="t">STEP 3</span><b>適性検査・内定</b><p>適性検査のあと、内定です。</p></div></div>
   <p class="cap">出典：同社の公開求人票（2026年11月時点）。AI推進担当と営業事務は、一次面接（オンライン）と最終面接（対面）と記載されています／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">ITエンジニア</button><button role="tab" aria-selected="false" data-g="g1">IT営業（コーディネーター）</button><button role="tab" aria-selected="false" data-g="g2">企画・事務</button></div><ul class="joblist" data-g="g0"><li><a href="/job/reclHqFFsuep9shNe/?utm_source=pickup&utm_medium=company-lp&utm_campaign=hal"><b>【ITエンジニア/開発・インフラ】全国の拠点で募集（東京・大阪・名古屋・福岡・札幌・仙台・広島・金沢）<span class="pick">厳選</span></b><span class="sal">350〜850万円</span></a></li><li><a href="/job/recI3wSc0WPoFQsk7/?utm_source=pickup&utm_medium=company-lp&utm_campaign=hal"><b>【ITエンジニア/開発・インフラ】大阪</b><span class="sal">350〜850万円</span></a></li><li><a href="/job/rec17rtbHBWgYkyXt/?utm_source=pickup&utm_medium=company-lp&utm_campaign=hal"><b>【ITエンジニア/開発・インフラ】広島</b><span class="sal">450〜850万円</span></a></li><li><div class="j"><b>【ITエンジニア/Web系開発】広島</b><span class="sal">経験・スキルに応じて決定</span></div></li><li><div class="j"><b>【ITエンジニア/業務系システム開発】広島</b><span class="sal">経験・スキルに応じて決定</span></div></li><li><div class="j"><b>【ITエンジニア/組み込み開発（C／C＋＋）】広島</b><span class="sal">経験・スキルに応じて決定</span></div></li><li><a href="/job/recp1ztVpGwuio7XO/?utm_source=pickup&utm_medium=company-lp&utm_campaign=hal"><b>【ITエンジニア・未経験歓迎】</b><span class="sal">月給制（金額の記載なし）</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recf9L4wyxFat6LuD/?utm_source=pickup&utm_medium=company-lp&utm_campaign=hal"><b>【関西/IT営業】コーディネーター（昇給・インセンティブあり）<span class="pick">厳選</span></b><span class="sal">応相談</span></a></li><li><div class="j"><b>【関西/IT営業】コーディネーター（企業とエンジニアのマッチング）</b><span class="sal">応相談</span></div></li><li><a href="/job/reckNKQNA8RnqQN06/?utm_source=pickup&utm_medium=company-lp&utm_campaign=hal"><b>【人材コーディネーター】愛知でIT営業</b><span class="sal">応相談</span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><a href="/job/recge7PQACj4dYkHd/?utm_source=pickup&utm_medium=company-lp&utm_campaign=hal"><b>【東京】AI推進担当 兼 社内AI講師（全社AI活用推進ポジション）</b><span class="sal">700〜900万円</span></a></li><li><a href="/job/recotZcqojJs2MLTX/?utm_source=pickup&utm_medium=company-lp&utm_campaign=hal"><b>【東京】営業事務スタッフ（未経験歓迎／リーダー候補）</b><span class="sal">550〜700万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はITエンジニア（開発・インフラ）とIT営業の求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はITエンジニア（開発・インフラ）とIT営業の求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件</h3><ul><li>ITエンジニア：エンジニアとしての実務経験（開発・インフラは問わない）</li><li>ITエンジニア（未経験歓迎の求人）：社会人経験と基本的なPCスキル</li><li>IT営業（コーディネーター）：営業経験（年数・業界は不問）、大卒以上</li><li>AI推進担当：4年制大学卒業以上。AIツールを業務で実践的に使えること</li></ul></div><div><h3>合う人</h3><ul><li>希望の案件を選んで、エンジニアとして経験を積みたい人</li><li>給与の内訳が分かる環境で働きたい人</li><li>目標に向かって努力でき、課題に自分で改善策を考えられる人</li><li>営業の経験を活かして、IT業界で企業とエンジニアをつなぎたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、IT・スタートアップ・M&amp;A・コンサルに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>未経験でも応募できますか？</summary><p>ITエンジニアには、未経験歓迎の求人があります。応募条件は、社会人経験と基本的なPCスキルです。研修が用意されていると記載されています。</p></details><details><summary>年収はいくらですか？</summary><p>求人票の想定年収は、ITエンジニアが350〜850万円（広島は450〜850万円）です。IT営業は応相談です。給与は前職を考慮し、経験・スキルに応じて決まります。</p></details><details><summary>転勤はありますか？</summary><p>求人票には、会社都合の転勤は一切ないと記載されています。勤務地は、本人の希望と居住地を考慮して案内されます。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>エンジニア職は、書類選考のあと面接が1〜2回です。面接はオンラインまたは来社で行います。所要期間は公開されていません。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。HAL以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

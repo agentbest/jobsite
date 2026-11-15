@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">顧客対応のためのAIメッセンジャー「チャネルトーク」を、日本・韓国・アメリカで展開するスタートアップです。日本のオフィスは東京・半蔵門にあります。</p><ul class="points"><li><b>問い合わせ対応をAIで自動化</b><p>公式サイトでは、AIエージェント「ALF」が問い合わせの80％を自動化できるとしています。電話・メール・チャットの問い合わせを一元管理できます。</p></li><li><b>日本・韓国・アメリカの3拠点</b><p>日・米・韓のメンバーが一緒に働きます。日本で得た顧客の声は、グローバルの開発チームにも届けられます。</p></li><li><b>AIを前提にした組織</b><p>プロダクト開発、営業、カスタマーサクセスなど全領域でAIを日常的に使っています。従業員約200名のうち、約100名がエンジニアです。</p></li></ul><p class="cap">従業員 約200名（グローバル・同社求人票より）／所在地：東京都千代田区麹町（半蔵門）。出典：同社の求人票・公式サイト</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>問い合わせの約半分を、AIが受け持つまでになった。</h2>
+  <p class="lead">「チャネルトーク」に届く問い合わせのうち、約半数をAIエージェント「ALF」が対応するまでになりました。2026年10月には、シンガポール証券取引所が主催する「NextGen Tech 30 2026」に選ばれています。2026年10月からはカスハラ対策が全事業主の義務になり、顧客対応の仕組みづくりが急がれています。</p>
+  <div class="gr-hl"><div><b>約400万<small>件</small></b><span>AIエージェント「ALF」が担う月間の問い合わせ（約800万件のうち・2026年7月時点）</span></div><div><b>98<small>％</small></b><span>サービス継続率（2026年1月発表）</span></div><div><b>51<small>億円</small></b><span>累計の資金調達額（2025年1月時点）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>アジアで選ばれた</b><p>2026年10月、「NextGen Tech 30 2026」を受賞しました。アジアの有望な成長企業を表彰するもので、導入実績や具体的な成果が重視されます。</p></div><div><span class="n">02</span><b>大手EC・自治体が導入</b><p>2026年には、コメ兵や「4℃」の公式オンラインショップ、オンライン診療の「レバクリ」が導入しました。熊本県天草市では、子育て相談のAIコンシェルジュが5月から本格運用に入っています。</p></div><div><span class="n">03</span><b>国際認証で守りも固い</b><p>2026年3月に、APECのプライバシー認証「CBPR」を取得しました。日本・韓国・アメリカに拠点を持ち、国をまたいでデータを扱う体制を整えています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>4,190億円</b><span>国内コンタクトセンターソリューション市場（2024年度・矢野経済研究所）</span></div><p>矢野経済研究所によると、国内のコンタクトセンターソリューション市場は2024年度に4,190億円で、前年度より5.0％増えました。2025年度以降も着実に伸びると予測されています。電話以外の窓口やCRM、データ活用への投資が伸びる理由です。2026年10月1日からは、カスタマーハラスメント対策がすべての事業主の義務になりました（厚生労働省）。</p></div>
+  
+  <p class="cap">出典：同社プレスリリース（2025年1月24日・2026年1月29日・3月17日・5月1日・6月19日・7月2日・8月7日・10月20日）、矢野経済研究所「コールセンターサービス市場／コンタクトセンターソリューション市場の調査を実施（2025年）」（2025年11月11日）、厚生労働省</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>アカウントエグゼクティブの仕事</h2><p class="lead" style="margin:0">新規顧客の獲得から、導入後のアップセルまでを一貫して担当するフィールドセールスです。ただ製品を売るのではなく、顧客の課題に向き合い、導入の先まで伴走します。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>アカウントエグゼクティブの仕事</h2><p class="lead" style="margin:0">新規顧客の獲得から、導入後のアップセルまでを一貫して担当するフィールドセールスです。ただ製品を売るのではなく、顧客の課題に向き合い、導入の先まで伴走します。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>顧客の課題に向き合う</b><p>問い合わせ業務に悩むEC、顧客体験を改善したいブランド、店舗運営に悩む企業などに提案します。</p></div><div><span class="n">POINT 2</span><b>導入後のアップセル</b><p>新機能のアップセル戦略を自分で策定し、運用します。</p></div><div><span class="n">POINT 3</span><b>売上の予実管理</b><p>新規営業とアップセルによる売上の予実管理も担当します。</p></div><div><span class="n">POINT 4</span><b>日・米・韓のチームで</b><p>海外のメンバーと動くため、グローバルなBtoB SaaSのやり方を学べると同社は説明しています。</p></div></div><p class="oneperson">アカウントエグゼクティブは現在9名です（同社の求人票より）。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">同社が求人票で示している想定年収です。経験とスキルに応じて決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">同社が求人票で示している想定年収です。経験とスキルに応じて決まります。</p>
   <div class="stairs"><div class="stair"><small>インサイドセールス</small><b>600〜1,000万円</b><span>リードから商談までを担当</span></div><div class="stair"><small>アカウントエグゼクティブ／セールスエンジニア／FDE</small><b>800〜1,400万円</b><span>顧客の導入と成長を支える</span></div><div class="stair"><small>インサイドセールスマネージャー</small><b>1,000〜2,000万円</b><span>チームの戦略設計と育成</span></div></div>
   <div class="realized"><div><small>AIツール利用手当</small><b>月10,000円</b></div><div><small>成長支援（ジム・語学など）</small><b>月最大20,000円</b></div></div>
   <p class="breakdown">年間休日は120日以上で、完全週休2日制です。夏期休暇（6月〜9月に最大3日）があり、社会保険も完備されています。書籍購入は会社が全額負担します。</p><p class="cap">出典：同社の公開求人票。インサイドセールスの求人票の福利厚生にもとづきます（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接2〜3回。</h2><p class="lead">同社の求人票に書かれている選考の流れです。面接の回数や順番は、ポジションによって変わることがあります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接2〜3回。</h2><p class="lead">同社の求人票に書かれている選考の流れです。面接の回数や順番は、ポジションによって変わることがあります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書・職務経歴書をもとに確認されます。</p></div><div><span class="t">STEP 2</span><b>面接（2〜3回）</b><p>回数や順番が変わる場合があります。</p></div><div><span class="t">STEP 3</span><b>リファレンスチェック</b><p>面接のあとに行われます。</p></div><div><span class="t">STEP 4</span><b>オファー</b><p>条件を確認して、入社の意思を決めます。</p></div></div>
   <p class="cap">出典：同社のインサイドセールスの求人票（2026年11月時点）。ほかのポジションは流れが異なることがあります／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">営業・CS</button><button role="tab" aria-selected="false" data-g="g1">マーケティング・企画</button><button role="tab" aria-selected="false" data-g="g2">エンジニア</button><button role="tab" aria-selected="false" data-g="g3">コーポレート</button></div><ul class="joblist" data-g="g0"><li><a href="/job/recF9ShfjRQOt6R8v/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>アカウントエグゼクティブ<span class="pick">厳選</span></b><span class="sal">800〜1,400万円</span></a></li><li><a href="/job/recRRmxu93KRcD9Is/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>アカウントエグゼクティブマネージャー</b><span class="sal"></span></a></li><li><a href="/job/recqJSmmCkkrhznuJ/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>インサイドセールス</b><span class="sal">600〜1,000万円</span></a></li><li><a href="/job/recj0uPPgyecNRxCl/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>インサイドセールスマネージャー</b><span class="sal">1,000〜2,000万円</span></a></li><li><a href="/job/recVUVHuUFvnyTO1Y/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>パートナーセールス</b><span class="sal">600〜1,400万円</span></a></li><li><a href="/job/recLDOuHsEOdYXinZ/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>アカウントマネジメント（オンボーディング＆リテンション）</b><span class="sal">600〜1,000万円</span></a></li><li><a href="/job/reccWb1RExOx2IgIF/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>アカウントマネジメント（リニューアル＆エクスパンション）</b><span class="sal">700〜1,000万円</span></a></li><li><a href="/job/recp9BYHsVMkbx9H1/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>アカウントマネジメントマネージャー</b><span class="sal"></span></a></li><li><a href="/job/recRdrJ5Jj6eFCUY7/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>カスタマーサクセス（AXコンサルタント）</b><span class="sal"></span></a></li><li><a href="/job/receKF2S3SIFUrULK/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>【オープンポジション】ビジネス職（Sales／CS／CX）</b><span class="sal"></span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><div class="j"><b>マーケティングマネージャー</b><span class="sal">800〜1,400万円</span></div></li><li><div class="j"><b>CRMマーケティングリード</b><span class="sal"></span></div></li><li><div class="j"><b>CRMマーケティングスペシャリスト</b><span class="sal"></span></div></li><li><a href="/job/recINVvM0wobt5edg/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>Revenue Operations（営業企画）</b><span class="sal">700〜1,000万円</span></a></li><li><a href="/job/recsz2wbczNDzJoXV/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>Business Development（事業開発）</b><span class="sal"></span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><a href="/job/recBh96Qp0zx5yPXv/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>セールスエンジニア<span class="pick">厳選</span></b><span class="sal">800〜1,400万円</span></a></li><li><a href="/job/recSmfAgqL1YNRjd2/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>Forward Deployed Engineer（FDE）</b><span class="sal">800〜1,400万円</span></a></li><li><a href="/job/recm9KRBX5ETbnV5z/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>開発マネージャー（Engineering Manager）</b><span class="sal"></span></a></li></ul><ul class="joblist" data-g="g3" hidden><li><a href="/job/recTxZYPpyyC1o6Ov/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>ファイナンスマネージャー</b><span class="sal"></span></a></li><li><a href="/job/recTULXPbOEw1LUD3/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>法務（Legal Counsel）</b><span class="sal"></span></a></li><li><a href="/job/reccYy5FldOIEP4MP/?utm_source=pickup&utm_medium=company-lp&utm_campaign=channel"><b>人事／採用担当（HR・Recruiter）</b><span class="sal"></span></a></li><li><div class="j"><b>人事／採用担当（Recruiter II）</b><span class="sal"></span></div></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はアカウントエグゼクティブの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はアカウントエグゼクティブの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（アカウントエグゼクティブ）</h3><ul><li>3年以上のITツール関連の営業経験</li><li>歓迎：B2B SaaS製品の営業経験</li><li>歓迎：スタートアップでの営業経験</li><li>セールスエンジニアは、SaaS・IT業界での技術的な顧客対応経験とAPI・システム連携の基本的な理解が必要</li></ul></div><div><h3>合う人</h3><ul><li>論理的に考え、戦略を立てて営業を進めたい人</li><li>社内外の人と協力し、主体的に透明性のあるコミュニケーションを取れる人</li><li>責任感をもって、最後までやり切れる人</li><li>複数の業務の優先順位をつけながら進められる人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、IT・スタートアップ・M&amp;A・コンサルに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>SaaS営業の経験がなくても応募できますか？</summary><p>アカウントエグゼクティブは、3年以上のITツール関連の営業経験が必須です。B2B SaaSの営業経験は歓迎条件で、必須ではありません。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>インサイドセールスの求人票では、書類選考、面接2〜3回、リファレンスチェック、オファーの流れです。ポジションによって異なることがあります。</p></details><details><summary>英語や韓国語は必要ですか？</summary><p>アカウントエグゼクティブの求人票に、語学の必須条件は書かれていません。日・米・韓のメンバーと動く環境です。ポジションによって条件が違うため、相談のときに確認します。</p></details><details><summary>福利厚生はどのようなものがありますか？</summary><p>ジムや語学などに使える成長支援が月最大2万円、AIツール利用手当が月1万円です。年間休日は120日以上です。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。Channel Corporation以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

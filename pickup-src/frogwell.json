@@ -223,5 +223,43 @@
   "href": "https://lp.consultenshoku.com/",
   "label": "コンサルへのキャリアチェンジ（特設サイト）"
  },
- "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Javier Haro／Amina Atar／Ryusei Machida"
+ "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Javier Haro／Amina Atar／Ryusei Machida",
+ "growth": {
+  "h2": "ヘルスケアから全業界へ広がるSalesforce×AI支援",
+  "lead": "Salesforceのコンサルティングパートナーです。株主は東証プライム上場のエムスリー株式会社です。医療・ヘルスケアから始まり、今は不動産やM&A、MICE施設まで支援先が広がっています。2025年からは、SalesforceのAI（Agentforce）の導入支援も公表しています。",
+  "highlights": [
+   {
+    "v": "2019",
+    "unit": "年度",
+    "label": "Salesforce Partner Summit NON PROFIT部門を受賞"
+   },
+   {
+    "v": "2023",
+    "unit": "年",
+    "label": "Salesforce Japan Partner Award（Healthcare & Life Science）を受賞"
+   }
+  ],
+  "strengths": [
+   {
+    "b": "エムスリーのグループ",
+    "p": "株主はエムスリー株式会社（東証プライム）です。医療・製薬の領域で、医療データとSalesforceの両方を扱えるのが特長です。"
+   },
+   {
+    "b": "AI導入の公表事例",
+    "p": "2025年10月に、Solvvyとカーサ・プロジェクトのAgentforce導入支援を公表しました。2026年7月には、注文書をAIで自動解析するエーコーの事例も出しています。"
+   },
+   {
+    "b": "難しい基幹刷新も担う",
+    "p": "パシフィコ横浜では、Salesforceで基幹システムを置き換えました。顧客・催事管理から見積、請求、会計連携までを一つの基盤にまとめています。"
+   }
+  ],
+  "market": {
+   "h3": "市場と将来性",
+   "v": "3,950億8,200万円",
+   "label": "国内CRMアプリケーション市場の2028年予測（IDC Japan、2024年6月）",
+   "p": "IDC Japanによると、国内CRMアプリケーション市場は2023年に2,497億8,600万円でした。前年比13.4％増です。2028年には3,950億8,200万円になると予測されています。年平均成長率は9.6％です。"
+  },
+  "cap": "出典：同社コーポレートサイト（会社概要・お知らせ・導入事例、2026年11月時点）、IDC Japan『国内CX関連ソフトウェア／CRMアプリケーション市場予測』（2024年6月）",
+  "decks": []
+ }
 }

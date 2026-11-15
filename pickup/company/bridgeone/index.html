@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「人の力で世界最高峰を再興する」を掲げ、企業の経営課題を解決する「ワンデスクソリューション事業」を展開する会社です。2020年3月の設立で、本社は東京・恵比寿、大阪と名古屋に支店があります。</p><ul class="points"><li><b>営業ひとりが、多様な解決策を組み合わせる</b><p>単一の商材を売るのではなく、営業ひとりが窓口になり、社内にそろえた複数のソリューションを組み合わせて提供するモデルです。</p></li><li><b>人材・コンサル・金融を一社で</b><p>人材紹介やヘッドハンティング、採用・人事・DX・財務などのコンサルティング、保険・ファクタリング・リースなどの金融サービスを展開しています。</p></li><li><b>M&amp;Aは社内外から案件が届く</b><p>M&amp;A事業部では、社内の営業部門や、金融機関・会計事務所・税理士法人などのパートナーから案件が届く体制だと、求人票に書かれています。</p></li></ul><p class="cap">設立2020年3月／資本金980万円／従業員数264人（2025年10月31日時点）／本社：東京都渋谷区恵比寿。出典：同社の会社概要・公開求人票（2026年11月時点）</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>2020年設立から、5,200社超の支援実績へ</h2>
+  <p class="lead">2020年3月に設立され、業界を問わず5,200社を超える企業を支援してきました（2026年10月時点）。2026年4月には、過去最多となる50名の新卒が入社しました。10月には助成金・Web支援の会社をグループに加え、提供できる解決策を広げています。</p>
+  <div class="gr-hl"><div><b>5,200<small>社超</small></b><span>業界を問わない企業の支援実績（2026年10月時点）</span></div><div><b>20<small>種類以上</small></b><span>組み合わせて提供するソリューション（2026年10月時点）</span></div><div><b>50<small>名</small></b><span>2026年度に入社した新卒（同社として過去最多）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>解決策の幅が広い</b><p>業界ごとの専門組織と、20種類以上のソリューションを組み合わせて提供します。人材、コンサルティング、M&amp;A、金融サービスまでを扱います。</p></div><div><span class="n">02</span><b>グループを広げている</b><p>2026年10月、助成金・Web支援のオールシステムを完全グループ化しました。同社は名古屋に本社、福岡に営業所を置き、2,000社以上の支援実績があります。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>50.1％</b><span>日本企業の後継者不在率（2025年・帝国データバンク調べ）</span></div><p>帝国データバンクの2025年の調査では、日本企業の後継者不在率は50.1％でした。業種別で最も高いのは建設業の57.3％です。2025年度の建設・採掘従事者の有効求人倍率は5.02倍で、職業全体の1.10倍を大きく上回ります。事業承継と人手不足の両方で、外部の支援を求める企業が多い状況です。</p></div>
+  
+  <p class="cap">出典：同社コーポレートサイト・プレスリリース（2026年11月時点）、帝国データバンク「全国『後継者不在率』動向調査（2025年）」、厚生労働省「一般職業紹介状況」（2025年度・労働政策研究・研修機構の集計）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>ブリッジワンで募集している仕事</h2><p class="lead" style="margin:0">M&amp;A、コンサルティング、人材紹介、法人営業のほか、エンジニアやバックオフィスなど、幅広い職種を募集しています。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>ブリッジワンで募集している仕事</h2><p class="lead" style="margin:0">M&amp;A、コンサルティング、人材紹介、法人営業のほか、エンジニアやバックオフィスなど、幅広い職種を募集しています。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>M&amp;A</b><p>M&amp;A事業部は、トスアップされた案件から初期段階を担当するポジションと、M&amp;Aの全プロセスを担当するポジションがあります。自社のM&amp;Aを担うポジションもあります。</p></div><div><span class="n">POINT 2</span><b>コンサルタント・金融</b><p>採用、人事・組織、DX、AI、財務などのコンサルティングと、保険などの金融コンサルティングがあります。</p></div><div><span class="n">POINT 3</span><b>人材紹介・法人営業</b><p>ヘッドハンター、キャリアアドバイザー、リクルーティングアドバイザーなどの人材紹介と、東京・関西・中部・福岡の営業開発事業部があります。</p></div><div><span class="n">POINT 4</span><b>社内の仕組みをつくる</b><p>社内システムのエンジニア、経営企画、経理・財務、広報、人事、法務など、会社を支えるポジションも募集しています。</p></div></div><p class="oneperson">M&amp;A事業部メンバー（テレアポ・書類作成なし）は、テレアポは一切なく、確度の高い案件に集中できると求人票に書かれています。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収です。経験や能力に応じて決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収です。経験や能力に応じて決まります。</p>
   <div class="stairs"><div class="stair"><small>コンサルタント・人材紹介・法人営業（メンバー）</small><b>500〜800万円</b><span>ポジションにより379万円〜の求人もあります</span></div><div class="stair"><small>M&amp;A事業部メンバー（テレアポ・書類作成なし）</small><b>800万円〜＋賞与</b><span>月給666,700円〜</span></div><div class="stair"><small>自社M&amp;A事業部・FP&amp;A・IR/Finance責任者</small><b>800〜1,500万円</b><span>自社M&amp;A事業部は固定給＋インセンティブ。FP&amp;Aは600〜1,500万円</span></div></div>
   
   <p class="breakdown">多くのポジションで、固定残業代（月45時間分）を含みます。超過分は別に支給されます。M&amp;A事業部と自社M&amp;A事業部は、年間休日125日です。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の流れは、ポジションによって異なります。詳しくは相談のときにお伝えします。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の流れは、ポジションによって異なります。詳しくは相談のときにお伝えします。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書・職務経歴書で選考します。</p></div><div><span class="t">STEP 2</span><b>面接</b><p>回数はポジションによります。</p></div><div><span class="t">STEP 3</span><b>内定</b><p>オファー額は、面接の結果を踏まえて決まります。</p></div></div>
   <p class="cap">同社の公開求人票には、選考フローの詳しい記載がありません。詳しい流れは相談時にお伝えします／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">M&amp;A</button><button role="tab" aria-selected="false" data-g="g1">コンサル・金融</button><button role="tab" aria-selected="false" data-g="g2">人材紹介・法人営業</button><button role="tab" aria-selected="false" data-g="g3">エンジニア</button><button role="tab" aria-selected="false" data-g="g4">バックオフィス・マーケ・広報</button></div><ul class="joblist" data-g="g0"><li><a href="/job/rec1JRrXIXqRCqoFN/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【M&amp;A】M&amp;A事業部メンバー ※テレアポ、書類作成なし<span class="pick">厳選</span></b><span class="sal">800万円〜</span></a></li><li><a href="/job/recx10NaNQ1QB1ZcB/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【経営企画・M&amp;A】自社M&amp;A事業部<span class="pick">厳選</span></b><span class="sal">800〜1,500万円＋インセンティブ</span></a></li><li><a href="/job/rec9GOzkp97OqlBJX/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【M&amp;A】M&amp;A事業部_メンバー</b><span class="sal">550万円〜</span></a></li><li><a href="/job/recI4ecd1Q1KZtOnE/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【M&amp;A】企業再生アドバイザリー_メンバー</b><span class="sal">550万円〜</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recOAgbtY5wi8bLHw/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】AIコンサル事業部_メンバー（新規事業）</b><span class="sal">400〜1,200万円</span></a></li><li><a href="/job/recorHQpCEFlvujAu/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】DXコンサル事業部_メンバー</b><span class="sal">500〜700万円</span></a></li><li><a href="/job/rec7vgvWRH7chq2wG/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】ビジネスマッチング事業部_メンバー</b><span class="sal">500〜700万円</span></a></li><li><a href="/job/recbVmtYaRuqQ01vj/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】顧問紹介事業部_メンバー</b><span class="sal">500〜700万円</span></a></li><li><a href="/job/recawZHsXta2cQi5r/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】採用コンサルティング事業部_コンサルタント_メンバー</b><span class="sal">500〜700万円</span></a></li><li><a href="/job/recrRCwjx5Kwom4Pv/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】採用コンサルティング事業部_RPO担当</b><span class="sal">390〜900万円</span></a></li><li><a href="/job/rectZOaRzpPPM9xh0/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】人事・組織コンサルティング_メンバー</b><span class="sal">490〜900万円</span></a></li><li><a href="/job/reccgxcAi8LKnfoE7/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】資格支援コーチング_メンバー</b><span class="sal">420〜800万円</span></a></li><li><a href="/job/recCJAYc5edzv9Mgj/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】経営コンサルティング営業_メンバー</b><span class="sal">379〜800万円</span></a></li><li><a href="/job/recraSiWKd3v4G6Qf/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【コンサルタント】コンサルタントオープンポジション_メンバー</b><span class="sal">500〜700万円</span></a></li><li><a href="/job/recOHSDyhlLWLntKP/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【金融コンサルティング】金融総合コンサルティング事業部_コンサルタント（営業職）</b><span class="sal">500〜700万円</span></a></li><li><a href="/job/recLO5zwNyf1TlkfG/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【金融コンサルティング】保険事業部_コンサルタント</b><span class="sal">500〜700万円</span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><a href="/job/rec51J0lZQ3Vn1Oi2/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【人材紹介】エージェント事業部_ヘッドハンター</b><span class="sal">500〜800万円＋賞与</span></a></li><li><a href="/job/recjCF3Ob3rWMJtlw/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【人材紹介】エージェント部（キャリアアドバイザー職）</b><span class="sal">500〜800万円＋賞与</span></a></li><li><a href="/job/recWFUreqJOPNlOol/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【人材紹介】エージェント部_RA職</b><span class="sal">500〜800万円＋賞与</span></a></li><li><a href="/job/rec7lIK3QMuqFupYq/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【法人営業】営業開発事業部_メンバー＜東京本社希望者＞</b><span class="sal">500〜800万円＋賞与</span></a></li><li><a href="/job/reczuK2AT22ps7zLN/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【法人営業】営業開発事業部_メンバー＜関西支社希望者＞</b><span class="sal">500〜800万円＋賞与</span></a></li><li><a href="/job/recBePzvTXaL1Fq1b/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【法人営業】営業開発事業部_メンバー＜中部支社希望者＞</b><span class="sal">500〜800万円＋賞与</span></a></li><li><a href="/job/rec25C5wZtr8u9Kdk/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【法人営業】営業開発事業部_支店長候補＜福岡支社＞</b><span class="sal">550万円〜</span></a></li><li><a href="/job/recPbRFcOeMD0E1L6/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【法人営業】アライアンス事業_責任者</b><span class="sal">550万円〜</span></a></li></ul><ul class="joblist" data-g="g3" hidden><li><a href="/job/recbI9v13iGXyv2e0/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【エンジニア】コーポレートエンジニア_社内IT環境の設計・構築</b><span class="sal">450〜1,100万円</span></a></li><li><a href="/job/rec5TORtBFLhWcLiH/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【エンジニア】バックエンドエンジニア_社内システム開発エンジニア</b><span class="sal">450〜1,100万円</span></a></li><li><a href="/job/recXXYG0MOKDTHF8D/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【エンジニア】フルスタックエンジニア_社内システム開発エンジニア</b><span class="sal">450〜1,100万円</span></a></li></ul><ul class="joblist" data-g="g4" hidden><li><a href="/job/recNUAhYg8IBH1qRs/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【FP&amp;A】経営管理・財務分析ポジション</b><span class="sal">600〜1,500万円</span></a></li><li><a href="/job/recEUubAa7DHDkRjN/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【IPO準備中】経理マネージャー（課長〜部長候補）</b><span class="sal">700〜1,200万円</span></a></li><li><a href="/job/recQHqtE2URMyzU78/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【バックオフィス】IR/Finance_責任者</b><span class="sal">700〜1,500万円</span></a></li><li><a href="/job/recVwQTcPqqeMRkJs/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【バックオフィス】経営企画_メンバー</b><span class="sal">420〜900万円</span></a></li><li><a href="/job/recyjBui33BJlhu9p/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【バックオフィス】人事部_採用</b><span class="sal">390〜900万円</span></a></li><li><a href="/job/recdiupBeaSwJf463/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【バックオフィス】法務担当</b><span class="sal">390〜800万円</span></a></li><li><a href="/job/recWxcsKIQEMWQ63N/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【バックオフィス】広報部_メンバー</b><span class="sal">320〜700万円</span></a></li><li><a href="/job/rechARX3ys4oReeSE/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【広報】広報責任者（マネージャー候補）</b><span class="sal">640〜940万円</span></a></li><li><div class="j"><b>【マーケティング】イベントマーケター（リーダー候補）</b><span class="sal">490〜690万円</span></div></li><li><a href="/job/recU8eoJkapKgkWtw/?utm_source=pickup&utm_medium=company-lp&utm_campaign=bridgeone"><b>【マーケティング】コミュニティマーケター（事業責任者候補）</b><span class="sal">490〜690万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はポジションによって異なります。ここでは、主なポジションの求人票の記載をまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はポジションによって異なります。ここでは、主なポジションの求人票の記載をまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（主なもの）</h3><ul><li>M&amp;A事業部メンバー（テレアポ・書類作成なし）：BtoBの営業経験（新規開拓や高い営業目標を追った経験）、または金融機関・不動産・コンサル・人材などの営業経験</li><li>M&amp;A事業部_メンバー：法人営業の経験（証券、保険、銀行系、商社系、コンサル営業など）</li><li>企業再生アドバイザリー：財務・会計の基礎知識と、金融機関またはコンサルティングファームなどでの実務経験</li><li>自社M&amp;A事業部：M&amp;A仲介会社でのコンサルタント／アドバイザーの実務経験、またはM&amp;A関連業務（DD、バリュエーション、契約交渉など）の経験が1年以上</li><li>ヘッドハンター：法人営業の経験（2年以上・業界不問）</li></ul></div><div><h3>合う人</h3><ul><li>営業ひとりで複数のソリューションを組み合わせ、経営課題に向き合いたい人</li><li>高い目標を追い、成果を出すことにこだわれる人</li><li>社内の他の部署と、円滑にコミュニケーションをとれる人</li><li>成長できる環境を求め、素直に物事に取り組める人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、M&amp;A・コンサル・人材紹介・金融に特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>M&amp;Aの経験がなくても応募できますか？</summary><p>M&amp;A事業部メンバー（テレアポ・書類作成なし）は、BtoBの営業経験などが応募条件で、M&amp;A仲介の経験は歓迎条件です。ポジションによって条件が異なります。</p></details><details><summary>M&amp;A事業部は、テレアポがありますか？</summary><p>M&amp;A事業部メンバー（テレアポ・書類作成なし）の求人票では、テレアポは一切なく、社内やパートナーからトスアップされた案件に取り組むと書かれています。</p></details><details><summary>勤務地はどこですか？</summary><p>本社は東京・恵比寿です。営業開発事業部には、関西・中部・福岡の支社を希望できるポジションがあります。ポジションごとの勤務地は、相談のときにお伝えします。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>同社の求人票には選考の流れの詳しい記載がないため、相談のときにお伝えします。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。ブリッジワン以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

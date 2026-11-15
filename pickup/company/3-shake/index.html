@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「インフラをシンプルにして、イノベーションが起こりやすい世界を作る」を掲げるテックカンパニーです。2015年1月設立、本社は東京・銀座です。</p><ul class="points"><li><b>4つの事業で、開発の「労苦」を減らす</b><p>AWS・Google Cloud・Kubernetesに強いSRE支援のSreake、セキュリティの統合プラットフォームSecurify、データの実行・運用基盤Reckoner、エンジニア組織向けの人材紹介Relanceを展開しています。</p></li><li><b>自社プロダクトで売る・つくる</b><p>SecurifyとReckonerは自社で開発するSaaSです。営業は、顧客の声を開発チームに直接届けられます。</p></li><li><b>小さな組織で、役割を広げやすい</b><p>求人票では、Securifyのビジネス組織は約15名と紹介されています。担当領域の外にも関わりやすい環境です。</p></li></ul><p class="cap">設立2015年1月／従業員数140名（非正規社員を除く）。出典：同社の公式サイト・公開求人票</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>クラウドの技術力で、大手との提携と受賞を重ねる</h2>
+  <p class="lead">インフラとセキュリティの技術力を軸に、大手SIerとの資本業務提携まで進んだ会社です。2024年11月にはNTTデータとSCSKから10億円を調達しました。企業のクラウド移行とAI活用が進むほど、同社の出番は増えていきます。</p>
+  <div class="gr-hl"><div><b>23.5<small>億円</small></b><span>累計の資金調達額（2024年11月時点・同社発表）</span></div><div><b>2<small>年連続</small></b><span>Google Cloud「Infrastructure Modernization Partner of the Year - Japan」受賞（2025年・2026年）</span></div><div><b>208<small>人</small></b><span>社員数（2026年11月時点・同社の会社紹介資料）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>大手SIerと資本業務提携</b><p>2024年11月、NTTデータとSCSKを引受先に総額10億円を調達し、資本業務提携を結びました。SRE人材の供給やセキュリティ連携、クラウド人材の育成で協業します。</p></div><div><span class="n">02</span><b>Google Cloudの表彰</b><p>2026年4月、Google Cloudのパートナー表彰でインフラのモダナイゼーション部門（日本）を受賞しました。2025年に続く受賞です。顧客インフラの刷新で成果を上げたパートナーに贈られる賞です。</p></div><div><span class="n">03</span><b>名だたる企業を支援</b><p>SRE支援「Sreake」の取引実績には、NTTデータ、JCB、トヨタ、CADDi、enechainなどが並びます。Google CloudのPremier Partner、AWSのAdvanced Tier Services Partnerでもあります。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>約4兆4,930億円</b><span>国内パブリッククラウドサービス市場の規模（2025年・IDC Japan）</span></div><p>IDC Japanによると、2025年の国内パブリッククラウドサービス市場は前年比20.3%増の4兆4,930億円でした。2030年には10兆962億円に達すると予測されています。AIの普及でクラウドの利用量が増え、古いシステムの刷新も活発です。クラウドを安定して動かすSREとセキュリティの需要は、これからも広がります。</p></div>
+  <h3 class="gr-dh">会社が公開している資料</h3><div class="decks"><div class="deck"><div class="deck__frame"><iframe src="https://speakerdeck.com/player/278e9f00bd064d88a76d2b17ec2c2c16" title="株式会社スリーシェイク_company deck" loading="lazy" allowfullscreen></iframe></div><p class="deck__meta"><b>株式会社スリーシェイク_company deck</b><span>株式会社スリーシェイク（@3shake）・2025-10</span><a href="https://speakerdeck.com/3shake/zhu-shi-hui-she-surisieiku-company-deck" target="_blank" rel="noopener">資料を開く ↗</a></p></div></div>
+  <p class="cap">出典：同社プレスリリース（2024年11月・2026年4月）、同社Sreakeサイト・会社紹介資料（2026年11月時点）、IDC Japan「国内パブリッククラウドサービス市場予測」（2026年3月12日）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>スリーシェイクのセールスの仕事</h2><p class="lead" style="margin:0">ここでは、募集の中心であるフィールドセールスの仕事を紹介します。商談から受注、導入後のコンサルティングまでを一通り担います。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>スリーシェイクのセールスの仕事</h2><p class="lead" style="margin:0">ここでは、募集の中心であるフィールドセールスの仕事を紹介します。商談から受注、導入後のコンサルティングまでを一通り担います。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>商談に集中できる</b><p>アポイントはインサイドセールスが獲得して引き継ぎます（状況に応じて一部自己開拓あり）。顧客との対話と提案づくりに時間を使えます。</p></div><div><span class="n">POINT 2</span><b>用途に合わせて提案する</b><p>顧客の課題を聞き、Securifyの診断プランなどを目的に合わせて組み合わせて提案します。</p></div><div><span class="n">POINT 3</span><b>会社全体で提案できる</b><p>課題によっては、同社のITインフラ技術支援やIT人材紹介も組み合わせた総合提案ができます。</p></div><div><span class="n">POINT 4</span><b>現場の声を製品に返す</b><p>商談で得た要望は、開発チームやマーケティングチームに直接伝えます。</p></div></div><p class="oneperson">同社の求人票では、SaaSまたはITソリューションの法人営業経験を必須とするポジションと、IT業界の営業経験があれば年数は問わないポジションがあります。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも公開求人票に記載された想定年収で、経験とスキルを考慮して決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも公開求人票に記載された想定年収で、経験とスキルを考慮して決まります。</p>
   <div class="stairs"><div class="stair"><small>リクルーティングアドバイザー（ジュニア）</small><b>400〜600万円</b><span>業界不問で営業経験を活かせる</span></div><div class="stair"><small>フィールドセールス（Securify）</small><b>450〜700万円</b><span>セキュリティ診断SaaSの法人営業</span></div><div class="stair"><small>フィールドセールス（マネージャー候補）</small><b>650〜1,200万円</b><span>セキュリティプラットフォームの営業</span></div></div>
   
   <p class="breakdown">年収には固定残業代（月30時間分）が含まれるポジションがあり、超過分は別途支給です。フレックスタイム制（コアタイム12:00〜16:00）で、リモート勤務は可、フルリモートは不可と記載されています。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1606044466411-207a9a49711f?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、面接を中心に最短3週間。</h2><p class="lead">公開求人票に記載された流れです。ポジションによって回数が変わることがあります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、面接を中心に最短3週間。</h2><p class="lead">公開求人票に記載された流れです。ポジションによって回数が変わることがあります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>一次選考（適性検査あり）</b><p>選考の途中で適性検査があります。希望すれば、一次選考の前にカジュアル面談もできます。</p></div><div><span class="t">STEP 2</span><b>二次面接（ポジションによる）</b><p>二次面接を挟むポジションと、一次選考のあと最終面接に進むポジションがあります。</p></div><div><span class="t">STEP 3</span><b>最終面接</b><p>面接はオンラインで対応できると案内されているポジションがあります。選考中にリファレンスチェックを行う場合があります。</p></div></div>
   <p class="cap">出典：同社の公開求人票（2026年11月時点）。最短3週間での内定と記載されています／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">セールス</button><button role="tab" aria-selected="false" data-g="g1">エンジニア・技術</button><button role="tab" aria-selected="false" data-g="g2">人材紹介・マーケティング</button></div><ul class="joblist" data-g="g0"><li><a href="/job/rec3hdNNuHj0HhSx9/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>フィールドセールス（Securify）<span class="pick">厳選</span></b><span class="sal">450〜700万円</span></a></li><li><a href="/job/recjZqnP7RJtjFwVN/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>フィールドセールス（マネージャー候補）｜Securify</b><span class="sal">650〜1,200万円</span></a></li><li><a href="/job/rec9HvKSVxdrjw8IZ/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>フィールドセールス（Reckoner）</b><span class="sal">501〜900万円</span></a></li><li><a href="/job/rectoaQ7nFadNjo29/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>パートナーセールス（Reckoner）</b><span class="sal">500〜900万円</span></a></li><li><a href="/job/recvW76baafmUMcPl/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>パートナーセールス（ジュニア）｜Reckoner</b><span class="sal">400〜900万円</span></a></li><li><a href="/job/recm2wRzdJQArC1cN/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>SREソリューションセールス（Sreake）<span class="pick">厳選</span></b><span class="sal">500〜900万円</span></a></li><li><a href="/job/rec5ev5PmPHIGjvUH/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>【Sales_All】Sales_Open（オープンポジション）</b><span class="sal">400万円〜</span></a></li><li><a href="/job/recWJ9cFEYU7yOwF5/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>【SaaS_All】SaaS_Open（オープンポジション）</b><span class="sal">450〜1,000万円</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recZ61TzNGufwJEFA/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>FDE（Securify）</b><span class="sal">500〜1,000万円</span></a></li><li><a href="/job/recvgKobTeT7ijANB/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>Technical support（Reckoner）</b><span class="sal">450〜900万円</span></a></li><li><a href="/job/rec4mED7rPNrOevJN/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>コーポレートエンジニア（Sreake）</b><span class="sal">426〜694万円</span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><a href="/job/recfQmX8P4S16FYS5/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>リクルーティングアドバイザー（Relance）</b><span class="sal">500〜800万円</span></a></li><li><a href="/job/recLxtLwb5lWLpn9g/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>リクルーティングアドバイザー／キャリアアドバイザー（Relance）</b><span class="sal">500〜800万円</span></a></li><li><a href="/job/recQhVio2ekUQecvS/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>リクルーティングアドバイザー（ジュニア）</b><span class="sal">400〜600万円</span></a></li><li><a href="/job/recNn3gbUYcj3TQN7/?utm_source=pickup&utm_medium=company-lp&utm_campaign=3-shake"><b>【Securify】マーケター</b><span class="sal">450〜700万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、フィールドセールス（Securify）とSREソリューションセールスの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、フィールドセールス（Securify）とSREソリューションセールスの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（セールス）</h3><ul><li>フィールドセールス（Securify）：SaaSまたはITソリューションの法人営業の経験</li><li>SREソリューションセールス：IT業界での営業経験（SIer、SES、パッケージソフト、クラウド・SaaSなど）。経験年数は不問で、深い技術知識は必要ない</li><li>セキュリティやクラウドの知識は歓迎条件で、必須ではない（求人により異なる）</li></ul></div><div><h3>合う人</h3><ul><li>顧客の事業に踏み込んで、課題を聞き出す営業をしたい人</li><li>セキュリティやクラウドなど、新しい領域を学ぶのが好きな人</li><li>営業だけでなく、組織やプロダクトづくりにも関わりたい人</li><li>チームで受注と顧客の成功をつくりたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、IT・スタートアップ・M&amp;A・コンサルに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>IT業界の営業経験がなくても応募できますか？</summary><p>ポジションによります。フィールドセールス（Securify）はSaaSまたはITソリューションの法人営業経験が必須です。リクルーティングアドバイザー（ジュニア）は、業界不問で営業経験を活かせると記載されています。</p></details><details><summary>技術の知識は必要ですか？</summary><p>Securifyのフィールドセールスは、技術的な専門知識よりも、顧客のビジネスに踏み込む営業力とセキュリティ・IT市場への関心を重視すると求人票に記載されています。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>求人票では、最短で3週間で内定と記載されています。一次選考から最終面接までで、ポジションにより二次面接が入ります。カジュアル面談も可能です。</p></details><details><summary>リモートで働けますか？</summary><p>リモート勤務は可、フルリモートは不可と記載されています。フレックスタイム制（コアタイム12:00〜16:00）です。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。スリーシェイク以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

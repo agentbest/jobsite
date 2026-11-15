@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「ベンチャーの可能性を広げ、あらゆる挑戦を支援する」を掲げ、M&amp;A事業・コンテンツマーケティング事業・セールステック事業を展開する、東京・表参道の会社です。</p><ul class="points"><li><b>ベンチャー・IT領域に特化したM&amp;A</b><p>ディールの約9割がIT・Web領域（メディア、SaaS、デジタルマーケティング支援、ECなど）です。価値がまだ定まっていない成長企業を支える案件が中心です。</p></li><li><b>売却相談はインバウンド中心</b><p>新規開拓のテレアポではなく、問い合わせを受けて動く体制です。アドバイザーはディール業務に集中できると、求人票に書かれています。</p></li><li><b>個人プレーではなく、チームで進める</b><p>案件には必ずサポートがつきます。成果だけでなく、チームや事業づくりへの貢献もインセンティブの評価対象です。弁護士・会計士・税理士など提携する専門家とも連携します。</p></li></ul><p class="cap">設立2006年6月／資本金6,000万円／メンバー約140名（従業員・フリーランス含む、2026年4月現在）。出典：同社の会社概要・求人票</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>ベンチャーのM&amp;Aで、成約実績を積み上げる</h2>
+  <p class="lead">2006年の設立以来、ベンチャー企業の成長を支えてきた会社です。M&amp;A事業は、立ち上げから6年で89組の成約実績があります（2026年7月時点）。2026年はタクシー広告や書籍で、ベンチャー経営者への発信を強めています。</p>
+  <div class="gr-hl"><div><b>89<small>組</small></b><span>M&amp;Aの成約実績（事業立ち上げから6年・2026年7月時点）</span></div><div><b>17,400<small>社以上</small></b><span>経営者との独自ネットワーク数（2026年5月時点）</span></div><div><b>8,000<small>社</small></b><span>これまでの取引社数（全事業の累計・2026年4月現在）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>成約が積み上がる</b><p>ウィルゲートM&amp;Aは、立ち上げから6年で89組の成約実績があります。最短45日で成約した実績もあります。</p></div><div><span class="n">02</span><b>経営者との接点が広い</b><p>経営者との独自ネットワークは17,400社以上です。コンテンツマーケティングなどの事業を含め、累計8,000社と取引してきました。</p></div><div><span class="n">03</span><b>発信に力を入れる</b><p>2026年5月から、全国のタクシーメディア「TOKYO PRIME」で動画を放映しています。専務取締役の吉岡 諒が書籍『ベンチャーM&amp;Aの教科書』を出版しました。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>3,883件</b><span>日本企業のM&amp;A件数（2026年1〜9月・レコフデータ調べ）</span></div><p>レコフデータによると、2026年1〜9月の日本企業のM&amp;A件数は3,883件でした。前年同期より5.0％増え、3年連続で最多を更新しています。このうち日本企業同士のM&amp;Aは3,090件です。ウィルゲートは、成長途中のベンチャー・IT企業の売却や資本提携を支えています。</p></div>
+  
+  <p class="cap">出典：同社コーポレートサイト（2026年11月時点）・同社プレスリリース（2026年5月・7月）、レコフデータ「MARR Online」（2026年10月2日）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1681505531034-8d67054e07f6?w=1200&q=75" alt="書類の上で握手を交わす様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>ウィルゲートのM&amp;Aアドバイザーの仕事</h2><p class="lead" style="margin:0">売り手・買い手の企業へのヒアリングから、マッチング、条件交渉、クロージングまで、M&amp;Aの成立に向けた一連の業務を担当します。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>ウィルゲートのM&amp;Aアドバイザーの仕事</h2><p class="lead" style="margin:0">売り手・買い手の企業へのヒアリングから、マッチング、条件交渉、クロージングまで、M&amp;Aの成立に向けた一連の業務を担当します。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>ディールの経験を積みやすい</b><p>成約までの平均期間は3〜6か月と、同社のM&amp;Aサイトに記載されています。同社の求人票では、1人あたり20件ほどの案件を担当すると紹介されています。</p></div><div><span class="n">POINT 2</span><b>一連のプロセスを通して担う</b><p>買い手・売り手との商談、候補企業への提案、マッチング交渉、契約書などの書類作成、クロージングまでを担当します。</p></div><div><span class="n">POINT 3</span><b>専門家とチームで動く</b><p>M&amp;Aの経験が豊富な顧問や、提携する弁護士・会計士・税理士の協力を得ながら進めます。</p></div><div><span class="n">POINT 4</span><b>キャリアの広げ方を選べる</b><p>慣れてきたら、案件推進に加えて事業開発やメンバーマネジメントにも取り組みます。希望と適性を考慮すると、求人票に書かれています。</p></div></div><p class="oneperson">M&amp;A経験者向けのポジションに加えて、コンサルや法人営業の経験を活かして挑戦できる「未経験歓迎」のポジションもあります（同社求人票より）。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収の例で、上限ではありません。経験と実績に応じて決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収の例で、上限ではありません。経験と実績に応じて決まります。</p>
   <div class="stairs"><div class="stair"><small>M&amp;Aアドバイザー（未経験歓迎）</small><b>年収例 600万円</b><span>インセンティブは含まず。1年目から1,000万円を超える例もあります</span></div><div class="stair"><small>M&amp;Aアドバイザー（経験者）</small><b>年収例 1,008万円</b><span>モデルケース：1年目 1,000万円〜／3年目 2,000万円〜／5年目 4,100万円〜</span></div><div class="stair"><small>M&amp;Aスペシャリスト</small><b>年収例 1,500万円</b><span>インセンティブ次第で上回る可能性があります</span></div></div>
   <div class="realized"><div><small>インセンティブ</small><b>年2回・上限なし</b></div><div><small>昇給</small><b>年2回</b></div></div>
   <p class="breakdown">年収には固定残業45時間分（業務手当）を含みます。時間外労働は全社平均で月20時間です。フレックスタイム制で、テレワークは週4日・出社は週1日です。年間休日は120日以上です。</p><p class="cap">出典：同社求人票（2026年11月時点）。インセンティブは半期の売上実績をもとに支給されます</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類・面接2回・会食。</h2><p class="lead">M&amp;Aアドバイザーの選考の流れです。一次面接はオンラインで、最終選考はオンラインまたは対面のいずれかです。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類・面接2回・会食。</h2><p class="lead">M&amp;Aアドバイザーの選考の流れです。一次面接はオンラインで、最終選考はオンラインまたは対面のいずれかです。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書・職務経歴書で選考します。</p></div><div><span class="t">STEP 2</span><b>一次面接＋適性検査</b><p>人事責任者との面接（オンライン）です。適性検査とリファレンスチェックもあります。</p></div><div><span class="t">STEP 3</span><b>二次面接</b><p>取締役、管掌役員、現場マネージャーが面接します。</p></div><div><span class="t">STEP 4</span><b>会食選考</b><p>現場責任者・マネージャーと会食をしながら話します。</p></div></div>
   <p class="cap">出典：同社求人票の選考フロー（2026年11月時点）。ポジションによって異なることがあります／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">M&amp;Aアドバイザー</button><button role="tab" aria-selected="false" data-g="g1">M&amp;A関連・コンサル</button></div><ul class="joblist" data-g="g0"><li><a href="/job/recy3gzgYo6n8qins/?utm_source=pickup&utm_medium=company-lp&utm_campaign=willgate"><b>【M&amp;Aスペシャリスト】ディール・専門性に100%集中できる環境へ<span class="pick">厳選</span></b><span class="sal">1,500〜3,000万円</span></a></li><li><a href="/job/recjk8TrrjNy7Wgg7/?utm_source=pickup&utm_medium=company-lp&utm_campaign=willgate"><b>【M&amp;Aアドバイザー】テレアポなし／チームで協働する風土／IT・Web領域特化<span class="pick">厳選</span></b><span class="sal">1,000〜1,500万円</span></a></li><li><a href="/job/reccEWkB32Re8lWLc/?utm_source=pickup&utm_medium=company-lp&utm_campaign=willgate"><b>【未経験歓迎｜M&amp;Aアドバイザー】入社1年以内での成約実績あり／IT・Web領域特化</b><span class="sal">600〜1,000万円</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><div class="j"><b>【M&amp;Aクライアントリレーション】買い手企業との関係構築／IT・Web領域メイン</b><span class="sal">500〜700万円</span></div></li><li><div class="j"><b>【M&amp;Aマーケティング｜リーダー候補】未経験歓迎／M&amp;Aの集客施策を立ち上げ</b><span class="sal">500〜700万円</span></div></li><li><a href="/job/recg1d2XENZszgc6v/?utm_source=pickup&utm_medium=company-lp&utm_campaign=willgate"><b>【シニアコンサルタント】AI×人のハイブリッドでマーケティングの勝ちパターンを創る</b><span class="sal">800〜1,200万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、M&amp;Aアドバイザー（経験者）と、未経験歓迎のM&amp;Aアドバイザーの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、M&amp;Aアドバイザー（経験者）と、未経験歓迎のM&amp;Aアドバイザーの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（M&amp;Aアドバイザー）</h3><ul><li>【経験者向け】以下のいずれかの経験が1年以上：独立系M&amp;Aブティックでのディール経験（5件以上）／銀行・証券会社等でのM&amp;Aに関する一連業務の経験（エグゼキューションのみでも可）／事業会社でM&amp;Aを推進し、契約成立まで行った経験</li><li>【未経験歓迎】コンサルタント経験（業界・領域は問わない）、または法人営業経験（金融・商社・保険・IT・SaaS領域）が1年以上</li><li>歓迎：IT・Web領域のビジネスへの関心、経営者・オーナーへの営業経験、簿記2級以上や会計・ファイナンス系の資格</li></ul></div><div><h3>合う人</h3><ul><li>ベンチャー・IT領域のM&amp;Aで、ディールの経験を数多く積みたい人</li><li>個人の成果だけでなく、チームで大きな目標を達成したい人</li><li>自分で考えて動き、問題の原因を突き止めてやり切りたい人</li><li>事業開発やメンバーマネジメントまで、キャリアを広げていきたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、M&amp;A・IT・スタートアップ・コンサルに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>M&amp;Aの経験がなくても応募できますか？</summary><p>「未経験歓迎」のM&amp;Aアドバイザーの求人があります。応募条件は、コンサルタント経験、または法人営業経験（金融・商社・保険・IT・SaaS領域）が1年以上であることです。</p></details><details><summary>テレアポなどの新規開拓はありますか？</summary><p>同社の求人票では、売却相談はインバウンド中心で、新規開拓のテレアポは不要と紹介されています。ポジションによって業務が異なるため、詳しくは相談時にお伝えします。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>書類選考のあと、一次面接（オンライン）、適性検査・リファレンスチェック、二次面接、会食選考の流れです。最終選考はオンラインまたは対面のいずれかです。</p></details><details><summary>働き方は柔軟ですか？</summary><p>フレックスタイム制（コアタイム11時〜15時）で、テレワークは週4日・出社は週1日です。時間外労働は全社平均で月20時間です。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。ウィルゲート以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

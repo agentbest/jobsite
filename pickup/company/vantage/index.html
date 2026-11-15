@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「世界を“エナジー”する〜Energize the People〜」を掲げる、東京・築地に本社を置く会社です。Web×BtoBを主戦場にしています。</p><ul class="points"><li><b>Web＆AIパートナー事業</b><p>Webマーケティングのコンサルティングと、広告運用支援、AIツール開発を行います。クライアントは中小企業が中心で、相手は経営者が多いと求人票に記載されています。</p></li><li><b>人材ソリューション事業</b><p>年収800万円以上のフリーランス人材と企業をつなぐ「HighClass」や、運用型レターサービス「Keyman Letter」、コールサービス「Keyman Call」を運営しています。</p></li><li><b>若い組織で、評価軸ははっきり</b><p>求人票では、評価軸として5つの「粋」（No.1、挑戦、逆算、スピード、執念）が示されています。</p></li></ul><p class="cap">同社が立ち上がったのは2008年。本社：東京都中央区築地。出典：同社の公式サイト・公開求人票</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>Web・人材・セールスDXの3事業で売上を伸ばす</h2>
+  <p class="lead">2008年に立ち上がり、売上高は2024年7月期の38.5億円から、2025年7月期は41.7億円になりました。代表メッセージでは、累計5,000社を超える企業と取引してきたと述べています。2026年7月期は50.2億円を目標に掲げています。</p>
+  <div class="gr-hl"><div><b>41.7<small>億円</small></b><span>売上高（2025年7月期・実績）</span></div><div><b>16,639<small>名</small></b><span>「HighClass」の累計登録フリーランス数（2026年10月現在）</span></div><div><b>2,238<small>社</small></b><span>「HighClass」の累計導入企業数（うち東証上場339社・2026年10月現在）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>売上が伸びている</b><p>売上高は2024年7月期の38.5億円から、2025年7月期は41.7億円になりました。2026年7月期は50.2億円を目標にしています。</p></div><div><span class="n">02</span><b>上場企業にも広がる</b><p>即戦力フリーランスのマッチング「HighClass」は、登録者が16,639名です。導入企業は2,238社で、うち339社が東証上場企業です。</p></div><div><span class="n">03</span><b>営業をデータで磨く</b><p>決裁者向けの営業支援で得たデータを、分析として公表しています。2026年10月には「電話で決裁者につながるのは3回目までに84.8％」という分析を出しました。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>4兆459億円</b><span>日本のインターネット広告費（2025年・電通調べ）</span></div><p>電通の「2025年 日本の広告費」によると、インターネット広告費は4兆459億円でした。前年比は110.8％です。総広告費に占める割合は50.2％で、初めて半分を超えました。企業のWeb活用は広がり続けており、Webマーケティングを支える仕事の需要も続いています。</p></div>
+  <h3 class="gr-dh">会社が公開している資料</h3><div class="decks"><div class="deck"><div class="deck__frame"><iframe src="https://speakerdeck.com/player/fb71beb38dfc44f7981f296117077862" title="リクルートブック（web用）" loading="lazy" allowfullscreen></iframe></div><p class="deck__meta"><b>リクルートブック（web用）</b><span>ヴァンテージマネジメント株式会社（@vantage）・2026-02</span><a href="https://speakerdeck.com/vantage/rikurutobutuku-webyong" target="_blank" rel="noopener">資料を開く ↗</a></p></div><div class="deck"><div class="deck__frame"><iframe src="https://speakerdeck.com/player/aa08834d22484f4fb172f42c634ef38a" title="corporate-profile" loading="lazy" allowfullscreen></iframe></div><p class="deck__meta"><b>corporate-profile</b><span>ヴァンテージマネジメント株式会社（@vantage）・2026-03</span><a href="https://speakerdeck.com/vantage/corporate-profile" target="_blank" rel="noopener">資料を開く ↗</a></p></div></div>
+  <p class="cap">出典：同社コーポレートサイト・プレスリリース（2026年11月時点）、電通「2025年 日本の広告費」（2026年3月5日）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>ヴァンテージマネジメントの営業の仕事</h2><p class="lead" style="margin:0">主力は、WEB＆AIカンパニーのWebコンサルタント（営業）と、人材ソリューションカンパニーのコンサル営業・事業開発です。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>ヴァンテージマネジメントの営業の仕事</h2><p class="lead" style="margin:0">主力は、WEB＆AIカンパニーのWebコンサルタント（営業）と、人材ソリューションカンパニーのコンサル営業・事業開発です。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>Webコンサルタント（営業）</b><p>クライアントの売上アップのため、マーケティング手法を選んで提案し、社内のWebマーケッターと連携して実行を管理します。</p></div><div><span class="n">POINT 2</span><b>契約は3か月から</b><p>プロジェクトは最低3か月の契約で、ゴールはプロジェクトの開始時にクライアントごとに決めます。</p></div><div><span class="n">POINT 3</span><b>HighClassのコンサル営業</b><p>ハイキャリアのフリーランス人材と企業をマッチングするサービスの営業です。</p></div><div><span class="n">POINT 4</span><b>セールスDXの事業開発</b><p>Keyman LetterやKeyman Callを組み合わせて、企業の営業課題の戦略立案から実行までをプロデュースします。</p></div></div><p class="oneperson">求人票では、業界経験・法人営業経験を問わず、マインド重視で採用するオープンポジションもあります。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>年収のモデル</h2><p class="lead">公開求人票に月給や年収の金額は記載されていません。求人票に載っているWEB＆AIカンパニーのモデル年収を紹介します。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>年収のモデル</h2><p class="lead">公開求人票に月給や年収の金額は記載されていません。求人票に載っているWEB＆AIカンパニーのモデル年収を紹介します。</p>
   <div class="stairs"><div class="stair"><small>主任（3年目）</small><b>618万円＋インセンティブ</b><span>求人票に掲載されたモデル年収</span></div><div class="stair"><small>係長代行（4年目）</small><b>1,006万円＋インセンティブ</b><span>求人票に掲載されたモデル年収</span></div><div class="stair"><small>係長（11年目）</small><b>1,464万円＋インセンティブ</b><span>求人票に掲載されたモデル年収</span></div></div>
   <div class="realized"><div><small>昇給</small><b>半期に一度の給与査定</b></div><div><small>インセンティブ</small><b>月次目標の達成で毎月</b></div></div>
   <p class="breakdown">モデル年収はあくまで求人票の例で、同じ金額が約束されるわけではありません。実際の条件は経験や評価によって決まります。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1606044466411-207a9a49711f?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、面接3回。</h2><p class="lead">WEB＆AIカンパニーの営業職の求人票に記載された流れです。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、面接3回。</h2><p class="lead">WEB＆AIカンパニーの営業職の求人票に記載された流れです。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>一次面接（人事）</b><p>オンラインと来社のどちらかを選べます。</p></div><div><span class="t">STEP 2</span><b>二次面接（現場責任者）</b><p>東京・築地の本社に来社して面接します。</p></div><div><span class="t">STEP 3</span><b>最終面接（カンパニー長）</b><p>東京・築地の本社に来社して面接します。</p></div></div>
   <p class="cap">出典：同社の公開求人票（2026年11月時点）。エンジニア職やKeyman Letter事業部の一部の求人は、流れが異なります／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。給与額の記載がない求人があります。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。給与額の記載がない求人があります。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">WEB＆AI（営業・マーケティング）</button><button role="tab" aria-selected="false" data-g="g1">人材ソリューション（営業・企画）</button><button role="tab" aria-selected="false" data-g="g2">エンジニア</button><button role="tab" aria-selected="false" data-g="g3">管理部門</button></div><ul class="joblist" data-g="g0"><li><a href="/job/recGCFDG5L4ET8ZcT/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【WEBコンサルタント（営業）】WEB＆AIカンパニー事業部<span class="pick">厳選</span></b><span class="sal">月給（金額の記載なし）</span></a></li><li><a href="/job/rec6ibDX0cnQogEEX/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【現年収800万以上の方限定】webカンパニー事業部</b><span class="sal">月給（金額の記載なし）</span></a></li><li><a href="/job/recjCnFSUMJeh76q4/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【マーケティング部】WEB＆AIカンパニー事業部</b><span class="sal">月給（金額の記載なし）</span></a></li><li><div class="j"><b>【業務推進課】WEBパートナー事業部</b><span class="sal">月給（金額の記載なし）</span></div></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/rec9WE4baxNwZNCdQ/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【コンサル営業】HighClass事業部／人材ソリューションカンパニー<span class="pick">厳選</span></b><span class="sal">月給（金額の記載なし）</span></a></li><li><a href="/job/recEOEOESpz9dBb2q/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【事業開発・セールス】Keyman Call事業部</b><span class="sal">480〜540万円</span></a></li><li><a href="/job/recDiwVMI0zkYTDTB/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【業界経験不問！法人営業経験不問！(マインド重視)】事業開発・セールス</b><span class="sal">500〜700万円</span></a></li><li><a href="/job/recHnSaig3B2B2fld/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>Keyman Letter・営業</b><span class="sal">月給（金額の記載なし）</span></a></li><li><a href="/job/rec7EKuWxVTSUrupH/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【営業企画アシスタント】人材ソリューションカンパニー</b><span class="sal">月給（金額の記載なし）</span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><a href="/job/rec8U875nyDAlV4W3/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>「レター×AI」で営業を科学する！Keyman Letterの開発エンジニア</b><span class="sal">月給（金額の記載なし）</span></a></li><li><a href="/job/recxn7JUq41NY5VfD/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【エンジニア部】wonder事業部</b><span class="sal">月給（金額の記載なし）</span></a></li></ul><ul class="joblist" data-g="g3" hidden><li><a href="/job/recK9HlCSU4SFokTn/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【管理部】財務経理</b><span class="sal">月給（金額の記載なし）</span></a></li><li><a href="/job/recFlTLfzgUTwRqce/?utm_source=pickup&utm_medium=company-lp&utm_campaign=vantage"><b>【管理部】総務・労務</b><span class="sal">月給（金額の記載なし）</span></a></li><li><div class="j"><b>【弁護士】</b><span class="sal">月給（金額の記載なし）</span></div></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、求人票に記載されたポジションごとのものです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、求人票に記載されたポジションごとのものです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件</h3><ul><li>WEBコンサルタント（営業）：求人票の必須条件は、評価軸「粋」への共感</li><li>Keyman Letter・営業：営業経験2〜3年以上（BtoCでも可）</li><li>Keyman Letterの開発エンジニア：Webサービス開発の実務経験（言語は不問）</li><li>事業開発・セールスのオープンポジション：業界経験・法人営業経験は不問</li></ul></div><div><h3>合う人</h3><ul><li>経営者と直接話して、売上や事業に関わる提案をしたい人</li><li>目標を決めて、そこから逆算して動ける人</li><li>スピード感のある環境で、挑戦し続けたい人</li><li>AIを使ったマーケティングやセールスの仕組みに関わりたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、Web・AI・人材・営業に特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>営業の経験がなくても応募できますか？</summary><p>事業開発・セールスのオープンポジションは、業界経験と法人営業経験を問わず、マインドを重視すると記載されています。ポジションにより条件は違うので、相談時に確認します。</p></details><details><summary>年収はいくらですか？</summary><p>公開求人票に月給や年収の金額は記載されていません。WEB＆AIカンパニーのモデル年収が例として載っています。実際の条件は相談時にお伝えします。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>WEB＆AIカンパニーの営業職は、一次面接（人事）、二次面接（現場責任者）、最終面接（カンパニー長）の計3回です。所要期間は公開されていません。</p></details><details><summary>リモートで働けますか？</summary><p>公開求人票には、勤務地は東京・築地の本社と記載されています。リモート勤務の可否は記載がないため、相談時に確認します。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。ヴァンテージマネジメント以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

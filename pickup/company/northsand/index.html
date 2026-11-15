@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">事業・IT戦略の立案からプロジェクトマネジメント、最新テクノロジーの導入支援までを手がけるコンサルティングファームです。2015年7月設立、本社は東京・銀座です。</p><ul class="points"><li><b>東京・大阪・福岡に拠点</b><p>東京・大阪・福岡に拠点があります。東証グロース市場に上場しています。</p></li><li><b>大手クライアントが中心</b><p>金融、製造、人材、通信などの大手企業を担当します。外資・内資は問いません。</p></li><li><b>働きやすさの認定・認証</b><p>「働きがいのある会社」に9年連続で認定されています。人的資本の開示（ISO30414）や情報セキュリティ（ISO/IEC 27001）の認証も取得しています。</p></li></ul><p class="cap">設立2015年7月／資本金4,717百万円／従業員2,304名（2026年7月末時点）。出典：同社の会社概要</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>売上が毎年大きく伸び、上場後も勢いが続くファーム</h2>
+  <p class="lead">2025年11月に東証グロース市場へ上場しました。2026年1月期の売上高は約262億円です。2026年2〜7月の中間期も、売上高が前年同期比60.2％増えました。コンサルタントの採用が順調に進み、高い稼働率を保てていると、同社は説明しています。</p>
+  <div class="gr-hl"><div><b>約262<small>億円</small></b><span>売上高（2026年1月期）</span></div><div><b>60.2<small>％増</small></b><span>中間期の売上高の前年同期比（2027年1月期中間期）</span></div><div><b>293<small>社</small></b><span>コンサルティング事業の顧客数（2026年1月期）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>4年で売上が大きく拡大</b><p>売上高は2022年1月期に24億700万円でした。2026年1月期は261億8,500万円です。同じ期間に、従業員は170名から1,762名になりました。</p></div><div><span class="n">02</span><b>特定の顧客に頼らない</b><p>お客様の数は毎年増えています。2026年1月期の顧客数は293社です。売上は特定の会社に偏らず、国内の大手企業を中心に広がっていると、同社は説明しています。</p></div><div><span class="n">03</span><b>通期予想を上方修正</b><p>2026年9月に、2027年1月期の業績予想を引き上げました。売上高の予想は405億6,000万円で、前期比54.9％増です。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>10兆2,541億円</b><span>国内ITサービス市場の2030年予測（IDC Japan、2026年3月）</span></div><p>IDC Japanは、国内ITサービス市場が2025年の7兆5,663億円から、2030年に10兆2,541億円へ伸びると予測しています。年平均成長率は6.2％です。国内ビジネスコンサルティング市場も、2024年から2029年まで年平均9.9％で伸びる見込みです。システムの刷新やクラウド移行、AIの活用が需要を押し上げています。</p></div>
+  <h3 class="gr-dh">会社が公開している資料</h3><div class="decks"><div class="deck deck--link"><p class="deck__meta"><b>entrance book（会社紹介資料）</b><span>株式会社ノースサンド（公式サイト）・2026-04</span><a href="https://northsand.co.jp/wp-content/uploads/2026/04/entrance_book.pdf" target="_blank" rel="noopener">資料を開く ↗</a></p></div></div>
+  <p class="cap">出典：同社の有価証券報告書（2026年4月）・2027年1月期第2四半期決算短信（2026年9月）、IDC Japan『国内ITサービス市場予測』（2026年3月）・『国内ビジネスコンサルティング市場予測』（2025年12月）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1681505531034-8d67054e07f6?w=1200&q=75" alt="書類の上で握手を交わす様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>ノースサンドのコンサルタントの仕事</h2><p class="lead" style="margin:0">大手クライアントを中心に、業務改革からIT戦略立案、IT導入、新規事業立案まで、幅広いコンサルティングを担当します。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>ノースサンドのコンサルタントの仕事</h2><p class="lead" style="margin:0">大手クライアントを中心に、業務改革からIT戦略立案、IT導入、新規事業立案まで、幅広いコンサルティングを担当します。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>IT戦略からPMOまで</b><p>IT戦略立案、ITコスト削減、ITシステム調達、PMOなどのプロジェクトマネジメントを担います。</p></div><div><span class="n">POINT 2</span><b>業務とITの両面から</b><p>業務改革、業務分析、業務設計などの、プロセス・ITコンサルティングに携わります。</p></div><div><span class="n">POINT 3</span><b>大規模プロジェクトに関わる</b><p>大規模な基幹システムの刷新など、各種プロジェクトのマネジメントも担当します。</p></div><div><span class="n">POINT 4</span><b>入社後の支援が手厚い</b><p>営業担当のキャリアパートナーが、案件やキャリアの相談に乗ります。研修やOJTもあります。</p></div></div><p class="oneperson">配属先は、キャリアパートナーとの相談、提案面談、現場リーダーとお客様との面談を経て決まります（同社の採用サイトより）。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収の下限です。経験とスキルに応じて決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収の下限です。経験とスキルに応じて決まります。</p>
   <div class="stairs"><div class="stair"><small>コンサルタント</small><b>400万円〜</b><span>IT業界未経験の募集もあります</span></div><div class="stair"><small>シニアコンサルタント</small><b>600万円〜</b><span>設計〜開発とマネジメントの経験が目安</span></div><div class="stair"><small>マネージャー</small><b>800万円〜</b><span>シニアマネージャー以上は1,200万円〜</span></div></div>
   <div class="realized"><div><small>年間休日</small><b>120日以上</b></div><div><small>昇給・昇格</small><b>年1回（4月）</b></div></div>
   <p class="breakdown">年俸制で、固定残業40時間分を含みます（超過分は別途支給）。勤務時間は10:00〜19:00で、クライアント先に準じます。フレックスタイム制はなく、リモート可能な案件もありますが、出社が前提です。</p><p class="cap">出典：同社の公開求人票・採用サイト（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の詳しい流れは公開されていません。ポジションによって異なります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の詳しい流れは公開されていません。ポジションによって異なります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書・職務経歴書で選考します。</p></div><div><span class="t">STEP 2</span><b>面接</b><p>回数はポジションによります。</p></div><div><span class="t">STEP 3</span><b>内定</b><p>条件を確認したうえで、入社を決めます。</p></div></div>
   <p class="cap">詳しい流れは相談時にお伝えします／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">コンサルタント</button><button role="tab" aria-selected="false" data-g="g1">営業</button><button role="tab" aria-selected="false" data-g="g2">人事・コーポレート</button></div><ul class="joblist" data-g="g0"><li><a href="/job/recFo9WxESwz2lK8L/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>コンサルタント【東京/大阪/福岡】【全ポジション】<span class="pick">厳選</span></b><span class="sal">400万円〜（ポジションにより異なる）</span></a></li><li><a href="/job/recXLgcHlydMGjmwC/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>コンサルタント【IT業界未経験】【東京/大阪】<span class="pick">厳選</span></b><span class="sal">400万円〜</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recN8TYahNRFrbVFq/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>コンサルティング事業部 / 営業【東京】</b><span class="sal">500〜1,000万円</span></a></li><li><a href="/job/recugkQbu3AEhE5uT/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>コンサルティング事業部 / 営業【大阪】</b><span class="sal">500〜1,000万円</span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><a href="/job/recaKeKBWs2HUcikw/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>人事部 / 人的資本推進チーム【東京】</b><span class="sal">400〜650万円</span></a></li><li><a href="/job/recS2ht3SIjtlCL4e/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>人事部 / フォローアップチーム【東京】</b><span class="sal">350〜700万円</span></a></li><li><a href="/job/recTLgssVq1CY3oTp/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>人事部 / 広報担当クリエイター【東京】</b><span class="sal">400〜700万円</span></a></li><li><a href="/job/rec8Cajfepvgo4PMS/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>人事部 / キャリア採用 メンバー【東京】</b><span class="sal">400〜600万円</span></a></li><li><a href="/job/recjUmtQBWHVfmt5F/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>コーポレート本部 / 法務【東京】</b><span class="sal">450〜700万円</span></a></li><li><a href="/job/recaoFIpdJX6VrMn5/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>コーポレート本部 / 労務 / 産業保健師【東京】</b><span class="sal">400〜600万円</span></a></li><li><a href="/job/rec7is5o37445VzYf/?utm_source=pickup&utm_medium=company-lp&utm_campaign=northsand"><b>コーポレート本部 / 労務 / 臨床心理士【東京】</b><span class="sal">400〜600万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、コンサルタント各ポジションの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、コンサルタント各ポジションの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（コンサルタント）</h3><ul><li>【コンサルタント】IT領域でのエンジニアの実務経験2年以上（設計〜開発、アプリ・インフラ不問）</li><li>【シニアコンサルタント】設計〜開発の経験3年以上と、PL・PM・PMOなどのマネジメント経験2年以上</li><li>【マネージャー】プロジェクトマネジメント経験3年以上</li><li>【IT業界未経験の募集】社会人経験2年以上で、コンサルタントを志す方。論理的なコミュニケーションと思考力、PCでの資料作成経験</li></ul></div><div><h3>合う人</h3><ul><li>向上心が強く、新しいことにも果敢にチャレンジしたい人</li><li>お客様や上司、メンバーの指摘を素直に受け止め、改善を提案できる人</li><li>業界を問わず、IT領域から経営戦略まで幅広く経験したい人</li><li>一人ひとりの裁量が大きく、意思決定が速い環境で働きたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、コンサル・IT・DXに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>IT業界の経験がなくても応募できますか？</summary><p>「IT業界未経験」の募集があります。応募条件は、社会人経験が2年以上あり、コンサルタントを志す方です。入社後は研修とOJTで、先輩がフォローします。</p></details><details><summary>働く場所と時間を教えてください。</summary><p>勤務地は参画するクライアント先が中心です。勤務時間は10:00〜19:00で、クライアント先に準じます。フレックスタイム制はなく、リモート可能な案件もあります。</p></details><details><summary>評価や昇給はどのように決まりますか？</summary><p>粗利・稼働率・現場評価・会社貢献の4つの軸で評価されます。昇給・昇格は年1回、4月です。</p></details><details><summary>入社後のプロジェクトはどう決まりますか？</summary><p>キャリアパートナーとのキャリア相談のあと、提案面談を設定します。現場リーダーとお客様との面談を経て、アサイン先が決まります。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。ノースサンド以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

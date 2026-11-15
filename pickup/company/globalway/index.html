@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「“人”と“技術”を新しい時代のために」を理念に、2004年に創業した東証グロース上場の会社です。AIをすべての事業の基盤とする「AIネイティブ・カンパニー」への変革を進めています。</p><ul class="points"><li><b>デジタル・ソリューション事業</b><p>Salesforce、HubSpot、MuleSoft、ServiceNowなどのクラウドソリューションや、Python/Djangoによるシステム開発で、企業のDX・AI活用を上流から運用・定着まで支援します。</p></li><li><b>キャリアイノベーション事業</b><p>企業の口コミ・年収情報プラットフォーム「キャリコネ」や、ハイクラス人材紹介サービス「GLOBALWAY AGENT」を運営しています。</p></li><li><b>クリエイターエコノミー事業</b><p>グループ会社のタイムチケットを中心に、TikTok LIVEのライバーマネジメントやライブコマースなどを手がけます。</p></li></ul><p class="cap">設立2004年10月／連結従業員153名（2026年3月末）／2026年3月期は連結売上高約40億円、営業利益約3億円で営業黒字に転換。出典：同社の会社概要・決算説明資料</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>黒字転換を果たし、AIを軸に次の成長段階へ</h2>
+  <p class="lead">2026年3月期は、売上高が前期比30.7%増え、営業黒字に転換しました。デジタルソリューション事業の利益も大きく伸びています。2030年3月期に営業利益約14億円を目指し、AIとSalesforceの領域を広げています。</p>
+  <div class="gr-hl"><div><b>30.7<small>%</small></b><span>連結売上高の前期比の伸び（2026年3月期）</span></div><div><b>約4.2<small>億円</small></b><span>デジタルソリューション事業のセグメント利益（2026年3月期・前期は約0.4億円）</span></div><div><b>9<small>社</small></b><span>Salesforce「FDE Partner Network」の国内初期パートナー数（同社はその1社）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>利益体質へ転換</b><p>2026年3月期の連結売上高は過去最高の40億1,400万円でした。デジタルソリューション事業の利益は、前期の約4,000万円から約4億2,300万円になりました。案件の品質管理と採算の見極めを徹底した結果です。</p></div><div><span class="n">02</span><b>AIエージェントで先行</b><p>Salesforceの「FDE Partner Network」で、国内初期パートナー9社の1社に選ばれました。Agentforceを含むAIエージェントの案件を複数獲得しています。</p></div><div><span class="n">03</span><b>大手の基盤づくりを支援</b><p>旭化成ホームズでは、MuleSoftによるAPI連携基盤で開発コスト60%削減・工期50%短縮を実現しました。資生堂のVOC管理システム構築にも参画しています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>約10.2兆円</b><span>国内DX関連投資額（2030年度予測・富士キメラ総研、同社IR資料より）</span></div><p>同社のIR資料は、富士キメラ総研の調査をもとに、国内のDX関連投資額が2030年度に約10.2兆円へ広がると示しています。IDCの予測では、国内AIシステム市場も2029年に約4.2兆円になる見込みです。企業がAIを業務に組み込むには、システムをつなぐ設計と導入の支援が欠かせません。上流から入れるITコンサルの役割は、これから大きくなります。</p></div>
+  
+  <p class="cap">出典：同社「2026年3月期 通期決算説明資料」（2026年5月14日）・「2027年3月期 第1四半期決算説明資料」（2026年8月）、富士キメラ総研「業種別IT投資動向／DX市場の将来展望 2026年版 DX投資編」、IDC Japan「国内AIシステム市場予測」（2025年5月1日）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>MuleSoft・SalesforceのPM／ITコンサルの仕事</h2><p class="lead" style="margin:0">クライアントと直接やり取りするプライム案件で、要件定義から設計、開発、運用保守まで一気通貫で担当します。PMとして、チームと案件をまとめる役割です。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>MuleSoft・SalesforceのPM／ITコンサルの仕事</h2><p class="lead" style="margin:0">クライアントと直接やり取りするプライム案件で、要件定義から設計、開発、運用保守まで一気通貫で担当します。PMとして、チームと案件をまとめる役割です。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>プライム案件が中心</b><p>Salesforce開発は、開発案件のほとんどがプライムです。顧客と直接話しながら要件をまとめ、設計から定着化支援まで通して担当します。</p></div><div><span class="n">POINT 2</span><b>大手企業の連携基盤をつくる</b><p>MuleSoft事業部は、金融・製造・流通など大手企業のシステム連携やAPI開発を支えます。ITアーキテクチャの構想策定の支援も担います。</p></div><div><span class="n">POINT 3</span><b>案件の規模と体制</b><p>Salesforce開発の案件は、期間が3か月〜1年、規模は数千万〜数億円、チームは数〜10名ほどです。</p></div><div><span class="n">POINT 4</span><b>フルリモート・フルフレックス</b><p>コアタイムなしのフレックスタイム制で、基本はフルリモートです。必要に応じて訪問や出社の対応があります。</p></div></div><p class="oneperson">キャリアは「プロジェクトマネージャー」か「技術スペシャリスト」から選べると、Salesforce開発の求人票に書かれています。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収の範囲です。経験と能力を考慮して決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収の範囲です。経験と能力を考慮して決まります。</p>
   <div class="stairs"><div class="stair"><small>Salesforce開発 PL</small><b>500〜700万円</b><span>Salesforce開発のプライム案件</span></div><div class="stair"><small>MuleSoft PL／ITコンサル</small><b>600〜900万円</b><span>将来的にPM・ITコンサルを目指す</span></div><div class="stair"><small>MuleSoft PM／ITコンサル・Salesforce PM</small><b>700〜1,200万円</b><span>最上流から案件を統括</span></div></div>
   <div class="realized"><div><small>ストックオプション</small><b>制度あり</b></div><div><small>在宅勤務手当</small><b>月7,000円</b></div></div>
   <p class="breakdown">年収は12分割で毎月支給します。MuleSoft PM／ITコンサルは管理監督者のため、時間外・深夜労働手当は支給されません。交通費は実費支給（上限月4万円）です。年間休日は125日、副業は申請すれば可能です。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接1〜2回。</h2><p class="lead">選考はオンラインで完結することが基本です。選考の回数は状況によって変わることがあります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接1〜2回。</h2><p class="lead">選考はオンラインで完結することが基本です。選考の回数は状況によって変わることがあります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書と職務経歴書で選考します。</p></div><div><span class="t">STEP 2</span><b>面接（1〜2回）</b><p>基本はオンラインです。経理財務マネージャーは、選考の過程で一度は対面で話す予定です。</p></div><div><span class="t">STEP 3</span><b>内定</b><p>面接を通過するとオファーです。リファレンスチェックを行う場合があります。</p></div></div>
   <p class="cap">出典：同社の公開求人票の選考プロセス（2026年11月時点）。ポジションによって異なることがあります／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">PM・ITコンサル</button><button role="tab" aria-selected="false" data-g="g1">経理・管理部門</button></div><ul class="joblist" data-g="g0"><li><a href="/job/recD9GbJLjxtkCOkz/?utm_source=pickup&utm_medium=company-lp&utm_campaign=globalway"><b>【MuleSoft／AI・API統合基盤】PM・ITスペシャリスト｜プライム中心｜フルリモート<span class="pick">厳選</span></b><span class="sal">700〜1,200万円</span></a></li><li><a href="/job/recDG38uOi1dS0d19/?utm_source=pickup&utm_medium=company-lp&utm_campaign=globalway"><b>【Salesforce開発】プロジェクトマネージャー｜プライム案件9割｜フルリモート<span class="pick">厳選</span></b><span class="sal">700〜1,200万円</span></a></li><li><a href="/job/rechA65YwkbYaheS3/?utm_source=pickup&utm_medium=company-lp&utm_campaign=globalway"><b>【MuleSoft／AI・API統合基盤】PL〜PM候補｜プライム中心｜フルリモート</b><span class="sal">600〜900万円</span></a></li><li><div class="j"><b>【Salesforce開発】PL｜プライム案件9割｜フルリモート</b><span class="sal">500〜700万円</span></div></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recNzRTgcRu82iXAV/?utm_source=pickup&utm_medium=company-lp&utm_campaign=globalway"><b>【経理財務マネージャー】上場企業の経理基盤強化を推進／週3〜4リモート可</b><span class="sal">800〜950万円</span></a></li><li><a href="/job/recUCYE2SYPULitsI/?utm_source=pickup&utm_medium=company-lp&utm_campaign=globalway"><b>【経理財務リーダー】上場企業で決算〜開示まで経験／週3〜4リモート可</b><span class="sal">550〜700万円</span></a></li><li><a href="/job/rec5xe5eLbNhSR8O5/?utm_source=pickup&utm_medium=company-lp&utm_campaign=globalway"><b>【人事・総務・業務改革】管理部門マネージャー候補｜AI推進｜週1〜2出社</b><span class="sal">700万円〜</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はMuleSoft PM／ITコンサルの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はMuleSoft PM／ITコンサルの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（MuleSoft PM／ITコンサル）</h3><ul><li>業務アプリケーション開発におけるPM経験、またはITコンサルタントとしての実務経験</li><li>歓迎：システム連携やAPIに関する知識・経験</li><li>歓迎：クラウド環境での開発経験</li><li>歓迎：顧客への提案・課題解決の経験</li></ul></div><div><h3>合う人</h3><ul><li>顧客の業務課題を、ITで解決するコンサルティング志向の人</li><li>最上流の工程からプロジェクトをリードしたい人</li><li>ビジネスと技術をつなぐ役割を担いたい人</li><li>新規事業・新しい領域に挑戦したい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、IT・スタートアップ・M&amp;A・コンサルに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>MuleSoftの経験がなくても応募できますか？</summary><p>求人票の必須要件は、業務アプリケーション開発のPM経験、またはITコンサルタントとしての実務経験です。システム連携やAPIの知識は歓迎要件で、必須ではありません。</p></details><details><summary>フルリモートで働けますか？</summary><p>MuleSoft・Salesforceのポジションは、全国でのリモート勤務が可能と書かれています。必要に応じて訪問や出社の対応があります。経理・管理部門は週3〜4日のリモート、または週1〜2日の出社です。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>書類選考のあと、面接が1〜2回です。基本はオンラインで完結します。選考の状況によって回数が変わることがあります。</p></details><details><summary>経理や管理部門の求人もありますか？</summary><p>上場企業の経理財務マネージャー・リーダー、AI活用を進める管理部門マネージャー候補の求人があります。応募条件は求人ごとに異なるため、相談のときにご案内します。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。グローバルウェイ以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

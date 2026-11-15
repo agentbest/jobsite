@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -169,7 +196,7 @@ footer dt{font-weight:700}footer dd{margin:0}
   <h1>コンサルへの入口を、<br>伸びている企業から探す。</h1>
   <p>コンサルタントを目指す方に向けて、業績好調・成長中の企業を中心に、コンサルタントを募集している会社をまとめました。未経験の枠がある求人も載せています。</p>
   <div class="ctas"><a class="btn" href="https://calendly.com/r_matsuoka?utm_source=pickup&utm_campaign=feature-consulting" target="_blank" rel="noopener" data-consult="pickup-feature-consulting">コンサル転職を相談する（無料）</a><a class="btn btn--line" href="#companies">掲載企業を見る</a></div>
-  <div class="strip"><div><b>9<small>社</small></b><span>掲載企業</span></div><div><b>48<small>件</small></b><span>テーマに合うポジション</span></div><div><b>成長中</b><span>の会社を中心に</span></div><div><b>無料</b><span>ご相談</span></div></div>
+  <div class="strip"><div><b>9<small>社</small></b><span>掲載企業</span></div><div><b>47<small>件</small></b><span>テーマに合うポジション</span></div><div><b>成長中</b><span>の会社を中心に</span></div><div><b>無料</b><span>ご相談</span></div></div>
   <p class="cap">写真はイメージです</p>
 </div></section>
 <section class="sec"><div class="wrap split">
@@ -198,7 +225,7 @@ footer dt{font-weight:700}footer dd{margin:0}
   </article><article class="fco" id="co-lts">
     <div class="fco__head"><span class="fco__n">04</span><div><small>LTS ／ CAREER GUIDE</small><h3>株式会社エル・ティー・エス</h3></div></div>
     <p class="fco__reason">企業の変革を支える東証スタンダード上場のコンサルティング会社です。お客様のチームの一員として現場に入り込む支援が基本です。IT変革支援・SAP・新規事業開発で、コンサル未経験の方を歓迎する求人があります。</p>
-    <ul class="joblist" data-co="lts"><li><a href="/job/recdN6pPwYoWbMgml/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>【コンサル未経験歓迎】新規事業開発コンサルタント（事業化～グロース伴走）</b><span class="sal">550〜1,100万円</span></a></li><li><a href="/job/rechnRzv1SDBEHQrH/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>【コンサル未経験歓迎/超上流＆ERP】IT変革支援コンサルタント</b><span class="sal">500〜750万円</span></a></li><li><a href="/job/recdZ9X1boiAmb9Ye/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>【コンサル未経験歓迎/SAP】 SAPコンサルタント</b><span class="sal">年収は面談時にご案内</span></a></li><li><a href="/job/rec2CNaDwmAyuHImt/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>【メンバー】スタートアップ・新規事業創出支援コンサルタント（静岡）</b><span class="sal">500〜600万円</span></a></li><li><a href="/job/rec47gDhy7FcXGxhi/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>フィジカルAIコンサルタント（戦略×技術／メンバー）</b><span class="sal">600〜1,200万円</span></a></li><li><a href="/job/rec6oYvCipC6bGztx/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>戦略コンサルタント（財務戦略、経営支援）</b><span class="sal">850〜1,600万円</span></a></li><li class="more"><a href="/pickup/company/lts/#jobs">ほか19件のポジションを見る</a></li></ul>
+    <ul class="joblist" data-co="lts"><li><a href="/job/recdN6pPwYoWbMgml/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>【コンサル未経験歓迎】新規事業開発コンサルタント（事業化～グロース伴走）</b><span class="sal">550〜1,100万円</span></a></li><li><a href="/job/recdZ9X1boiAmb9Ye/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>【コンサル未経験歓迎/SAP】 SAPコンサルタント</b><span class="sal">500〜1,500万円</span></a></li><li><a href="/job/rec2CNaDwmAyuHImt/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>【メンバー】スタートアップ・新規事業創出支援コンサルタント（静岡）</b><span class="sal">500〜600万円</span></a></li><li><a href="/job/rec47gDhy7FcXGxhi/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>フィジカルAIコンサルタント（戦略×技術／メンバー）</b><span class="sal">600〜1,200万円</span></a></li><li><a href="/job/rec6oYvCipC6bGztx/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>戦略コンサルタント（財務戦略、経営支援）</b><span class="sal">850〜1,600万円</span></a></li><li><a href="/job/recgEZGyUvpcselrv/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting"><b>戦略コンサルタント（中長期的成長戦略、競争戦略（市場創造を含む））</b><span class="sal">850〜1,600万円</span></a></li><li class="more"><a href="/pickup/company/lts/#jobs">ほか18件のポジションを見る</a></li></ul>
     <p class="fco__more"><a class="btn btn--line" href="/pickup/company/lts/?utm_source=pickup&utm_medium=feature&utm_campaign=consulting">LTSの特集ページを見る</a></p>
   </article><article class="fco" id="co-ninae">
     <div class="fco__head"><span class="fco__n">05</span><div><small>NINAE ／ CAREER GUIDE</small><h3>株式会社NINAE</h3></div></div>

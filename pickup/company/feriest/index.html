@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">企業のSNSマーケティングを支援する会社です。2016年8月に設立し、東京証券取引所のTOKYO PRO Market（証券コード557A）に上場しています。本社は東京・晴海にあります。</p><ul class="points"><li><b>上流から下流まで一貫して支援</b><p>市場調査やペルソナ設計などの戦略づくりから、クリエイティブ制作、運用、分析まで、SNSマーケティングを一貫して提供しています。</p></li><li><b>幅広いサービス</b><p>Instagram・TikTok・YouTube・Xの運用代行、ショート動画制作、インフルエンサーのプロモーション、SNS広告の運用などがあります。</p></li><li><b>大手企業と直接取引</b><p>求人票によると、大手企業と直接やり取りする案件があり、組織が大きくなる段階のため、高い役職を目指せる可能性があります。</p></li></ul><p class="cap">設立2016年8月／資本金1,000万円。出典：同社の公式サイト（会社情報）</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>上場を果たし、SNS運用代行で伸びる成長企業</h2>
+  <p class="lead">フェリエストは、SNSアカウントの運用代行を軸にした会社です。2025年8月期の売上高は約5.5億円で、2026年4月に東証TOKYO PRO Marketへ上場しました。企業のSNS投資は年々増えており、同社はその追い風を受けています。</p>
+  <div class="gr-hl"><div><b>約5.5<small>億円</small></b><span>売上高（2025年8月期）。2024年3月期は約2.9億円</span></div><div><b>42<small>名</small></b><span>従業員数（2025年12月31日現在）。直近1年で10名増えています</span></div><div><b>約5,000<small>名</small></b><span>連携しているインフルエンサーの数（同社サイト・2026年11月時点）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>戦略から分析まで一体</b><p>SNS戦略、コンテンツ制作、運用、広告、分析・改善を分けずに一体で提供しています。同社はこれを「一気通貫モデル」と呼んでいます。継続的な運用支援によるストック型の収益が、成長を支えていると説明しています。</p></div><div><span class="n">02</span><b>主要SNSの公認を獲得</b><p>2026年7月にX社の「X広告認定代理店」に認定されました。8月にはTikTok for Business SGA広告代理店アドバンテージプログラムのゴールドランクを獲得しました。10月にはLINEヤフーと「Sales Partner」契約を結んでいます。</p></div><div><span class="n">03</span><b>事業の領域を広げている</b><p>2025年6月にTikTok Shop関連サービスを始め、SNSを起点とした購買の支援に広げています。2026年7月には大阪支社を設けました。500社以上の支援で得たデータをAIで分析する取り組みも進めています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>1兆2,038億円</b><span>国内ソーシャルメディアマーケティング市場（2024年の見通し・サイバー・バズ／デジタルインファクト調べ、2024年11月発表）</span></div><p>サイバー・バズとデジタルインファクトの調査では、2024年の国内ソーシャルメディアマーケティング市場は1兆2,038億円で、前年比113%の見通しです。2029年には2兆1,313億円に達すると予測されています。調査では、縦型ショート動画の広がりやEコマースとの連携が伸びの背景に挙げられています。SNSの運用から広告、購買支援まで扱う同社は、この市場の中心で事業をしています。</p></div>
+  
+  <p class="cap">出典：同社コーポレートサイト・同社の発行者情報（2026年3月23日公表）・東京証券取引所への開示（2026年6月23日）、サイバー・バズ／デジタルインファクト「ソーシャルメディアマーケティング市場動向調査」（2024年11月7日発表）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>新規営業とカスタマーサクセスの仕事</h2><p class="lead" style="margin:0">新規営業は、問い合わせをくれた顧客に提案する仕事です。カスタマーサクセスは、獲得した顧客の運用を続け、取引を広げる仕事です。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>新規営業とカスタマーサクセスの仕事</h2><p class="lead" style="margin:0">新規営業は、問い合わせをくれた顧客に提案する仕事です。カスタマーサクセスは、獲得した顧客の運用を続け、取引を広げる仕事です。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>反響営業で新規獲得</b><p>Webなどから問い合わせがあったお客様に、要望や課題に合わせたSNSマーケティングの企画を提案します。</p></div><div><span class="n">POINT 2</span><b>分析して改善を提案</b><p>SNSの運用結果を分析し、戦略の最適化や改善策を提案します。</p></div><div><span class="n">POINT 3</span><b>カスタマーサクセスは継続と拡大</b><p>アカウントプランナーが獲得した案件を引き継ぎ、運用案件の継続とアップセル・クロスセルを担当します。</p></div><div><span class="n">POINT 4</span><b>役割がはっきりしている</b><p>新規獲得は営業が担うため、カスタマーサクセスは顧客管理に集中できます。</p></div></div><p class="oneperson">在籍しているメンバーには、販売職やメーカーの営業からSNSマーケティングへ移った人がいます（同社の採用ページより）。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>年収の目安</h2><p class="lead">同社の採用サイトに書かれている想定年収です。年齢や経験を考慮して決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>年収の目安</h2><p class="lead">同社の採用サイトに書かれている想定年収です。年齢や経験を考慮して決まります。</p>
   <div class="stairs"><div class="stair"><small>両ポジションの下限</small><b>400万円〜</b><span>新規営業・カスタマーサクセスとも</span></div><div class="stair"><small>賞与（新規営業）</small><b>平均3〜4か月分</b><span>年4回・特別賞与を含む</span></div><div class="stair"><small>両ポジションの上限</small><b>〜900万円</b><span>年齢・経験を考慮して決定</span></div></div>
   <div class="realized"><div><small>昇給・賞与</small><b>年4回（四半期ごとの査定）</b></div><div><small>賞与の実績</small><b>1回で100万円超えの支給あり</b></div></div>
   <p class="breakdown">月給には40時間分のみなし残業代を含み、超えた分は全額支給されます。新規営業は目標達成に応じたインセンティブ（年2回）もあります。年間休日は126日で、完全週休2日制です。有給休暇は入社半年経過時点で10日付与されます。</p><p class="cap">出典：同社の採用サイト・求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の回数は、ポジションによって異なります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の回数は、ポジションによって異なります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>職務経歴書をもとに確認されます。</p></div><div><span class="t">STEP 2</span><b>面接（回数はポジションによる）</b><p>これまでの経験や希望を話し合います。</p></div><div><span class="t">STEP 3</span><b>内定</b><p>条件を確認して、入社の意思を決めます。</p></div></div>
   <p class="cap">詳しい流れは相談時にお伝えします／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"></div><ul class="joblist" data-g="g0"><li><a href="/job/reczAmX9iHLpJH2vY/?utm_source=pickup&utm_medium=company-lp&utm_campaign=feriest"><b>新規営業（東京）／SNSマーケティング事業部<span class="pick">厳選</span></b><span class="sal">400〜900万円</span></a></li><li><a href="/job/recummeFnEiPL3Nky/?utm_source=pickup&utm_medium=company-lp&utm_campaign=feriest"><b>カスタマーサクセス（東京）／SNSマーケティング事業部<span class="pick">厳選</span></b><span class="sal">400〜900万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は同社の採用サイトのとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は同社の採用サイトのとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件</h3><ul><li>新規営業（アカウントプランナー）：法人営業の経験1年以上</li><li>カスタマーサクセス：法人営業の経験1年以上</li></ul></div><div><h3>合う人</h3><ul><li>素直に学び、成長し続けたい人</li><li>課題を見つけて、解決まで取り組みたい人</li><li>SNSが好きで、アカウントの動きを追うのが苦にならない人</li><li>将来はリーダーとして、チームを率いたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、IT・スタートアップ・M&amp;A・コンサルに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>SNSマーケティングの経験がなくても応募できますか？</summary><p>同社の採用サイトでは、新規営業・カスタマーサクセスとも、応募条件は法人営業の経験1年以上です。SNSマーケティングの経験は、応募条件に書かれていません。</p></details><details><summary>年収はどのくらいですか？</summary><p>同社の採用サイトでは、新規営業・カスタマーサクセスとも400〜900万円です。月給にはみなし残業代（40時間分）を含みます。昇給と賞与は年4回（四半期ごとの査定）です。</p></details><details><summary>休日や勤務時間を教えてください。</summary><p>勤務時間は平日9:00〜18:00で、年間休日は126日です。完全週休2日制で、夏期休暇と年末年始休暇があります。</p></details><details><summary>働き方で気になる制度はありますか？</summary><p>服装自由、自転車通勤可、出産・育児支援制度、研修支援制度などがあります。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。フェリエスト以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">経理・労務・総務のBPOとDX支援を手がける会社です。Sevenrich会計事務所を母体とし、2023年4月に事業譲渡で独立して設立されました。</p><ul class="points"><li><b>4つのサービス</b><p>経理BPO、労務BPO、DX支援、採用代行（RPO）を提供しています。実務の代行と、仕組みづくりの両方を担います。</p></li><li><b>お客様の自走まで伴走する</b><p>代行しながら業務を見直し、最終的にお客様へ業務をお戻しすることを目指しています。「関わる全ての会社に、最適なバックオフィス環境を実現していきたい」がビジョンです。</p></li><li><b>東京・札幌・福岡・大阪に拠点</b><p>東京本社は渋谷、札幌にも本社があります。福岡と大阪に事務所があります。求人は東京・札幌・福岡で出ています。</p></li></ul><p class="cap">設立2023年4月（母体のSevenrich会計事務所は2011年設立）／従業員94名（2026年6月現在）。出典：同社の会社概要</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>地域銀行とも組み、バックオフィス支援を広げる</h2>
+  <p class="lead">Sevenrich会計事務所の経理代行から生まれたBPOの会社です。2024年3月に顧客数100件を超え、2026年6月時点のBPOの顧客は180社以上です。2025年からは地方銀行との提携が続き、地域企業へも支援を広げています。</p>
+  <div class="gr-hl"><div><b>94.9<small>％</small></b><span>契約の1年継続率（2026年8月時点）</span></div><div><b>1,300<small>社以上</small></b><span>マネーフォワードなどバックオフィスSaaSの導入支援（2026年6月時点）</span></div><div><b>2024<small>年</small></b><span>LayerX ベストパートナー賞を受賞（11月）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>地方銀行との提携</b><p>グループで琉球銀行（2025年9月）、北洋銀行（2026年3月）と提携しました。2026年には常陽銀行と組み、地域企業の労務・勤怠業務を引き受けています。</p></div><div><span class="n">02</span><b>SaaS導入の実績</b><p>バックオフィスSaaSの導入支援は1,300社以上です。2024年11月には、LayerXからベストパートナー賞を受けました。</p></div><div><span class="n">03</span><b>人に頼らない品質体制</b><p>マネージャー・メイン担当・アシスタントの3人1組でお客様を担当します。作業はダブルチェックが標準です。契約の1年継続率は94.9％です。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>5兆786億5,000万円</b><span>国内BPO市場（2024年度、矢野経済研究所）</span></div><p>矢野経済研究所によると、2024年度の国内BPO市場は5兆786億5,000万円でした。前年度比4.0％増です。経理や人事などの間接部門の業務を含む非IT系BPOは、1兆9,566億5,000万円でした。2025年度以降も、市場は堅調に推移する見込みです。</p></div>
+  
+  <p class="cap">出典：同社公式サイト（トップ・会社概要・お知らせ、2026年11月時点）、矢野経済研究所『BPO（ビジネスプロセスアウトソーシング）市場に関する調査』（2025年11月）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>BPIOのBPO・DXコンサルの仕事</h2><p class="lead" style="margin:0">給与計算や月次決算などの実務を代行するだけでなく、業務フローの見直しやSaaSの導入、運用の定着までを、お客様のバックオフィスに入り込んで担当します。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>BPIOのBPO・DXコンサルの仕事</h2><p class="lead" style="margin:0">給与計算や月次決算などの実務を代行するだけでなく、業務フローの見直しやSaaSの導入、運用の定着までを、お客様のバックオフィスに入り込んで担当します。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>代行と改善を両方やる</b><p>経理・労務の運用や成果物のレビューを担いながら、CSVやAIを使った自動化・仕組み化も提案します。</p></div><div><span class="n">POINT 2</span><b>チームでお客様を担当</b><p>労務BPOは、1つのお客様に対して原則3名体制です。マネージャーはメンバーのタスクや案件の品質・進行を管理します。</p></div><div><span class="n">POINT 3</span><b>SaaSの導入から定着まで</b><p>MFクラウド、バクラク、SmartHR、freeeなど複数のツールを扱います。特定のベンダーに縛られず、お客様に合うものを選びます。</p></div><div><span class="n">POINT 4</span><b>AIを日常で使う</b><p>Gemini、Claude Code、NotebookLMなどを積極的に取り入れています。</p></div></div><p class="oneperson">DXコンサルタントの案件は紹介が中心で、自分で新規開拓の営業活動をする必要はないと、同社の求人票に書かれています。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収の範囲です。現在の年収を考慮し、選考の評価をもとに決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収の範囲です。現在の年収を考慮し、選考の評価をもとに決まります。</p>
   <div class="stairs"><div class="stair"><small>経理・労務BPO リーダー</small><b>500〜800万円</b><span>経理BPOは500〜700万円、労務BPOは500〜800万円</span></div><div class="stair"><small>BPOマネージャー・DXコンサルタント</small><b>600〜1,000万円</b><span>BPOマネージャーは600〜1,000万円、DXコンサルタントマネージャーは600〜900万円</span></div><div class="stair"><small>PMI推進・社長室</small><b>700〜1,500万円</b><span>PMI推進は700〜1,500万円、社長室は850〜1,500万円</span></div></div>
   <div class="realized"><div><small>昇給</small><b>最大年2回</b></div><div><small>賞与</small><b>年2回</b></div></div>
   <p class="breakdown">BPO・DXコンサルの年収には月45時間分のみなし残業手当を含みます。勤務は基本的に出社中心で、リモート勤務は試用期間の満了後に原則月2回までです。年間休日は125日、試用期間は6か月です。</p><p class="cap">出典：同社公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の流れはポジションによって異なります。詳しい流れは、相談のときにお伝えします。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の流れはポジションによって異なります。詳しい流れは、相談のときにお伝えします。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書・職務経歴書で選考します。</p></div><div><span class="t">STEP 2</span><b>面接</b><p>回数はポジションによります。</p></div><div><span class="t">STEP 3</span><b>内定</b><p>面接を通過するとオファーです。</p></div></div>
   <p class="cap">選考フローは公開されていないため、概要のみ記載しています。詳しい流れは相談時にお伝えします／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。パート・長期インターンは除いています。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。パート・長期インターンは除いています。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">DXコンサル・プリセールス</button><button role="tab" aria-selected="false" data-g="g1">経理BPO</button><button role="tab" aria-selected="false" data-g="g2">労務BPO</button><button role="tab" aria-selected="false" data-g="g3">PMI・社長室・人事</button></div><ul class="joblist" data-g="g0"><li><div class="j"><b>DXコンサルタントマネージャー<span class="pick">厳選</span></b><span class="sal">600〜900万円</span></div></li><li><div class="j"><b>DXコンサルタントリーダー</b><span class="sal">500〜700万円</span></div></li><li><div class="j"><b>労務DXコンサルタントリーダー（東京）</b><span class="sal">500〜800万円</span></div></li><li><div class="j"><b>SaaS導入プリセールス リーダー（東京）</b><span class="sal">500〜650万円</span></div></li></ul><ul class="joblist" data-g="g1" hidden><li><div class="j"><b>経理BPOマネージャー（東京）<span class="pick">厳選</span></b><span class="sal">600〜1,000万円</span></div></li><li><div class="j"><b>経理BPOマネージャー（札幌）</b><span class="sal">600〜1,000万円</span></div></li><li><div class="j"><b>経理BPOマネージャー（福岡）</b><span class="sal">600〜1,000万円</span></div></li><li><div class="j"><b>経理BPOリーダー（東京）</b><span class="sal">500〜700万円</span></div></li><li><div class="j"><b>経理BPOリーダー（札幌）</b><span class="sal">500〜700万円</span></div></li><li><div class="j"><b>経理BPOリーダー（福岡）</b><span class="sal">500〜700万円</span></div></li></ul><ul class="joblist" data-g="g2" hidden><li><div class="j"><b>労務BPOマネージャー（東京）</b><span class="sal">600〜1,000万円</span></div></li><li><div class="j"><b>労務BPOマネージャー（札幌）</b><span class="sal">600〜1,000万円</span></div></li><li><div class="j"><b>労務BPOマネージャー（福岡）</b><span class="sal">600〜1,000万円</span></div></li><li><div class="j"><b>労務BPOリーダー（東京）</b><span class="sal">500〜800万円</span></div></li><li><div class="j"><b>労務BPOリーダー（札幌）</b><span class="sal">500〜800万円</span></div></li><li><div class="j"><b>労務BPOリーダー（福岡）</b><span class="sal">500〜800万円</span></div></li></ul><ul class="joblist" data-g="g3" hidden><li><div class="j"><b>バックオフィスPMI推進（東京）</b><span class="sal">700〜1,500万円</span></div></li><li><div class="j"><b>社長室（SRA・BPIO）</b><span class="sal">850〜1,500万円</span></div></li><li><div class="j"><b>人事（HRBP）リーダー（東京）</b><span class="sal">550〜800万円</span></div></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、DXコンサルタントマネージャーと、経理・労務BPOマネージャーの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、DXコンサルタントマネージャーと、経理・労務BPOマネージャーの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（マネージャー職）</h3><ul><li>【DXコンサルタントマネージャー】業務コンサルタント経験5年以上、またはバックオフィス業務システムの経験5年以上（導入プロジェクトリーダー、カスタマーサポート、カスタマーサクセスのいずれか）</li><li>【経理BPOマネージャー】3名以上のマネジメント経験と、月次決算の経験（他の人が作った試算表をレビューできること）</li><li>【労務BPOマネージャー】給与計算実務の経験が合計5年以上（事業会社、社労士事務所、労務アウトソーシング会社は問わない）</li><li>歓迎：SaaS／ERPの導入経験、バックオフィスBPOの経験、生成AIを使った業務効率化の実績</li></ul></div><div><h3>合う人</h3><ul><li>お客様のニーズをくみ取り、課題を一緒に解決したい人</li><li>スピード感や大きな変化を楽しみながら働ける人</li><li>新しいツールやAIを、自分から学んで使いこなしたい人</li><li>既存の手順にとらわれず、手順そのものをアップデートしたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、バックオフィス・DX・コンサル・ITに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>経理や労務の実務経験を活かせますか？</summary><p>活かせます。労務BPOマネージャーは給与計算実務が合計5年以上、経理BPOマネージャーは月次決算のレビュー経験などが求人票の必須条件です。経験に応じてDX支援やPMIの業務に携われる場合もあります。</p></details><details><summary>勤務地はどこですか？</summary><p>求人は東京（渋谷）・札幌・福岡で出ています。会社都合の転勤はなく、応募した勤務地に配属されます。</p></details><details><summary>リモートで働けますか？</summary><p>基本は出社中心です。DXコンサルタントの求人票では、リモート勤務は試用期間の満了後に原則月2回までと書かれています。</p></details><details><summary>DXコンサルタントは営業活動が必要ですか？</summary><p>求人票では、案件は紹介が中心で、自分で新規開拓の営業活動をする必要はないと書かれています。クライアントの課題解決に集中できる環境です。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。BPIO以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

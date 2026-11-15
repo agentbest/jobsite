@@ -448,5 +448,61 @@
  ],
  "closingImg": "1779275859289-9bcf24ee065a",
  "footerSource": "掲載している数字・条件は、ログラスの会社概要・採用サイト・公開求人票（2026年11月時点）にもとづきます。",
- "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Javier Haro／Dylan Gillis／Ryusei Machida"
+ "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Javier Haro／Dylan Gillis／Ryusei Machida",
+ "growth": {
+  "h2": "Excelの経営管理を、クラウドで置き換える側にいる。",
+  "lead": "ログラスは、予算と実績の管理をクラウドで行う「予実管理」の分野で事業を広げています。2024年7月に、米国のSequoia Heritageなどから70億円を調達しました。富士キメラ総研は、この市場が2030年度に2025年度の3.0倍になると予測しています。",
+  "highlights": [
+   {
+    "v": "70",
+    "unit": "億円",
+    "label": "シリーズBの調達額（2024年7月・国内外の投資家14社）"
+   },
+   {
+    "v": "11",
+    "unit": "期連続",
+    "label": "ITreview Grid Award「予算管理システム」部門で最高位「Leader」（2026 Fallまで）"
+   },
+   {
+    "v": "366",
+    "unit": "名",
+    "label": "社員数（2026年9月時点・正社員とパートタイマーの合計）"
+   }
+  ],
+  "strengths": [
+   {
+    "b": "世界の投資家が出資",
+    "p": "シリーズBは、米国のSequoia HeritageとALL STAR SAAS FUNDが共同で主導しました。MITIMCoやSMBCベンチャーキャピタルなど、国内外の14社が引き受けています。この調達で、累計の調達額は100億円になる予定と発表されました。"
+   },
+   {
+    "b": "大手企業の導入が続く",
+    "p": "2026年10〜11月には、IDOMやコスモス調剤が「Loglass 経営管理」を導入しました。信越化学工業とコクヨには、IR業務向けの「Loglass AI IR」の提供が始まっています。"
+   }
+  ],
+  "market": {
+   "h3": "市場と将来性",
+   "v": "292億円",
+   "label": "国内の予実管理ソフトウェア市場（2030年度予測・富士キメラ総研）",
+   "p": "富士キメラ総研によると、予実管理ソフトウェアの国内市場は2026年度に137億円の見込みです。2030年度には292億円と、2025年度の3.0倍になると予測しています。中でもSaaS/PaaSは、2030年度に2025年度の3.5倍になる見通しです。Excelに散らばった経営データをまとめたいという需要が市場を押し上げ、今後はAIエージェントの組み込みが進むと見られています。"
+  },
+  "cap": "出典：同社プレスリリース（2024年7月31日・2026年10月14日ほか）・会社紹介資料（2026年10月）、富士キメラ総研「ソフトウェアビジネス新市場 2026年版」（2026年10月1日発表）",
+  "decks": [
+   {
+    "title": "ログラス会社紹介資料 / Loglass Company Deck",
+    "provider": "speakerdeck",
+    "url": "https://speakerdeck.com/loglass2019/whats-loglass",
+    "embed": "https://speakerdeck.com/player/06ce0c5358aa4a92a61d42567542236b",
+    "date": "2026-10",
+    "owner": "株式会社ログラス（@loglass2019）"
+   },
+   {
+    "title": "株式会社ログラス - 会社説明資料【エンジニア】/ Loglass Engineer",
+    "provider": "speakerdeck",
+    "url": "https://speakerdeck.com/loglass2019/loglass-in-10-min-for-engineers",
+    "embed": "https://speakerdeck.com/player/92f8ed1f5f164fafb0a7669e17285057",
+    "date": "2025-09",
+    "owner": "株式会社ログラス（@loglass2019）"
+   }
+  ]
+ }
 }

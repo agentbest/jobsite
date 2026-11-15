@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">AIとテクノロジーの力で「人と機会（ポジション）の出会い方」を再設計する会社です。2019年12月設立、本社は東京・品川区上大崎です。</p><ul class="points"><li><b>AI面接官を2024年に開始</b><p>AIが面接官の役割を担うプロダクト「AI面接官」を2024年に始めました。キリンHDなど、大手企業での導入が紹介されています。</p></li><li><b>AI面接は入口のひとつ</b><p>面接や評価のデータを企業の経営課題につなげ、採用を起点に「人事OS」をつくる構想です。単一のプロダクトだけの会社ではないと、求人票に書かれています。</p></li><li><b>経営に近い立場で動ける</b><p>求人票では、事業責任者候補やCxO候補など、事業や組織づくりをリードするポジションが多く紹介されています。</p></li></ul><p class="cap">設立2019年12月／資本金1億円。出典：同社の公開求人票</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>大手企業の採用に、AI面接が次々と広がる</h2>
+  <p class="lead">2024年9月に始めた「AI面接官」が、1年半ほどで大手企業に広がっています。2026年3月の受検者数は、前年同月の約10倍になりました。2026年6月には、5体のAIエージェントが採用を支える「TA Team」へと進化させています。</p>
+  <div class="gr-hl"><div><b>約10<small>倍</small></b><span>AI面接の受検者数（2026年3月・前年同月比）</span></div><div><b>89.5<small>%</small></b><span>受検者の肯定的評価の割合（満足度調査33,467件・2026年5月発表）</span></div><div><b>5<small>体</small></b><span>「TA Team」を構成する専門AIエージェントの数（2026年6月発表）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>大手の導入が続く</b><p>2026年は、AGC、JR東日本、A.T. カーニー、住友林業、フューチャー、国際協力銀行の導入を発表しました。キリンは新卒採用で「TA Team」を使った評価を始めています。</p></div><div><span class="n">02</span><b>受ける側にも好評</b><p>3万件を超える満足度調査で、最高評価を選んだ人は50.4%でした。肯定的な評価は89.5%です。受検の規模が急に増えるなかでも、評価は高いままです。</p></div><div><span class="n">03</span><b>AIの安全性で先行</b><p>2026年5月、AI面接の品質と安全性を評価する独自のフレームワークをつくりました。大手企業と、EU AI法を見据えた実務ガイドラインづくりの会も立ち上げています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>約1,689億円</b><span>国内HRTechクラウド市場の規模（2025年度見込・ミック経済研究所）</span></div><p>ミック経済研究所によると、国内のHRTechクラウド市場は2025年度に1,689億円の見込みです。前年度比124.9%の伸びです。2029年度までは年20〜30%の成長が続くと見られています。人手不足で採用の負担が重くなるなか、面接や評価をAIで支える仕組みの出番は増えていきます。</p></div>
+  
+  <p class="cap">出典：同社プレスリリース（2026年4月〜10月）、ミック経済研究所「HRTechクラウド市場の実態と展望 2025年度版」（2026年2月）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>VARIETASで任される仕事</h2><p class="lead" style="margin:0">ポジションによって役割は変わります。ここでは、求人票に書かれている主な仕事を紹介します。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>VARIETASで任される仕事</h2><p class="lead" style="margin:0">ポジションによって役割は変わります。ここでは、求人票に書かれている主な仕事を紹介します。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>導入から定着までを進める</b><p>クライアントサクセスPMOは、AI面接官の導入が決まってから現場に定着するまでの進行管理を担います。</p></div><div><span class="n">POINT 2</span><b>顧客の成果に向き合う</b><p>Strategic Account Managerは、導入企業の選考精度や採用成功率など、顧客側の成果を高める役割です。</p></div><div><span class="n">POINT 3</span><b>データから新しい事業をつくる</b><p>事業開発責任者候補は、AI面接のデータをもとに、人材の活躍と配置を結びつける事業をゼロから構築します。</p></div><div><span class="n">POINT 4</span><b>業務そのものをAIで変える</b><p>クライアントサクセスPMOは、自分たちの業務を生成AI前提で組み直し、社内に広げる役割も担います。</p></div></div><p class="oneperson">エンジニア、デザイナー、HRBPなど、ほかの職種の募集もあります。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収レンジです。経験と期待される役割に応じて決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収レンジです。経験と期待される役割に応じて決まります。</p>
   <div class="stairs"><div class="stair"><small>Strategic Account Manager</small><b>1,000〜1,500万円</b><span>メンバークラスの想定</span></div><div class="stair"><small>クライアントサクセスPMO／HRBP</small><b>1,000〜2,000万円</b><span>ポジションにより異なります</span></div><div class="stair"><small>VP of CS候補／VP of AI Governance候補など</small><b>1,000〜3,000万円</b><span>責任者・幹部候補のポジション</span></div></div>
   
   <p class="breakdown">一部のポジションでは、想定月給に月45時間分のみなし残業代を含みます。勤務は出社ベース（リモートも可）で、フレックスタイム制（コアタイム11:00〜15:00）です。試用期間があります。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の詳しい流れは公開されていません。ポジションによって異なります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の詳しい流れは公開されていません。ポジションによって異なります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書・職務経歴書で選考します。</p></div><div><span class="t">STEP 2</span><b>面接</b><p>回数はポジションによります。</p></div><div><span class="t">STEP 3</span><b>内定</b><p>条件を確認したうえで、入社を決めます。</p></div></div>
   <p class="cap">詳しい流れは相談時にお伝えします／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">事業・営業・CS</button><button role="tab" aria-selected="false" data-g="g1">人事・ガバナンス</button><button role="tab" aria-selected="false" data-g="g2">エンジニア・デザイン</button></div><ul class="joblist" data-g="g0"><li><a href="/job/rec04pt2wDtPyfldD/?utm_source=pickup&utm_medium=company-lp&utm_campaign=varietas"><b>事業開発責任者候補｜【AI×採用】データ起点で“人材活躍の再現性”をつくる新規事業開発責任者<span class="pick">厳選</span></b><span class="sal">〜2,500万円</span></a></li><li><a href="/job/recOQFmnLlpNP0XGZ/?utm_source=pickup&utm_medium=company-lp&utm_campaign=varietas"><b>Strategic Account Manager<span class="pick">厳選</span></b><span class="sal">1,000〜1,500万円</span></a></li><li><a href="/job/recSN2Z4OnqC6uHiP/?utm_source=pickup&utm_medium=company-lp&utm_campaign=varietas"><b>クライアントサクセスPMO</b><span class="sal">1,000〜2,000万円</span></a></li><li><a href="/job/recw3Z8S73W9uyI1D/?utm_source=pickup&utm_medium=company-lp&utm_campaign=varietas"><b>VP of CS候補</b><span class="sal">1,000〜3,000万円</span></a></li><li><div class="j"><b>GTM責任者候補｜AI×エンタープライズで成長を再現可能にするHead of GTM</b><span class="sal">1,000〜3,000万円</span></div></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recyliC1R0RQn8SMb/?utm_source=pickup&utm_medium=company-lp&utm_campaign=varietas"><b>HRBP</b><span class="sal">1,000〜2,000万円</span></a></li><li><a href="/job/recVBs2BoejsFYCe2/?utm_source=pickup&utm_medium=company-lp&utm_campaign=varietas"><b>情報セキュリティ責任者候補【AI×リスクマネジメント】</b><span class="sal">〜2,000万円</span></a></li><li><a href="/job/recmE3WL102VjgSvp/?utm_source=pickup&utm_medium=company-lp&utm_campaign=varietas"><b>VP of AI Governance候補｜AI評価の公平性・透明性を維持する技術倫理の最高責任者</b><span class="sal">1,000〜3,000万円</span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><div class="j"><b>Forward Deployed Engineer（FDE）</b><span class="sal">1,000〜3,000万円</span></div></li><li><div class="j"><b>AIエンジニア（基盤・強化学習）</b><span class="sal">1,000〜2,000万円</span></div></li><li><div class="j"><b>SRE責任者候補｜【AI×採用領域】数十万人規模の受検基盤を守り抜く</b><span class="sal">1,000〜2,000万円</span></div></li><li><div class="j"><b>データエンジニア</b><span class="sal">1,000〜2,000万円</span></div></li><li><div class="j"><b>UI/UXデザイナー（デザインエンジニア-リード）</b><span class="sal">1,000〜2,000万円</span></div></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はStrategic Account Managerの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件はStrategic Account Managerの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（Strategic Account Manager）</h3><ul><li>法人向けの新規開拓または既存拡張を、自分の数字で成し遂げた経験（業種は問わない。無形・高単価の法人商材が対象）</li><li>スタートアップ・外資・新規事業の立ち上げ期（0→1、1→10）を、営業または事業側で担った経験</li><li>大手企業の部長〜役員と自分で折衝し、取引を拡大した経験</li><li>想定は実務3〜10年目のメンバークラス。マネジメント経験は必須ではありません</li></ul></div><div><h3>合う人</h3><ul><li>変化の速い環境で、前提が変わることを面白がれる人</li><li>売上だけでなく、顧客の成果を自分の成果として背負える人</li><li>社内外の多くの関係者を巻き込んで、物事を前に進められる人</li><li>生成AIなどのツールを、自分の仕事に積極的に取り入れたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、AI・HRTech・IT・スタートアップに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>AI面接官の仕事は、AIエンジニアだけですか？</summary><p>いいえ。事業開発、営業、カスタマーサクセス、人事、ガバナンス、デザインなど、さまざまな職種の募集があります。</p></details><details><summary>年収はどのくらいですか？</summary><p>多くのポジションで、年収1,000万円からのレンジが示されています。経験と期待される役割で決まります。ポジションごとの金額は、上の一覧のとおりです。</p></details><details><summary>働き方を教えてください。</summary><p>出社ベースで、リモートも可能です。フレックスタイム制（コアタイム11:00〜15:00）で、勤務地は東京都品川区です。</p></details><details><summary>選考はどのように進みますか？</summary><p>選考の流れは公開されていません。ポジションによって異なるため、詳しくは相談時にお伝えします。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。VARIETAS以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

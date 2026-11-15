@@ -266,5 +266,57 @@
  ],
  "closingImg": "1779275859289-9bcf24ee065a",
  "footerSource": "掲載している数字・条件は、スリーシェイクの公開求人票と公式サイト（2026年11月時点）にもとづきます。",
- "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Dylan Gillis／Marek Okon／Ryusei Machida"
+ "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Dylan Gillis／Marek Okon／Ryusei Machida",
+ "growth": {
+  "h2": "クラウドの技術力で、大手との提携と受賞を重ねる",
+  "lead": "インフラとセキュリティの技術力を軸に、大手SIerとの資本業務提携まで進んだ会社です。2024年11月にはNTTデータとSCSKから10億円を調達しました。企業のクラウド移行とAI活用が進むほど、同社の出番は増えていきます。",
+  "highlights": [
+   {
+    "v": "23.5",
+    "unit": "億円",
+    "label": "累計の資金調達額（2024年11月時点・同社発表）"
+   },
+   {
+    "v": "2",
+    "unit": "年連続",
+    "label": "Google Cloud「Infrastructure Modernization Partner of the Year - Japan」受賞（2025年・2026年）"
+   },
+   {
+    "v": "208",
+    "unit": "人",
+    "label": "社員数（2026年11月時点・同社の会社紹介資料）"
+   }
+  ],
+  "strengths": [
+   {
+    "b": "大手SIerと資本業務提携",
+    "p": "2024年11月、NTTデータとSCSKを引受先に総額10億円を調達し、資本業務提携を結びました。SRE人材の供給やセキュリティ連携、クラウド人材の育成で協業します。"
+   },
+   {
+    "b": "Google Cloudの表彰",
+    "p": "2026年4月、Google Cloudのパートナー表彰でインフラのモダナイゼーション部門（日本）を受賞しました。2025年に続く受賞です。顧客インフラの刷新で成果を上げたパートナーに贈られる賞です。"
+   },
+   {
+    "b": "名だたる企業を支援",
+    "p": "SRE支援「Sreake」の取引実績には、NTTデータ、JCB、トヨタ、CADDi、enechainなどが並びます。Google CloudのPremier Partner、AWSのAdvanced Tier Services Partnerでもあります。"
+   }
+  ],
+  "market": {
+   "h3": "市場と将来性",
+   "v": "約4兆4,930億円",
+   "label": "国内パブリッククラウドサービス市場の規模（2025年・IDC Japan）",
+   "p": "IDC Japanによると、2025年の国内パブリッククラウドサービス市場は前年比20.3%増の4兆4,930億円でした。2030年には10兆962億円に達すると予測されています。AIの普及でクラウドの利用量が増え、古いシステムの刷新も活発です。クラウドを安定して動かすSREとセキュリティの需要は、これからも広がります。"
+  },
+  "cap": "出典：同社プレスリリース（2024年11月・2026年4月）、同社Sreakeサイト・会社紹介資料（2026年11月時点）、IDC Japan「国内パブリッククラウドサービス市場予測」（2026年3月12日）",
+  "decks": [
+   {
+    "title": "株式会社スリーシェイク_company deck",
+    "provider": "speakerdeck",
+    "url": "https://speakerdeck.com/3shake/zhu-shi-hui-she-surisieiku-company-deck",
+    "embed": "https://speakerdeck.com/player/278e9f00bd064d88a76d2b17ec2c2c16",
+    "date": "2025-10",
+    "owner": "株式会社スリーシェイク（@3shake）"
+   }
+  ]
+ }
 }

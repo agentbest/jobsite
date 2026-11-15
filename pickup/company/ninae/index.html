@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「AIの進化を、人の前進に変える。」をミッションに、エンタープライズ企業のAI活用を支援する会社です。2024年2月創業、本社は東京・五反田です。</p><ul class="points"><li><b>導入して終わりにしない支援</b><p>新しいAIプロダクトやシステムは売らず、企業がすでに導入しているMicrosoft CopilotやGemini、Claudeなどの活用を支えます。</p></li><li><b>4つのステップで伴走</b><p>導入支援、定着化支援、効果創出、事業創出・組織変革の4つです。固定のメニューではなく、企業の状況に合わせて組み替えます。</p></li><li><b>大手企業の支援事例を公開</b><p>三菱UFJ信託銀行、JCB、キューデン・インターナショナル、TISシステムサービスなどの支援事例を、同社サイトで紹介しています。</p></li></ul><p class="cap">創業2024年2月／旧商号は株式会社Low Code（2026年10月1日に商号変更）。出典：同社の会社情報</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>大手企業のAI定着を担い、創業3年で売上10億円超</h2>
+  <p class="lead">2024年2月の創業から3期目で、売上が10億円を超えたと同社は公表しています。2025年12月には、みずほ銀行などから総額4億円を調達しました。AIツールを「入れた」企業が「使いこなす」段階に進むなかで、定着を支える役割を担っています。</p>
+  <div class="gr-hl"><div><b>10<small>億円超</small></b><span>売上（創業3期目・同社公式note 2026年10月）</span></div><div><b>4<small>億円</small></b><span>資金調達額（2025年12月・みずほ銀行など）</span></div><div><b>約3<small>倍</small></b><span>支援先TISシステムサービスのAIエージェント作成数（2025年8月→10月）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>大手の全社展開を支援</b><p>支援先は大手企業が中心です。数万人規模の組織で、Copilotの活用を全社に広げる支援もしています。公式サイトには、NTTデータ、JCB、デンソー、三菱UFJ信託銀行などのロゴが並びます。</p></div><div><span class="n">02</span><b>数字で見える定着効果</b><p>TISシステムサービスでは、Copilotの利用率が2025年1月の16%から10月に34%へ倍増しました。AIエージェントの作成数は、8月の52件から10月の154件に増えています。</p></div><div><span class="n">03</span><b>銀行が出資する成長性</b><p>2025年12月、みずほ銀行と地方銀行から総額4億円を調達しました。採用と社内のAI活用の仕組みづくりに投資し、100名規模への拡大を進めています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>約2兆3,725億円</b><span>国内AI市場の支出額（2025年・IDC Japan）</span></div><p>IDC Japanによると、国内のAI市場の支出額は2025年に2兆3,725億円でした。2029年には6兆8,897億円に達すると予測されています。大手企業ではCopilotなどの導入が進み、次は社員が日々使いこなせるかが問われています。導入後の定着と業務変革を支える仕事は、これから一段と求められます。</p></div>
+  
+  <p class="cap">出典：同社プレスリリース（2025年12月・2026年10月）、同社公式サイト・公式note（2026年11月時点）、IDC Japan「国内AI市場は今後4年で約3倍に成長」（2026年3月18日）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>NINAEのAIコンサルタントの仕事</h2><p class="lead" style="margin:0">エンタープライズ企業のAI活用を支援するコンサルタントとして、Microsoft製品をはじめとするAIツールの活用を進めます。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>NINAEのAIコンサルタントの仕事</h2><p class="lead" style="margin:0">エンタープライズ企業のAI活用を支援するコンサルタントとして、Microsoft製品をはじめとするAIツールの活用を進めます。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>戦略から現場まで通して担う</b><p>戦略立案から企画・実行、研修・人材育成、現場への伴走まで一貫して担当します。</p></div><div><span class="n">POINT 2</span><b>導入済みのAIを使いこなす</b><p>Microsoft CopilotやCopilot Studio、Power Platformなど、すでに企業が持つツールが対象です。</p></div><div><span class="n">POINT 3</span><b>セキュリティガバナンスも支援</b><p>大手企業に求められるセキュリティやガバナンスの検討も、支援の範囲に含まれます。</p></div><div><span class="n">POINT 4</span><b>会社づくりにも関われる</b><p>同社は創業3年目で、これから必要なサービスや仕組み、役割をつくる余地があると、採用サイトに書かれています。</p></div></div><p class="oneperson">コンサルタントは「未経験」と「経験者」の2つの募集があります。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収について</h2><p class="lead">同社の求人票に載っている想定年収です。経験とスキルに応じて決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収について</h2><p class="lead">同社の求人票に載っている想定年収です。経験とスキルに応じて決まります。</p>
   <div class="stairs"><div class="stair"><small>AIコンサルタント（未経験）</small><b>490〜672万円</b><span>勤務地：五反田／正社員</span></div><div class="stair"><small>AIコンサルタント（経験者）</small><b>630〜1,248万円</b><span>勤務地：五反田／正社員</span></div><div class="stair"><small>エンタープライズセールス</small><b>742〜1,408万円</b><span>勤務地：五反田／正社員</span></div></div>
   
   <p class="cap">出典：同社の求人票（2026年11月時点）。マネージャー候補の年収は相談時にお伝えします</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の詳しい流れは公開されていません。ポジションによって異なります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、書類と面接。</h2><p class="lead">選考の詳しい流れは公開されていません。ポジションによって異なります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>履歴書・職務経歴書で選考します。</p></div><div><span class="t">STEP 2</span><b>面接</b><p>回数はポジションによります。</p></div><div><span class="t">STEP 3</span><b>内定</b><p>条件を確認したうえで、入社を決めます。</p></div></div>
   <p class="cap">詳しい流れは相談時にお伝えします／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">コンサルタント</button><button role="tab" aria-selected="false" data-g="g1">セールス</button></div><ul class="joblist" data-g="g0"><li><a href="/job/reci3SlESYH5XNhck/?utm_source=pickup&utm_medium=company-lp&utm_campaign=ninae"><b>AIコンサルタント（経験者）<span class="pick">厳選</span></b><span class="sal">630〜1,248万円</span></a></li><li><a href="/job/reciWoWssEikyEOXQ/?utm_source=pickup&utm_medium=company-lp&utm_campaign=ninae"><b>AIコンサルタント（未経験）</b><span class="sal">490〜672万円</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recAkkdp4giYyjSIW/?utm_source=pickup&utm_medium=company-lp&utm_campaign=ninae"><b>エンタープライズセールス<span class="pick">厳選</span></b><span class="sal">742〜1,408万円</span></a></li><li><div class="j"><b>エンタープライズセールスマネージャー候補</b><span class="sal"></span></div></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件の詳細は、相談時にお伝えします。ここでは、同社の採用サイトで公開されている内容をまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件の詳細は、相談時にお伝えします。ここでは、同社の採用サイトで公開されている内容をまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>募集ポジションの概要</h3><ul><li>AIコンサルタント（未経験）：エンタープライズ企業のAI活用を支援する。未経験の方が対象</li><li>AIコンサルタント（経験者）：同じ仕事を経験者として担う</li><li>エンタープライズセールス：経営層やDX推進部門に、提案から契約、既存顧客の深耕まで一気通貫で担う</li><li>エンタープライズセールスマネージャー候補：営業戦略の立案、KPI設計、メンバー育成まで担う</li></ul></div><div><h3>合う人</h3><ul><li>はじめからAIが大好きでなくても、その先の変化に期待できる人</li><li>完成した会社に入るのではなく、これからの会社をつくる側に回りたい人</li><li>まず試して、現場やお客様の事実から学び、やり方を変えていける人</li><li>大手企業の変革に、同世代の仲間と本気で取り組みたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、AI・コンサル・IT・スタートアップに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>AIやコンサルの経験がなくても応募できますか？</summary><p>「AIコンサルタント（未経験）」の募集があります。同社の採用サイトでは、はじめからAIが大好きでなくてもよいと書かれています。</p></details><details><summary>どんな会社を支援していますか？</summary><p>大手・エンタープライズ企業が中心です。同社サイトでは、金融やIT、電力グループなどの支援事例が公開されています。</p></details><details><summary>勤務地はどこですか？</summary><p>募集中のポジションは、いずれも勤務地が五反田（東京都品川区）と案内されています。</p></details><details><summary>選考はどのように進みますか？</summary><p>選考の流れは公開されていません。ポジションによって異なるため、詳しくは相談時にお伝えします。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。NINAE以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

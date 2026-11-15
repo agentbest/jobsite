@@ -276,5 +276,65 @@
  ],
  "closingImg": "1779275859289-9bcf24ee065a",
  "footerSource": "掲載している数字・条件は、ヴァンテージマネジメントの公開求人票と公式サイト（2026年11月時点）にもとづきます。",
- "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Dylan Gillis／Marek Okon／Ryusei Machida"
+ "credits": "Dmitrijs Tokyo／Sho Shimada／Christina @ wocintechchat.com／Dylan Gillis／Marek Okon／Ryusei Machida",
+ "growth": {
+  "h2": "Web・人材・セールスDXの3事業で売上を伸ばす",
+  "lead": "2008年に立ち上がり、売上高は2024年7月期の38.5億円から、2025年7月期は41.7億円になりました。代表メッセージでは、累計5,000社を超える企業と取引してきたと述べています。2026年7月期は50.2億円を目標に掲げています。",
+  "highlights": [
+   {
+    "v": "41.7",
+    "unit": "億円",
+    "label": "売上高（2025年7月期・実績）"
+   },
+   {
+    "v": "16,639",
+    "unit": "名",
+    "label": "「HighClass」の累計登録フリーランス数（2026年10月現在）"
+   },
+   {
+    "v": "2,238",
+    "unit": "社",
+    "label": "「HighClass」の累計導入企業数（うち東証上場339社・2026年10月現在）"
+   }
+  ],
+  "strengths": [
+   {
+    "b": "売上が伸びている",
+    "p": "売上高は2024年7月期の38.5億円から、2025年7月期は41.7億円になりました。2026年7月期は50.2億円を目標にしています。"
+   },
+   {
+    "b": "上場企業にも広がる",
+    "p": "即戦力フリーランスのマッチング「HighClass」は、登録者が16,639名です。導入企業は2,238社で、うち339社が東証上場企業です。"
+   },
+   {
+    "b": "営業をデータで磨く",
+    "p": "決裁者向けの営業支援で得たデータを、分析として公表しています。2026年10月には「電話で決裁者につながるのは3回目までに84.8％」という分析を出しました。"
+   }
+  ],
+  "market": {
+   "h3": "市場と将来性",
+   "v": "4兆459億円",
+   "label": "日本のインターネット広告費（2025年・電通調べ）",
+   "p": "電通の「2025年 日本の広告費」によると、インターネット広告費は4兆459億円でした。前年比は110.8％です。総広告費に占める割合は50.2％で、初めて半分を超えました。企業のWeb活用は広がり続けており、Webマーケティングを支える仕事の需要も続いています。"
+  },
+  "cap": "出典：同社コーポレートサイト・プレスリリース（2026年11月時点）、電通「2025年 日本の広告費」（2026年3月5日）",
+  "decks": [
+   {
+    "title": "リクルートブック（web用）",
+    "provider": "speakerdeck",
+    "url": "https://speakerdeck.com/vantage/rikurutobutuku-webyong",
+    "embed": "https://speakerdeck.com/player/fb71beb38dfc44f7981f296117077862",
+    "date": "2026-02",
+    "owner": "ヴァンテージマネジメント株式会社（@vantage）"
+   },
+   {
+    "title": "corporate-profile",
+    "provider": "speakerdeck",
+    "url": "https://speakerdeck.com/vantage/corporate-profile",
+    "embed": "https://speakerdeck.com/player/aa08834d22484f4fb172f42c634ef38a",
+    "date": "2026-03",
+    "owner": "ヴァンテージマネジメント株式会社（@vantage）"
+   }
+  ]
+ }
 }

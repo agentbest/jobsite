@@ -45,11 +45,40 @@ ${style}
 `;
 }
 
+/* この会社が伸びている理由（growth）— 2026-11-15
+   ハチワレさん「各企業の凄さをコーポレートサイト等から取得したり、市場規模や将来性を語ってほしい（エンカレッジ・FastGrow・Goodfind のイメージ）」
+   「採用ピッチ資料や会社紹介資料を各社が公開しているものを掲載してほしい」。
+   - 数字はすべて出典つき（下書きは focus-lp\research\<slug>.growth.json、出典URLは _sources）。ページには cap で出典名を書く。
+   - decks は会社の公式アカウントが公開した資料だけ。公式の埋め込み（Speaker Deck・Docswell）は iframe、ほかはリンクだけ。中身は転載しない。 */
+function deckHtml(k) {
+  const em = String(k.embed || '');
+  const ok = /^https:\/\/(speakerdeck\.com\/player\/|www\.docswell\.com\/slide\/[^/]+\/embed)/.test(em);
+  const meta = `<p class="deck__meta"><b>${e(k.title)}</b><span>${e([k.owner, k.date].filter(Boolean).join('・'))}</span><a href="${esc(k.url)}" target="_blank" rel="noopener">資料を開く ↗</a></p>`;
+  return ok ? `<div class="deck"><div class="deck__frame"><iframe src="${esc(em)}" title="${esc(k.title)}" loading="lazy" allowfullscreen></iframe></div>${meta}</div>`
+    : `<div class="deck deck--link">${meta}</div>`;
+}
+function growthHtml(g, ch) {
+  if (!g) return '';
+  const hl = (g.highlights || []).filter(x => x && x.v);
+  const st = g.strengths || [], mk = g.market, decks = (g.decks || []).filter(k => k && k.url);
+  return `<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>${ch()}</i><span>GROWTH</span></div><h2>${e(g.h2 || 'この会社が伸びている理由')}</h2>
+  ${g.lead ? `<p class="lead">${e(g.lead)}</p>` : ''}
+  ${hl.length ? `<div class="gr-hl">${hl.map(x => `<div><b>${e(x.v)}<small>${e(x.unit || '')}</small></b><span>${e(x.label)}</span></div>`).join('')}</div>` : ''}
+  ${st.length ? `<div class="gr-st">${st.map((x, i) => `<div><span class="n">${String(i + 1).padStart(2, '0')}</span><b>${e(x.b)}</b><p>${e(x.p)}</p></div>`).join('')}</div>` : ''}
+  ${mk && mk.p ? `<div class="gr-mk"><div class="gr-mk__h"><small>${e(mk.h3 || '市場と将来性')}</small>${mk.v ? `<b>${e(mk.v)}</b><span>${e(mk.label || '')}</span>` : ''}</div><p>${e(mk.p)}</p></div>` : ''}
+  ${decks.length ? `<h3 class="gr-dh">会社が公開している資料</h3><div class="decks">${decks.map(deckHtml).join('')}</div>` : ''}
+  ${g.cap ? `<p class="cap">${e(g.cap)}</p>` : ''}
+</div></section>
+`;
+}
+
 function companyPage(d, style, why, live) {
   const slug = d.slug, utm = `https://calendly.com/r_matsuoka?utm_source=pickup&utm_campaign=${slug}`;
   const cta = (label, cls = 'btn') => `<a class="${cls}" href="${utm}" target="_blank" rel="noopener" data-consult="pickup-${slug}">${e(label)}</a>`;
   const { hero: h, about: a, work: w, income: inc, selection: sel, jobs, fit } = d;
   const canonical = `${SITE}/pickup/company/${slug}/`;
+  let chN = 0; const ch = () => String(++chN).padStart(2, '0');
   const o = [head(d.title, d.description, canonical, style, IMG(h.img, 1200))];
   o.push(`<header class="top"><div class="wrap">
   <a class="brand" href="/">エージェントベスト<small>おすすめ企業特集</small></a>
@@ -65,22 +94,22 @@ function companyPage(d, style, why, live) {
 </div></section>
 <section class="sec"><div class="wrap split">
   <div class="ph"><img src="${IMG(a.img, 1000)}" alt="${e(a.alt || 'イメージ')}" loading="lazy"></div>
-  <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
+  <div><div class="chapter"><i>${ch()}</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">${e(a.lead)}</p><ul class="points">${a.points.map(p => `<li><b>${e(p.b)}</b><p>${e(p.p)}</p></li>`).join('')}</ul><p class="cap">${e(a.cap)}</p></div>
 </div></section>
-<section class="sec sec--alt"><div class="wrap">
+${growthHtml(d.growth, ch)}<section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="${IMG(w.img)}" alt="${e(w.alt || 'イメージ')}" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>${e(w.h2)}</h2><p class="lead" style="margin:0">${e(w.lead)}</p></div></div>
+  <div><div class="chapter"><i>${ch()}</i><span>WORK</span></div><h2>${e(w.h2)}</h2><p class="lead" style="margin:0">${e(w.lead)}</p></div></div>
   <div class="process" style="margin-top:48px">${w.steps.map(s => `<div><span class="n">${e(s.n)}</span><b>${e(s.b)}</b><p>${e(s.p)}</p></div>`).join('')}</div>${w.note ? `<p class="oneperson">${e(w.note)}</p>` : ''}
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>${e(inc.h2)}</h2><p class="lead">${e(inc.lead)}</p>
+  <div class="chapter"><i>${ch()}</i><span>INCOME</span></div><h2>${e(inc.h2)}</h2><p class="lead">${e(inc.lead)}</p>
   <div class="stairs">${inc.stairs.map(s => `<div class="stair"><small>${e(s.small)}</small><b>${e(s.b)}</b><span>${e(s.span || '')}</span></div>`).join('')}</div>
   ${(inc.realized || []).length ? `<div class="realized">${inc.realized.map(r => `<div><small>${e(r.small)}</small><b>${e(r.b)}</b></div>`).join('')}</div>` : ''}
   ${inc.breakdown ? `<p class="breakdown">${e(inc.breakdown)}</p>` : ''}<p class="cap">${e(inc.cap)}</p>
 </div></section>
 <section class="sec night" style="background-image:url('${IMG(sel.img || '1606044466411-207a9a49711f', 2000)}')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>${e(sel.h2)}</h2><p class="lead">${e(sel.lead)}</p>
+  <div class="chapter"><i>${ch()}</i><span>SELECTION</span></div><h2>${e(sel.h2)}</h2><p class="lead">${e(sel.lead)}</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div>${sel.steps.map(s => `<div><span class="t">${e(s.t)}</span><b>${e(s.b)}</b><p>${e(s.p)}</p></div>`).join('')}</div>
   <p class="cap">${e(sel.cap)}</p>
 </div></section>
@@ -98,20 +127,20 @@ function companyPage(d, style, why, live) {
     return j.href ? `<li><a href="${j.href}">${inner}</a></li>` : `<li><div class="j">${inner}</div></li>`;
   }).join('')}</ul>`).join('');
   o.push(`<section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">${e(jobs.lead)}</p>
+  <div class="chapter"><i>${ch()}</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">${e(jobs.lead)}</p>
   <div class="tabs" role="tablist">${tabs}</div>${lists}
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="${IMG(fit.img)}" alt="${e(fit.alt || 'イメージ')}" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">${e(fit.lead)}</p></div></div>
+  <div><div class="chapter"><i>${ch()}</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">${e(fit.lead)}</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>${e(fit.req.h3)}</h3><ul>${fit.req.items.map(x => `<li>${e(x)}</li>`).join('')}</ul></div><div><h3>${e(fit.fit.h3)}</h3><ul>${fit.fit.items.map(x => `<li>${e(x)}</li>`).join('')}</ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>${ch()}</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   ${why.replace('{{AREA}}', esc(d.area || DEFAULT_AREA)).replace('{{COMPANY}}', esc(d.companyShort))}
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>${ch()}</i><span>FAQ</span></div><h2>よくある質問</h2>
   ${d.faq.map(q => `<details><summary>${e(q.q)}</summary><p>${e(q.a)}</p></details>`).join('')}
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。${e(d.companyShort)}以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

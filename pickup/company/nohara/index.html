@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">400年以上の歴史を持つ建設業界の老舗でありながら、建設DXによる業界の変革に挑戦している会社です。本社は東京・新宿です。</p><ul class="points"><li><b>建材・工事を幅広く手がける</b><p>内装資材や住宅設備機器の販売、各種工事の企画・設計・管理・請負、各種内外装工事・改修工事などを行っています。</p></li><li><b>建設DXの事業を持つ</b><p>建設DX推進事業や積算支援サービスを展開しています。建設DXの営業やエンジニアの求人もあります。</p></li><li><b>事業ごとにカンパニー制</b><p>求人票には、建材カンパニーや住環境カンパニーなど、事業ごとの配属先が記載されています。</p></li></ul><p class="cap">創業1598年／設立1947年／資本金1億円／従業員数1,098名（2026年7月、グループ連結）。出典：同社の会社概要</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>建材流通の老舗が、BIMで建設業界を変えにいく</h2>
+  <p class="lead">野原グループは、建材の流通と施工を長く担ってきた会社です。2023年に、BIMで設計から製造・施工までをつなぐ「BuildApp」を始めました。人手不足が進む建設業界で、国も省人化を目標に掲げており、同社はその課題に正面から取り組んでいます。</p>
+  <div class="gr-hl"><div><b>約5,000<small>社</small></b><span>建材商社として築いてきたネットワーク（BuildApp公式サイトの会社説明・2026年11月時点）</span></div><div><b>357<small>点</small></b><span>BIMobjectで公開したYKK APのビル用商品のBIMオブジェクト（2026年6月発表）</span></div><div><b>5<small>年分</small></b><span>2021〜2025年の調査を再分析した「建設DX実態調査レポート2026」（2026年6月発表）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>BIMで工程をつなぐ</b><p>BuildAppは、設計事務所やゼネコンが作ったBIM設計データを、各工程で使えるデータに置き換えるクラウドサービスです。設計積算から生産・流通・施工管理・維持管理までをBIMでつなぎます。2026年2月には、鋼製建具工事向けの新サービスの商用提供も始めました。</p></div><div><span class="n">02</span><b>メーカーのデータが集まる</b><p>2017年に設立したBIMobject Japanが、建材や設備のBIMデータを公開しています。2026年6月にはYKK APのビル用商品357点を公開しました。2026年10月にはパナソニックのプロジェクターなどのBIMデータも公開しています。</p></div><div><span class="n">03</span><b>業界の課題を調べ発信</b><p>2024年12月にBuildApp総合研究所を立ち上げました。2021〜2025年に続けてきた調査をまとめ、2026年7月に「建設DX実態調査レポート2026」を公開しました。2026年3月には「健康経営優良法人2026（大規模法人部門）」に初めて認定されています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small><b>3割</b><span>国が目指す建設現場の省人化（2040年度まで・国土交通省「i-Construction 2.0」2024年4月策定）</span></div><p>国土交通省は2024年4月に「i-Construction 2.0」をまとめました。2040年度までに建設現場の省人化を少なくとも3割、つまり生産性を1.5倍にすることを目指しています。柱の一つが「データ連携のオートメーション化」です。設計から施工までデータでつなぐBuildAppは、この方向と重なる事業です。</p></div>
+  <h3 class="gr-dh">会社が公開している資料</h3><div class="decks"><div class="deck"><div class="deck__frame"><iframe src="https://speakerdeck.com/player/7547370b8c1440a9ae3f9c787059bd3f" title="野原グループ会社紹介資料" loading="lazy" allowfullscreen></iframe></div><p class="deck__meta"><b>野原グループ会社紹介資料</b><span>野原グループ（@nohara_saiyo）・2026-07</span><a href="https://speakerdeck.com/nohara_saiyo/nohara-gurupu-kaisha-shoukai-shiryou" target="_blank" rel="noopener">資料を開く ↗</a></p></div></div>
+  <p class="cap">出典：同社コーポレートサイト・同社プレスリリース・BuildApp公式サイト（2026年11月時点）、国土交通省『i-Construction 2.0』（2024年4月16日発表）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>野原グループの営業の仕事</h2><p class="lead" style="margin:0">募集の中心は法人営業です。建材、住環境、金属工事、建設DXと、扱う商材や相手先が事業ごとに違います。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>野原グループの営業の仕事</h2><p class="lead" style="margin:0">募集の中心は法人営業です。建材、住環境、金属工事、建設DXと、扱う商材や相手先が事業ごとに違います。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>既存顧客が中心の営業</b><p>建材事業の法人営業の求人では、新規の飛び込み営業はほとんどなく、内装工事業者や内装メーカーなどの既存顧客を担当すると記載されています。</p></div><div><span class="n">POINT 2</span><b>ハウスメーカー向けの提案</b><p>住環境事業では、大手ハウスメーカーやビルダー向けに、建材とサービスを組み合わせた課題解決型のルート営業を募集しています。</p></div><div><span class="n">POINT 3</span><b>ゼネコン向けの金属工事営業</b><p>金属工事の法人営業は、大型建築プロジェクトに関わるゼネコン向けの営業です。</p></div><div><span class="n">POINT 4</span><b>建設DXの新サービス</b><p>3Dカメラ「Matterport」の法人営業では、提案から導入支援、活用促進までを一貫して担います。</p></div></div><p class="oneperson">求人票では、ポジションによって残業は月5〜20時間程度、在宅勤務は「有」「無（直行直帰可）」と記載が分かれています。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと給与の目安</h2><p class="lead">公開求人票は月給で記載されています。いずれも経験・能力に応じて決まり、固定残業手当（15時間分）を含むポジションがあります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと給与の目安</h2><p class="lead">公開求人票は月給で記載されています。いずれも経験・能力に応じて決まり、固定残業手当（15時間分）を含むポジションがあります。</p>
   <div class="stairs"><div class="stair"><small>カスタマーサポート（建材・大阪支店）</small><b>月給22.0〜28.1万円</b><span>受発注・納期調整の実務経験が必要</span></div><div class="stair"><small>法人営業（建材・東京本社）</small><b>月給28.1〜37.5万円</b><span>法人営業の経験1年以上</span></div><div class="stair"><small>法人営業（金属工事）</small><b>月給37.5〜56.2万円</b><span>金属工事の営業経験が必要</span></div></div>
   <div class="realized"><div><small>賞与</small><b>年2回（9月・3月）</b></div><div><small>昇給</small><b>年1回</b></div></div>
   <p class="breakdown">金額は、求人票の月給を万円単位に直したものです（小数第2位以下は切り捨て）。管理職候補のポジション（営業課長、産業資材の管理職候補など）は、固定残業代がなく、月給43.8〜50.0万円と記載されています。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1606044466411-207a9a49711f?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考の流れ</h2><p class="lead">選考の流れは、公開求人票には記載されていません。一般的な流れは次のとおりです。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考の流れ</h2><p class="lead">選考の流れは、公開求人票には記載されていません。一般的な流れは次のとおりです。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>書類選考</b><p>職務経歴書をもとに選考します。</p></div><div><span class="t">STEP 2</span><b>面接（回数はポジションによる）</b><p>営業職・技術職などで進め方が異なります。</p></div><div><span class="t">STEP 3</span><b>内定</b><p>条件を確認したうえで、ご入社の時期を相談します。</p></div></div>
   <p class="cap">詳しい流れは相談時にお伝えします／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。給与は、求人によって年収または月給で記載しています。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。給与は、求人によって年収または月給で記載しています。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">営業</button><button role="tab" aria-selected="false" data-g="g1">カスタマーサポート・事務</button><button role="tab" aria-selected="false" data-g="g2">建設DX・エンジニア</button><button role="tab" aria-selected="false" data-g="g3">施工管理・設計・技術</button><button role="tab" aria-selected="false" data-g="g4">企画・IT・管理</button></div><ul class="joblist" data-g="g0"><li><a href="/job/rec0xJAddmwuUImAR/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>【建材事業】法人営業／東京本社<span class="pick">厳選</span></b><span class="sal">450〜650万円</span></a></li><li><a href="/job/recTKssmzzkONv1A6/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>【建材事業】木質床材の法人営業／新規事業</b><span class="sal">450〜533万円</span></a></li><li><a href="/job/recf6XRWT64fCMmE8/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>未経験から挑む住宅建材の課題解決型ルート営業｜大手ハウスメーカー・ビルダー向け</b><span class="sal">400〜550万円</span></a></li><li><a href="/job/recmIjqr1g2Psujt6/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>ハウスメーカー向け 建材・業務効率化の提案営業</b><span class="sal">550〜700万円</span></a></li><li><a href="/job/recpofOjbAufDwrAI/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>【金属工事】法人営業｜大型建築プロジェクトを牽引<span class="pick">厳選</span></b><span class="sal">600〜900万円</span></a></li><li><a href="/job/recbVMroonZIAvOgG/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>営業課長（将来の営業部長を期待）：ゼネコン向け営業×建設DX推進</b><span class="sal">700〜800万円</span></a></li><li><a href="/job/rec14Pf8zptyups0h/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>既存顧客中心｜ものづくりを支える法人営業（産業資材）・管理職候補</b><span class="sal">700〜800万円</span></a></li><li><a href="/job/recWvQWGqMVYRvgj7/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>【建設DX】3Dデータ化サービス（Matterport）の法人営業</b><span class="sal">500〜700万円</span></a></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/reccQVqalHj0Gxa0a/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>【建材事業】カスタマーサポート：リーダー候補</b><span class="sal">380〜450万円</span></a></li><li><a href="/job/recWkE54udZbiqdqV/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>【建材事業】カスタマーサポート／大阪支店</b><span class="sal">352〜450万円</span></a></li><li><a href="/job/recXNk1VeFfQXHsex/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>【リノベーション事業】リフォーム事業での営業事務</b><span class="sal">380〜430万円</span></a></li><li><div class="j"><b>【住環境事業】積算・発注サポート／東京本社</b><span class="sal">月給25.0〜31.2万円</span></div></li></ul><ul class="joblist" data-g="g2" hidden><li><div class="j"><b>【建設DX】プロダクトオーナー</b><span class="sal">月給43.7〜75.0万円</span></div></li><li><div class="j"><b>【建設DX】エンジニアリングマネージャー</b><span class="sal">月給50.0〜75.0万円</span></div></li><li><div class="j"><b>【建設DX】テックリード（リモート勤務が中心）</b><span class="sal">月給56.2〜75.0万円</span></div></li><li><div class="j"><b>【建設DX】ソフトウェアエンジニア（リモート勤務が中心）</b><span class="sal">月給31.2〜50.0万円</span></div></li><li><div class="j"><b>【建設DX】QAエンジニア（リモート勤務が中心）</b><span class="sal">月給34.3〜56.2万円</span></div></li><li><div class="j"><b>【建設DX】DevSecOpsエンジニア（リモート勤務が中心）</b><span class="sal">月給40.6〜62.5万円</span></div></li><li><div class="j"><b>【建設DX】アプリケーションエンジニア（施工管理・生産設計経験を活かす）</b><span class="sal">月給31.2〜56.2万円</span></div></li><li><div class="j"><b>【建設DX】「BuildApp」BIMオペ</b><span class="sal">月給31.2〜56.2万円</span></div></li><li><div class="j"><b>【建設DX】内装ディレクター</b><span class="sal">月給31.2〜43.7万円</span></div></li><li><div class="j"><b>【建築DX】ドメインスペシャリスト（生産設計領域）</b><span class="sal">月給31.2〜56.2万円</span></div></li></ul><ul class="joblist" data-g="g3" hidden><li><div class="j"><b>【建材事業】床材施工管理</b><span class="sal">月給28.1〜37.5万円</span></div></li><li><div class="j"><b>【金属工事】施工管理</b><span class="sal">月給31.2〜50.0万円</span></div></li><li><div class="j"><b>【サッシ・建具事業】設計コーディネーター（大阪支店専任）</b><span class="sal">月給31.2〜43.7万円</span></div></li><li><div class="j"><b>【リノベーション事業】施工管理（マネージャー候補）</b><span class="sal">月給37.5〜56.2万円</span></div></li><li><div class="j"><b>【リノベーション事業】設計コーディネーター</b><span class="sal">月給25.0〜43.7万円</span></div></li><li><div class="j"><b>建具設計リーダー（スチールドア）</b><span class="sal">月給37.5〜56.2万円</span></div></li><li><div class="j"><b>建具バラ図作成（スチールドア）</b><span class="sal">月給31.2〜50.0万円</span></div></li><li><div class="j"><b>【SDバラ図未経験可】スチールドアのバラ図作成</b><span class="sal">月給31.2〜50.0万円</span></div></li><li><div class="j"><b>【住環境事業】木造住宅の割付積算DX・施工図体制構築担当</b><span class="sal">月給25.0〜43.7万円</span></div></li><li><div class="j"><b>【住環境事業】木造住宅の図面・申請書類チェック（建設DX）</b><span class="sal">月給25.0〜37.5万円</span></div></li></ul><ul class="joblist" data-g="g4" hidden><li><a href="/job/recZH9l6v6VYpYhA8/?utm_source=pickup&utm_medium=company-lp&utm_campaign=nohara"><b>【マーケティング】デジタルマーケティング</b><span class="sal">450〜600万円</span></a></li><li><div class="j"><b>【情報システム】クラウド×オンプレ環境を支えるエンジニア</b><span class="sal">月給31.2〜50.0万円</span></div></li><li><div class="j"><b>【IT推進】（リーダークラス）ITプロジェクト推進</b><span class="sal">月給31.2〜43.7万円</span></div></li><li><div class="j"><b>【情報システム】社内ITサポート（リーダークラス）</b><span class="sal">月給31.2〜40.6万円</span></div></li><li><div class="j"><b>壁紙ブランド「WhO」企画・デザインディレクション担当</b><span class="sal">月給25.0〜37.5万円</span></div></li><li><div class="j"><b>【グループ人事統括部】中途・新卒採用から採用戦略まで</b><span class="sal">月給31.2〜43.7万円</span></div></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、建材事業の法人営業と住環境事業の営業の求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、建材事業の法人営業と住環境事業の営業の求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（営業）</h3><ul><li>建材事業の法人営業：法人営業の経験1年以上、普通自動車免許（AT限定可）</li><li>住環境事業のルート営業：営業経験1年以上（法人・個人不問）、顧客折衝経験、または住宅営業経験1年以上のいずれか。普通自動車免許（AT限定可）</li><li>金属工事の法人営業：金属工事における営業経験、普通自動車免許（AT限定可）</li><li>建設DXの3Dカメラ営業：法人向け提案営業の経験3年以上</li></ul></div><div><h3>合う人</h3><ul><li>指示を待たず、自分でキャッチアップして仕事を進められる人</li><li>得意先との信頼関係を大切にして、相手の課題を自分ごととして考えられる人</li><li>価格だけでなく、商品とサービスを組み合わせた提案をしたい人</li><li>建設DXなど、変わっていく業界の仕事に関わりたい人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、IT・スタートアップ・M&amp;A・コンサルに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>未経験でも応募できますか？</summary><p>住環境事業のルート営業は、営業経験1年以上（法人・個人不問）などが条件で、業界は問われていません。職種ごとに応募条件が違うので、相談のときに確認します。</p></details><details><summary>給与はいくらですか？</summary><p>公開求人票は月給で記載されています。営業職では月給28.1〜37.5万円（建材事業の法人営業）から、月給37.5〜56.2万円（金属工事の法人営業）まで幅があります。賞与は年2回です。</p></details><details><summary>転勤はありますか？</summary><p>応募条件や勤務地は求人ごとに違います。希望の勤務地を伝えていただければ、求人票を見て確認します。</p></details><details><summary>選考の流れを教えてください。</summary><p>公開求人票には記載がありません。書類選考と面接のあと内定になるのが一般的で、詳しい流れは相談時にお伝えします。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。野原グループ以外の選択肢も一緒に検討できます。</p></details>
 </div></section>

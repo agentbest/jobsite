@@ -157,6 +157,33 @@ footer dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0 0 14
 footer dt{font-weight:700}footer dd{margin:0}
 .float{position:fixed;right:16px;bottom:16px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 @media (min-width:761px){.float{display:none}}
+
+/* growth（この会社が伸びている理由）2026-11-15 */
+.gr-hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:2px solid var(--navy);margin:32px 0 8px}
+.gr-hl div{padding:22px 20px 18px 0;border-bottom:1px solid var(--line)}
+.gr-hl b{font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);color:var(--navy);display:block;line-height:1.15}
+.gr-hl b small{font-size:.42em;margin-left:3px}
+.gr-hl span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:6px}
+.gr-st{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:36px 0}
+.gr-st div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);padding:22px 20px}
+.gr-st .n{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold)}
+.gr-st b{display:block;font-size:17px;margin:6px 0 8px;line-height:1.5}
+.gr-st p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-soft)}
+.gr-mk{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:28px;background:var(--navy);color:#fff;padding:30px 28px;margin:8px 0 28px}
+.gr-mk__h small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-soft)}
+.gr-mk__h b{display:block;font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1.15;margin-top:8px}
+.gr-mk__h span{display:block;font-size:12.5px;color:#C9CEDA;margin-top:6px;line-height:1.6}
+.gr-mk p{margin:0;line-height:1.95;font-size:15px}
+.gr-dh{font-size:18px;margin:8px 0 14px}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.deck{background:var(--surface);border:1px solid var(--line)}
+.deck__frame{position:relative;aspect-ratio:16/9.6;background:#0b1020}
+.deck__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.deck__meta{margin:0;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:13px}
+.deck__meta b{font-size:14px;flex-basis:100%}
+.deck__meta span{color:var(--ink-faint)}
+.deck__meta a{margin-left:auto;color:var(--navy)}
+@media (max-width:760px){.gr-hl{grid-template-columns:1fr 1fr}.gr-st,.decks,.gr-mk{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -177,33 +204,42 @@ footer dt{font-weight:700}footer dd{margin:0}
   <div><div class="chapter"><i>01</i><span>COMPANY</span></div><h2>どんな会社か</h2>
   <p class="lead" style="margin-bottom:24px">「未来の世代に豊かな世界を残す」をミッションに、自治体向けの予算編成・経営管理SaaS「Build &amp; Scrap（BnS）」を開発・提供するGovTechスタートアップです。本社は愛媛県松山市で、働き方はフルリモートが基本です。</p><ul class="points"><li><b>紙とExcelの予算編成を、データでつなぐ</b><p>自治体の予算編成の多くが、今も紙とExcelで組まれていると求人票に書かれています。BnSは予算の編成から執行・評価までをつなぐ仕組みです。</p></li><li><b>自治体への導入が広がっている</b><p>愛媛県・沖縄県をはじめ、長野県・新潟県・佐久市（2県1市の共同調達）で導入・受注が進んでいます。2026年9月にはソフトバンクとの戦略的提携に合意しました。</p></li><li><b>現場を知る人がプロダクトをつくる</b><p>元自治体財政課の職員がドメインスペシャリストとして在籍し、エンジニア・PdM・セールスと一緒に開発しています。</p></li></ul><p class="cap">設立2018年3月／社員数46人（2026年3月）。出典：同社のプレスリリース</p></div>
 </div></section>
+<section class="sec sec--alt growth"><div class="wrap">
+  <div class="chapter"><i>02</i><span>GROWTH</span></div><h2>国と自治体の“お金の流れ”を、見える化する側にいる。</h2>
+  <p class="lead">WiseVineの仕組みは、国の行政事業レビューのサイトから、県と市の共同調達まで使われるようになりました。2026年には横浜市から受注し、総務省の事例集にも載りました。自治体では人手が足りなくなる見通しで、事務のシステム化が急がれています。</p>
+  <div class="gr-hl"><div><b>約4<small>億円</small></b><span>新潟県・長野県・佐久市の共同調達で見込む財政負担の軽減額（2026年8月発表）</span></div><div><b>週約20<small>時間</small></b><span>愛媛県砥部町の実証で減った査定業務の時間（2026年6月発表）</span></div><div><b>47<small>自治体</small></b><span>同社共催の自治体DXセミナーに参加した自治体数（2026年7月・29都道府県を含む）</span></div></div>
+  <div class="gr-st"><div><span class="n">01</span><b>国のシステムも担う</b><p>内閣官房から受託し、国の事業を横断で検索できる「行政事業レビュー見える化サイト」を2024年8月に公開しました。土台には、自治体向けの「WiseVine Build &amp; Scrap」を使っています。</p></div><div><span class="n">02</span><b>大きな自治体へ広がる</b><p>横浜市から指標ダッシュボードの構築を受注し、2026年10月の稼働を予定していました。沖縄県では、20年以上使ってきた予算編成システムの作り直しを受託しています。</p></div><div><span class="n">03</span><b>国の事例集に掲載</b><p>新潟県・長野県・佐久市の共同調達は、総務省「自治体DX推進参考事例集【第4.0版】」に載りました。県の枠を越えた共同調達の例として紹介されています。</p></div></div>
+  <div class="gr-mk"><div class="gr-mk__h"><small>市場と将来性</small></div><p>日本総合研究所は、2045年には自治体職員の充足率が78％程度まで下がると推計しています。令和7年度には、都道府県と市区町村がシステムを共同で調達するための「デジタル活用推進事業債」ができました。総務省も、この制度を使った共同調達を進める方針を示しています。紙とExcelで行ってきた予算編成を、システムに置き換える動きが広がりつつあります。</p></div>
+  
+  <p class="cap">出典：同社プレスリリース（2024年8月30日・2025年7月25日・2026年4月16日・6月19日・8月4日・8月31日）、ソフトバンク株式会社プレスリリース（2026年9月15日・日本総合研究所の推計を引用）</p>
+</div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split split--rev"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=1200&q=75" alt="チームで打ち合わせをする様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>02</i><span>WORK</span></div><h2>WiseVineで募集している仕事</h2><p class="lead" style="margin:0">ドメイン（行財政の実務）、プロダクト、営業、事業の4つの領域で募集しています。いずれも、立ち上げ期の組織で裁量を持って進める仕事です。</p></div></div>
+  <div><div class="chapter"><i>03</i><span>WORK</span></div><h2>WiseVineで募集している仕事</h2><p class="lead" style="margin:0">ドメイン（行財政の実務）、プロダクト、営業、事業の4つの領域で募集しています。いずれも、立ち上げ期の組織で裁量を持って進める仕事です。</p></div></div>
   <div class="process" style="margin-top:48px"><div><span class="n">POINT 1</span><b>ドメインスペシャリスト</b><p>自治体財政の業務の専門家として、導入プロジェクトや製品の仕様づくりを担います。自治体ごとの運用を、全国で使える標準に寄せていきます。</p></div><div><span class="n">POINT 2</span><b>Function Owner（PdM）</b><p>プロダクトの方針と優先順位を決め、要件定義から開発チームとのやり取り、外部ベンダーを含む体制づくりまでを担います。</p></div><div><span class="n">POINT 3</span><b>セールス・行政DXパートナー</b><p>自治体向けの導入営業とアップセル、売り方の型づくり、アライアンスやプロダクトへの提言まで関わります。</p></div><div><span class="n">POINT 4</span><b>事業責任者</b><p>担当するプロダクトラインの方針とリソース配分を決め、CEOと直接交渉しながら、外部ベンダーを含む実行体制をつくります。</p></div></div><p class="oneperson">事業計画から決算までの自治体の事務事業をAIエージェントが担う「行政丸ごとAI-BPO」構想も進めています。内容や進捗は、カジュアル面談で伝えるとされています（同社求人票より）。</p>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>03</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収です。経験やスキルによって決まります。</p>
+  <div class="chapter"><i>04</i><span>INCOME</span></div><h2>ポジションと年収の目安</h2><p class="lead">いずれも求人票に載っている年収です。経験やスキルによって決まります。</p>
   <div class="stairs"><div class="stair"><small>ドメインスペシャリスト・行政DXパートナー</small><b>600〜1,000万円</b><span>自治体財政・行政の実務経験を活かすポジション</span></div><div class="stair"><small>Function Owner（PdM）・Sales Manager</small><b>750〜1,200万円</b><span>新規プロダクトのFOは750〜1,100万円</span></div><div class="stair"><small>事業責任者・セールスマネージャー（事業リード型）</small><b>900〜1,200万円</b><span>事業責任者は想定年収。事業リード型のセールスマネージャーは1,000〜1,200万円</span></div></div>
   
   <p class="breakdown">勤務地はフルリモートで、自治体への出張はあります。勤務体系は、フルフレックスまたは裁量労働制（ポジションによる）です。土日祝休みで、試用期間があります。</p><p class="cap">出典：同社の公開求人票（2026年11月時点）</p>
 </div></section>
 <section class="sec night" style="background-image:url('https://images.unsplash.com/photo-1634201580620-110223756709?w=2000&q=75')"><div class="wrap">
-  <div class="chapter"><i>04</i><span>SELECTION</span></div><h2>選考は、面談から最終面接まで。</h2><p class="lead">ポジションによって面接の回数が異なります。まずカジュアル面談から始まるポジションが多くあります。</p>
+  <div class="chapter"><i>05</i><span>SELECTION</span></div><h2>選考は、面談から最終面接まで。</h2><p class="lead">ポジションによって面接の回数が異なります。まずカジュアル面談から始まるポジションが多くあります。</p>
   <div class="timeline"><div class="us"><span class="t">BEFORE</span><b>当社と面談</b><p>経歴の棚卸しと、どのポジションで受けるかを一緒に決めます。</p></div><div><span class="t">STEP 1</span><b>カジュアル面談</b><p>仕事や会社の話をします。事業責任者のポジションは、ここから始まります。</p></div><div><span class="t">STEP 2</span><b>書類選考</b><p>ドメインスペシャリスト、Sales Manager、行政DXパートナーなどでは、面談のあとに書類選考があります。</p></div><div><span class="t">STEP 3</span><b>面接（2〜3回）</b><p>一次・二次・最終の流れが基本です。ドメインスペシャリストの最終は代表と人事責任者、事業責任者の二次には現場責任者が入ります。</p></div><div><span class="t">STEP 4</span><b>内定（リファレンスチェック）</b><p>事業責任者のポジションは、最終面接のあとにリファレンスチェックがあります。</p></div></div>
   <p class="cap">出典：同社の公開求人票の選考フロー（2026年11月時点）。面接の回数と順番は、ポジションごとの求人票によります／写真はイメージです</p>
 </div></section>
 <section class="sec" id="jobs"><div class="wrap">
-  <div class="chapter"><i>05</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
+  <div class="chapter"><i>06</i><span>POSITIONS</span></div><h2>募集中のポジション</h2><p class="lead">中途採用の公開求人です（2026年11月14日時点）。</p>
   <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-g="g0">ドメイン・行政DX</button><button role="tab" aria-selected="false" data-g="g1">プロダクト（PdM）</button><button role="tab" aria-selected="false" data-g="g2">営業</button><button role="tab" aria-selected="false" data-g="g3">事業責任者</button></div><ul class="joblist" data-g="g0"><li><a href="/job/recTwNhKiZUwD18NB/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>Domain Specialist（自治体財政スペシャリスト）<span class="pick">厳選</span></b><span class="sal">600〜1,000万円</span></a></li><li><div class="j"><b>行政DXパートナー（Sales）</b><span class="sal">600〜1,000万円</span></div></li></ul><ul class="joblist" data-g="g1" hidden><li><a href="/job/recNWDsXzWR1URBl2/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>Function Owner（PdM）｜プロダクト責任者候補</b><span class="sal">800〜1,200万円</span></a></li><li><a href="/job/recq5EEBdv3P7lmef/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>Function Owner（PdM）正社員 ※新規プロダクトFO候補</b><span class="sal">750〜1,100万円</span></a></li></ul><ul class="joblist" data-g="g2" hidden><li><a href="/job/recp66bx57o9o8G4u/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>Sales Manager</b><span class="sal">800〜1,200万円</span></a></li><li><a href="/job/recYsiOXdzlK4FbM1/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>セールスマネージャー（事業リード型）</b><span class="sal">1,000〜1,200万円</span></a></li></ul><ul class="joblist" data-g="g3" hidden><li><a href="/job/recsgF7SnTnaVUgTr/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>事業責任者A｜SaaS事業部長型向け（縦の事業責任者）<span class="pick">厳選</span></b><span class="sal">900〜1,200万円</span></a></li><li><a href="/job/rechK12xwmjBWdWk3/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>事業責任者B｜SIer公共PM→事業推進型向け（縦の事業責任者）</b><span class="sal">900〜1,200万円</span></a></li><li><a href="/job/recmgQyZlyVzRMxTL/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>事業責任者C｜スタートアップ新規事業責任者型向け</b><span class="sal">900〜1,200万円</span></a></li><li><a href="/job/recnePiw4gNLcDeeK/?utm_source=pickup&utm_medium=company-lp&utm_campaign=wisevine"><b>事業責任者D｜大手SI社内新規事業→PMF達成型向け</b><span class="sal">900〜1,200万円</span></a></li></ul>
 </div></section>
 <section class="sec sec--alt"><div class="wrap">
   <div class="split"><div class="ph ph--wide"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=75" alt="打ち合わせの様子（イメージ）" loading="lazy"></div>
-  <div><div class="chapter"><i>06</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、ポジションごとの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
+  <div><div class="chapter"><i>07</i><span>FIT</span></div><h2>応募条件と、合う人</h2><p class="lead" style="margin:0">応募条件は、ポジションごとの求人票のとおりです。合う人は、同社が求人票で示している人物像をもとにまとめました。</p></div></div>
   <div class="fit" style="margin-top:40px"><div><h3>応募条件（主なもの）</h3><ul><li>ドメインスペシャリスト：自治体の財政部門（財政課・会計課など）での実務経験（目安3年以上）</li><li>行政DXパートナー：行政職員としての経験（1年以上）</li><li>Function Owner（PdM）：Webアプリケーション開発の経験5年以上、要件の抽出や開発をリードできるスキル</li><li>Sales Manager：営業チームのマネジメント経験（3名以上・プレイングマネージャー可）と、SaaSやSIerなどでの法人営業またはITコンサル・PMの経験</li><li>事業責任者：スクラム開発チームやPdMとの協働経験、事業目標をKPI・予算に分解して経営に交渉した経験、外部パートナーを含む実行体制を設計した経験</li></ul></div><div><h3>合う人</h3><ul><li>行政や財政の課題を、自分の言葉で語れる人</li><li>スタートアップの変化の速さや不確実さを楽しめる人</li><li>「作って納品」で終わらず、届けて使い続けてもらうことに責任を持ちたい人</li><li>考えや進み具合を、オープンに共有できる人</li></ul></div></div>
 </div></section>
 <section class="sec"><div class="wrap">
-  <div class="chapter"><i>07</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
+  <div class="chapter"><i>08</i><span>WHY AGENT BEST</span></div><h2>エージェントベストに相談する理由</h2>
   <p class="why-lead">エージェントベストは、GovTech・SaaS・スタートアップに特化した転職エージェントです。</p>
 <div class="why">
   <div><span class="n">1</span><b>求人票に書かれていない、募集の背景をお伝えします</b><p>なぜ今採用しているのか、どんな経験の人が求められているのか。企業から直接聞いた話をもとに、応募するかどうかを判断していただけます。</p></div>
@@ -213,7 +249,7 @@ footer dt{font-weight:700}footer dd{margin:0}
 </div>
 </div></section>
 <section class="sec sec--alt"><div class="wrap" style="max-width:860px">
-  <div class="chapter"><i>08</i><span>FAQ</span></div><h2>よくある質問</h2>
+  <div class="chapter"><i>09</i><span>FAQ</span></div><h2>よくある質問</h2>
   <details><summary>IT・システムの経験がなくても応募できますか？</summary><p>ドメインスペシャリストは、IT・システムの知識は入社後に身につければよいと求人票に書かれています。応募条件は自治体の財政部門での実務経験です。</p></details><details><summary>どこからでも働けますか？</summary><p>勤務地はフルリモートです。自治体への出張はあります。本社は愛媛県松山市で、沖縄や横浜にもオフィスがあります。</p></details><details><summary>選考にはどのくらいかかりますか？</summary><p>ポジションによって異なります。カジュアル面談、書類選考のあと、面接が2〜3回のものが多くあります。事業責任者は最終面接のあとにリファレンスチェックがあります。</p></details><details><summary>年度末まで今の職場にいても大丈夫ですか？</summary><p>ドメインスペシャリストや行政DXパートナーの求人票では、入社時期は相談でき、年度末での退職も歓迎と書かれています。</p></details>
   <details><summary>相談したら必ず応募しないといけませんか？</summary><p>いいえ。話を聞いてから決めていただいて大丈夫です。WiseVine以外の選択肢も一緒に検討できます。</p></details>
 </div></section>
