@@ -360,6 +360,7 @@ function jobPage(ctx, j, related){
   const name = jobName(j);
   const co = j.company || '企業非公開';
   const canon = SITE + jobPath(j);
+  const idx = ctx.indexable ? ctx.indexable(j) : true;   /* Google に載せる求人か（build() の INDEX 基準） */
   const apply = applyHref(C.APPLY_PAGE, j);
 
   /* 見出しのタグ（検索画面の renderDetail と同じ順） */
@@ -573,7 +574,8 @@ function jobPage(ctx, j, related){
     .replace(/__OGTITLE__/g, () => esc(`${name}｜${co}${titleSal(j)}`))
     .replace(/__DESC__/g, () => esc(desc))
     .replace(/__CANON__/g, () => esc(canon))
-    .replace('__JSONLD__', () => JSON.stringify([ld, crumbLd]).replace(/<\//g, '<\\/'))
+    .replace('<meta name="robots" content="index,follow">', () => `<meta name="robots" content="${idx ? 'index' : 'noindex'},follow">`)
+    .replace('__JSONLD__', () => JSON.stringify(idx ? [ld, crumbLd] : [crumbLd]).replace(/<\//g, '<\\/'))   /* noindex の求人には JobPosting を出さない */
     .replace(/__APPLY__/g, () => esc(apply))
     .replace(/__ID__/g, () => esc(j.id))
     .replace('__BACK__', () => esc(back))
@@ -736,6 +738,21 @@ function readArray(tpl, name){
   if(!m) throw new Error(`template.html に const ${name} が見つかりません`);
   return new Function(`return [${m[1]}]`)();
 }
+/* Google に載せる（index・sitemap・JobPosting）求人の基準（2026-11-15 ハチワレさん決定「jobs は絞ろう」）
+   直接取引の企業（pickup-src/*.json の求人リストに載っている求人）＋ 年収下限600万円以上。それ以外はページを出したまま noindex,follow。
+   理由：10/17 に jobs を中途全件（2,504→約1.5万件）にした後、しごと検索の有効求人が約450→1件に落ち、
+   求人ページの大半が「クロール済み・インデックス未登録」になった（他媒体と同文のシェア求人が一気に増えたため）。 */
+const INDEX_SALARY_MIN = 600;
+function directJobIds(root){
+  const dir = path.join(root, 'pickup-src'), ids = new Set();
+  if(!fs.existsSync(dir)) return ids;
+  fs.readdirSync(dir).filter(f => f.endsWith('.json')).forEach(f => {
+    const txt = fs.readFileSync(path.join(dir, f), 'utf8');
+    for(const m of txt.matchAll(/\/job\/(rec[A-Za-z0-9]{14})\//g)) ids.add(m[1]);
+  });
+  return ids;
+}
+
 function build(root, full){
   const tpl = fs.readFileSync(path.join(root, 'template.html'), 'utf8');
   const jobTpl = fs.readFileSync(path.join(root, 'job-template.html'), 'utf8');
@@ -764,6 +781,8 @@ function build(root, full){
     tagCatsAll: [...new Set(TAGS.map(t => t.cat).filter(Boolean))],
     lpExists: rel => lpSet.has(rel),
   };
+  const DIRECT = directJobIds(root);
+  ctx.indexable = j => DIRECT.has(j.id) || (j.salaryMin || 0) >= INDEX_SALARY_MIN;
 
   /* 3. 一覧ページの組み合わせを先に決める（求人ページから「◯◯の求人一覧」へリンクするため） */
   const byGroup = new Map();   // 大分類 → 求人
@@ -867,7 +886,7 @@ function build(root, full){
     .concat(pk.urls)
     .concat(pages.filter(p => p.hub || p.jobs.length >= LP_MIN).map(p => ({ loc: `${SITE}/${p.rel}/`, lastmod: today, pri: '0.8' })))   /* LP_MIN 未満は noindex（landingPage） */
     .concat(co.urls.map(u => ({ loc: u.loc, lastmod: u.lastmod || today, pri: u.pri })))
-    .concat(full.map(j => ({ loc: SITE + jobPath(j), lastmod: j.createdAt || (j.recordCreatedAt || today).slice(0, 10), pri: '0.6' })));
+    .concat(full.filter(ctx.indexable).map(j => ({ loc: SITE + jobPath(j), lastmod: j.createdAt || (j.recordCreatedAt || today).slice(0, 10), pri: '0.6' })));
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     + urls.map(u => `<url><loc>${esc(u.loc)}</loc><lastmod>${u.lastmod}</lastmod><priority>${u.pri}</priority></url>`).join('\n') + '\n</urlset>\n';
   fs.writeFileSync(path.join(root, 'sitemap.xml'), xml, 'utf8');
@@ -877,7 +896,7 @@ function build(root, full){
      まとめられるだけのURL。求人数だけ増えてクロールを食うので巡回させない（2026-10-29、GSCの代替ページ約2,000件）。
      「/?」はクエリ付きのトップだけに当たり、トップ自体（/）と /data/list.json は対象外 */
   fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nAllow: /data/list.json\nAllow: /data/companies-list.json\nDisallow: /data/\nDisallow: /apply.html\nDisallow: /?\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
-  console.log(`sitemap.xml を書き出しました: ${urls.length} URL`);
+  console.log(`sitemap.xml を書き出しました: ${urls.length} URL（求人は Google に載せる ${full.filter(ctx.indexable).length}件／掲載 ${full.length}件・直接取引の求人 ${DIRECT.size}件）`);
 }
 
 module.exports = { build, jobHubOf, jobGroupOf, jobName, fmtSalary, locShort, GROUP_SLUG };
