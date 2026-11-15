@@ -19,6 +19,7 @@
   },
   "closingImg": "1606044466411-207a9a49711f",
   "site": { "repo": "consultant-lp", "url": "https://lp.consultenshoku.com/", "name": "未経験からコンサル", "label": "未経験からコンサル転職（特設サイト）" },
+  "jobsite": { "host": "consultenshoku.com", "url": "https://www.consultenshoku.com/", "name": "コンサル転職" },
   "companies": [
     { "slug": "northsand", "match": "コンサルタント【",
       "reason": "大手企業の業務改革からIT戦略の立案、IT導入、新規事業の立案まで手がけるコンサルティングファームです。IT業界未経験の方に向けたコンサルタントの求人があります。" },

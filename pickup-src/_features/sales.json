@@ -25,6 +25,7 @@
   "closingImg": "1606044466411-207a9a49711f",
   "companiesH2": "掲載している企業",
   "site": { "url": "https://jobs.agent-best.net/jobs/sales/", "label": "営業の求人をすべて見る" },
+  "jobsite": { "host": "eigyotenshoku.com", "url": "https://www.eigyotenshoku.com/", "name": "営業転職" },
   "companies": [
     { "slug": "loglass", "match": "セールス|アカウント|パートナービジネス", "exclude": "エンジニア|Administrator|カスタマーサクセス",
       "reason": "経営管理クラウド「Loglass 経営管理」を提供する会社です。フィールドセールス・インサイドセールス・アカウントマネージャー・パートナービジネスと、分業した営業の各ポジションを募集しています。関西拠点や新規事業の営業、マネージャー候補・部長候補の募集もあります。" },

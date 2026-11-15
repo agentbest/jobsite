@@ -193,7 +193,7 @@ function featureJobsHtml(slug, coSlug, jobs, base) {
 function featurePage(f, items, style, why, opt = {}) {
   const m = !!opt.mirror, base = m ? SITE : '';
   const canonical = `${SITE}/pickup/${f.slug}/`;
-  const src = m ? `lp-${f.slug}` : 'pickup';
+  const src = opt.src || (m ? `lp-${f.slug}` : 'pickup');
   const utm = `https://calendly.com/r_matsuoka?utm_source=${src}&utm_campaign=feature-${f.slug}`;
   const cta = (label, cls = 'btn') => `<a class="${cls}" href="${utm}" target="_blank" rel="noopener" data-consult="${src}-feature-${f.slug}">${e(label)}</a>`;
   const h = f.hero, ab = f.about || {};
@@ -383,6 +383,9 @@ function build(root, live) {
     const dir = path.join(root, 'pickup', f.slug);
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'index.html'), featurePage(f, items, style, why), 'utf8');
+    /* 求人検索サイト（www.〇〇tenshoku.com・jobs-front が host ごとに /pickup/ をここへ向ける）用の入口。canonical は jobs のまま */
+    if (f.jobsite) fs.writeFileSync(path.join(dir, 'site.html'), featurePage({ ...f, site: f.jobsite }, items, style, why, { mirror: true, src: `site-${f.slug}` }), 'utf8');
+    else fs.rmSync(path.join(dir, 'site.html'), { force: true });
     fs.writeFileSync(path.join(dir, 'jobs.json'), JSON.stringify({ updated: new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), companies: Object.fromEntries(items.map(x => [x.slug, x.jobs])) }), 'utf8');
     feats.push({ slug: f.slug, name: f.name, hero: f.hero, count: items.length, jobs: items.reduce((n, x) => n + x.jobs.length, 0) });
   }

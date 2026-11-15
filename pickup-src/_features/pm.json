@@ -18,6 +18,7 @@
     "img": "1681489933902-bb3644b91d65"
   },
   "site": { "repo": "pm-lp", "url": "https://lp.pmtenshoku.com/", "name": "PM特化 転職", "label": "PMのキャリア支援（特設サイト）" },
+  "jobsite": { "host": "pmtenshoku.com", "url": "https://www.pmtenshoku.com/", "name": "PM転職" },
   "companies": [
     { "slug": "finatext", "match": "プロジェクトマネージャー|（PM）|Fintech SHIFT",
       "reason": "東証グロース上場のフィンテック企業グループです。50〜100人月ほどのプロジェクトを、企画・要件定義からリリースまで通してまとめるPMを募集しています。開発は内製で、PMはエンジニアと同じチームで動きます。" },

@@ -18,6 +18,7 @@
     "img": "1681505531034-8d67054e07f6"
   },
   "site": { "repo": "ma-lp", "url": "https://lp.matenshoku.com/", "name": "M&A転職", "label": "M&A転職（特設サイト）" },
+  "jobsite": { "host": "matenshoku.com", "url": "https://www.matenshoku.com/", "name": "M&A転職" },
   "companies": [
     { "slug": "macp", "match": "M&A",
       "reason": "東証プライム上場のM&A仲介会社です。上場企業・大手企業の成長戦略としてのM&Aと、中堅・中小企業の事業承継の両方を扱います。グループにレコフや企業再生のみらい共創アドバイザリーがあり、M&Aアドバイザーのほか、IB部門や未経験歓迎のM&Aコンサルタントも募集しています。" },
