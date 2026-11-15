@@ -64,6 +64,7 @@ const F = {
   prefs:            'flddnoD5qZtuAISOO', // 勤務地（都道府県）。複数選択。エリア絞り込みの正データ（2026-09-22新設）
   status:           'fldLFxYGKjXQPoZsd', // 募集状況（空／募集中／募集停止）。募集停止はサイトに載せない（2026-10-11新設）
   hidden:           'fldHvKsNpzFCEEjRV', // サイトに掲載しない（チェック）。募集中のまま公開だけしない求人（2026-10-16新設）
+  siteManual:       'fldCTFmQxQfo1vHAG', // 掲載する特化サイト（手動）。1求人は最大2サイト。空なら site-assign.js が自動で選ぶ（2026-11-15新設）
 };
 const CO_TABLE = 'tblBNNH9sJjldPmZZ', CO_NAME = 'fld03vEbeabi8IQDN';
 const IND_TABLE = 'tblfn5HIG6pPiQ2LE', IND_NAME = 'fldXKyZtMheTlkX1r';
@@ -241,6 +242,8 @@ function flat(v){
     /* 勤務地（都道府県）。⚠ サイトはこの列が入っている求人では本文からの推測をしない */
     const pf = (f[F.prefs] || []).map(x => (typeof x === 'object' ? x.name : x)).filter(Boolean);
     if(pf.length) job.prefs = pf;
+    const sm = flat(f[F.siteManual]);
+    if(sm) job.siteManual = sm;
     for(const k of TEXT_KEYS) job[k] = sanitize(job[k], r.id, k);
     jobs.push(job);
   }

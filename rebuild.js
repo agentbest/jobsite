@@ -542,6 +542,8 @@ if(jobs){
     j.remote = /在宅|リモート|テレワーク|フルリモート/.test(loc + ' ' + (j.jobContent || '') + ' ' + (j.benefits || ''));
   });
   require('./static-pages').build(dir, fullJobs);
+  /* 1求人は最大2サイト（jobs＋skill か jobs＋特化サイト1つ）。data/site-assign.json を jobs-front が読む。中身は site-assign.js の先頭 */
+  require('./site-assign').build(dir, fullJobs);
 }
 
 /* ---------- 転職メディアの記事ごとの求人（data/media-jobs/<記事slug>.json） ----------
