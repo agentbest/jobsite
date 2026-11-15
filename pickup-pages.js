@@ -378,7 +378,8 @@ function build(root, live) {
   for (const f of readFeatures(root)) {
     if (f.slug === 'company') throw new Error('特集の slug に company は使えません');
     const items = featureItems(f, cos, live);
-    if (items.length < 2) { console.warn(`  特集 ${f.slug}: 載せる会社が2社未満なので作りません`); continue; }
+    const min = f.minCompanies || 2;   // 財政課転職のように1社だけ載せる特集は minCompanies: 1
+    if (items.length < min) { console.warn(`  特集 ${f.slug}: 載せる会社が${min}社未満なので作りません`); continue; }
     const dir = path.join(root, 'pickup', f.slug);
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'index.html'), featurePage(f, items, style, why), 'utf8');
