@@ -22,7 +22,7 @@
 const fs = require('fs'), path = require('path');
 const { jobHubOf, jobGroupOf, jobName, fmtSalary, locShort, GROUP_SLUG } = require('./static-pages');
 
-const PER = 4;
+const PER = 6;   // 2026-11-18 4→6：記事の末尾に1〜4件目、本文の途中に5〜6件目（agentbest-lp ArticleJobs.astro）
 
 const GROUP_BY_HUB = {};
 const put = (group, hubs) => hubs.forEach(h => { GROUP_BY_HUB[h] = group; });
