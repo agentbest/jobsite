@@ -658,6 +658,7 @@ function landingPage(ctx, p){
     ${hubLead || `<p class="lp__lead">${esc(p.title)}を${n.toLocaleString()}件（${cos.toLocaleString()}社）掲載しています。${esc(factsText)}企業へ直接応募するのではなく、当社から推薦する形で選考が進みます。ご利用は無料です。</p>`}
     <ul class="lp__stats"><li><b>${n.toLocaleString()}</b>件</li><li><b>${cos.toLocaleString()}</b>社</li><li><b>${nSal800.toLocaleString()}</b>件が年収800万円以上</li><li><b>${nRemote.toLocaleString()}</b>件がリモート可</li><li><b>${nListed.toLocaleString()}</b>件が上場企業</li></ul>
     ${hubMix}
+    ${p.marketHref ? `<p class="lp__lead" style="margin-top:-6px"><a href="${esc(p.marketHref)}">${esc(p.mediaLabel)}の求人・年収動向（職種別の年収中央値・勤務地・推移）を見る →</a></p>` : ''}
     ${p.pills && p.pills.length ? `<nav class="lp__nav" aria-label="${esc(p.pillsTitle)}"><p>${esc(p.pillsTitle)}</p><div class="lp__pills">${p.pills.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
     ${p.pills2 && p.pills2.length ? `<nav class="lp__nav" aria-label="${esc(p.pills2Title)}"><p>${esc(p.pills2Title)}</p><div class="lp__pills">${p.pills2.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
     ${mediaBlock((p.rel.match(/^jobs\/([^/]+)/) || [])[1], p.mediaLabel || '転職', 'lp')}
@@ -809,7 +810,7 @@ function build(root, full){
   groups.forEach(([g, jobs]) => {
     const gslug = GROUP_SLUG[g];
     const combos = areaUnits.map(a => ({ a, jobs: jobs.filter(j => inArea(a, j)) })).filter(x => lpKeep(`jobs/${gslug}/${x.a.slug}`, x.jobs.length));
-    pages.push({ rel: `jobs/${gslug}`, mediaLabel: g, title: `${g}の転職・求人`, h1: `${g}の求人`, jobs, crumbs: [[`${g}の求人`, `/jobs/${gslug}/`]],
+    pages.push({ rel: `jobs/${gslug}`, mediaLabel: g, marketHref: jobs.length >= 30 ? `/jobs/${gslug}/market/` : '', title: `${g}の転職・求人`, h1: `${g}の求人`, jobs, crumbs: [[`${g}の求人`, `/jobs/${gslug}/`]],
       pillsTitle: '勤務地で絞る', pills: combos.map(x => ({ label: x.a.name, href: `/jobs/${gslug}/${x.a.slug}/`, n: x.jobs.length })),
       pills2Title: '他の職種', pills2: groups.filter(([g2]) => g2 !== g).map(([g2, js]) => ({ label: g2, href: `/jobs/${GROUP_SLUG[g2]}/`, n: js.length })),
       allHref: `/?cat=${encodeURIComponent(g)}` });
@@ -871,11 +872,15 @@ function build(root, full){
 
   /* 5. 一覧ページ（件数が減って LP_KEEP を割ったページは消す） */
   ['jobs', 'area', 'feature'].forEach(top => syncDir(path.join(root, top), new Set(pages.filter(p => p.rel.startsWith(top + '/')).map(p => p.rel.split('/')[1]))));
-  groups.forEach(([g]) => syncDir(path.join(root, 'jobs', GROUP_SLUG[g]), new Set(pages.filter(p => p.rel.startsWith(`jobs/${GROUP_SLUG[g]}/`)).map(p => p.rel.split('/')[2]))));
+  groups.forEach(([g]) => syncDir(path.join(root, 'jobs', GROUP_SLUG[g]), new Set(pages.filter(p => p.rel.startsWith(`jobs/${GROUP_SLUG[g]}/`)).map(p => p.rel.split('/')[2]).concat(['market']))));   /* market＝求人・年収動向（market.js） */
   pages.forEach(p => writePage(root, p.rel, landingPage(ctx, p)));
   const nCombo = pages.filter(p => p.rel.split('/').length === 3).length;
   console.log(`特集ハブを書き出しました: ${hubs.map(x => `${x.h.slug} ${x.jobs.length}件`).join('・')}`);
   console.log(`一覧ページを書き出しました: 職種 ${groups.length}・職種×勤務地 ${nCombo}・勤務地 ${areaUnits.length}（新規は ${LP_MIN}件以上・公開中は ${LP_KEEP}件以上で維持）`);
+
+  /* 5a. 職種ごとの求人・年収動向（jobs/<職種>/market/）と記事用の数字（data/market-index.json）。中身は market.js の先頭 */
+  const mk = require('./market').build(root, ctx, groups, { esc, jobGroupOf, jobHubOf, GROUP_SLUG, SITE, writePage });
+  groups.forEach(([g]) => { if(!mk.made.has(GROUP_SLUG[g])) fs.rmSync(path.join(root, 'jobs', GROUP_SLUG[g], 'market'), { recursive: true, force: true }); });
 
   /* 5b. 厳選特集（pickup/・直接取引の企業LP）。掲載中の求人にだけリンクする。中身は pickup-pages.js の先頭 */
   const pk = require('./pickup-pages').build(root, new Set(full.map(j => j.id)));
@@ -884,6 +889,7 @@ function build(root, full){
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
   const urls = [{ loc: `${SITE}/`, lastmod: today, pri: '1.0' }]
     .concat(pk.urls)
+    .concat(mk.urls)
     .concat(pages.filter(p => p.hub || p.jobs.length >= LP_MIN).map(p => ({ loc: `${SITE}/${p.rel}/`, lastmod: today, pri: '0.8' })))   /* LP_MIN 未満は noindex（landingPage） */
     .concat(co.urls.map(u => ({ loc: u.loc, lastmod: u.lastmod || today, pri: u.pri })))
     .concat(full.filter(ctx.indexable).map(j => ({ loc: SITE + jobPath(j), lastmod: j.createdAt || (j.recordCreatedAt || today).slice(0, 10), pri: '0.6' })));
