@@ -228,6 +228,29 @@ function build(root){
     fs.writeFileSync(path.join(outDir, `${slug}.json`), JSON.stringify({ k: kind, l: label, j: picked.map(card) }), 'utf8');
   });
   console.log(`記事向けの求人: ${articles.length}本中 記事タグ${stat.tag || 0}・自社の求人${stat.co}・同じ職種${stat.hub}・同じ大分類${stat.group}・該当なし${stat.none} → data/media-jobs/`);
+
+  /* ---------- 転職事例（www.agent-best.net/cases/）向け：職種の大分類ごとの求人（2026-11-18） ----------
+     事例ページは「転職先の職種の大分類」（agentbest-lp の jobsGroupOfCaseArea）しか分からないので、大分類ごとに1ファイル。
+     data/group-jobs/<大分類slug>.json = { l: 大分類名, n: 掲載件数, j: [カード, ...最大 GROUP_PER 件] }
+     事例ページ側が事例IDでずらして4件出す（全事例が同じ4件にならないように）。 */
+  const GROUP_PER = 24;
+  const gDir = path.join(root, 'data', 'group-jobs');
+  fs.rmSync(gDir, { recursive: true, force: true });
+  fs.mkdirSync(gDir, { recursive: true });
+  let gn = 0;
+  byGroup.forEach((pool, group) => {
+    const slug = GROUP_SLUG[group];
+    if(!slug || !pool.length) return;
+    /* 新しい順のまま、同じ会社が続かないように1社1件ずつ拾ってから残りで埋める */
+    const seenCo = new Set(), first = [], rest = [];
+    /* 年収が書いてある求人を先に（カードに「年収は面談時にご案内」が並ぶと比べようがないため） */
+    const withSal = pool.filter(j => j.salaryMax || j.salaryMin), noSal = pool.filter(j => !(j.salaryMax || j.salaryMin));
+    withSal.concat(noSal).forEach(j => { const c = norm(j.company); (seenCo.has(c) ? rest : first).push(j); seenCo.add(c); });
+    const pick = first.concat(rest).slice(0, GROUP_PER);
+    fs.writeFileSync(path.join(gDir, `${slug}.json`), JSON.stringify({ l: group, n: pool.length, j: pick.map(card) }), 'utf8');
+    gn++;
+  });
+  console.log(`事例向けの求人: 大分類${gn}本 → data/group-jobs/`);
 }
 
 module.exports = { build };
