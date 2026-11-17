@@ -4,8 +4,9 @@
 //   - ページ：掲載中の求人の求人票に書かれた提示年収・勤務地・職種を集計したもの。毎朝のビルドで数字が入れ替わる。
 //     検索・AI に「この会社のデータ」として引用されることを狙う。集計の方法と母数を必ずページに書く（数字だけ出さない）。
 //   - data/market-index.json：コーポレートの記事（agentbest-lp の SalaryFacts.astro）がビルド時に読む。
-//       { updated, groups: { <大分類slug>: { l, n, cos, nSal, medMin, medMax, p800, remote, new30 } },
-//         hubs:   { <メディアのハブslug>: { g, n, cos, nSal, medMin, medMax } } }   ※ハブは JOBCAT_HUB で引けた求人だけ・10件以上
+//       { updated, groups: { <大分類slug>: { l, n, cos, nSal, medMin, medMax, p800, remote, new30, co } },
+//         hubs:   { <メディアのハブslug>: { g, n, cos, nSal, medMin, medMax, co } } }   ※ハブは JOBCAT_HUB で引けた求人だけ・10件以上
+//       co = [[企業ID, 社名, 掲載件数], …最大8社]（企業ページがある会社だけ）。記事の「この職種を募集中の企業」＝記事→企業ページの静的リンク（施策6）
 //   - data/market-history.json：月ごとのスナップショット { 'YYYY-MM': { <slug>: { n, cos, medMin, medMax, remote } } }。
 //     その月の最後のビルドの値で上書きしていく＝月末の値が残る。前月比はここから出す。⚠ 消さない（推移が途切れる）。
 //
@@ -134,13 +135,21 @@ function build(root, ctx, groups, H){
     urls.push({ loc: canon, lastmod: today, pri: '0.7' });
   });
 
+  /* その職種を募集中の企業（企業ページがある会社だけ・件数の多い順に最大8社）。記事から企業ページへの静的リンクに使う（施策6） */
+  const topCos = jobs => {
+    const m = new Map();
+    jobs.forEach(j => { const id = j.companyId; if(!id || !j.company) return; const cur = m.get(id) || [id, j.company, 0]; cur[2]++; m.set(id, cur); });
+    return [...m.values()].filter(([id]) => fs.existsSync(path.join(root, 'company', id, 'index.html'))).sort((a, b) => b[2] - a[2]).slice(0, 8);
+  };
+  groups.forEach(([, jobs]) => { const slug = GROUP_SLUG[jobGroupOf(jobs[0].jobCategory)]; if(index.groups[slug]) index.groups[slug].co = topCos(jobs); });
+
   /* メディアのハブ単位（記事に出す数字） */
   const byHub = new Map();
   groups.forEach(([, jobs]) => jobs.forEach(j => { const h = jobHubOf(j.jobCategory); if(!h) return; if(!byHub.has(h)) byHub.set(h, []); byHub.get(h).push(j); }));
   byHub.forEach((jobs, h) => {
     if(jobs.length < HUB_MIN) return;
     const s = stats(jobs, today);
-    index.hubs[h] = { g: GROUP_SLUG[jobGroupOf(jobs[0].jobCategory)] || '', n: s.n, cos: s.cos, nSal: s.nSal, medMin: s.medMin, medMax: s.medMax };
+    index.hubs[h] = { g: GROUP_SLUG[jobGroupOf(jobs[0].jobCategory)] || '', n: s.n, cos: s.cos, nSal: s.nSal, medMin: s.medMin, medMax: s.medMax, co: topCos(jobs) };
   });
 
   fs.writeFileSync(path.join(root, 'data', 'market-index.json'), JSON.stringify(index), 'utf8');
