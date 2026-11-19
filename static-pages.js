@@ -222,6 +222,7 @@ function plain(src, max){
   const t = String(src || '').replace(/\r/g, '')
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/^#{1,6}\s*/gm, '').replace(/^\s*[-*・–—]\s*/gm, '').replace(/[*_`>|\\]/g, '')
+    .replace(/([。！？」』）])\s+/g, '$1')   /* 会社概要の段落の改行が「。 」の空白にならないように（2026-11-19） */
     .replace(/\s+/g, ' ').trim();
   return max && t.length > max ? t.slice(0, max) + '…' : t;
 }
