@@ -221,6 +221,8 @@ function build(root, ctx, full, H){
       ? `${c.name}の求人${n}件を掲載${sal ? `（年収${sal}）` : ''}。${topGroups.length ? `職種は${topGroups.join('・')}` : ''}${topGroups.length && topPrefs.length ? '、' : ''}${topPrefs.length ? `勤務地は${topPrefs.join('・')}` : ''}${facts.remote ? `、リモート可${facts.remote}件` : ''}。${coLine}。${descHead ? descHead + ' ' : ''}転職支援は無料です。`
       : `${descHead ? descHead + ' ' : ''}${coLine}と${near.length ? `、同じ業界で募集中の求人${near.length}件` : '転職情報'}。転職支援は無料です。`;
     return tpl
+      /* 求人0件の会社は noindex（ページは残す・sitemap からも外す）。2026-11-19 ハチワレさん決定：企業DBの概要だけのページ約4,700件が薄いページとしてサイト全体の評価を下げるのを避ける。求人が入れば次のビルドで index に戻る */
+      .replace('<meta name="robots" content="index,follow">', () => `<meta name="robots" content="${n ? 'index' : 'noindex'},follow">`)
       .replace('__TITLE__', () => esc(title.length > 70 ? (n ? `${nm}の転職・求人${n}件｜年収・勤務地・職種 - エージェントベスト` : `${nm}の会社概要・転職情報 - エージェントベスト`) : title))
       .replace(/__OGTITLE__/g, () => esc(n ? `${nm}の転職・求人${n}件｜${axes || '年収・勤務地・職種'}` : `${nm}の会社概要・転職情報`))
       .replace(/__DESC__/g, () => esc(desc))
@@ -435,7 +437,7 @@ function build(root, ctx, full, H){
   const urls = [{ loc: SITE + '/company/', lastmod: null, pri: '0.8' }]
     .concat([...byBigCode.keys()].map(bc => ({ loc: SITE + bigPath(bc), lastmod: null, pri: '0.7' })))
     .concat([...byMid.keys()].map(code => ({ loc: SITE + indPath(code), lastmod: null, pri: '0.7' })))
-    .concat(companies.map(c => ({ loc: SITE + coPath(c), lastmod: c.updatedAt || null, pri: '0.7' })));
+    .concat(companies.filter(c => c.jobs.length).map(c => ({ loc: SITE + coPath(c), lastmod: c.updatedAt || null, pri: '0.7' })));   /* 求人0件の会社は noindex なので入れない */
   return { coOf, urls, coPath, mediaOf, mediaHref, count: companies.length };
 }
 
