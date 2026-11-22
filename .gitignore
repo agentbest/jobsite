@@ -37,3 +37,6 @@ data/skill-list.json
 
 # 転職ガイドの書きかけ原稿（articles/ に移したものだけ公開する）
 _guide/drafts/
+
+# Python のキャッシュ（tools/make-guide-plan.py が作る）
+__pycache__/
