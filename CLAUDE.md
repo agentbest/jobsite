@@ -827,6 +827,21 @@ _features/<theme>.json（載せる会社の slug・求人タイトルに当て�
 - `_features` を変えたら（会社の追加・理由の修正）`node tools/pickup-mirror.js` を回して各特化サイトも push する。求人の入れ替わりだけなら不要（jobs.json で毎朝反映）。
 - 載せるのは直接取引の会社（企業LPがある会社）だけ。アーキテックス・ヴァンテージの「コンサル営業」（不動産・人材の営業）はコンサル特集に入れない。reason も公開情報だけで、年齢・性別・学歴を理由に書かない。M&A特集では社名と「一気通貫／分業」を結びつけない（ma-lp の方針）。
 
+## 転職ガイド（`guide/`・記事）— 2026-11-22 土台
+
+ハチワレさん「求人が中心のサイト（記事0本）は記事を追加しよう」。計画・担当表は **agentbest/content-expansion**（1サイト約2,000本・別端末と分担）。
+```
+_guide/articles/<slug>.md（公開する原稿）・_guide/drafts/（書きかけ・.gitignore）・_guide/taxonomy.json（グループ→ハブ）・_guide/plan.tsv・_guide/RULES.md（書き方・必読）
+  → rebuild.js → static-pages.js の 5c で guide.js の build()
+  → guide/index.html・guide/hub/<hub>/・guide/<slug>/・guide/search/ → sitemap.xml に入る
+```
+- ⚠ **/media/ は jobs-front が www へ 301 するので使えない。/guide/ に置く。** /guide/ は jobs-front の転送にかからず Pages に届く（11/22 確認）。
+- **記事が0本のときは guide/ を作らない。** 原稿は drafts/ で書き、`node tools/check-guide.js --drafts <slug>` で警告0にしてから articles/ へ移す。
+- 差別化は掲載データ：taxonomy のハブは職種の中分類（`c`）・大分類（`g`）と結びつき、記事とハブの下に「◯◯の求人をデータで見る」（件数・募集中の企業数・提示年収の中央値・リモート可・募集中の企業へのリンク・求人カード4件）を**毎朝のビルドで差し込む**。本文には件数・年収額を書かせない（check が止める）。
+- www.agent-best.net/media（職種別の年収・面接・職務経歴書・20代/30代…）と重ねないため、切り口は「求人票の読み方・求人で求められること・応募〜内定の実務」。企画は `python tools/make-guide-plan.py`（slug は URL なので変えない）。
+- `robots.txt` は `/_guide/` を拒否（.nojekyll なので原稿の .md も配信されるため）。
+- 手元の `node rebuild.js` は求人データの差で生成物が約2万ファイル変わる。記事の公開は原稿（`_guide/`）だけ commit すれば翌朝の Actions で出る。すぐ出したいときだけ手元で rebuild した `guide/`・`sitemap.xml` を足す。
+
 ## 404対策（2026-10-12）
 
 Search Console の「見つかりませんでした（404）」393件（10/12時点）の中身は、**掲載終了で消した求人ページ約340件**と、**件数が10件を割って消えた一覧ページ約35件**（`/area/akita/`・`/jobs/retail-food/osaka/` など）、旧Squarespace時代のURL少々。

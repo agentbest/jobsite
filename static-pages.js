@@ -886,10 +886,14 @@ function build(root, full){
   /* 5b. 厳選特集（pickup/・直接取引の企業LP）。掲載中の求人にだけリンクする。中身は pickup-pages.js の先頭 */
   const pk = require('./pickup-pages').build(root, new Set(full.map(j => j.id)));
 
+  /* 5c. 転職ガイド（guide/・記事）。記事が0本なら何も作らない。中身は guide.js の先頭 */
+  const gd = require('./guide').build(root, ctx, full, { esc, cardHtml, sortForList, writePage, jobGroupOf, GROUP_SLUG, SITE });
+
   /* 6. sitemap.xml / robots.txt */
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
   const urls = [{ loc: `${SITE}/`, lastmod: today, pri: '1.0' }]
     .concat(pk.urls)
+    .concat(gd.urls)
     .concat(mk.urls)
     .concat(pages.filter(p => p.hub || p.jobs.length >= LP_MIN).map(p => ({ loc: `${SITE}/${p.rel}/`, lastmod: today, pri: '0.8' })))   /* LP_MIN 未満は noindex（landingPage） */
     .concat(co.urls.map(u => ({ loc: u.loc, lastmod: u.lastmod || today, pri: u.pri })))
@@ -902,7 +906,7 @@ function build(root, full){
   /* 応募フォーム（apply.html?job=…）と検索画面の ?job= / ?cat= 付きURLは、どれも canonical で apply.html・トップに
      まとめられるだけのURL。求人数だけ増えてクロールを食うので巡回させない（2026-10-29、GSCの代替ページ約2,000件）。
      「/?」はクエリ付きのトップだけに当たり、トップ自体（/）と /data/list.json は対象外 */
-  fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nAllow: /data/list.json\nAllow: /data/companies-list.json\nDisallow: /data/\nDisallow: /apply.html\nDisallow: /?\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
+  fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\nAllow: /data/list.json\nAllow: /data/companies-list.json\nDisallow: /data/\nDisallow: /_guide/\nDisallow: /apply.html\nDisallow: /?\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
   console.log(`sitemap.xml を書き出しました: ${urls.length} URL（求人は Google に載せる ${full.filter(ctx.indexable).length}件／掲載 ${full.length}件・直接取引の求人 ${DIRECT.size}件）`);
 }
 
