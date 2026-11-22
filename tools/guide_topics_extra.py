@@ -56,7 +56,6 @@ TOPICS_EXTRA = {
         ('nenshu-dasshutsu', '年収が提示より下がるケースと確認点'),
         ('kyuyo-kotei', '固定給と変動給の割合の読み方'),
         ('nenshu-1000', '求人票の年収1,000万円以上の求人の読み方'),
-        ('nenshu-gekigen', '転職で年収が下がりやすい場面と確認点'),
         ('shakai-hoken-ritsu', '社会保険料の負担と転職時の手取りの変化'),
     ],
     'working-conditions': [
