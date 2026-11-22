@@ -6,7 +6,10 @@
 # english / failure / from-scratch / future / how-to-use-agent / in-20s / in-30s / interview / market-trend /
 # motivation / resume / salary(-600/-1000) / skills / work-style を書いている。ここではそれを避け、
 # 「求人票の読み方」「その職種の求人で実際に求められていること」「応募〜内定の実務」に寄せる。
-import json, os
+import json, os, sys
+sys.path.insert(0, os.path.dirname(__file__))
+from guide_role_topics import ROLE_TOPICS
+from guide_topics_extra import TOPICS_EXTRA
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', '_guide')
 tax = json.load(open(os.path.join(ROOT, 'taxonomy.json'), encoding='utf-8'))
@@ -28,6 +31,11 @@ ROLE_THEMES = [
     ('job-title', '{r}の求人で使われる職種名・肩書きの違い'),
     ('jd-keywords', '{r}の求人によく出る用語と略語｜意味と読み取り方'),
     ('evaluation', '{r}の評価のされ方｜求人票の評価制度・インセンティブの読み方'),
+    # 2026-11-22 追加（末尾に足す）
+    ('hiring-check', '{r}の求人に応募する前に確かめたいこと'),
+    ('questions-to-ask', '{r}の面接で求人票について確かめたいこと'),
+    ('mismatch', '{r}の入社後のギャップを防ぐ｜求人票で見落としやすいところ'),
+    ('team-structure', '{r}の求人の配属先とチーム体制の読み方'),
 ]
 
 # 職種に関係しないハブの企画（slug, タイトル）
@@ -177,12 +185,17 @@ def add(hub, slug, title):
 for g in tax['groups']:
     for hub, label, m in g['hubs']:
         if m is None:
-            for slug, title in TOPICS.get(hub, []):
+            for slug, title in TOPICS.get(hub, []) + TOPICS_EXTRA.get(hub, []):
                 add(hub, slug, title)
         else:
             for t, title in ROLE_THEMES:
                 add(hub, f'{hub}-{t}', title.format(r=label))
+            for t, title in ROLE_TOPICS.get(hub, []):
+                add(hub, f'{hub}-{t}', title)
 
+unknown = [h for h in ROLE_TOPICS if h not in {x[0] for g in tax['groups'] for x in g['hubs']}]
+if unknown:
+    raise SystemExit(f'taxonomy に無いハブ: {unknown}')
 missing = [h for g in tax['groups'] for h, _, m in g['hubs'] if m is None and h not in TOPICS]
 if missing:
     print('⚠ 企画が無いハブ:', ', '.join(missing))
