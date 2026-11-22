@@ -75,7 +75,7 @@ for(const f of files){
     const u = lk.slice(2, -1);
     const g = u.match(/^\/guide\/([a-z0-9-]+)\/$/);
     if(g && !plan[g[1]]) msgs.push(`plan.tsv にない記事へのリンク: ${u}`);
-    else if(!g && !/^\/(jobs\/[a-z-]+\/(market\/)?|company\/|feature\/[a-z0-9-]+\/|apply\.html|guide\/)$/.test(u) && !/^\/(jobs|company|feature)\//.test(u)) msgs.push(`サイト内リンクの形が想定外: ${u}`);
+    else if(!g && u !== '/' && !/^\/(jobs\/[a-z-]+\/(market\/)?|company\/|feature\/[a-z0-9-]+\/|apply\.html|guide\/)$/.test(u) && !/^\/(jobs|company|feature)\//.test(u)) msgs.push(`サイト内リンクの形が想定外: ${u}`);
   }
   const text = m[1] + '\n' + body;
   for(const [re, label] of NG){ const hit = text.match(re); if(hit) msgs.push(`使わない表現: ${label}（…${text.slice(Math.max(0, hit.index - 10), hit.index + 15).replace(/\n/g, ' ')}…）`); }
