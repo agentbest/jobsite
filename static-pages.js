@@ -239,11 +239,11 @@ const ZIP_RE = /〒\s*(\d{3})\s*[-ー－‐―]\s*(\d{4})[\s\/／]*(北海道|�
 const CITY_HEAD = /^((?:[一-龥々ぁ-んァ-ヶー]{1,5}郡)?[一-龥々ぁ-んァ-ヶー]{1,6}?(?:市(?!市)(?:[一-龥々ぁ-んァ-ヶー]{1,4}?区)?|区|町|村))(.+)$/;
 function postalPlaces(text){
   const out = [];
-  const norm = String(text || '').replace(/\r/g, '').replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/　/g, ' ');
+  const norm = String(text || '').replace(/\r/g, '').replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/　/g, ' ').replace(/[​-‍﻿]/g, '');
   for(const m of norm.matchAll(ZIP_RE)){
     const pref = m[3];
     /* 住所の続きは「／」「（」「・アクセス」などで切る */
-    const rest = m[4].split(/[\/／（(【▍◆■※]|\s{2,}|アクセス/)[0].replace(/^[\s:：]+/, '').replace(/[)）\]】」]+\s*$/, '').trim();
+    const rest = m[4].split(/[\/／（(【▍◆■※<"＂]|\s{2,}|アクセス/)[0].replace(/^[\s:：]+/, '').replace(/[)）\]】」]+\s*$/, '').trim();
     const c = rest.match(CITY_HEAD);
     if(!PREF_SLUG[pref] || !c) continue;
     const street = c[2].trim().slice(0, 80);
