@@ -257,10 +257,16 @@ function jobPlaces(j, co){
   const place = (pref, city, zip, street) => ({ '@type': 'Place', address: Object.assign({ '@type': 'PostalAddress', addressCountry: 'JP' },
     pref ? { addressRegion: pref } : {}, city ? { addressLocality: city } : {}, street ? { streetAddress: street } : {}, zip ? { postalCode: zip } : {}) });
   const seen = new Set(), out = [];
+  /* Airtable の 勤務地_〜 の4列（2026-11-24〜）が正。入っていれば最初の Place にする（勤務地（都道府県）での絞り込みはかけない） */
+  const ad = j.addr;
+  if(ad && PREF_SLUG[ad.pref]){
+    seen.add(ad.pref + (ad.city || '') + (ad.street || ''));
+    out.push(place(ad.pref, ad.city, /^\d{3}-\d{4}$/.test(ad.zip || '') ? ad.zip : '', ad.street));
+  }
   for(const a of postalPlaces(j.location)){
     if(prefs.length && !prefs.includes(a.pref)) continue;
     const key = a.pref + a.city + a.street;
-    if(seen.has(key)) continue;
+    if([...seen].some(k => k.startsWith(a.pref + a.city))) continue;
     seen.add(key); out.push(place(a.pref, a.city, a.zip, a.street));
   }
   for(const m of plain(j.location).matchAll(LOC_RE)){
