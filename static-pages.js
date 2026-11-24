@@ -227,15 +227,42 @@ function plain(src, max){
   return max && t.length > max ? t.slice(0, max) + '…' : t;
 }
 /* JobPosting の jobLocation。都道府県は areas（Airtable の列が正）、市区町村は勤務地の原文に「都道府県＋市区町村」と並んで書かれているものだけ拾う。
-   勤務地の原文は住所になっていないことが多い（「東京都内（詳細は面談時に）」「在宅勤務あり」など）ので streetAddress には入れない。
+   勤務地の原文は住所になっていないことが多い（「東京都内（詳細は面談時に）」「在宅勤務あり」など）ので、原文をそのまま streetAddress には入れない。
+   ただし「〒220-8509 神奈川県横浜市西区みなとみらい…」のように郵便番号つきで住所が書かれていれば、それを postalCode・streetAddress に使う（2026-11-24・Search Console の推奨項目の警告への対応）。
+   都道府県が1つも決まらず、勤務地に「本社」と書かれている求人だけ、企業DBの本社住所を使う（「本社（飯田橋オフィス）」「本社またはリモート」など）。
+   ⚠ 「本社」の語が無い求人に本社住所を当てない（取引先構内・全国の求人が本社の県で出てしまうため。勤務地の絞り込みと同じ方針）。
    勤務地が複数なら Place を並べる（最大10）。 */
 const LOC_RE = /(北海道|東京都|大阪府|京都府|[一-龥]{2,3}県)\s*([一-龥々ぁ-んァ-ヶー]{1,8}?(?:区|町|市(?!市)|村(?!市)))/g;  /* 市・村の後ろの否定先読みは「四日市市」「羽村市」を途中で切らないため */
 const LOC_NG = new Set(['地', '全', '各', '同', '近隣', '周辺', '他', '都', '府', '県', '首都', '都心', '内', '内の']);
-function jobPlaces(j){
+/* 郵便番号つきの住所。〒の直後（改行・空白・「/」をはさんでもよい）に都道府県から始まる住所が続くものだけ */
+const ZIP_RE = /〒\s*(\d{3})\s*[-ー－‐―]\s*(\d{4})[\s\/／]*(北海道|東京都|大阪府|京都府|[一-龥]{2,3}県)([^\n]*)/g;
+const CITY_HEAD = /^((?:[一-龥々ぁ-んァ-ヶー]{1,5}郡)?[一-龥々ぁ-んァ-ヶー]{1,6}?(?:市(?!市)(?:[一-龥々ぁ-んァ-ヶー]{1,4}?区)?|区|町|村))(.+)$/;
+function postalPlaces(text){
+  const out = [];
+  const norm = String(text || '').replace(/\r/g, '').replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/　/g, ' ');
+  for(const m of norm.matchAll(ZIP_RE)){
+    const pref = m[3];
+    /* 住所の続きは「／」「（」「・アクセス」などで切る */
+    const rest = m[4].split(/[\/／（(【▍◆■※]|\s{2,}|アクセス/)[0].replace(/^[\s:：]+/, '').replace(/[)）\]】」]+\s*$/, '').trim();
+    const c = rest.match(CITY_HEAD);
+    if(!PREF_SLUG[pref] || !c) continue;
+    const street = c[2].trim().slice(0, 80);
+    if(!/\d|丁目|番地/.test(street)) continue;   /* 番地の無いものは住所として不完全なので使わない */
+    out.push({ pref, city: c[1], zip: `${m[1]}-${m[2]}`, street });
+  }
+  return out;
+}
+function jobPlaces(j, co){
   const prefs = (j.areas || []).filter(p => PREF_SLUG[p]);
-  const place = (pref, city) => ({ '@type': 'Place', address: Object.assign({ '@type': 'PostalAddress', addressCountry: 'JP' },
-    pref ? { addressRegion: pref } : {}, city ? { addressLocality: city } : {}) });
+  const place = (pref, city, zip, street) => ({ '@type': 'Place', address: Object.assign({ '@type': 'PostalAddress', addressCountry: 'JP' },
+    pref ? { addressRegion: pref } : {}, city ? { addressLocality: city } : {}, street ? { streetAddress: street } : {}, zip ? { postalCode: zip } : {}) });
   const seen = new Set(), out = [];
+  for(const a of postalPlaces(j.location)){
+    if(prefs.length && !prefs.includes(a.pref)) continue;
+    const key = a.pref + a.city + a.street;
+    if(seen.has(key)) continue;
+    seen.add(key); out.push(place(a.pref, a.city, a.zip, a.street));
+  }
   for(const m of plain(j.location).matchAll(LOC_RE)){
     /* 「勤務地：静岡県静岡県袋井市」のように県名が重なると市区町村側に県名が入るので、頭の県名を外して付け替える */
     let pref = m[1], city = m[2];
@@ -246,11 +273,17 @@ function jobPlaces(j){
     if(/区$/.test(city) && pref !== '東京都') continue;
     if(!/^[一-龥々ぁ-んァ-ヶー]+[市区町村]$/.test(city) || /[都道府県]$/.test(city.slice(0, -1)) || /メトロ|駅|線/.test(city)) continue;
     if(!PREF_SLUG[pref] || (prefs.length && !prefs.includes(pref)) || LOC_NG.has(city.slice(0, -1))) continue;
-    if(seen.has(pref + city)) continue;
+    if([...seen].some(k => k.startsWith(pref + city))) continue;
     seen.add(pref + city); out.push(place(pref, city));
   }
   /* 市区町村が拾えなかった都道府県も Place として残す */
   prefs.forEach(p => { if(![...seen].some(k => k.startsWith(p))) out.push(place(p)); });
+  /* 都道府県が決まらず「本社」勤務と書かれていれば、企業DBの本社住所 */
+  if(!out.length && co && /本社/.test(String(j.location || ''))){
+    const a = postalPlaces(co.addr)[0];
+    if(a) out.push(place(a.pref, a.city, a.zip, a.street));
+    else if(co.pref && PREF_SLUG[co.pref]) out.push(place(co.pref));
+  }
   if(!out.length) out.push(place());
   return out.slice(0, 10);
 }
@@ -537,7 +570,7 @@ function jobPage(ctx, j, related){
     description: descHtml || plain(j.companyInfo, 500) || name,
     identifier: { '@type': 'PropertyValue', name: '株式会社エージェントベスト', value: j.id },
     hiringOrganization: Object.assign({ '@type': 'Organization', name: co }, url ? { sameAs: url } : {}),
-    jobLocation: (pl => pl.length === 1 ? pl[0] : pl)(jobPlaces(j)),
+    jobLocation: (pl => pl.length === 1 ? pl[0] : pl)(jobPlaces(j, coRec)),
     employmentType: [...new Set(empList(j).map(e => EMP_SCHEMA[e] || 'OTHER'))],
     directApply: false,
     url: canon,
@@ -554,10 +587,13 @@ function jobPage(ctx, j, related){
   }
   if(j.logo) ld.hiringOrganization.logo = `${SITE}/${j.logo}`;
   if(j.salaryMin != null || j.salaryMax != null){
+    /* 下限だけの求人（「600万円〜」）は value だけにする。minValue だけ出すと Search Console が「maxValue がありません」と警告するため（2026-11-24） */
     const v = { '@type': 'QuantitativeValue', unitText: 'YEAR' };
-    if(j.salaryMin != null) v.minValue = j.salaryMin * 10000;
-    if(j.salaryMax != null) v.maxValue = j.salaryMax * 10000;
     if(j.salaryMin != null && j.salaryMax == null) v.value = j.salaryMin * 10000;
+    else {
+      if(j.salaryMin != null) v.minValue = j.salaryMin * 10000;
+      if(j.salaryMax != null) v.maxValue = j.salaryMax * 10000;
+    }
     ld.baseSalary = { '@type': 'MonetaryAmount', currency: 'JPY', value: v };
   }
   const crumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
