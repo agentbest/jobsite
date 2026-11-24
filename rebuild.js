@@ -342,8 +342,11 @@ function plainLead(src){
    タグは名前ではなく data/tags.json の並び順の番号（t）で持つ（1件あたり平均27タグ。名前だと4MB超になる）。
    template.html 側で展開する（JOBS の定義と JOBS.forEach の中）。 */
 const LIGHT_KEYS = ['id','company','position','title','employment','kubun','salaryMin','salaryMax','location',
-  'jobCategory','industry','url','listedStatus','createdAt','gradYear','t','logo','employees','employeeCount','areas','remote','lead','companyId','salHint'];
+  'jobCategory','industry','url','listedStatus','createdAt','gradYear','t','logo','employees','employeeCount','areas','remote','lead','companyId','salHint','cities'];
 function lighten(full){
+  /* 市区町村（検索画面の「市区町村」の絞り込み・?city=）。static-pages.js の jobCities と同じ規則（2026-11-24） */
+  const { jobCities } = require('./static-pages');
+  const coById = loadCompanies().byId;
   const tagPath = path.join(dir, 'data', 'tags.json');
   const tagIdx = new Map();
   if(fs.existsSync(tagPath)) JSON.parse(fs.readFileSync(tagPath, 'utf8')).forEach((t, i) => tagIdx.set(t.name, i));
@@ -361,6 +364,7 @@ function lighten(full){
     o.t = (j.tags || []).map(n => tagIdx.get(n)).filter(i => i !== undefined);
     const loc = j.location || '';
     o.areas = prefsOfJob(j);
+    { const cs = jobCities(j, coById.get(j.companyId)); if(cs.length) o.cities = cs; }
     o.remote = /在宅|リモート|テレワーク|フルリモート/.test(loc + ' ' + (j.jobContent || '') + ' ' + (j.benefits || ''));
     const lead = plainLead(j.jobContent || j.must || j.companyInfo || '');
     o.lead = lead.length > 72 ? lead.slice(0, 72) + '…' : lead;

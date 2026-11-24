@@ -293,6 +293,44 @@ function jobPlaces(j, co){
   if(!out.length) out.push(place());
   return out.slice(0, 10);
 }
+/* 市区町村の一覧ページ・検索画面の「市区町村」の単位（2026-11-24・ハチワレさん「都道府県単位や市区町村で検索できるように」）。
+   政令市は区をまとめて市にする（「大阪市北区」→「大阪市」）。東京23区・郡部の町村はそのまま。値は「東京都港区」のように都道府県から書く */
+function cityUnit(locality){ const m = String(locality || '').match(/^(.+?市)(.+区)$/); return m ? m[1] : String(locality || ''); }
+function jobCities(j, co){
+  return [...new Set(jobPlaces(j, co).map(p => p.address).filter(a => a.addressRegion && a.addressLocality).map(a => a.addressRegion + cityUnit(a.addressLocality)))];
+}
+/* 市区町村の一覧ページの URL（/area/<都道府県>/<市区町村>/）。⚠ スラッグを変えると URL が変わる（検索の評価がリセットされる）。
+   ここに無い市区町村はページを作らない（件数が LP_MIN を超えたらビルドログに名指しされるので、足す） */
+const CITY_SLUG = {
+  '東京都千代田区': 'chiyoda', '東京都中央区': 'chuo', '東京都港区': 'minato', '東京都新宿区': 'shinjuku', '東京都文京区': 'bunkyo', '東京都台東区': 'taito',
+  '東京都墨田区': 'sumida', '東京都江東区': 'koto', '東京都品川区': 'shinagawa', '東京都目黒区': 'meguro', '東京都大田区': 'ota', '東京都世田谷区': 'setagaya',
+  '東京都渋谷区': 'shibuya', '東京都中野区': 'nakano', '東京都杉並区': 'suginami', '東京都豊島区': 'toshima', '東京都北区': 'kita', '東京都荒川区': 'arakawa',
+  '東京都板橋区': 'itabashi', '東京都練馬区': 'nerima', '東京都足立区': 'adachi', '東京都葛飾区': 'katsushika', '東京都江戸川区': 'edogawa',
+  '東京都武蔵野市': 'musashino', '東京都立川市': 'tachikawa',
+  '北海道札幌市': 'sapporo', '北海道千歳市': 'chitose', '北海道広尾郡大樹町': 'taiki', '宮城県仙台市': 'sendai', '岩手県盛岡市': 'morioka', '福島県郡山市': 'koriyama', '福島県双葉郡大熊町': 'okuma',
+  '茨城県つくば市': 'tsukuba', '茨城県日立市': 'hitachi', '茨城県ひたちなか市': 'hitachinaka', '栃木県宇都宮市': 'utsunomiya', '栃木県小山市': 'oyama',
+  '群馬県高崎市': 'takasaki', '群馬県太田市': 'ota', '埼玉県さいたま市': 'saitama-shi', '埼玉県所沢市': 'tokorozawa', '埼玉県蓮田市': 'hasuda', '埼玉県比企郡滑川町': 'namegawa',
+  '千葉県千葉市': 'chiba-shi', '千葉県船橋市': 'funabashi', '千葉県柏市': 'kashiwa',
+  '神奈川県横浜市': 'yokohama', '神奈川県川崎市': 'kawasaki', '神奈川県藤沢市': 'fujisawa', '神奈川県厚木市': 'atsugi', '神奈川県大和市': 'yamato', '神奈川県鎌倉市': 'kamakura',
+  '新潟県新潟市': 'niigata-shi', '富山県富山市': 'toyama-shi', '石川県金沢市': 'kanazawa', '石川県白山市': 'hakusan', '岐阜県岐阜市': 'gifu-shi',
+  '静岡県静岡市': 'shizuoka-shi', '静岡県浜松市': 'hamamatsu', '静岡県沼津市': 'numazu', '静岡県磐田市': 'iwata',
+  '愛知県名古屋市': 'nagoya', '愛知県岡崎市': 'okazaki', '愛知県刈谷市': 'kariya', '愛知県豊田市': 'toyota', '愛知県春日井市': 'kasugai', '愛知県小牧市': 'komaki',
+  '三重県四日市市': 'yokkaichi', '三重県津市': 'tsu', '滋賀県草津市': 'kusatsu', '京都府京都市': 'kyoto-shi',
+  '大阪府大阪市': 'osaka-shi', '大阪府高槻市': 'takatsuki', '大阪府門真市': 'kadoma', '大阪府守口市': 'moriguchi', '大阪府吹田市': 'suita', '大阪府堺市': 'sakai', '大阪府豊中市': 'toyonaka',
+  '兵庫県神戸市': 'kobe', '兵庫県加古川市': 'kakogawa', '鳥取県倉吉市': 'kurayoshi', '岡山県岡山市': 'okayama-shi', '岡山県玉野市': 'tamano', '広島県広島市': 'hiroshima-shi',
+  '香川県高松市': 'takamatsu', '愛媛県松山市': 'matsuyama', '福岡県福岡市': 'fukuoka-shi', '福岡県大牟田市': 'omuta', '福岡県宮若市': 'miyawaka',
+  '長崎県諫早市': 'isahaya', '熊本県熊本市': 'kumamoto-shi', '宮崎県宮崎市': 'miyazaki-shi', '鹿児島県鹿児島市': 'kagoshima-shi', '沖縄県那覇市': 'naha',
+};
+const cityRel = c => { const p = Object.keys(PREF_SLUG).find(x => c.startsWith(x)); return p && CITY_SLUG[c] ? `area/${PREF_SLUG[p]}/${CITY_SLUG[c]}` : ''; };
+/* 画面に出す住所（勤務地・本社所在地）。郵便番号つきで、都道府県・市区町村は一覧ページがあればリンクにする。
+   Google 向けの住所（JobPosting）と画面の住所を一致させるため（2026-11-24） */
+function addrHtml(ctx, a){
+  const pref = a.addressRegion, city = a.addressLocality ? cityUnit(a.addressLocality) : '';
+  const prefRel = PREF_SLUG[pref] ? `area/${PREF_SLUG[pref]}` : '', cRel = city ? cityRel(pref + city) : '';
+  const link = (rel, text) => rel && ctx.lpExists(rel) ? `<a href="/${rel}/">${esc(text)}</a>` : esc(text);
+  const rest = a.addressLocality && city !== a.addressLocality ? a.addressLocality.slice(city.length) : '';
+  return `${a.postalCode ? `〒${esc(a.postalCode)} ` : ''}${link(prefRel, pref)}${city ? link(cRel, city) : ''}${esc(rest)}${a.streetAddress ? esc(a.streetAddress) : ''}`;
+}
 function fmtSalary(j){
   const mn = j.salaryMin, mx = j.salaryMax;
   if(mn != null && mx != null) return mn === mx ? `${mn}万円` : `${mn}〜${mx}万円`;
@@ -417,7 +455,11 @@ function jobPage(ctx, j, related){
   const coRec = ctx.coOf ? ctx.coOf(j) : null;
   /* 企業情報は求人票の値を優先し、空なら企業DB（data/companies.json）で補う。設立・資本金・業界は企業DBにしか無い */
   const cr = coRec || {};
-  const coMeta = [metaRow('本社所在地', j.companyAddress || cr.addr), metaRow('設立', cr.founded), metaRow('資本金', cr.capital), metaRow('従業員数', j.employees || cr.employees),
+  /* 本社所在地は郵便番号つきの住所が読めれば都道府県・市区町村を一覧ページへのリンクにする（読めなければ原文のまま） */
+  const hqText = j.companyAddress || cr.addr;
+  const hqPlace = postalPlaces(hqText)[0];
+  const hqRow = hqPlace ? `<dt>本社所在地</dt><dd>${addrHtml(ctx, { postalCode: hqPlace.zip, addressRegion: hqPlace.pref, addressLocality: hqPlace.city, streetAddress: hqPlace.street })}</dd>` : metaRow('本社所在地', hqText);
+  const coMeta = [hqRow,metaRow('設立', cr.founded), metaRow('資本金', cr.capital), metaRow('従業員数', j.employees || cr.employees),
     metaRow('上場区分', j.listedStatus || cr.market), metaRow('業界', (cr.industry || []).join('・')), siteRow].join('');
   /* 会社概要は企業DBの要約を先に出し、求人票の企業紹介（他媒体と同じ原文）は折りたたむ */
   const coBody = cr.overview
@@ -445,7 +487,10 @@ function jobPage(ctx, j, related){
   if(coRec && coRec.jobs.length > 1) pts.push(`${esc(co)}は、この求人のほかに${(coRec.jobs.length - 1).toLocaleString()}件を募集しています。`);
   const ptSec = pts.length >= 2 ? `<div class="pd-sec"><h3>この求人のポイント</h3><ul style="margin:0;padding-left:1.2em;line-height:1.9">${pts.map(x => `<li>${x}</li>`).join('')}</ul><p style="margin:8px 0 0;font-size:12px;color:var(--ink-3)">掲載データをもとに当社が整理したものです。選考の通りやすさや社風は、担当にお尋ねください。</p></div>` : '';
   const coSec = (coBody || coMeta || coLink) ? `<div class="pd-sec"><h3>企業情報</h3>${coBody}${coMeta ? `<dl class="pd-meta">${coMeta}</dl>` : ''}${coLink}${coArtLink}</div>` : '';
-  const reqMeta = [metaRow('給与（原文）', j.salaryRaw), metaRow('勤務地', j.location), metaRow('勤務時間', j.workHours), metaRow('休日・休暇', j.holidays), metaRow('福利厚生', j.benefits)].join('');
+  /* 勤務地の住所（Google 向けの JobPosting と同じもの）。市区町村まで分かる勤務地だけ1行ずつ出す */
+  const workAddrs = jobPlaces(j, coRec).map(p => p.address).filter(a => a.addressLocality);
+  const workRow = workAddrs.length ? `<dt>勤務地の住所</dt><dd>${workAddrs.map(a => addrHtml(ctx, a)).join('<br>')}</dd>` : '';
+  const reqMeta = [metaRow('給与（原文）', j.salaryRaw), workRow, metaRow('勤務地', j.location),metaRow('勤務時間', j.workHours), metaRow('休日・休暇', j.holidays), metaRow('福利厚生', j.benefits)].join('');
 
   /* この求人のタグ。押すと検索画面でそのタグに絞り込む（?tag=スラッグ） */
   const tagSec = (() => {
@@ -703,6 +748,7 @@ function landingPage(ctx, p){
     ${hubMix}
     ${p.marketHref ? `<p class="lp__lead" style="margin-top:-6px"><a href="${esc(p.marketHref)}">${esc(p.mediaLabel)}の求人・年収動向（職種別の年収中央値・勤務地・推移）を見る →</a></p>` : ''}
     ${p.pills && p.pills.length ? `<nav class="lp__nav" aria-label="${esc(p.pillsTitle)}"><p>${esc(p.pillsTitle)}</p><div class="lp__pills">${p.pills.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
+    ${p.pills3 && p.pills3.length ? `<nav class="lp__nav" aria-label="${esc(p.pills3Title)}"><p>${esc(p.pills3Title)}</p><div class="lp__pills">${p.pills3.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
     ${p.pills2 && p.pills2.length ? `<nav class="lp__nav" aria-label="${esc(p.pills2Title)}"><p>${esc(p.pills2Title)}</p><div class="lp__pills">${p.pills2.map(x => `<a href="${esc(x.href)}">${esc(x.label)}<b>${x.n.toLocaleString()}</b></a>`).join('')}</div></nav>` : ''}
     ${mediaBlock((p.rel.match(/^jobs\/([^/]+)/) || [])[1], p.mediaLabel || '転職', 'lp')}
     <div class="joblist">${jobs.slice(0, LP_LIST_MAX).map(j => cardHtml(ctx, j)).join('')}</div>
@@ -848,6 +894,20 @@ function build(root, full){
   const areaUnits = [];
   BLOCKS.forEach(([name, slug]) => { const a = { name, slug, isBlock: true }; a.jobs = full.filter(j => inArea(a, j)); if(lpKeep(`area/${slug}`, a.jobs.length)) areaUnits.push(a); });
   Object.entries(PREF_SLUG).forEach(([name, slug]) => { const jobs = byPref.get(name) || []; if(lpKeep(`area/${slug}`, jobs.length)) areaUnits.push({ name, slug, jobs, isBlock: false }); });
+  /* 市区町村（/area/<都道府県>/<市区町村>/・2026-11-24）。勤務地の住所（jobPlaces＝Airtable の勤務地_〜4列 or 原文の住所）の市区町村で数える。
+     都道府県のページがあるものだけ・CITY_SLUG にあるものだけ作る */
+  const coById = new Map((fs.existsSync(path.join(root, 'data', 'companies.json')) ? JSON.parse(fs.readFileSync(path.join(root, 'data', 'companies.json'), 'utf8')) : []).map(c => [c.id, c]));
+  const byCity = new Map();
+  full.forEach(j => jobCities(j, coById.get(j.companyId)).forEach(c => { if(!byCity.has(c)) byCity.set(c, []); byCity.get(c).push(j); }));
+  const cityUnits = [], noSlug = [];
+  byCity.forEach((jobs, c) => {
+    const pref = Object.keys(PREF_SLUG).find(x => c.startsWith(x));
+    const rel = cityRel(c);
+    if(!rel){ if(jobs.length >= LP_MIN) noSlug.push(`${c}（${jobs.length}件）`); return; }
+    if(areaUnits.some(a => !a.isBlock && a.name === pref) && lpKeep(rel, jobs.length)) cityUnits.push({ name: c.slice(pref.length), full: c, pref, rel, jobs });
+  });
+  cityUnits.sort((a, b) => b.jobs.length - a.jobs.length);
+  if(noSlug.length) console.log(`⚠ static-pages.js の CITY_SLUG に無い市区町村（一覧ページを作りません）: ${noSlug.join(', ')}`);
   const groups = [...byGroup.entries()].filter(([g]) => GROUP_SLUG[g]).sort((a, b) => b[1].length - a[1].length);
   const pages = [];
   groups.forEach(([g, jobs]) => {
@@ -870,7 +930,17 @@ function build(root, full){
     pages.push({ rel: `area/${a.slug}`, title: `${a.name}の転職・求人`, h1: `${a.name}の求人`, jobs: a.jobs, crumbs: [[`${a.name}の求人`, `/area/${a.slug}/`]],
       pillsTitle: '職種で絞る', pills: groups.map(([g, js]) => ({ g, n: js.filter(j => inArea(a, j)).length })).filter(x => lpKeep(`jobs/${GROUP_SLUG[x.g]}/${a.slug}`, x.n)).map(x => ({ label: x.g, href: `/jobs/${GROUP_SLUG[x.g]}/${a.slug}/`, n: x.n })),
       pills2Title: '他の勤務地', pills2: areaUnits.filter(b => b !== a).map(b => ({ label: b.name, href: `/area/${b.slug}/`, n: b.jobs.length })),
+      pills3Title: '市区町村で絞る', pills3: a.isBlock ? [] : cityUnits.filter(c => c.pref === a.name).map(c => ({ label: c.name, href: `/${c.rel}/`, n: c.jobs.length })),
       allHref: `/?area=${encodeURIComponent(a.name)}` });
+  });
+  cityUnits.forEach(c => {
+    const pslug = PREF_SLUG[c.pref];
+    const pg = groups.map(([g, js]) => ({ g, n: js.filter(j => c.jobs.includes(j)).length })).filter(x => x.n);
+    pages.push({ rel: c.rel, title: `${c.pref}${c.name}の転職・求人`, h1: `${c.pref}${c.name}の求人`, jobs: c.jobs,
+      crumbs: [[`${c.pref}の求人`, `/area/${pslug}/`], [c.name, `/${c.rel}/`]],
+      pillsTitle: `${c.pref}の他の市区町村`, pills: cityUnits.filter(x => x !== c && x.pref === c.pref).map(x => ({ label: x.name, href: `/${x.rel}/`, n: x.jobs.length })),
+      pills2Title: `${c.name}の求人を職種で絞る`, pills2: pg.map(x => ({ label: x.g, href: `/?cat=${encodeURIComponent(x.g)}&city=${encodeURIComponent(c.full)}`, n: x.n })),
+      allHref: `/?city=${encodeURIComponent(c.full)}` });
   });
   /* メインキーワード用のハブ（feature/<slug>/） */
   const hubs = HUBS.map(h => ({ h, jobs: full.filter(h.test) })).filter(x => x.jobs.length >= HUB_MIN);
@@ -916,8 +986,11 @@ function build(root, full){
   /* 5. 一覧ページ（件数が減って LP_KEEP を割ったページは消す） */
   ['jobs', 'area', 'feature'].forEach(top => syncDir(path.join(root, top), new Set(pages.filter(p => p.rel.startsWith(top + '/')).map(p => p.rel.split('/')[1]))));
   groups.forEach(([g]) => syncDir(path.join(root, 'jobs', GROUP_SLUG[g]), new Set(pages.filter(p => p.rel.startsWith(`jobs/${GROUP_SLUG[g]}/`)).map(p => p.rel.split('/')[2]).concat(['market']))));   /* market＝求人・年収動向（market.js） */
+  /* 市区町村ページ（area/<都道府県>/<市区町村>/）も件数が減ったら消す */
+  areaUnits.filter(a => !a.isBlock).forEach(a => syncDir(path.join(root, 'area', a.slug), new Set(cityUnits.filter(c => c.pref === a.name).map(c => c.rel.split('/')[2]))));
   pages.forEach(p => writePage(root, p.rel, landingPage(ctx, p)));
-  const nCombo = pages.filter(p => p.rel.split('/').length === 3).length;
+  console.log(`市区町村の一覧ページを書き出しました: ${cityUnits.length}件（${cityUnits.slice(0, 8).map(c => `${c.name} ${c.jobs.length}`).join('・')}…）`);
+  const nCombo = pages.filter(p => p.rel.startsWith('jobs/') && p.rel.split('/').length === 3).length;
   console.log(`特集ハブを書き出しました: ${hubs.map(x => `${x.h.slug} ${x.jobs.length}件`).join('・')}`);
   console.log(`一覧ページを書き出しました: 職種 ${groups.length}・職種×勤務地 ${nCombo}・勤務地 ${areaUnits.length}（新規は ${LP_MIN}件以上・公開中は ${LP_KEEP}件以上で維持）`);
 
@@ -952,4 +1025,4 @@ function build(root, full){
   console.log(`sitemap.xml を書き出しました: ${urls.length} URL（求人は Google に載せる ${full.filter(ctx.indexable).length}件／掲載 ${full.length}件・直接取引の求人 ${DIRECT.size}件）`);
 }
 
-module.exports = { build, jobHubOf, jobGroupOf, jobName, fmtSalary, locShort, GROUP_SLUG };
+module.exports = { build, jobHubOf, jobGroupOf, jobName, fmtSalary, locShort, GROUP_SLUG, jobCities, jobPlaces, cityUnit, cityRel, CITY_SLUG };
