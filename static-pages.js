@@ -581,7 +581,7 @@ function jobPage(ctx, j, related){
       <h1 class="dt-title">${esc(name)}</h1>
       ${j.createdAt ? `<p class="dt-posted">${postedHtml(j.createdAt)}</p>` : ''}
       <div class="pd-tags">${tags.join('')}</div>
-    </div>
+    </div>${ctx.insightOf && ctx.insightOf(j) ? ctx.insightHtml(ctx.insightOf(j), { jobId: j.id }) : ''}
     ${ptSec}
     ${coSec}
     ${tagSec}
@@ -873,6 +873,11 @@ function build(root, full){
   };
   const DIRECT = directJobIds(root);
   ctx.indexable = j => DIRECT.has(j.id) || (j.salaryMin || 0) >= INDEX_SALARY_MIN;
+  /* 当社だけの一次情報（insights/<slug>.json・approved のものだけ。insights.js の先頭） */
+  const INS = require('./insights').load(root);
+  ctx.insightOf = j => INS.byJob.get(j.id) || null;
+  ctx.insightHtml = (ins, o) => require('./insights').html(ins, esc, o);
+  if(INS.list.length) console.log(`一次情報（insights）: ${INS.list.length}社・${INS.byJob.size}求人`);
 
   /* 3. 一覧ページの組み合わせを先に決める（求人ページから「◯◯の求人一覧」へリンクするため） */
   const byGroup = new Map();   // 大分類 → 求人

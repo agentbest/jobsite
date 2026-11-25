@@ -181,7 +181,7 @@ function build(root, ctx, full, H){
         ${c.tagline ? `<p class="co-head__tag">${esc(c.tagline)}</p>` : ''}
         <div class="co-head__chips">${chip((c.industry || [])[0])}${chip(c.pref)}${chip(c.size)}${chip(listedLabel(c) === '非上場' ? '' : listedLabel(c), 'tag--cat')}</div></div></div>
       <ul class="lp__stats"><li><b>${n.toLocaleString()}</b>件 募集中</li>${sal ? `<li>想定年収 <b>${esc(sal)}</b></li>` : ''}${c.employeeCount ? `<li>従業員数 <b>${c.employeeCount.toLocaleString()}</b>名</li>` : ''}</ul>
-      ${factsLine ? `<p class="co-txt co-facts">${esc(factsLine)}</p>` : ''}
+      ${factsLine ? `<p class="co-txt co-facts">${esc(factsLine)}</p>` : ''}${(() => { const ins = ctx.insightOf && jobs.map(j => ctx.insightOf(j)).find(Boolean); return ins ? ctx.insightHtml(ins, { hTag: 'h2' }) : ''; })()}
       ${c.overview ? `<div class="pd-sec"><h2>会社概要</h2><p class="co-txt">${esc(c.overview)}</p></div>` : ''}
       ${c.biz ? `<div class="pd-sec"><h2>事業内容</h2><p class="co-txt">${esc(c.biz)}</p></div>` : ''}
       ${meta ? `<div class="pd-sec"><h2>基本情報</h2><dl class="pd-meta">${meta}</dl></div>` : ''}
