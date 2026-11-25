@@ -198,7 +198,7 @@ function flat(v){
   /* 募集停止の扱い（2026-10-11）。行は消さずに「募集状況」を募集停止にする運用。
      本文に「募集終了日時 YYYY-MM-DD」があって過ぎている求人も載せない（キャリアバンク由来の書式）。 */
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);   // JST
-  const closed = [], expired = [], hidden = [], nonjob = [];
+  const closed = [], expired = [], hidden = [], nonjob = [], badEmp = [];
   for(const r of recs){
     const f = r.fields;
     const title = (f[F.title] || '').trim();
@@ -208,6 +208,15 @@ function flat(v){
     if(f[F.hidden] === true){ hidden.push(`${r.id} ${title.slice(0, 40)}`); continue; }
     const nj = nonJobReason(`${title}\n${f[F.position] || ''}`, today);
     if(nj){ nonjob.push(`${r.id} ${nj}：${title.slice(0, 50)}`); continue; }
+    /* 雇用形態は正社員・契約社員だけ載せる（2026-11-25・松岡さん指示「正社員と契約社員以外は掲載してほしくない」）。
+       併記（「正社員 / アルバイト・パート」など）は求人を残し、正社員・契約社員以外の表記だけ落とす。空欄は不明なので残す */
+    const empAll = flat(f[F.employment]);
+    let empOk = empAll;
+    if(empAll){
+      const keep = String(empAll).split(/\s*[\/／,、]\s*/).filter(e => e === '正社員' || e === '契約社員');
+      if(!keep.length){ badEmp.push(`${r.id} ${empAll}：${title.slice(0, 50)}`); continue; }
+      empOk = [...new Set(keep)].sort((a, b) => (a === '正社員' ? -1 : 1)).join(' / ');
+    }
     const end = endDateOf([f[F.jobContent], f[F.title], f[F.selectionProcess]].filter(Boolean).join('\n'));
     if(end && end < today){ expired.push(`${r.id} ${end} ${title.slice(0, 40)}`); continue; }
     const job = {
@@ -216,7 +225,7 @@ function flat(v){
       company: (f[F.company] || []).map(id => coName.get(id)).filter(Boolean).join(' / ') || null,
       companyId: (f[F.company] || [])[0] || null,   // 企業ページ（company/<企業ID>/）へのリンク。data/companies.json の id と突き合わせる
       position: f[F.position] ?? null,
-      employment: flat(f[F.employment]),
+      employment: empOk,
       kubun: flat(f[F.kubun]),
       salaryMin: f[F.salaryMin] ?? null,
       salaryMax: f[F.salaryMax] ?? null,
@@ -267,6 +276,10 @@ function flat(v){
   if(nonjob.length){
     console.log(`  ⚠ 求人ではない行（カジュアル面談の受付・説明会・セミナー・開催日の過ぎた選考会）を ${nonjob.length}件 除外しました。Airtable で「募集状況」を募集停止にしてください（判定は nonjob.js）:`);
     nonjob.forEach(x => console.log('    ' + x));
+  }
+  if(badEmp.length){
+    console.log(`  正社員・契約社員以外の雇用形態の求人を ${badEmp.length}件 除外しました:`);
+    badEmp.forEach(x => console.log('    ' + x));
   }
   if(expired.length){
     console.log(`  ⚠ 本文の募集終了日時を過ぎた求人を ${expired.length}件 除外しました。Airtable で「募集状況」を募集停止にしてください:`);

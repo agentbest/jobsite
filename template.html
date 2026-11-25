@@ -290,6 +290,7 @@
      消さずに残すのは、その条件が「無い」のか「今の条件では0件」なのかを見分けられるようにするため。 */
   .opt.is-zero{opacity:.45; cursor:default}
   .fgroup[data-key="cities"] .opt.is-zero{display:none}
+  .fgroup[hidden]{display:none}
   .opt.is-zero:hover{background:none}
   .opt.is-zero .lbl{color:var(--ink-3)}
   .fchip:disabled{opacity:.45; cursor:default}
@@ -2233,6 +2234,9 @@ function paintCounts(counts){
   const selPrefs=new Set();
   state.sel.areas.forEach(v=>{ const blk=AREA_BLOCKS.find(b=>b[0]===v); (blk?blk[1]:[v]).forEach(p=>selPrefs.add(p)); });
   const outOfArea=v=>selPrefs.size>0 && ![...selPrefs].some(p=>v.startsWith(p));
+  /* 都道府県を選ぶ前は市区町村の箱ごと隠す（全国の市区町村が勤務地の下にずらっと並んで変だったため・2026-11-25） */
+  const cityGrp=document.querySelector('.fgroup[data-key="cities"]');
+  if(cityGrp) cityGrp.hidden = selPrefs.size===0 && state.sel.cities.size===0;
   for(const key in CNT_EL){
     const m=counts[key], sel=state.sel[key];
     CNT_EL[key].forEach((r,v)=>{
