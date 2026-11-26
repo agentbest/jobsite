@@ -702,15 +702,17 @@ function cardHtml(ctx, j){
 }
 /* 一覧の並び: 掲載開始日が新しい順 → 年収の高い順（検索画面の「新着順」＋「おすすめ順」に近い） */
 /* 上位固定の注目企業（pickup-src/_pinned.json・2026-11-26）。一覧ページでもこの会社の求人を先頭に（会社を交互に・各社は年収順） */
-const PIN_IDS = (() => { try { return (JSON.parse(fs.readFileSync(path.join(__dirname, 'pickup-src', '_pinned.json'), 'utf8')).companies || []).map(c => c.companyId); } catch(e){ return []; } })();
+const PINS = (() => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'pickup-src', '_pinned.json'), 'utf8')).companies || []; } catch(e){ return []; } })();
+const PIN_IDS = PINS.map(c => c.companyId);
 function sortForList(arr){
   const base = sortForListPlain(arr);
   if(!PIN_IDS.length) return base;
-  const per = PIN_IDS.map(id => base.filter(j => j.companyId === id).sort((a, b) => (b.salaryMax || b.salaryMin || 0) - (a.salaryMax || a.salaryMin || 0)));
+  /* limit がある会社はその件数だけ上に出し、残りは元の位置のまま */
+  const per = PINS.map(c => { const a = base.filter(j => j.companyId === c.companyId).sort((a, b) => (b.salaryMax || b.salaryMin || 0) - (a.salaryMax || a.salaryMin || 0)); return c.limit ? a.slice(0, c.limit) : a; });
   const top = [];
   while(per.some(x => x.length)) per.forEach(x => { if(x.length) top.push(x.shift()); });
-  const pinned = new Set(PIN_IDS);
-  return top.concat(base.filter(j => !pinned.has(j.companyId)));
+  const topSet = new Set(top);
+  return top.concat(base.filter(j => !topSet.has(j)));
 }
 function sortForListPlain(arr){
   return arr.slice().sort((a, b) => (Date.parse(b.createdAt || 0) || 0) - (Date.parse(a.createdAt || 0) || 0) || (b.salaryMax || b.salaryMin || 0) - (a.salaryMax || a.salaryMin || 0));
