@@ -387,6 +387,14 @@
     flex:none; font-size:10.5px; font-weight:800; letter-spacing:.08em; line-height:1;
     padding:4px 7px; border-radius:5px; background:var(--cta); color:var(--cta-ink);
   }
+  /* 上位固定の注目企業（PINNED）。カードの縁と「注目企業」ラベル */
+  .jrow--pin{border-color:color-mix(in srgb,var(--accent) 45%, var(--line))}
+  .jrow__pin{flex:none; font-size:10.5px; font-weight:800; letter-spacing:.08em; line-height:1; padding:4px 7px; border-radius:5px; background:var(--accent); color:#fff}
+  :root[data-theme="dark"] .jrow__pin{color:#0F131A}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .jrow__pin{color:#0F131A} }
+  .pinbar{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin:0 0 14px; padding:12px 16px; border:1px solid color-mix(in srgb,var(--accent) 35%, var(--line)); border-radius:var(--r-card); background:color-mix(in srgb,var(--accent) 6%, var(--surface)); font-size:13.5px}
+  .pinbar b{font-weight:800; color:var(--accent)}
+  .pinbar a{font-weight:700; color:var(--ink); text-decoration:underline; text-underline-offset:3px}
   .dt-posted{display:flex; align-items:center; gap:8px; margin:0 0 10px; font-size:12.5px; color:var(--ink-3)}
   .jrow__co{font-size:13px; font-weight:700; color:var(--accent); min-width:0; overflow-wrap:anywhere}
   /* 企業ロゴ。画像が無い企業は社名の頭文字タイルにする。
@@ -1225,6 +1233,7 @@
         <p class="cond__none" id="condNone">指定なし（すべての求人）</p>
         <div class="active-chips" id="activeChips"></div>
       </div>
+      <div class="pinbar" id="pinbar" hidden></div>
       <div class="resbar">
         <div class="rescount"><b id="resCount">0</b> 件の求人</div>
         <div class="sortsel">
@@ -1785,6 +1794,9 @@ AREA_BLOCKS.forEach(([name,list])=>list.forEach(p=>AREA_BLOCK_OF[p]=name));
    対応表は Airtable の業界マスタそのもの（data/industry-master.json → rebuild.js の attachIndustryGroups() が下のプレースホルダに埋める。2026-09-22〜）。
    以前は手書きだったので、マスタに中分類を足すたびに書き忘れて「その他」に落ちていた。 */
 const IND_GROUP=__IND_GROUP__;
+/* 上位固定の注目企業（pickup-src/_pinned.json → rebuild.js が埋める）。[{id, name, short, limit, lp}] */
+const PINNED=__PINNED__;
+const PIN_RANK=new Map(PINNED.map((c,i)=>[c.id,i]));
 
 /* ---------- タグ ----------
    求人1件に平均26タグ付く。280タグを1つの箱に並べると探せないので、
@@ -2051,8 +2063,21 @@ function sortJobs(arr){
   else if(state.sort==="salaryHigh") a.sort((x,y)=>y._skey-x._skey);
   else if(state.sort==="salaryLow") a.sort((x,y)=>(x._skey<0?1e9:x._skey)-(y._skey<0?1e9:y._skey));
   else if(state.sort==="company") a.sort((x,y)=>String(x.company||"").localeCompare(String(y.company||""),"ja"));
-  else return interleaveByCompany(a.sort((x,y)=>y._skey-x._skey));
-  return a;
+  else return pinFirst(interleaveByCompany(a.sort((x,y)=>y._skey-x._skey)));
+  return state.sort==="new" ? pinFirst(a) : a;
+}
+/* 注目企業（PINNED）の求人を先頭に出す。「新着順」「おすすめ順」だけ（年収順・企業名順は並び替えの意味が変わるので触らない）。
+   会社を交互に並べ、各社の中は年収の高い順。limit がある会社はその件数だけ上に出し、残りは元の位置のまま。 */
+function pinFirst(a){
+  if(!PINNED.length) return a;
+  const per=PINNED.map(()=>[]), rest=[];
+  a.forEach(j=>{ const r=PIN_RANK.get(j.companyId); if(r===undefined) rest.push(j); else per[r].push(j); });
+  const top=[];
+  per.forEach((arr,r)=>{ arr.sort((x,y)=>y._skey-x._skey); const lim=PINNED[r].limit; if(lim&&arr.length>lim) rest.push(...arr.splice(lim)); });
+  for(let i=0; per.some(x=>x.length); i++) per.forEach(x=>{ if(x.length) top.push(x.shift()); });
+  if(!top.length) return a;
+  const restSet=new Set(rest);
+  return top.concat(a.filter(j=>restSet.has(j)));
 }
 /* おすすめ順だけ、同じ企業の求人が隣り合わないように配る（backlog #4）。
    1社平均8件なので素直に年収順で並べると同じ企業が固まり、第一画面が「求人が少ないサイト」に見える。
@@ -2407,9 +2432,10 @@ function rowHtml(j){
   const ind=(j.industry&&j.industry[0])?`<span class="jrow__ind">${esc(j.industry[0])}</span>`:"";
   const isNew = j._ts && (Date.now()-j._ts) < NEW_DAYS*864e5;
   const name = j.position||j.jobCategory||j.title||"求人";
-  return `<article class="jrow" data-id="${esc(j.id)}">
+  const pin = PIN_RANK.has(j.companyId) ? PINNED[PIN_RANK.get(j.companyId)] : null;
+  return `<article class="jrow${pin?" jrow--pin":""}" data-id="${esc(j.id)}">
     ${favBtn(j.id)}
-    <div class="jrow__top">${isNew?`<span class="jrow__new">新着</span>`:""}${logoHtml(j)}<span class="jrow__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
+    <div class="jrow__top">${pin?`<span class="jrow__pin">注目企業</span>`:""}${isNew?`<span class="jrow__new">新着</span>`:""}${logoHtml(j)}<span class="jrow__co">${esc(j.company||"企業非公開")}</span>${ind}</div>
     <h3 class="jrow__title"><a href="${esc(jobHref(j))}" data-job="${esc(j.id)}">${esc(name)}</a></h3>
     <div class="card__tags">${tags.join("")}</div>
     ${j._lead?`<p class="jrow__desc">${esc(j._lead)}</p>`:""}
@@ -3894,6 +3920,9 @@ $("#totalCount").textContent=JOBS.length;
 $("#count800").textContent=JOBS.filter(j=>j.salaryMax>=800).length;
 $("#count1000").textContent=JOBS.filter(j=>j.salaryMax>=1000).length;
 buildFilters();
+/* 注目企業の特設ページへの帯（企業LPがある会社だけ・新着順／おすすめ順で上位に固定していることの案内） */
+{ const lp=PINNED.filter(c=>c.lp && JOBS.some(j=>j.companyId===c.id));
+  if(lp.length){ const el=$("#pinbar"); el.innerHTML=`<b>注目企業</b><span>特設ページ：</span>`+lp.map(c=>`<a href="${esc(c.lp)}" data-pin-lp="${esc(c.short)}">${esc(c.short)}への転職ガイド</a>`).join(" ／ "); el.hidden=false; } }
 /* 掲載日が入っているデータのときだけ「新着順」を出し、既定にする（ワークポートと同じ） */
 if(HAS_DATES){
   const sel=$("#sort");

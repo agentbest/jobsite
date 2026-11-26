@@ -1,0 +1,533 @@
+{
+ "slug": "datax",
+ "company": "株式会社データX",
+ "companyShort": "データX",
+ "title": "データXへの転職｜b→dashのセールス・CS・エンジニアの年収と求人｜エージェントベスト",
+ "description": "データX（データマーケティングSaaS「b→dash」）への転職を考える方へ。セールス・カスタマーサクセス・エンジニアの仕事、四半期ごとの評価と年収、会社の特徴、募集中のポジションを、エージェントベストがまとめました。",
+ "area": "SaaS・データ活用・IT・スタートアップ",
+ "hero": {
+  "img": "1779275859289-9bcf24ee065a",
+  "label": "dataX ／ CAREER GUIDE",
+  "h1": "データを、<br>誰もが使える道具に。",
+  "lead": "データXへの転職を考えている方へ。ノーコードのデータ活用プラットフォーム「b→dash」を軸に、セールス・カスタマーサクセス・エンジニアの仕事、評価と年収、募集中のポジションまで、エージェントベストがまとめました。",
+  "strip": [
+   {
+    "v": "1,300",
+    "unit": "社超",
+    "label": "b→dashの累計導入社数（サービスサイト）"
+   },
+   {
+    "v": "145",
+    "unit": "億円",
+    "label": "累計資金調達額（2019年にKKRなどから約100億円）"
+   },
+   {
+    "v": "年4",
+    "unit": "回",
+    "label": "昇給・昇格の機会（四半期ごとの評価）"
+   },
+   {
+    "v": "56",
+    "unit": "件",
+    "label": "当サイトに掲載中の中途求人（2026年11月26日時点）"
+   }
+  ],
+  "cap": "出典：b→dashサービスサイト、同社プレスリリース（2019年8月）、同社の採用サイト・公開求人票（2026年11月時点）／写真はイメージです"
+ },
+ "about": {
+  "img": "1681489933902-bb3644b91d65",
+  "alt": "オフィスビルの外観（イメージ）",
+  "lead": "「スマートデータ社会の実現」をミッションに、データマーケティングのSaaSを開発・提供する会社です。2010年設立、本社は東京・西新宿、福岡にも拠点があります。",
+  "points": [
+   {
+    "b": "ノーコードでデータを扱える",
+    "p": "主力の「b→dash」は、データの取り込み・加工・統合・抽出・活用までを、SQLを書かずに1つのツールで行えると同社は説明しています。現場のマーケターが自分で使えることを目指しています。"
+   },
+   {
+    "b": "マーケと経営管理の2つの柱",
+    "p": "マーケティングの「b→dash」に加え、経営管理のDXを支える「kpiee」を展開しています。ツールの提供だけでなく、業務の代行まで含めて支援します。"
+   },
+   {
+    "b": "AIの機能を次々に追加",
+    "p": "2024年10月に「b→dash AI」の提供を始めました。2025年以降も、ABテストの自動最適化やメール・LINEのAIレコメンド、AI接客エージェントなどを発表しています。"
+   }
+  ],
+  "cap": "設立2010年4月／資本金1億円／従業員406人（2026年5月時点・正社員・契約社員・アルバイトの合計）。2021年に株式会社フロムスクラッチから社名を変更。出典：同社の会社情報・採用サイト・ニュース"
+ },
+ "work": {
+  "img": "1573164574572-cb89e39749b4",
+  "alt": "チームで打ち合わせをする様子（イメージ）",
+  "h2": "データXのカスタマーサクセスとセールスの仕事",
+  "lead": "クライアントは旅行・人材・アパレル・不動産・金融など幅広い業界の企業です。ツールの使い方を教えるだけでなく、マーケティングの課題を一緒に解く立場で関わります。",
+  "steps": [
+   {
+    "n": "POINT 1",
+    "b": "課題から聞く提案",
+    "p": "カスタマーサクセスは、担当企業のマーケティング課題を聞き取り、b→dashを使った施策の提案・PDCAの設計・実行まで支援します。"
+   },
+   {
+    "n": "POINT 2",
+    "b": "週1回の定例で伴走",
+    "p": "担当企業とは週に1回ほど定例の打ち合わせを持ちます。1日に3〜5社ほどと話し、それ以外の時間で次の提案を準備します。"
+   },
+   {
+    "n": "POINT 3",
+    "b": "分業したセールス",
+    "p": "電話での営業は別の部門が担い、フィールドセールスはオンラインや対面の商談に集中します。新規プロダクトでは、CEO直下で営業組織を立ち上げる募集もあります。"
+   },
+   {
+    "n": "POINT 4",
+    "b": "IT未経験からも入れる",
+    "p": "営業やカスタマーサクセスなど顧客と向き合ってきた経験を活かし、IT・マーケティングの知識を身につけられる募集があります。"
+   }
+  ],
+  "note": "仕事の進め方は、同社の公開求人票（カスタマーサクセス・法人営業）にもとづきます。"
+ },
+ "income": {
+  "h2": "評価と年収について",
+  "lead": "四半期ごとに評価があり、昇給・昇格の機会が年に4回あります。月給とは別に、業績に連動する「プレミアム報酬」も年4回支給されます。",
+  "stairs": [
+   {
+    "small": "法人営業（b→dash）",
+    "b": "420〜600万円",
+    "span": "東京／正社員"
+   },
+   {
+    "small": "マーケティングコンサルタント",
+    "b": "560〜980万円",
+    "span": "東京／正社員"
+   },
+   {
+    "small": "カスタマーサクセス（マネージャー候補）",
+    "b": "700〜1,400万円",
+    "span": "東京／正社員"
+   }
+  ],
+  "breakdown": "同社は等級ごとの固定給の幅を公開しています。メンバー276〜480万円、チームリーダー480〜960万円、ユニットマネージャー960〜2,400万円です。",
+  "cap": "出典：同社の公開求人票・採用サイト「働く環境」（2026年11月時点）。月給には45時間分のみなし残業代が含まれます"
+ },
+ "selection": {
+  "img": "1606044466411-207a9a49711f",
+  "h2": "選考は、書類と面接。",
+  "lead": "中途の選考の詳しい流れは公開されていません。ポジションによって異なります。",
+  "steps": [
+   {
+    "t": "STEP 1",
+    "b": "書類選考",
+    "p": "履歴書・職務経歴書で選考します。"
+   },
+   {
+    "t": "STEP 2",
+    "b": "面接",
+    "p": "回数はポジションによります。"
+   },
+   {
+    "t": "STEP 3",
+    "b": "内定",
+    "p": "条件を確認したうえで、入社を決めます。"
+   }
+  ],
+  "cap": "詳しい流れは相談時にお伝えします／写真はイメージです"
+ },
+ "jobs": {
+  "lead": "中途採用の公開求人です（2026年11月26日時点）。",
+  "groups": [
+   {
+    "label": "セールス",
+    "items": [
+     {
+      "title": "新規プロダクトのフィールドセールス立ち上げ（マネージャー候補・CEO直下）",
+      "pick": true,
+      "salary": "800〜1,200万円",
+      "href": "https://jobs.agent-best.net/job/rec9bSjpr5QbafT0e/"
+     },
+     {
+      "title": "新規プロダクトのフィールドセールス立ち上げ（リーダー候補）",
+      "salary": "600〜800万円",
+      "href": "https://jobs.agent-best.net/job/recV9SLNqYJ5OpDVV/"
+     },
+     {
+      "title": "新規プロダクトのフィールドセールス立ち上げ（第二新卒歓迎）",
+      "salary": "420〜600万円",
+      "href": "https://jobs.agent-best.net/job/recUjPj0UywGQ96Tl/"
+     },
+     {
+      "title": "法人営業（b→dash）",
+      "pick": true,
+      "salary": "420〜600万円",
+      "href": "https://jobs.agent-best.net/job/recsKp6lkKJC3CP0o/"
+     },
+     {
+      "title": "法人営業（b→dash・マネージャー候補）",
+      "href": "https://jobs.agent-best.net/job/recYCrLPJ1Mep7Ecj/"
+     },
+     {
+      "title": "法人営業（b→dash・IT経験者）",
+      "href": "https://jobs.agent-best.net/job/rect5Cs4wuV617xsw/"
+     },
+     {
+      "title": "法人営業（b→dash・IT経験者／2）",
+      "href": "https://jobs.agent-best.net/job/recyA42Q0wpeyDdTG/"
+     },
+     {
+      "title": "営業（2ndプロダクト）①",
+      "href": "https://jobs.agent-best.net/job/reczEtdfjTNZHmx6Z/"
+     },
+     {
+      "title": "営業（2ndプロダクト）②",
+      "href": "https://jobs.agent-best.net/job/recBtnro6FNzKgWNX/"
+     },
+     {
+      "title": "パートナーセールス",
+      "salary": "500〜700万円",
+      "href": "https://jobs.agent-best.net/job/recByfTVQA4hb1KAr/"
+     },
+     {
+      "title": "インサイドセールス（営業経験不問）",
+      "salary": "420〜500万円",
+      "href": "https://jobs.agent-best.net/job/recs7R7uAjZVfqXkd/"
+     },
+     {
+      "title": "アポインター（b→dash新規事業・未経験歓迎）",
+      "salary": "364〜500万円",
+      "href": "https://jobs.agent-best.net/job/rec3xp3UNAeZnHQyA/"
+     },
+     {
+      "title": "新規人材紹介事業の責任者候補",
+      "salary": "700〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recz1mchENYAw7kG8/"
+     },
+     {
+      "title": "新規人材紹介事業のリーダー候補",
+      "salary": "560〜840万円",
+      "href": "https://jobs.agent-best.net/job/recqCiFHryDbZcWh6/"
+     },
+     {
+      "title": "Salesオープンエントリー",
+      "salary": "420〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recs1Ij7GkR05xzwN/"
+     },
+     {
+      "title": "全事業の営業部門責任者（CSO）",
+      "salary": "1,300〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/rec05uPsByfUM8apg/"
+     }
+    ]
+   },
+   {
+    "label": "カスタマーサクセス・コンサル",
+    "items": [
+     {
+      "title": "b→dash カスタマーサクセス（マネージャー候補・コンサル経験者歓迎）",
+      "pick": true,
+      "salary": "700〜1,400万円",
+      "href": "https://jobs.agent-best.net/job/reciBIArftz1yh8QV/"
+     },
+     {
+      "title": "マーケティングコンサルタント（データ×AI）",
+      "salary": "560〜980万円",
+      "href": "https://jobs.agent-best.net/job/recHeJ74mAmpgxAFd/"
+     },
+     {
+      "title": "経営／DXコンサルタント（データ×AI・未経験歓迎）",
+      "href": "https://jobs.agent-best.net/job/rec1pwZgekWQWSupf/"
+     },
+     {
+      "title": "業務改善／DXコンサルタント（データ×AI）",
+      "href": "https://jobs.agent-best.net/job/recnGU30tX5zIkjoB/"
+     },
+     {
+      "title": "カスタマーサクセス（導入エンジニア・b→dash）",
+      "salary": "700〜980万円",
+      "href": "https://jobs.agent-best.net/job/reccMcEXSWFihGgrV/"
+     },
+     {
+      "title": "カスタマーサクセス（エンタープライズ担当・エキスパート職）",
+      "salary": "700〜1,400万円",
+      "href": "https://jobs.agent-best.net/job/recDK0IBKVkBlFKg1/"
+     },
+     {
+      "title": "カスタマーサクセス（b→dash・未経験歓迎）",
+      "salary": "420〜560万円",
+      "href": "https://jobs.agent-best.net/job/rec7RVPgkduTEkZ93/"
+     },
+     {
+      "title": "新規事業のカスタマーサクセス立ち上げ（マネージャー候補）",
+      "salary": "800〜1,200万円",
+      "href": "https://jobs.agent-best.net/job/recLI2wkGSYdFx6ET/"
+     },
+     {
+      "title": "カスタマーサクセス フロント担当（kpiee・営業経験不問）",
+      "href": "https://jobs.agent-best.net/job/recK8WT2mpbbQZqZD/"
+     },
+     {
+      "title": "カスタマーサクセス バック担当（2ndプロダクト）",
+      "href": "https://jobs.agent-best.net/job/recgujNNHcnrZUPut/"
+     },
+     {
+      "title": "コンサルタントサポートチーム リーダー候補",
+      "salary": "392〜462万円",
+      "href": "https://jobs.agent-best.net/job/rec9IFLrGLt5nxAe1/"
+     },
+     {
+      "title": "テクニカルサポート（福岡・リーダー候補）",
+      "salary": "378〜900万円",
+      "href": "https://jobs.agent-best.net/job/recvmEJbdik0jg07I/"
+     },
+     {
+      "title": "全事業の顧客責任者（CCO）",
+      "salary": "1,200〜1,700万円",
+      "href": "https://jobs.agent-best.net/job/recpsJ5OKhtXGa2hE/"
+     }
+    ]
+   },
+   {
+    "label": "エンジニア・プロダクト",
+    "items": [
+     {
+      "title": "バックエンドエンジニア（b→dash）",
+      "pick": true,
+      "href": "https://jobs.agent-best.net/job/recR9no1h8DV9ruiO/"
+     },
+     {
+      "title": "フロントエンドエンジニア（b→dash）",
+      "href": "https://jobs.agent-best.net/job/recylveBqJFm0ubW7/"
+     },
+     {
+      "title": "バックエンドエンジニア（2ndプロダクト）",
+      "href": "https://jobs.agent-best.net/job/rec4VUhXmxHsk7fMV/"
+     },
+     {
+      "title": "フロントエンドエンジニア（2ndプロダクト）",
+      "href": "https://jobs.agent-best.net/job/rec4kW0M1zBUWbkSA/"
+     },
+     {
+      "title": "バックエンドエンジニア（b→dash・未経験）",
+      "href": "https://jobs.agent-best.net/job/recaRk5qKzxGBeb23/"
+     },
+     {
+      "title": "フロントエンドエンジニア（b→dash・未経験）",
+      "href": "https://jobs.agent-best.net/job/recE6E3iPIav4BCfP/"
+     },
+     {
+      "title": "バックエンドエンジニア（2ndプロダクト・未経験）",
+      "href": "https://jobs.agent-best.net/job/recq4En3z59IbyxlX/"
+     },
+     {
+      "title": "フロントエンドエンジニア（2ndプロダクト・未経験）",
+      "href": "https://jobs.agent-best.net/job/recZt0uCmgoQFnvl6/"
+     },
+     {
+      "title": "インフラエンジニア（2ndプロダクト）",
+      "href": "https://jobs.agent-best.net/job/recPgXLBGhRo2DGAh/"
+     },
+     {
+      "title": "PM（2ndプロダクト）",
+      "href": "https://jobs.agent-best.net/job/recYOJpnni6Sj9HXc/"
+     },
+     {
+      "title": "要件仕様",
+      "salary": "420〜800万円",
+      "href": "https://jobs.agent-best.net/job/rect4lmsWgvJUKqMI/"
+     },
+     {
+      "title": "UI/UXデザイナー",
+      "href": "https://jobs.agent-best.net/job/recokLgBLbpo2PcVx/"
+     },
+     {
+      "title": "情報システム担当",
+      "href": "https://jobs.agent-best.net/job/rec9KFWu7OdsznIvm/"
+     },
+     {
+      "title": "開発オープンエントリー",
+      "href": "https://jobs.agent-best.net/job/recrJRmoPo3ouIy1b/"
+     },
+     {
+      "title": "全事業部の開発責任者",
+      "salary": "900〜1,100万円",
+      "href": "https://jobs.agent-best.net/job/recrpP1hBDO9ml2F9/"
+     },
+     {
+      "title": "全事業のプロダクト責任者（CPO）",
+      "salary": "1,200〜1,700万円",
+      "href": "https://jobs.agent-best.net/job/receSB4C5wRzEuZWY/"
+     }
+    ]
+   },
+   {
+    "label": "マーケ・事業企画",
+    "items": [
+     {
+      "title": "マーケター（b→dash）",
+      "pick": true,
+      "salary": "500万円〜",
+      "href": "https://jobs.agent-best.net/job/recH2RDu6UVSIjyZh/"
+     },
+     {
+      "title": "マーケター（b→dash・未経験歓迎）",
+      "href": "https://jobs.agent-best.net/job/reclAHsmtx8Mkb6Bb/"
+     },
+     {
+      "title": "事業企画（COO直下・マネージャー候補）",
+      "salary": "800〜1,500万円",
+      "href": "https://jobs.agent-best.net/job/recAGLQBUd14kraqz/"
+     },
+     {
+      "title": "全事業のマーケティング責任者（CMO）",
+      "salary": "1,200〜2,500万円",
+      "href": "https://jobs.agent-best.net/job/recclq07Sv6QW4Nxx/"
+     }
+    ]
+   },
+   {
+    "label": "コーポレート",
+    "items": [
+     {
+      "title": "中途採用リクルーター",
+      "pick": true,
+      "salary": "550〜600万円",
+      "href": "https://jobs.agent-best.net/job/recIgxFUhCzAdTCdE/"
+     },
+     {
+      "title": "中途採用リクルーター（未経験歓迎）",
+      "salary": "400万円〜",
+      "href": "https://jobs.agent-best.net/job/rec4pw1Zom0MR5UQA/"
+     },
+     {
+      "title": "中途採用リーダー候補",
+      "salary": "630〜980万円",
+      "href": "https://jobs.agent-best.net/job/rec50kD1ldcHvBWJ0/"
+     },
+     {
+      "title": "中途採用責任者候補",
+      "salary": "700〜1,400万円",
+      "href": "https://jobs.agent-best.net/job/recOMPxAhCcVK7tki/"
+     },
+     {
+      "title": "IR担当",
+      "salary": "380〜600万円",
+      "href": "https://jobs.agent-best.net/job/rec7UU8a8lQVjYM1V/"
+     },
+     {
+      "title": "IR＆IPO部門責任者（CFO候補）",
+      "salary": "1,200〜2,000万円",
+      "href": "https://jobs.agent-best.net/job/recQcjWu08HlBBycf/"
+     },
+     {
+      "title": "法務メンバー（実務経験が浅い方も歓迎）",
+      "salary": "420〜700万円",
+      "href": "https://jobs.agent-best.net/job/recYalVlBjowxCPmv/"
+     }
+    ]
+   }
+  ]
+ },
+ "fit": {
+  "img": "1517048676732-d65bc937f952",
+  "alt": "打ち合わせの様子（イメージ）",
+  "lead": "応募条件の詳細は、相談時にお伝えします。ここでは、同社の公開求人票に書かれている内容をまとめました。",
+  "req": {
+   "h3": "主なポジションの応募条件（抜粋）",
+   "items": [
+    "法人営業（b→dash）：営業経験がある方。法人営業・IT業界での営業経験があれば歓迎",
+    "マーケティングコンサルタント：営業やカスタマーサクセスなど、顧客折衝の経験が3年以上ある方（業界不問・IT未経験も歓迎）",
+    "カスタマーサクセス（マネージャー候補）：ITやマーケティング領域のコンサル経験、またはSIerでの経験が2年以上ある方",
+    "エンジニア・マーケター・採用担当などには、未経験から応募できる募集もあります"
+   ]
+  },
+  "fit": {
+   "h3": "合う人",
+   "items": [
+    "データやITを使って、お客様の売上や業務を良くする仕事がしたい人",
+    "システム・マーケティング・商材など、覚えることの多さを楽しめる人",
+    "日々の数字を追いながら、提案の質を上げていきたい人",
+    "評価の機会が多い環境で、早く役割を広げたい人"
+   ]
+  }
+ },
+ "faq": [
+  {
+   "q": "ITやマーケティングの経験がなくても応募できますか？",
+   "a": "カスタマーサクセス・インサイドセールス・マーケター・エンジニアなどに、未経験から応募できる募集があります。営業や接客など、顧客と向き合ってきた経験が活かせる求人もあります。"
+  },
+  {
+   "q": "働き方はどうなっていますか？",
+   "a": "勤務は9時〜18時です。同社の求人票によると、20時には完全に退社し、PCの持ち帰りや土日の出勤は原則禁止です。四半期の最終日を有給の取得日にする「クオーターピットイン」もあります。"
+  },
+  {
+   "q": "勤務地はどこですか？",
+   "a": "多くの求人は東京・西新宿のオフィスです。福岡（天神）のテクニカルサポートの募集もあります。"
+  },
+  {
+   "q": "選考はどのように進みますか？",
+   "a": "書類選考と面接で進みます。面接の回数はポジションによって異なるため、詳しくは相談時にお伝えします。"
+  }
+ ],
+ "closingImg": "1681505531034-8d67054e07f6",
+ "footerSource": "掲載している数字・条件は、データXの公式サイト・採用サイト・公開求人票（2026年11月時点）にもとづきます。",
+ "credits": "Ryusei Machida／Sho Shimada／Christina @ wocintechchat.com／Marek Okon／Dylan Gillis／Amina Atar",
+ "related": {
+  "href": "https://jobs.agent-best.net/pickup/sales/",
+  "label": "おすすめ企業特集（営業職）"
+ },
+ "growth": {
+  "h2": "データ活用のSaaSで、導入1,300社超",
+  "lead": "b→dashの累計導入社数は1,300社を超えたと、同社のサービスサイトは示しています。2019年には、世界的な投資会社KKRなどから約100億円を調達しました。データを持っていても使いこなせない企業が多いなかで、その壁を下げる役割を担っています。",
+  "highlights": [
+   {
+    "v": "1,300",
+    "unit": "社超",
+    "label": "b→dashの累計導入社数（サービスサイト・2026年11月時点）"
+   },
+   {
+    "v": "約100",
+    "unit": "億円",
+    "label": "2019年8月の資金調達（KKR・ゴールドマン・サックスほか）"
+   },
+   {
+    "v": "9",
+    "unit": "部門",
+    "label": "ITreview Grid Award 2026 WinterでLeaderを受賞"
+   }
+  ],
+  "strengths": [
+   {
+    "b": "大手投資会社が出資",
+    "p": "2019年8月の約100億円の調達は、KKRが主導し、ゴールドマン・サックスと既存株主が加わりました。経済産業省の資料では、KKRのアジアでのスタートアップ投資の最初の案件として紹介されています。"
+   },
+   {
+    "b": "外部の評価",
+    "p": "利用者のレビューで決まる「ITreview Grid Award」で、2025 Springと2026 Winterに9部門でLeaderに選ばれました。「BOXIL SaaS AWARD Autumn 2025」でも計8つの賞を受けています。"
+   },
+   {
+    "b": "AIの機能を広げている",
+    "p": "2024年10月の「b→dash AI」から、AIによるABテストの自動最適化、銀行向けの「AI Lifestage Concierge」、AI接客エージェントなど、AIの機能を続けて発表しています。"
+   }
+  ],
+  "market": {
+   "h3": "市場と将来性",
+   "v": "3,167.5億円",
+   "label": "国内デジタルマーケティング市場（2023年見込み・矢野経済研究所）",
+   "p": "矢野経済研究所によると、CRM・MA・CDPなどを含む国内のデジタルマーケティング市場は、2022年の2,828億円から2023年は3,167.5億円に伸びる見込みです。データを集めるだけでなく、現場で使いこなす仕組みが求められています。"
+  },
+  "cap": "出典：b→dashサービスサイト、同社ニュース、PR TIMES（2019年8月）、経済産業省「対日直接投資 事例集」、矢野経済研究所（2023年9月発表）",
+  "decks": [],
+  "more": {
+   "h3": "業績以外の注目ポイント",
+   "items": [
+    {
+     "b": "年4回の評価と公開された給与レンジ",
+     "p": "四半期ごとに評価し、昇給・昇格の機会が年4回あります。等級ごとの固定給の幅を採用サイトで公開しており、3年以内の昇格率は93.48%（2025年8月時点の在籍者）としています。"
+    },
+    {
+     "b": "遅くまで働かない仕組み",
+     "p": "20時には完全に退社し、PCの持ち帰りは禁止です。四半期の最終日を有給の取得日にする「クオーターピットイン」など、15種類の有償休暇があります。"
+    },
+    {
+     "b": "子育てを支える手当",
+     "p": "18歳以下の子ども1人につき、月最大6万円の「こども手当」があります。住宅の補助、借り上げ社宅、持株会、社内ジムもあります。"
+    }
+   ]
+  }
+ }
+}

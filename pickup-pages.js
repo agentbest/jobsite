@@ -319,7 +319,7 @@ function readFeatures(root) {
 }
 function readCompanies(root) {
   const src = path.join(root, 'pickup-src'), cos = {};
-  for (const f of fs.readdirSync(src).filter(f => f.endsWith('.json'))) { const d = JSON.parse(fs.readFileSync(path.join(src, f), 'utf8')); cos[d.slug] = d; }
+  for (const f of fs.readdirSync(src).filter(f => f.endsWith('.json') && !f.startsWith('_'))) { const d = JSON.parse(fs.readFileSync(path.join(src, f), 'utf8')); cos[d.slug] = d; }
   return cos;
 }
 function readParts(root) {
@@ -387,7 +387,7 @@ function build(root, live) {
   if (!fs.existsSync(src)) return { urls: [] };
   const style = fs.readFileSync(path.join(src, '_style.html'), 'utf8');
   const why = fs.readFileSync(path.join(src, '_why.html'), 'utf8').split('-->').slice(1).join('-->').trim();
-  const files = fs.readdirSync(src).filter(f => f.endsWith('.json')).sort();
+  const files = fs.readdirSync(src).filter(f => f.endsWith('.json') && !f.startsWith('_')).sort();
   const list = [], keep = new Set();
   let unlinked = 0;
   for (const f of files) {
@@ -424,6 +424,11 @@ function build(root, live) {
     const p = path.join(root, 'pickup', s);
     if (s !== 'company' && fs.statSync(p).isDirectory() && !feats.some(f => f.slug === s)) fs.rmSync(p, { recursive: true, force: true });
   }
+  /* 上位固定の注目企業（_pinned.json）を一覧の先頭に */
+  let pinSlugs = [];
+  try { pinSlugs = (JSON.parse(fs.readFileSync(path.join(src, '_pinned.json'), 'utf8')).companies || []).map(c => c.slug); } catch (e) {}
+  const pr = s => { const i = pinSlugs.indexOf(s); return i < 0 ? 999 : i; };
+  list.sort((a, b) => pr(a.slug) - pr(b.slug));
   fs.writeFileSync(path.join(root, 'pickup', 'index.html'), indexPage(list, style, feats), 'utf8');
   console.log(`厳選特集（pickup/）を書き出しました: 企業LP ${list.length}社（当サイト未掲載の求人 ${unlinked}件は文字だけ・掲載終了の求人は外した）・テーマ別特集 ${feats.map(f => `${f.slug} ${f.count}社/${f.jobs}件`).join('・') || 'なし'}`);
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);

@@ -825,6 +825,8 @@ pickup-src/<slug>.json（1社1ファイル）＋ _style.html（CSS）＋ _why.ht
 - canonical は jobs 側（特化ドメイン lp.〇〇tenshoku.com に同じ特集を置くときは jobs を正にする＝11/14 決定）。
 - ヘッダー（4テンプレ）に「厳選特集」→ `/pickup/`。
 - まだ無いもの：Airtable の「注力」チェック（出し入れ・おすすめ順の上位寄せ・カードの厳選バッジ）。
+- **上位固定の注目企業（2026-11-26・ハチワレさん「データXとNINAEを上位固定して強化」）**：`pickup-src/_pinned.json`（companyId・slug・任意で limit）。検索画面（`template.html` の `PINNED`／`pinFirst()`）は「新着順」「おすすめ順」のとき絞り込みに合うこの会社の求人を先頭に出す（会社を交互・各社は年収順。年収順・企業名順は触らない）、カードに「注目企業」ラベル、結果の上に特設ページ（企業LP）への帯。一覧ページ・求人ページの「同じ職種の求人」（`static-pages.js` の `sortForList`）と `/pickup/` の企業LP一覧も先頭に出す。外すときは配列から消すだけ。
+  - ⚠ `pickup-src/` 直下の `_` で始まる JSON は企業LPとして読まない（`pickup-pages.js`）。
 
 ### テーマ別のおすすめ企業特集（`pickup/<theme>/`）— 2026-11-15
 

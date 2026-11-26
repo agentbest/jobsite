@@ -463,6 +463,20 @@ function attachIndustryGroups(){
 }
 attachIndustryGroups();
 
+/* 上位固定の注目企業（pickup-src/_pinned.json）を template.html の __PINNED__ に埋める（2026-11-26）。
+   一覧ページ（static-pages.js の sortForList）も同じファイルを読む。企業LPがある会社だけ「特設ページ」へのリンクを出す。 */
+function attachPinned(){
+  const indexPath = path.join(dir, 'index.html');
+  if(!fs.existsSync(indexPath)) return;
+  const p = path.join(dir, 'pickup-src', '_pinned.json');
+  const list = fs.existsSync(p) ? (JSON.parse(fs.readFileSync(p, 'utf8')).companies || []) : [];
+  const out = list.map(c => ({ id: c.companyId, name: c.company, short: c.short || c.company, limit: c.limit || 0,
+    lp: c.slug && fs.existsSync(path.join(dir, 'pickup-src', c.slug + '.json')) ? `/pickup/company/${c.slug}/` : '' }));
+  fs.writeFileSync(indexPath, fs.readFileSync(indexPath, 'utf8').replace('__PINNED__', () => embed(out)), 'utf8');
+  if(out.length) console.log('上位固定の注目企業:', out.map(c => c.short).join('・'));
+}
+attachPinned();
+
 /* ヒーローの「タグで探す」と「リモート可」を HTML に最初から書いておく（2026-10-25・表示速度）。
    以前はブラウザが求人データ（data/list.json）を読み終えてから差し込んでいたため、
    その瞬間にヒーローが1段伸びて下の段落が押し下げられていた（CLS 0.12）。
