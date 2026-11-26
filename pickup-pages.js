@@ -263,7 +263,7 @@ u.innerHTML=j.length?li+more:'<li class="none"><a href="'+B+'/pickup/company/'+c
   <h1>${e(h.h1)}</h1>
   <p>${e(h.lead)}</p>
   <div class="ctas">${cta(h.cta || '無料で相談する')}<a class="btn btn--line" href="#companies">掲載企業を見る</a></div>
-  <div class="strip"><div><b>${items.length}<small>社</small></b><span>掲載企業</span></div><div><b>${nJobs}<small>件</small></b><span>テーマに合うポジション</span></div><div><b>${e((f.strip3 || {}).b || "成長中")}</b><span>${e((f.strip3 || {}).span || "の会社を中心に")}</span></div><div><b>無料</b><span>ご相談</span></div></div>
+  <div class="strip strip--3"><div><b>${nJobs}<small>件</small></b><span>テーマに合うポジション</span></div><div><b>${e((f.strip3 || {}).b || "成長中")}</b><span>${e((f.strip3 || {}).span || "の会社を中心に")}</span></div><div><b>無料</b><span>ご相談</span></div></div>
   <p class="cap">写真はイメージです</p>
 </div></section>
 <section class="sec"><div class="wrap split">
