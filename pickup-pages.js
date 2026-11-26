@@ -346,7 +346,7 @@ function indexPage(list, style, feats = []) {
 </div></header>
 <section class="hero" style="min-height:62vh;background-image:url('${IMG('1758095520684-99d5a1cc2768', 2000)}')"><div class="wrap">
   <p class="label">AGENT BEST ／ PICKUP</p>
-  <h1>業績好調・成長中の、<br>${list.length}社のおすすめ企業特集。</h1>
+  <h1>業績好調・成長中の、<br>おすすめ企業特集。</h1>
   <p>業績が好調な会社や、事業を伸ばしている会社を中心に、エージェントベストがいまおすすめしたい企業を1社ずつまとめました。仕事の中身、年収の仕組み、選考の流れ、募集中のポジションまで、公開情報をもとに紹介しています。</p>
   <p class="cap">写真はイメージです</p>
 </div></section>
@@ -355,7 +355,7 @@ ${feats.length ? `<section class="sec"><div class="wrap">
   <p class="lead">職種やキャリアの方向ごとに、合う会社だけを集めました。</p>
   <ul class="pklist">${feats.map((f, i) => `<li><a class="pk" href="/pickup/${f.slug}/">
     <span class="pk__img" style="background-image:url('${IMG(f.hero.img, 800)}')"></span>
-    <span class="pk__body"><small>${e(f.hero.label)}</small><b>${e(f.name)}</b><span>${e(plain(f.hero.h1))}</span><em>掲載企業 ${f.count}社</em></span>
+    <span class="pk__body"><small>${e(f.hero.label)}</small><b>${e(f.name)}</b><span>${e(plain(f.hero.h1))}</span></span>
   </a></li>`).join('')}</ul>
 </div></section>
 <section class="sec sec--alt">` : '<section class="sec">'}<div class="wrap">
